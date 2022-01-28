@@ -8,6 +8,7 @@ package apprunner;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import model.PathsManager;
 import view.MainViewRunner;
 //If you can't create a new fmxl file look here https://www.youtube.com/watch?v=knbw1MvMfBA&t=245s
@@ -19,9 +20,7 @@ import view.MainViewRunner;
 public class AppRunner {
 
     public static void main(String[] args) throws MalformedURLException, IOException {//https://www.youtube.com/watch?v=cmSbXsFE3l8&list=PLyfE3pnEkrBMiCPLNDhft9hmeXK1wtkGF https://www.youtube.com/watch?v=kTJczUoc26U&list=PLMC9KNkIncKseYxDN2niH6glGRWKsLtde
-        PathsManager.createFolders(PathsManager.APP_DATA_FOLDER_PATH);
-        PathsManager.createFolders(PathsManager.ACCOUNTS_DATA_PATH);
-        PathsManager.createFolders(PathsManager.WEBA_FOLDER_PATH);
+        PathsManager.setUpFolders();
         MainViewRunner.launchPanel(args);
 
 //playlist 511 index https://www.youtube.com/watch?v=RgKAFK5djSk&list=PLeCdlPO-XhWFzEVynMsmosfdRsIZXhZi0&index=1 // playlist with 5000 videos

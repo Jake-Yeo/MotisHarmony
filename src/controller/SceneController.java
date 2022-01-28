@@ -18,7 +18,7 @@ import view.MainViewRunner;
  */
 public class SceneController {
     
-    SceneController() {
+    public SceneController() {
     }
     
     public void switchToDownloadPageView() throws IOException {

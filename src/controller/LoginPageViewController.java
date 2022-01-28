@@ -51,6 +51,7 @@ import view.MainViewRunner;
 public class LoginPageViewController implements Initializable {
 
     private int animationNum = 0;
+    private Account acc = new Account();
     private FadeTransition fadeTransition = new FadeTransition();
     @FXML
     private AnchorPane loginSignupMainAnchorPane;
@@ -121,13 +122,13 @@ public class LoginPageViewController implements Initializable {
 
     @FXML
     public void login(ActionEvent event) throws IOException {
-        Account.setLoggedInAccount(usernameTextField.getText(), passwordPasswordField.getText(), false);
-        sceneController.switchToDownloadPageView();
+        acc.login(usernameTextField.getText(), passwordPasswordField.getText());
+        //sceneController.switchToDownloadPageView();
     }
 
     public void signup(ActionEvent event) throws IOException {
-        Account.setLoggedInAccount(usernameTextField.getText(), passwordPasswordField.getText(), true);
-        sceneController.switchToDownloadPageView();
+        acc.signup(usernameTextField.getText(), passwordPasswordField.getText());
+        //sceneController.switchToDownloadPageView();
     }
 
     @FXML

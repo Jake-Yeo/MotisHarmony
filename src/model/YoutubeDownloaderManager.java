@@ -31,7 +31,7 @@ import ws.schild.jave.EncoderException;
  * @author Jake Yeo
  */
 public class YoutubeDownloaderManager {
-
+    
     private static WebDriver driver;
     private static boolean doneDownloading = true;
     private static boolean isChromeDriverActive = false;
@@ -44,7 +44,7 @@ public class YoutubeDownloaderManager {
     private static final String YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER = "https:";
     private static final String YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER = "range";
     private static ArrayList<String> youtubeUrlDownloadQueueList = new ArrayList();
-
+    
     public static void setupChromeDriver() {
         //Set the Path of Executable Browser Driver
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Jake Yeo\\OneDrive\\Documents\\ChromeDriver\\chromedriver.exe");
@@ -53,11 +53,11 @@ public class YoutubeDownloaderManager {
         options.setCapability(ChromeOptions.CAPABILITY, options);
         driver = new ChromeDriver(options);
     }
-
+    
     public static void quitChromeDriver() {
         driver.quit();
     }
-
+    
     public static void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
         File youtubeUrlDownloadManagerFile = new File("YoutubeUrlsToDownload.txt");
         youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
@@ -65,19 +65,19 @@ public class YoutubeDownloaderManager {
             youtubeUrlDownloadQueueList.add(youtubeUrl);//adds the youtube url to the download queue
         }
     }
-
+    
     public static boolean isAppDownloadingFromDownloadQueue() {
         return isChromeDriverActive;
     }
-
+    
     public static void setIsChromeDriverActive(boolean tf) {
         isChromeDriverActive = tf;
     }
-
+    
     public static ArrayList<String> getYoutubeUrlDownloadQueueList() {
         return youtubeUrlDownloadQueueList;
     }
-
+    
     public static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
         String[] youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
@@ -87,11 +87,11 @@ public class YoutubeDownloaderManager {
                 System.out.println(i);
                 i++;
             }
-
+            
         }
         isPlaylistUrlGetterCurrentlyGettingUrls = false;
     }
-
+    
     public static boolean isPlaylistUrlGetterCurrentlyGettingUrls() {
         return isPlaylistUrlGetterCurrentlyGettingUrls;
     }
@@ -107,7 +107,7 @@ public class YoutubeDownloaderManager {
         }
         return netData;
     }
-
+    
     private static String obtainYoutubeUrlAudioSource(String youtubeUrl) throws MalformedURLException, IOException {//Gets the audio source of a youtube video and returns it
         try {
             driver.get(youtubeUrl);
@@ -117,7 +117,7 @@ public class YoutubeDownloaderManager {
             driver.get(youtubeUrl);
         }
         String scriptToExecute = "var performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}; var network = performance.getEntries() || {}; return network;";
-
+        
         String netData = ((JavascriptExecutor) driver).executeScript(scriptToExecute).toString();//Get network traffic data
         String audioHtmlSource = "";
         while (!audioHtmlSource.contains("media")) {
@@ -148,9 +148,9 @@ public class YoutubeDownloaderManager {
             }
         }
         return netData;
-
+        
     }
-
+    
     public static void addYoutubeLinkToDownloadQueue(String youtubeUrl) throws IOException {
         if (YoutubeVideoPageParser.isLinkAPlaylist(youtubeUrl)) {
             addSongsFromPlaylistToDownloadQueue(youtubeUrl);
@@ -158,18 +158,18 @@ public class YoutubeDownloaderManager {
             addYoutubeVideoUrlToDownloadQueue(youtubeUrl);
         }
     }
-
+    
     public static void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
         youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in maybe of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
         addYoutubeUrlsToDownloadQueue(youtubeUrl);
     }
-
+    
     public static void downloadYoutubeVideoUrl(String youtubeUrlFromDownloadManager) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
         URL downloadURL = null;
         if (!(YoutubeVideoPageParser.getHtml(youtubeUrlFromDownloadManager).contains(YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER))) {//We can remove this if statement, we are handling it in another method
             downloadURL = new URL(obtainYoutubeUrlAudioSource(youtubeUrlFromDownloadManager));//Out of range happens when mime=audio cannot be found
             int count = 0;
-            String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoMusicTitle(youtubeUrlFromDownloadManager).replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", ""); //Gets rid of foreign language characters;//Gets music title to use in the file name
+            String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoMusicTitle(youtubeUrlFromDownloadManager).replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
             String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
             try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
                 int i = 0;
@@ -184,7 +184,7 @@ public class YoutubeDownloaderManager {
                     new Runnable() {
                 public void run() {
                     try {
-                        AudioConverterManager.addToConversionQueue(downloadedPath, youtubeTitleSafeName + ".weba");
+                        AudioConverterManager.addToConversionQueue(downloadedPath, youtubeTitleSafeName + ".weba");//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
                     } catch (EncoderException ex) {
                         Logger.getLogger(YoutubeDownloaderManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
