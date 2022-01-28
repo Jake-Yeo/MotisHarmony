@@ -47,7 +47,7 @@ public class YoutubeDownloaderManager {
     
     public static void setupChromeDriver() {
         //Set the Path of Executable Browser Driver
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Jake Yeo\\OneDrive\\Documents\\ChromeDriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");//start the chrome browser headless, can be changed if you want
         options.setCapability(ChromeOptions.CAPABILITY, options);
