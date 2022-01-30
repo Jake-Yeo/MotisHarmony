@@ -62,32 +62,18 @@ public class YoutubeVideoPageParser {
     private static final String YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER = "og:image\" content=\"";
     private static final String YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER = "\"";
 
-    public static String getHtml(String url) throws IOException {
+    public static String getHtml(String url) throws IOException {//To prevent an ip ban from websites, don't overuse this method.
         String html = "";
         URL ytLink = new URL(url);
-        BufferedReader in = new BufferedReader(
+        BufferedReader in = null;
+        in = new BufferedReader(
                 new InputStreamReader(ytLink.openStream()));
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
             html += inputLine;
         }
         in.close();
-
         return html;
-    }
-
-    public static boolean get(String youtubePlaylistlink) throws IOException {
-        String downloadablePlaylistUrl = "";
-        try {
-            downloadablePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistlink);//if the youtube playlist does not exist then an error will be thrown
-            if (getHtml(downloadablePlaylistUrl).contains(YT_PLAYLIST_START_IDENTIFIER)) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     public static boolean doesYoutubePlaylistExist(String youtubePlaylistlink) throws IOException {
@@ -147,13 +133,11 @@ public class YoutubeVideoPageParser {
         } catch (IOException ex) {
             Logger.getLogger(YoutubeVideoPageParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-            if (html.contains(YOUTUBE_LIVESTREAM_IDENTIFIER)) {
-                return true;
-            }
-            return false;
+        if (html.contains(YOUTUBE_LIVESTREAM_IDENTIFIER)) {
+            return true;
         }
-
-    
+        return false;
+    }
 
     private static String getYoutubePlaylistListId(String youtubeUrl) {
         String playlistId = infoParserToolTrimToStart(youtubeUrl, YT_WHOLE_PLAYLIST_LIST_ID_START_IDENTIFIER);
