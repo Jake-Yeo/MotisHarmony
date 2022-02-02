@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ExitButtonController">
+   <children>
+      <Button fx:id="exitButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exitAppMainButton" onMouseEntered="#mouseEnterExitMainButton" onMouseExited="#mouseExitExitMainButton" prefHeight="16.0" prefWidth="30.0" style="-fx-background-color: transparent; -fx-border-color: #ee4540; -fx-border-radius: 2em 2em 0 0; -fx-padding: 0;" text="🞮" textFill="#ee4540">
+         <font>
+            <Font name="Quicksand SemiBold" size="10.0" />
+         </font>
+      </Button>
+      <Button fx:id="minimizeButton" layoutY="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#minimizeAppMainButton" onMouseEntered="#mouseEnterMinimizeButton" onMouseExited="#mouseExitExitMinimizeButton" prefHeight="15.0" prefWidth="30.0" style="-fx-background-color: transparent; -fx-background-radius: 0 0 2em 2em; -fx-border-color: #ee4540; -fx-border-radius: 0 0 2em 2em; -fx-padding: 0;" text="━" textFill="#ee4540">
+         <font>
+            <Font name="Quicksand SemiBold" size="10.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

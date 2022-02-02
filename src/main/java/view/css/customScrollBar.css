@@ -1,0 +1,72 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+    .scroll-bar:horizontal .track,
+        .scroll-bar:vertical .track{
+        -fx-background-color :transparent;
+        -fx-border-color :transparent;
+        -fx-background-radius : 0em;
+        -fx-border-radius :2em;
+    }
+
+
+    .scroll-bar:horizontal .increment-button ,
+        .scroll-bar:horizontal .decrement-button {
+        -fx-background-color :transparent;
+        -fx-background-radius : 0em;
+        -fx-padding :0 0 10 0;
+
+    }
+
+    .scroll-bar:vertical .increment-button ,
+        .scroll-bar:vertical .decrement-button {
+        -fx-background-color :transparent;
+        -fx-background-radius : 0em;
+        -fx-padding :0 10 0 0;
+
+    }
+
+    .scroll-bar .increment-arrow,
+    .scroll-bar .decrement-arrow{
+        -fx-shape : " ";    
+    }
+
+    .scroll-bar:vertical .increment-arrow,
+        .scroll-bar:vertical .decrement-arrow{
+        -fx-shape : " ";    
+    }
+
+    .corner {
+        -fx-background-color: transparent;
+    }
+
+    .scroll-bar:horizontal .thumb,
+        .scroll-bar:vertical .thumb {
+        -fx-background-color : linear-gradient(to bottom, #ee4540, #c12c4e, #8e224e, #5b1d43, #2d142c);
+        -fx-background-insets : 2, 0, 0;
+        -fx-background-radius : 2em;
+    }
+    .scroll-bar:horizontal .thumb {
+        -fx-background-color : linear-gradient(to right, #ee4540, #c12c4e, #8e224e, #5b1d43, #2d142c);
+    }
+
+    .scroll-bar:horizontal .thumb:hover,
+        .scroll-bar:vertical .thumb:hover {
+        -fx-background-color : linear-gradient(to bottom, #ff3e37, #db194d, #ae0a58, #7c1257, #4c154a);
+        -fx-background-insets : 2, 0, 0;
+        -fx-background-radius : 2em;
+    }
+
+    .scroll-bar:horizontal .thumb:hover {
+        -fx-background-color : linear-gradient(to right, #ff3e37, #db194d, #ae0a58, #7c1257, #4c154a);
+    }
+
+    .scroll-bar:vertical {
+        -fx-background-color: transparent;
+    }
+    .scroll-bar:horizontal {
+        -fx-background-color: transparent;
+    }
+}
