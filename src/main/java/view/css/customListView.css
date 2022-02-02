@@ -1,0 +1,44 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+    /* When the list-cell is selected and focused */
+    .list-view:focused .list-cell:filled:focused:selected {
+        -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-selection-bar;
+        -fx-background-insets: 0, 1, 2;
+        -fx-background-radius: 4em;
+        -fx-background: -fx-accent;
+    }
+
+    /* When the list-cell is selected and selected-hovered but not focused. 
+        Applied when the multiple items are selected but not focused */
+    .list-view:focused .list-cell:filled:selected, .list-view:focused .list-cell:filled:selected:hover {
+        -fx-background: -fx-accent;
+        -fx-background-color: -fx-selection-bar;
+        -fx-background-radius: 4em;
+        /* -fx-text-fill: -fx-selection-bar-text;  */
+        -fx-text-fill: white;
+    }
+
+    /* When the list-cell is selected, focused and mouse hovered */
+    .list-view:focused .list-cell:filled:focused:selected:hover {
+        -fx-background: -fx-accent;
+        -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-selection-bar;
+        -fx-background-radius: 4em;
+        -fx-background-insets: 0, 1, 2;
+        /* -fx-text-fill: -fx-selection-bar-text;  */
+        -fx-text-fill: white;
+    }
+    /*For when you unfocus listView, the selected highlight of the cell will be a pinkish color*/
+    .list-cell:filled:selected {
+        -fx-background: #d07ccc;
+        -fx-text-fill: white;
+    }
+
+    .list-cell {
+        -fx-background-radius: 4em;
+        -fx-text-fill: #ffffff7d;
+        -fx-font: 10pt "Quicksand SemiBold";
+    }
+}

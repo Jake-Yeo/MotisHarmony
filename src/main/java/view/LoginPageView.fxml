@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Polyline?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" fx:id="loginSignupMainAnchorPane" prefHeight="577.0" prefWidth="886.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginPageViewController">
+    <stylesheets>
+    </stylesheets>
+    <children>
+        <ImageView fx:id="loginPageImageView" fitHeight="577.0" fitWidth="620.0" layoutX="266.0" pickOnBounds="true" />
+        <AnchorPane layoutX="427.0" layoutY="49.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="399.0" style="-fx-background-color: linear-gradient(to right bottom, #801336, #9c1c3c, #b8283f, #d33541, #ee4540); -fx-background-radius: 1em;">
+            <children>
+                <TextField fx:id="usernameTextField" focusTraversable="false" layoutX="119.0" layoutY="156.0" promptText="Enter username here..." style="-fx-background-color: transparent; -fx-border-color: linear-gradient(to right, #d32038, #bf1a3a, #aa163a, #951439, #801336); -fx-border-radius: 1em; -fx-text-fill: #ffffff7d; -fx-prompt-text-fill: #ffffff7d;">
+                    <font>
+                        <Font name="Quicksand SemiBold" size="21.0" />
+                    </font>
+                </TextField>
+                <Text fill="#510a32" layoutX="82.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signup or Login">
+                    <font>
+                        <Font name="Quicksand Medium" size="35.0" />
+                    </font>
+                </Text>
+                <Text fill="#510a32" layoutX="82.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                    <font>
+                        <Font name="Quicksand Light" size="34.0" />
+                    </font>
+                </Text>
+                <Text fill="#510a32" layoutX="86.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+                    <font>
+                        <Font name="Quicksand Light" size="34.0" />
+                    </font>
+                </Text>
+                <Text fill="#510a32" layoutX="73.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="👤" wrappingWidth="46.0">
+                    <font>
+                        <Font size="43.0" />
+                    </font>
+                </Text>
+                <Text fill="#510a32" layoutX="75.0" layoutY="333.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🔒">
+                    <font>
+                        <Font size="43.0" />
+                    </font>
+                </Text>
+                <Button fx:id="signupButton" focusTraversable="false" layoutX="97.0" layoutY="396.0" mnemonicParsing="false" onAction="#signup" onMouseEntered="#mouseEnterSignupButton" onMouseExited="#mouseExitSignupButton" onMousePressed="#mousePressedSignupButton" onMouseReleased="#mouseReleasedSignupButton" style="-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: transparent;" text="Signup" textFill="WHITE">
+                    <font>
+                        <Font name="Quicksand Regular" size="18.0" />
+                    </font>
+                </Button>
+                <Button fx:id="loginButton" focusTraversable="false" layoutX="255.0" layoutY="396.0" mnemonicParsing="false" onAction="#login" onMouseEntered="#mouseEnterLoginButton" onMouseExited="#mouseExitLoginButton" onMousePressed="#mousePressedLoginButton" onMouseReleased="#mouseReleasedLoginButton" prefHeight="37.0" prefWidth="83.0" style="-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: transparent;" text="Login" textFill="WHITE">
+                    <font>
+                        <Font name="Quicksand Regular" size="18.0" />
+                    </font>
+                </Button>
+                <PasswordField fx:id="passwordPasswordField" layoutX="119.0" layoutY="292.0" promptText="Enter password here..." style="-fx-background-color: transparent; -fx-border-color: linear-gradient(to right, #d32038, #bf1a3a, #aa163a, #951439, #801336); -fx-border-radius: 1em; -fx-text-fill: #ffffff7d; -fx-prompt-text-fill: #ffffff7d;">
+                    <font>
+                        <Font name="Quicksand SemiBold" size="21.0" />
+                    </font>
+                </PasswordField>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="infoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="577.0" prefWidth="461.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #511a3e, #791c48, #a22049, #c72c41);">
+            <children>
+                <Text fx:id="motisHarmonyText" fill="#ee4540" layoutX="27.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🎧MotisHarmony">
+                    <font>
+                        <Font name="Quicksand SemiBold" size="51.0" />
+                    </font>
+                </Text>
+                <Polyline fill="#c72c41" layoutX="85.0" layoutY="430.0" points="-69.0, -153.0, -150.0, 162.0, 23.0, 146.0, 23.0, 100.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                <Polyline fill="#c72c41" layoutX="319.0" layoutY="392.0" points="104.0, 249.0, 57.0, 238.0, -68.0, 195.0, 97.0, -66.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                <Polyline fill="#c72c41" layoutX="342.0" layoutY="319.0" points="-202.0, -15.0, -327.0, 283.0, -162.0, 273.0, -109.0, 283.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                <Polyline fill="#c72c41" layoutX="172.0" layoutY="453.0" points="156.0, 91.0, -47.0, 149.0, 107.0, -155.0, 149.0, 168.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                <Polyline fill="#c72c41" layoutX="414.0" layoutY="407.0" points="79.0, 207.0, 57.0, 238.0, -38.0, 207.0, 33.0, -88.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                <Polyline fill="#c72c41" layoutX="431.0" layoutY="431.0" points="-92.0, -155.0, -139.0, 25.0, -127.0, 98.0, -61.0, 45.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                <Polyline fill="#c72c41" layoutX="303.0" layoutY="555.0" points="-104.0, -192.0, -145.0, -23.0, -93.0, 46.0, -81.0, -8.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                <Polyline fill="#c72c41" layoutX="146.0" layoutY="574.0" points="-22.0, -327.0, -143.0, -55.0, -93.0, 46.0, -81.0, -8.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                <Text fx:id="welcomeText" fill="#ee4540" layoutX="145.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome">
+                    <font>
+                        <Font name="Quicksand SemiBold" size="35.0" />
+                    </font>
+                </Text>
+                <Text fx:id="taglineText" fill="#ee4540" layoutX="125.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="its noisy out there... Enter!">
+                    <font>
+                        <Font name="Quicksand Light" size="19.0" />
+                    </font>
+                </Text>
+                <Text fx:id="pointOneText" fill="#510a32" layoutX="27.0" layoutY="459.0" strokeType="OUTSIDE" strokeWidth="0.0" text="⬤ Simply search for music to download">
+                    <font>
+                        <Font name="Quicksand Medium" size="17.0" />
+                    </font>
+                </Text>
+                <Text fx:id="pointTwoText" fill="#510a32" layoutX="27.0" layoutY="491.0" strokeType="OUTSIDE" strokeWidth="0.0" text="⬤ Add and easily organize your songs and playlists">
+                    <font>
+                        <Font name="Quicksand Medium" size="17.0" />
+                    </font>
+                </Text>
+                <Text fx:id="pointThreeText" fill="#510a32" layoutX="25.0" layoutY="524.0" strokeType="OUTSIDE" strokeWidth="0.0" text="⬤ Countless features for an enjoyable experience" AnchorPane.leftAnchor="27.0">
+                    <font>
+                        <Font name="Quicksand Medium" size="17.0" />
+                    </font>
+                </Text>
+            <fx:include source="DragWindowButton.fxml" />
+            </children>
+        </AnchorPane>
+      <AnchorPane layoutX="831.0" layoutY="25.0" prefHeight="30.0" prefWidth="30.0">
+         <children>
+            <fx:include source="ExitButton.fxml" />
+         </children>
+      </AnchorPane>
+    </children>
+</AnchorPane>
