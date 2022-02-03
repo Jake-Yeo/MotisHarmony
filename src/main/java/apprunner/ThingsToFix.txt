@@ -18,3 +18,5 @@ https://rr2---sn-ni5f-ttjz.googlevideo.com/videoplayback?expire=1643525196&ei=7N
 	at controller.DownloadPageViewController$3.run(DownloadPageViewController.java:344)
 	at java.base/java.lang.Thread.run(Thread.java:834)
 too many requests fix that problem!.
+
+Sometime the link gotten from the youtube url will only contain text, the text may lead to the video to download. Currently the text url is not being  dealt with properly and leads to an infinite loop.

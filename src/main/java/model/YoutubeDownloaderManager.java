@@ -148,10 +148,10 @@ public class YoutubeDownloaderManager {
                 System.out.println("Identifier at index " + netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER));//we should probably do what we did above in the while loop which gets rid of ad link!!!!!!
                 netData = netData.substring(netData.lastIndexOf(YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER, netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)));//This will get rid of everything up to the start of the youtube audio source link
                 netData = netData.substring(0, netData.indexOf(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER));//We must get rid of the range in order for the source audio url to actually load properly
-                System.out.println(netData);
+                System.out.println("Pure weba url: " + netData);
                 driver.get(netData);
                 audioHtmlSource = driver.getPageSource();//Sometimes an audio link which is parsed may contain another url to the correct source audio url which is why we check the html of the url we obtain. Also, it seems impossible to read the data with htmlGetter, so we use the selenium method instead
-                System.out.println(audioHtmlSource);
+                System.out.println("Audio html stuff " + audioHtmlSource);
                 driver.get("data:,");//just prevents sound from playing from chrome driver by switching it to an easy to load website.
             } else {//This will reload the youtube url and attempt to get netData that had a source url which isn't text
                 driver.get(youtubeUrl);
