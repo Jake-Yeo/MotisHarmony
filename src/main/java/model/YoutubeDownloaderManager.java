@@ -142,9 +142,9 @@ public class YoutubeDownloaderManager {
             }
             System.out.println("Netdata stuff: " + netData);
             if (netData.contains(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER)) {
-                PrintWriter pw = new PrintWriter(new FileWriter("html.txt"));
-                pw.print(netData);
-                pw.close();
+                //PrintWriter pw = new PrintWriter(new FileWriter("html.txt"));
+                //pw.print(netData);
+                //pw.close();
                 System.out.println("Identifier at index " + netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER));//we should probably do what we did above in the while loop which gets rid of ad link!!!!!!
                 netData = netData.substring(netData.lastIndexOf(YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER, netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)));//This will get rid of everything up to the start of the youtube audio source link
                 netData = netData.substring(0, netData.indexOf(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER));//We must get rid of the range in order for the source audio url to actually load properly
