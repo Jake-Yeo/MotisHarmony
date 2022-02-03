@@ -76,6 +76,19 @@ public class YoutubeVideoPageParser {
         return html;
     }
 
+    public static DataObject isUrlValid(String videoUrl) {
+        boolean didErrorOccur = false;
+        String errorMessage = "";
+        try {
+            getHtml(videoUrl);
+        } catch (Exception e) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " is likely not a link!";
+            return new DataObject(didErrorOccur, videoUrl);
+        }
+        return null;
+    }
+
     public static boolean doesYoutubePlaylistExist(String youtubePlaylistlink) throws IOException {
         String downloadablePlaylistUrl = "";
         try {
@@ -177,30 +190,14 @@ public class YoutubeVideoPageParser {
         return YT_VIDEO_URL_STARTER + getYoutubeVideoID(youtubeUrl);
     }
 
-    public static String getYoutubeVideoMusicTitle(String youtubeUrl) throws IOException {
+    public static DataObject getYoutubeVideoData(String youtubeUrl) throws IOException {
         String html = getHtml(youtubeUrl);
-        String title = infoParserTool(html, YT_TITLE_START_IDENTIFIER, YT_TITLE_END_IDENTIFIER);
-        title = title.replace("&#39;", "'"); //Replaces the apostrophe identifier with apostrophe
-        //title = title.replaceAll("[^\\x20-\\x7e]", ""); //Gets rid of foreign language characters
-        title = title.trim().replaceAll(" +", " ");
-        return title;
-    }
-
-    public static String getYoutubeVideoChannelName(String youtubeUrl) throws IOException {
-        String html = getHtml(youtubeUrl);
+        String thumbnailUrl = infoParserTool(html, YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER, YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER);
         String channelName = infoParserTool(html, YOUTUBE_VIDEO_CHANNEL_NAME_START_IDENTIFIER, YOUTUBE_VIDEO_CHANNEL_NAME_END_IDENTIFIER);
-        return channelName;
-    }
-
-    public static Image getYoutubeVideoThumbnailImage(String youtubeUrl) throws IOException {
-        String html = getHtml(youtubeUrl);
-        String imageUrl = infoParserTool(html, YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER, YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER);
-        Image image = new Image(imageUrl);
-        return image;
-    }
-
-    public static String getYoutubeVideoFormatedVideoDuration(String youtubeUrl) throws IOException {
-        String html = getHtml(youtubeUrl);
+        String videoTitle = infoParserTool(html, YT_TITLE_START_IDENTIFIER, YT_TITLE_END_IDENTIFIER);
+        videoTitle = videoTitle.replace("&#39;", "'"); //Replaces the apostrophe identifier with apostrophe
+        //title = title.replaceAll("[^\\x20-\\x7e]", ""); //Gets rid of foreign language characters
+        videoTitle = videoTitle.trim().replaceAll(" +", " ");
         String videoDuration = "";
         String stringDurationMinutes = "";
         int durationInSeconds = Integer.parseInt(infoParserTool(html, YOUTUBE_VIDEO_LENGTH_IN_SECONDS_START_IDENTIFIER, YOUTUBE_VIDEO_LENGTH_IN_SECONDS_END_IDENTIFIER));
@@ -221,7 +218,8 @@ public class YoutubeVideoPageParser {
         } else {
             videoDuration = durationMinutes + ":" + remaindingSeconds;
         }
-        return videoDuration;
+        DataObject youtubeVideoData = new DataObject(videoTitle, videoDuration, channelName, thumbnailUrl);
+        return youtubeVideoData;
     }
 
     public static String[] getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos

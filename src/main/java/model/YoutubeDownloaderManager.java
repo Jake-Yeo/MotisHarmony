@@ -183,7 +183,7 @@ public class YoutubeDownloaderManager {
             if (!(YoutubeVideoPageParser.getHtml(youtubeUrlFromDownloadManager).contains(YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER))) {//We can remove this if statement, we are handling it in another method
                 downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
                 int count = 0;
-                String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoMusicTitle(youtubeUrlFromDownloadManager).replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
+                String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlFromDownloadManager).getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
                 String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
                 try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
                     int i = 0;

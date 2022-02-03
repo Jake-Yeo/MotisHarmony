@@ -38,14 +38,13 @@ public class MainViewRunner extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        //Stage stage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("/LoginPageView.fxml"));//The file must be in the package this line is in!! if not you must do /"package name here"/"fxml file name here"
         Scene scene = new Scene(root, Color.TRANSPARENT);
         stage.setTitle("MotisHarmony");
-        //stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("/MotisHarmonyIcon.png")));
         stage.initStyle(StageStyle.TRANSPARENT);
 
         ArrayList<String> array = new ArrayList<>();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/MotisHarmonyIcon.png")));
         stage.setScene(scene);
         setStage(stage);
         stage.show();
