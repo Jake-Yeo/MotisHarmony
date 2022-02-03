@@ -56,21 +56,22 @@ public class BrowserPageViewController implements Initializable {
         webViewMainAnchorPane.setClip(clip);
         browserWebView.getEngine().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/538.19 (KHTML, like Gecko) JavaFX/8.0 Safari/538.19");
         browserWebView.setContextMenuEnabled(true);
-        WebConsoleListener.setDefaultListener(new WebConsoleListener() {
+        /*WebConsoleListener.setDefaultListener(new WebConsoleListener() { //This does not work and causes an error
             @Override
             public void messageAdded(WebView webView, String message, int lineNumber, String sourceId) {
                 System.out.println("Console: [" + sourceId + ":" + lineNumber + "] " + message);
             }
         });
-        browserWebView.getEngine().load("https://www.bing.com/videos/feed");//https://www.google.ca/videohp
+         */
+        browserWebView.getEngine().load("https://www.youtube.com/");//https://www.google.ca/videohp
     }
 
     public void showContextMenu(MouseEvent e) {
         //if (e.getButton() == MouseButton.SECONDARY) {
-       //     contextMenu.show(browserWebView, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
-       // } else {
-      //      contextMenu.hide();
-      //  }
+        //     contextMenu.show(browserWebView, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+        // } else {
+        //      contextMenu.hide();
+        //  }
     }
 
     public void setUpContextMenu() {
