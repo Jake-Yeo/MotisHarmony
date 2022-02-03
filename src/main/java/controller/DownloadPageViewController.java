@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.shape.Rectangle;
+import model.DataObject;
 import model.YoutubeDownloaderManager;
 import model.YoutubeVideoPageParser;
 import ws.schild.jave.EncoderException;
@@ -256,10 +257,11 @@ public class DownloadPageViewController implements Initializable {
                         new Runnable() {
                     public void run() {
                         try {
-                            titleName = YoutubeVideoPageParser.getYoutubeVideoMusicTitle(youtubeUrlToGetInfoFrom);
-                            channelName = YoutubeVideoPageParser.getYoutubeVideoChannelName(youtubeUrlToGetInfoFrom);
-                            durationTime = YoutubeVideoPageParser.getYoutubeVideoFormatedVideoDuration(youtubeUrlToGetInfoFrom);
-                            thumbnailImage = YoutubeVideoPageParser.getYoutubeVideoThumbnailImage(youtubeUrlToGetInfoFrom);
+                            DataObject youtubeData = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlToGetInfoFrom);
+                            titleName = youtubeData.getTitle();
+                            channelName = youtubeData.getChannelName();
+                            durationTime = youtubeData.getVideoDuration();
+                            thumbnailImage = new Image(youtubeData.getThumbnailUrl());
                         } catch (IOException ex) {
                             Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
                         }
