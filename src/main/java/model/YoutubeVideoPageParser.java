@@ -76,17 +76,59 @@ public class YoutubeVideoPageParser {
         return html;
     }
 
-    public static DataObject isUrlValid(String videoUrl) {
+    public static DataObject isUrlValid(String videoUrl) throws IOException {
         boolean didErrorOccur = false;
+        String html = "";
         String errorMessage = "";
+        if (!(videoUrl.contains("watch?v=") || videoUrl.contains("?list=") || videoUrl.contains("&list=") || videoUrl.contains("youtu.be"))) {
+            didErrorOccur = true;
+            errorMessage = "The url you input must be the link of a youtube playlist or video!";
+            return new DataObject(didErrorOccur, errorMessage);
+        }
+        if (videoUrl.contains(YT_DOWNLOADABLE_PLAYLIST_WHOLE_VIEW_URL_STARTER)) {
+            try {
+                videoUrl = getDownloadablePlaylistUrl(videoUrl);
+            } catch (Exception e) {
+                didErrorOccur = true;
+                errorMessage = videoUrl + " is likely not a link!";
+                return new DataObject(didErrorOccur, errorMessage);
+            }
+        }
         try {
-            getHtml(videoUrl);
+            html = getHtml(videoUrl);
         } catch (Exception e) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is likely not a link!";
-            return new DataObject(didErrorOccur, videoUrl);
+            return new DataObject(didErrorOccur, errorMessage);
         }
-        return null;
+        if (html.contains(YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER)) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " is age restricted and cannot be downloaded!";
+            return new DataObject(didErrorOccur, errorMessage);
+        }
+        if (html.contains(YOUTUBE_VIDEO_UNAVAILABLE_IDENTIFIER)) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " is unavailable to the public!";
+            return new DataObject(didErrorOccur, errorMessage);
+        }
+        if (html.contains(YOUTUBE_VIDEO_PRIVATE_IDENTIFIER)) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " is private and cannot be downloaded!";
+            return new DataObject(didErrorOccur, errorMessage);
+        }
+        if (html.contains(YOUTUBE_LIVESTREAM_IDENTIFIER)) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " is a livestream and cannot be downloaded!";
+            return new DataObject(didErrorOccur, errorMessage);
+        }
+        if (html.contains(RADIO_PLAYLIST_IDENTIFIER)) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " is a radio player and cannot be downloaded!";
+            return new DataObject(didErrorOccur, errorMessage);
+        }
+        didErrorOccur = false;
+        errorMessage = null;
+        return new DataObject(didErrorOccur, errorMessage);
     }
 
     public static boolean doesYoutubePlaylistExist(String youtubePlaylistlink) throws IOException {
@@ -207,7 +249,7 @@ public class YoutubeVideoPageParser {
         if (remaindingSeconds.length() == 1) {
             remaindingSeconds = 0 + remaindingSeconds;
         }
-        if (durationMinutes >= 60) {
+        if (durationMinutes >= 60) { //This will convert the youtube duration from milliseconds, to a readable format.
             durationHours = (int) Math.floor(durationMinutes / 60);
             durationMinutes = durationMinutes - durationHours * 60;
             stringDurationMinutes = durationMinutes + "";

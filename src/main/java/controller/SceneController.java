@@ -22,21 +22,21 @@ public class SceneController {
     }
     
     public void switchToDownloadPageView() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/DownloadPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/DownloadPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
         Scene scene = new Scene(root, Color.TRANSPARENT);
         MainViewRunner.getStage().setScene(scene);
         MainViewRunner.getStage().show();
     }
 
     public void switchToLoginPageView() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/LoginPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
         Scene scene = new Scene(root, Color.TRANSPARENT);
         MainViewRunner.getStage().setScene(scene);
         MainViewRunner.getStage().show();
     }
 
     public void switchToBrowserPageView() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/BrowserPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/BrowserPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
         Scene scene = new Scene(root, Color.TRANSPARENT);
         MainViewRunner.getStage().setScene(scene);
         MainViewRunner.getStage().show();
