@@ -9,5 +9,3 @@ https://www.youtube.com/watch?v=7814WeR0Xzo This link has no mime=audio and caus
 Ads can still be accidentally downloaded. Fix that problem. 
 
 https://www.youtube.com/playlist?list=PLleY9vT8KgEjaoNn9HwNceQ28i90HsqZE playlist may lead to infinite loop due to the video titled "MOSHi - dead feelings". Problem: Sometime the link parsed from the youtube url will only contain text. This text when copied and pasted into the browser may lead to the actual audio which can be downloaded.
-
-https://youtu.be/9xp1XWmJ_Wo is an unlisted video, test to see if it works.
