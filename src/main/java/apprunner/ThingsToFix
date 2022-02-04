@@ -1,0 +1,13 @@
+https://www.youtube.com/watch?v=cHc3cXXIydc&list=RDCLAK5uy_kb7EBi6y3GrtJri4_ZH56Ms786DFEimbM&start_radio=1 link creates an error when inputted into the download playlist or video url
+
+When two youtube videos produce an audio file with the same name, the downloadYoutubeVideoUrl or the convertWebaToWav fails to work, make sure that each audio file has a unique name.
+
+https://www.youtube.com/watch?v=ibXkjB67cyE This link has no mime=audio and causes an infinite while loop, either find a way to download, or make sure to add to the download error section. Try fixing problem by getting mp4 file from the network tab in the media section.
+
+https://www.youtube.com/watch?v=7814WeR0Xzo This link has no mime=audio and causes an infinite while loop
+
+Ads can still be accidentally downloaded. Fix that problem. 
+
+https://www.youtube.com/playlist?list=PLleY9vT8KgEjaoNn9HwNceQ28i90HsqZE playlist may lead to infinite loop due to the video titled "MOSHi - dead feelings". Problem: Sometime the link parsed from the youtube url will only contain text. This text when copied and pasted into the browser may lead to the actual audio which can be downloaded.
+
+https://youtu.be/9xp1XWmJ_Wo is an unlisted video, test to see if it works.
