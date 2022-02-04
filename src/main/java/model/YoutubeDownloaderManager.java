@@ -5,6 +5,7 @@
  */
 package model;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,7 +48,8 @@ public class YoutubeDownloaderManager {
 
     public static void setupChromeDriver() {
         //Set the Path of Executable Browser Driver
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "chromedriver.exe");//We probably don't need this anymore because we automatically get the webdriver below
+        WebDriverManager.chromedriver().setup();//This will automatically update the chrome webdriver to the proper version
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");//start the chrome browser headless, can be changed if you want
         options.setCapability(ChromeOptions.CAPABILITY, options);
