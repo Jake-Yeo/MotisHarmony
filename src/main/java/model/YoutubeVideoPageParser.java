@@ -51,6 +51,7 @@ public class YoutubeVideoPageParser {
     private final static int YT_PLAYLISTVIDEO_CAPPED_VIDEO_AMT = 200;
     private static final String YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER = "Age-restricted";
     private static final String YOUTUBE_VIDEO_UNAVAILABLE_IDENTIFIER = "Video unavailable";
+    private static final String YOUTUBE_PLAYLIST_DOES_NOT_EXIST_IDENTIFIER = "The playlist does not exist";
     private static final String YOUTUBE_VIDEO_PRIVATE_IDENTIFIER = "This video is private";
     private static final String YOUTUBE_PLAYLIST_EXISTS_IDENTIFIER = "&amp";//you're supposed to add this at the end of a youtube video url and check to see if the new identifier exists withing the given youtube playlist link on the video at index one
     private static final String RADIO_PLAYLIST_IDENTIFIER = "This playlist type is unviewable";//Basically if you try to load a playlist whole view page with a radio ID then this shows up in the html which can be used to identify radio playlists
@@ -85,14 +86,8 @@ public class YoutubeVideoPageParser {
             errorMessage = "The url you input must be the link of a youtube playlist or video!";
             return new DataObject(didErrorOccur, errorMessage);
         }
-        if (videoUrl.contains(YT_DOWNLOADABLE_PLAYLIST_WHOLE_VIEW_URL_STARTER)) {
-            try {
-                videoUrl = getDownloadablePlaylistUrl(videoUrl);
-            } catch (Exception e) {
-                didErrorOccur = true;
-                errorMessage = videoUrl + " is likely not a link!";
-                return new DataObject(didErrorOccur, errorMessage);
-            }
+        if (videoUrl.contains(YT_PLAYLIST_LIST_IDENTIFIER)) {
+            videoUrl = convertToWholePlaylistView(videoUrl);
         }
         try {
             html = getHtml(videoUrl);
@@ -126,32 +121,15 @@ public class YoutubeVideoPageParser {
             errorMessage = videoUrl + " is a radio player and cannot be downloaded!";
             return new DataObject(didErrorOccur, errorMessage);
         }
+        if (html.contains(YOUTUBE_PLAYLIST_DOES_NOT_EXIST_IDENTIFIER)) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " is a playlist that is either private or does not exist!";
+            return new DataObject(didErrorOccur, errorMessage);
+        }
         didErrorOccur = false;
         errorMessage = null;
+
         return new DataObject(didErrorOccur, errorMessage);
-    }
-
-    public static boolean doesYoutubePlaylistExist(String youtubePlaylistlink) throws IOException {
-        String downloadablePlaylistUrl = "";
-        try {
-            downloadablePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistlink);//if the youtube playlist does not exist then an error will be thrown
-            if (getHtml(downloadablePlaylistUrl).contains(YT_PLAYLIST_START_IDENTIFIER)) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public static boolean isTextGivenALink(String supposedLink) {
-        try {
-            getHtml(supposedLink);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 
     public static boolean isYoutubeLinkAvailableToPublic(String youtubeVideolink) throws IOException {//Ex is the youtube video link given not age resticted, private, unavailable?
@@ -166,29 +144,9 @@ public class YoutubeVideoPageParser {
         }
         return true;
     }
-
-    public static boolean isLinkValid(String link) {//Ex is the link a playlist or a video?
-        if (link.contains("watch?v=") || link.contains("?list=") || link.contains("&list=") || link.contains("youtu.be")) {
-            return true;
-        }
-        return false;
-    }
-
+    
     public static boolean isLinkAPlaylist(String link) {//make this more specific, radio and playlist links are indistinguishable, make sure to look at the html code too!//Should be able to be replaced with doesYoutubePlaylistExist
         if (link.contains(YT_PLAYLIST_LIST_IDENTIFIER)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isLinkALiveStream(String link) {//make this more specific, radio and playlist links are indistinguishable, make sure to look at the html code too!//Should be able to be replaced with doesYoutubePlaylistExist
-        String html = "";
-        try {
-            html = getHtml(link);
-        } catch (IOException ex) {
-            Logger.getLogger(YoutubeVideoPageParser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (html.contains(YOUTUBE_LIVESTREAM_IDENTIFIER)) {
             return true;
         }
         return false;
@@ -202,12 +160,12 @@ public class YoutubeVideoPageParser {
         return playlistId;
     }
 
+    public static String convertToWholePlaylistView(String potentialRadioPlaylist) {
+        return YT_DOWNLOADABLE_PLAYLIST_WHOLE_VIEW_URL_STARTER + getYoutubePlaylistListId(potentialRadioPlaylist);
+    }
+
     public static String getDownloadablePlaylistUrl(String youtubePlaylistUrl) throws IOException {//A playlist link comes in many forms. This method will transform any form of the playlist link into a specific form that we can use to obtain the youtube urls within that playlist
-        String wholeViewPlaylistLink = YT_DOWNLOADABLE_PLAYLIST_WHOLE_VIEW_URL_STARTER + getYoutubePlaylistListId(youtubePlaylistUrl);
-        String html = getHtml(wholeViewPlaylistLink);
-        String videoIdOfWholeViewPlaylistAtIndexOne = infoParserToolTrimToStart(html, YT_WHOLE_VIEW_PLAYLIST_VIDEO_ID_AT_INDEX_ONE_START_IDENTIFIER);
-        videoIdOfWholeViewPlaylistAtIndexOne = infoParserToolRemoveEnd(videoIdOfWholeViewPlaylistAtIndexOne, YT_WHOLE_VIEW_PLAYLIST_VIDEO_ID_AT_INDEX_ONE_END_IDENTIFIER);
-        String downloadablePlaylistLink = YT_DOWNLOADABLE_PLAYLIST_STARTER + videoIdOfWholeViewPlaylistAtIndexOne + YT_DOWNLOADABLE_PLAYLIST_LIST_PARAM_STARTER + getYoutubePlaylistListId(youtubePlaylistUrl);
+        String downloadablePlaylistLink = YT_DOWNLOADABLE_PLAYLIST_STARTER + YT_DOWNLOADABLE_PLAYLIST_LIST_PARAM_STARTER + getYoutubePlaylistListId(youtubePlaylistUrl);
         return downloadablePlaylistLink;
     }
 
