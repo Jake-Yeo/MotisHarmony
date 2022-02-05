@@ -202,19 +202,50 @@ public class DownloadPageViewController implements Initializable {
         downloadErrorList.getItems().clear();
     }
 
-    private void addErrorToErrorList(String error) {
-        downloadErrorList.getItems().add(0, error);
+    /**
+     *
+     * @param error Error msg to add
+     * @param withJavafxThread use true to add with the javafx thread
+     */
+    private void addErrorToErrorListWithJavafxThread(String error, boolean withJavafxThread) {
+        if (withJavafxThread) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    downloadErrorList.getItems().add(0, error);
+                }
+            });
+        } else {
+            downloadErrorList.getItems().add(0, error);
+        }
+    }
+
+    /**
+     * @param withJavafxThread use true to update with the javafx thread
+     */
+    private void updateDownloadQueueListViewWithJavafxThread(boolean withJavafxThread) {
+        if (withJavafxThread) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    listViewDownloadManager.getItems().clear();
+                    listViewDownloadManager.getItems().addAll(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList());
+                }
+            });
+        } else {
+            listViewDownloadManager.getItems().clear();
+            listViewDownloadManager.getItems().addAll(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList());
+        }
     }
 
     @FXML
     private void clearQueueManager(ActionEvent event) throws IOException {
         if (firstLinkFromDownloadQueueIsDownloading == true) {
-            listViewDownloadManager.getItems().remove(1, listViewDownloadManager.getItems().size());
-            YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().clear();
-            YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().addAll(listViewDownloadManager.getItems());
+            YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().subList(1, YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().size()).clear();
+            updateDownloadQueueListViewWithJavafxThread(false);
         } else {
-            listViewDownloadManager.getItems().clear();
             YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().clear();
+            updateDownloadQueueListViewWithJavafxThread(false);
         }
     }
 
@@ -222,29 +253,14 @@ public class DownloadPageViewController implements Initializable {
     private void deleteSelectedLinkFromQueueManager(ActionEvent event) throws IOException {
         if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {
             if (listViewDownloadManager.getSelectionModel().getSelectedIndex() == 0 && firstLinkFromDownloadQueueIsDownloading == true) {
-                addErrorToErrorList("Error the song you selected is currently being downloaded and cannot be deleted!");
+                addErrorToErrorListWithJavafxThread("Error the song you selected is currently being downloaded and cannot be deleted!", false);
             } else {
                 YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().remove(listViewDownloadManager.getSelectionModel().getSelectedIndex());
-                updateDownloadQueueTextArea();
+                updateDownloadQueueListViewWithJavafxThread(false);
             }
         } else {
-            addErrorToErrorList("Error! Select something before you delete!");
+            addErrorToErrorListWithJavafxThread("Error! Select something before you delete!", false);
         }
-    }
-
-    private void updateDownloadQueueTextArea() {
-
-        listViewDownloadManager.getItems().clear();
-        listViewDownloadManager.getItems().addAll(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList());
-    }
-
-    private void addErrorToErrorListWithJavafxThread(String error) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                addErrorToErrorList(error);
-            }
-        });
     }
 
     @FXML
@@ -314,12 +330,7 @@ public class DownloadPageViewController implements Initializable {
                     DataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeLinkTextOriginal);
                     if (!errorData.getDidErrorOccur()) {
                         YoutubeDownloaderManager.addYoutubeLinkToDownloadQueue(youtubeLinkTextOriginal);
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateDownloadQueueTextArea();
-                            }
-                        });
+                        updateDownloadQueueListViewWithJavafxThread(true);
                         if (!YoutubeDownloaderManager.isAppDownloadingFromDownloadQueue()) {
                             try {
                                 downloadSongsFromDownloadQueue();
@@ -328,7 +339,7 @@ public class DownloadPageViewController implements Initializable {
                             }
                         }
                     } else {
-                        addErrorToErrorListWithJavafxThread(errorData.getErrorMessage());
+                        addErrorToErrorListWithJavafxThread(errorData.getErrorMessage(), true);
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -345,15 +356,10 @@ public class DownloadPageViewController implements Initializable {
             if (YoutubeVideoPageParser.isYoutubeLinkAvailableToPublic(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(0))) {//The youtube urls in the playlists are not checked, so we must check those here.
                 YoutubeDownloaderManager.downloadYoutubeVideoUrl(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(0));//Gets the first youtube url in the download queue list
             } else {
-                addErrorToErrorListWithJavafxThread("WARNING! " + YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(0) + " is likely an age restricted video, please find link which is not age restricted!");
+                addErrorToErrorListWithJavafxThread("WARNING! " + YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(0) + " is likely an age restricted video, please find link which is not age restricted!", true);
             }
             YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().remove(0);//Removes the youtube url from the list which was downloaded.
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    listViewDownloadManager.getItems().remove(0);
-                }
-            });
+            updateDownloadQueueListViewWithJavafxThread(true);
             firstLinkFromDownloadQueueIsDownloading = false;
         }
         YoutubeDownloaderManager.quitChromeDriver();
