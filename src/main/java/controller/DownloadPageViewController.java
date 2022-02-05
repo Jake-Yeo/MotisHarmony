@@ -309,31 +309,11 @@ public class DownloadPageViewController implements Initializable {
         new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx 
                 new Runnable() {
             public void run() {
-                String youtubeUrlToTest = youtubeLinkTextFieldContent;
-                String youtubeLinkTextOriginal = youtubeUrlToTest;
-                if (YoutubeVideoPageParser.isTextGivenALink(youtubeUrlToTest) && !YoutubeVideoPageParser.isLinkAPlaylist(youtubeUrlToTest)) {//https://www.youtube.com/watch?v=9XJicRtefsefsfe_FaI&t=1550s
-                    youtubeUrlToTest = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrlToTest);//Changes link to a link that can be tested by the program
-                }
-                if (youtubeUrlToTest.equals("")) {
-                    addErrorToErrorListWithJavafxThread("Error! You need to enter a link to download!");
-                } else if (!YoutubeVideoPageParser.isTextGivenALink(youtubeLinkTextOriginal)) {//Checks if the link given isn't just gibberish
-                    addErrorToErrorListWithJavafxThread("Error! " + youtubeLinkTextOriginal + " isn't a link");
-                } else if (!YoutubeVideoPageParser.isLinkValid(youtubeLinkTextOriginal)) {//Checks if the link is a valid youtube link
-                    addErrorToErrorListWithJavafxThread("Error! " + youtubeLinkTextOriginal + " is an invalid link!");
-                } else if (YoutubeVideoPageParser.isLinkALiveStream(youtubeUrlToTest)) {//Checks if the link is not a live stream
-                    addErrorToErrorListWithJavafxThread("Error! " + youtubeLinkTextOriginal + " is a live stream!");
-                } else try {
-                    if (!YoutubeVideoPageParser.isLinkAPlaylist(youtubeUrlToTest) && !YoutubeVideoPageParser.isYoutubeLinkAvailableToPublic(youtubeUrlToTest)) {//checks if the link is not private, restricted or unavalable. Will only check if the link given is a youtube video link, not a playlist link.
-                        addErrorToErrorListWithJavafxThread("Error! " + youtubeLinkTextOriginal + " is either age restricted, private, unavailable or not a valid youtube link and cannot be downloaded!");
-                    } else if (!YoutubeVideoPageParser.doesYoutubePlaylistExist(youtubeUrlToTest) && YoutubeVideoPageParser.isLinkAPlaylist(youtubeUrlToTest)) {//checks that the given link is a normal playlist that can be downloaded.
-                        addErrorToErrorListWithJavafxThread("Error! " + youtubeLinkTextOriginal + " is not not a valid playlist, make sure it's not a radio playlist!");
-                    } else {
-                        try {
-                            System.out.println(youtubeLinkTextOriginal);
-                            YoutubeDownloaderManager.addYoutubeLinkToDownloadQueue(youtubeLinkTextOriginal);
-                        } catch (IOException ex) {
-                            Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                String youtubeLinkTextOriginal = youtubeLinkTextFieldContent;
+                try {
+                    DataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeLinkTextOriginal);
+                    if (!errorData.getDidErrorOccur()) {
+                        YoutubeDownloaderManager.addYoutubeLinkToDownloadQueue(youtubeLinkTextOriginal);
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
@@ -342,17 +322,13 @@ public class DownloadPageViewController implements Initializable {
                         });
                         if (!YoutubeDownloaderManager.isAppDownloadingFromDownloadQueue()) {
                             try {
-                                try {
-                                    downloadSongsFromDownloadQueue();
-                                } catch (FileNotFoundException ex) {
-                                    Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (EncoderException ex) {
-                                    Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            } catch (IOException ex) {
-                                Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+                                downloadSongsFromDownloadQueue();
+                            } catch (Exception e) {
+                                Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, e);
                             }
                         }
+                    } else {
+                        addErrorToErrorListWithJavafxThread(errorData.getErrorMessage());
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
