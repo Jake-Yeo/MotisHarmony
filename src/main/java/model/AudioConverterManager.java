@@ -42,6 +42,7 @@ public class AudioConverterManager {
         source.delete();
         conversionQueueList.remove(0);
         conversionIsDone = true;
+        System.out.println("done converting");
     }
 
     public static void addToConversionQueue(String pathToWebaFile, String webaFileName) throws EncoderException {

@@ -5,6 +5,7 @@
  */
 package model;
 
+import controller.DownloadPageViewController;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -18,9 +19,16 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -36,6 +44,8 @@ public class YoutubeDownloaderManager {
     private static WebDriver driver;
     private static boolean doneDownloading = true;
     private static boolean isChromeDriverActive = false;
+    @FXML
+    private static DownloadPageViewController downloadPageViewController = new DownloadPageViewController();
     private static boolean isPlaylistUrlGetterCurrentlyGettingUrls = false;
     private static final String YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER = "Age-restricted";
     private static final String YOUTUBE_AUDIO_SOURCE_AD_IDENTIFIER = "ctier";//Ad audio links are the only links that contain cteir in them
@@ -44,7 +54,7 @@ public class YoutubeDownloaderManager {
     private static final String YOUTUBE_AUDIO_SOURCE_IDENTIFIER = "mime=audio";
     private static final String YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER = "https:";
     private static final String YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER = "range";
-    private static ArrayList<String> youtubeUrlDownloadQueueList = new ArrayList();
+    private static ObservableList<String> youtubeUrlDownloadQueueList = FXCollections.observableArrayList();
 
     public static void setupChromeDriver() {
         //Set the Path of Executable Browser Driver
@@ -76,7 +86,7 @@ public class YoutubeDownloaderManager {
         isChromeDriverActive = tf;
     }
 
-    public static ArrayList<String> getYoutubeUrlDownloadQueueList() {
+    public static ObservableList<String> getYoutubeUrlDownloadQueueList() {
         return youtubeUrlDownloadQueueList;
     }
 
@@ -211,5 +221,23 @@ public class YoutubeDownloaderManager {
             }
         }
         doneDownloading = true;//needs to be outside the if statement!
+    }
+
+    public static void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
+        setIsChromeDriverActive(true); // this will make sure that the chrome driver isn't restarted multiple times in order to increase download speed.
+        setupChromeDriver();
+        while (!youtubeUrlDownloadQueueList.isEmpty()) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
+            DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(true);
+            if (YoutubeVideoPageParser.isYoutubeLinkAvailableToPublic(youtubeUrlDownloadQueueList.get(0))) {//The youtube urls in the playlists are not checked, so we must check those here.
+                downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
+            } else {
+                downloadPageViewController.addErrorToErrorListWithJavafxThread("WARNING! " + youtubeUrlDownloadQueueList.get(0) + " is likely an age restricted video, please find link which is not age restricted!", true);
+            }
+            youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
+            //downloadPageViewController.updateDownloadQueueListViewWithJavafxThread(true);
+            DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(false);
+        }
+        YoutubeDownloaderManager.quitChromeDriver();
+        YoutubeDownloaderManager.setIsChromeDriverActive(false);
     }
 }
