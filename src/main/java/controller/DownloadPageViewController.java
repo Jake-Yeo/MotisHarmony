@@ -12,9 +12,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -36,12 +38,19 @@ import ws.schild.jave.EncoderException;
  */
 public class DownloadPageViewController implements Initializable {
 
+    public Task<Void> task = new Task<Void>() {
+        @Override
+        protected Void call() throws Exception {
+            updateDownloadQueueListViewWithJavafxThread(true);
+            return null;
+        }
+    };
     private String titleName = "";
     private String channelName = "";
     private String durationTime = "";
     private String youtubeUrlToGetInfoFrom = "";
     private Image thumbnailImage;
-    private boolean firstLinkFromDownloadQueueIsDownloading = false;
+    private static boolean firstLinkFromDownloadQueueIsDownloading = false;
     private String youtubeLinkTextFieldContent = "";
     @FXML
     private TextField youtubeLinkField;
@@ -102,6 +111,13 @@ public class DownloadPageViewController implements Initializable {
         clip.setArcWidth(30);//this sets the rounded corners
         clip.setArcHeight(30);
         thumbnailAnchorPane.setClip(clip);
+        YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends String> arg0) {
+                updateDownloadQueueListViewWithJavafxThread(true);
+                System.out.println("listener ran");
+            }
+        } );
     }
 
     @FXML
@@ -202,12 +218,17 @@ public class DownloadPageViewController implements Initializable {
         downloadErrorList.getItems().clear();
     }
 
+    public static void setFirstLinkFromDownloadQueueIsDownloading(boolean tf) {
+        firstLinkFromDownloadQueueIsDownloading = tf;
+    }
+
     /**
      *
      * @param error Error msg to add
      * @param withJavafxThread use true to add with the javafx thread
      */
-    private void addErrorToErrorListWithJavafxThread(String error, boolean withJavafxThread) {
+    @FXML
+    public void addErrorToErrorListWithJavafxThread(String error, boolean withJavafxThread) {
         if (withJavafxThread) {
             Platform.runLater(new Runnable() {
                 @Override
@@ -223,7 +244,8 @@ public class DownloadPageViewController implements Initializable {
     /**
      * @param withJavafxThread use true to update with the javafx thread
      */
-    private void updateDownloadQueueListViewWithJavafxThread(boolean withJavafxThread) {
+    @FXML
+    public void updateDownloadQueueListViewWithJavafxThread(boolean withJavafxThread) {
         if (withJavafxThread) {
             Platform.runLater(new Runnable() {
                 @Override
@@ -322,7 +344,7 @@ public class DownloadPageViewController implements Initializable {
     private void downloadVideoOrPlaylist(ActionEvent event) throws IOException {//we may have to prevent button spamming
         youtubeLinkTextFieldContent = youtubeLinkField.getText();
         youtubeLinkField.clear();
-        new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx 
+        new Thread(
                 new Runnable() {
             public void run() {
                 String youtubeLinkTextOriginal = youtubeLinkTextFieldContent;
@@ -333,7 +355,7 @@ public class DownloadPageViewController implements Initializable {
                         updateDownloadQueueListViewWithJavafxThread(true);
                         if (!YoutubeDownloaderManager.isAppDownloadingFromDownloadQueue()) {
                             try {
-                                downloadSongsFromDownloadQueue();
+                                YoutubeDownloaderManager.downloadSongsFromDownloadQueue();
                             } catch (Exception e) {
                                 Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, e);
                             }
@@ -347,23 +369,4 @@ public class DownloadPageViewController implements Initializable {
             }
         }).start();
     }
-
-    public void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
-        YoutubeDownloaderManager.setIsChromeDriverActive(true); // this will make sure that the chrome driver isn't restarted multiple times in order to increase download speed.
-        YoutubeDownloaderManager.setupChromeDriver();
-        while (!YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().isEmpty()) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
-            firstLinkFromDownloadQueueIsDownloading = true;
-            if (YoutubeVideoPageParser.isYoutubeLinkAvailableToPublic(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(0))) {//The youtube urls in the playlists are not checked, so we must check those here.
-                YoutubeDownloaderManager.downloadYoutubeVideoUrl(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(0));//Gets the first youtube url in the download queue list
-            } else {
-                addErrorToErrorListWithJavafxThread("WARNING! " + YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(0) + " is likely an age restricted video, please find link which is not age restricted!", true);
-            }
-            YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().remove(0);//Removes the youtube url from the list which was downloaded.
-            updateDownloadQueueListViewWithJavafxThread(true);
-            firstLinkFromDownloadQueueIsDownloading = false;
-        }
-        YoutubeDownloaderManager.quitChromeDriver();
-        YoutubeDownloaderManager.setIsChromeDriverActive(false);
-    }
-
 }
