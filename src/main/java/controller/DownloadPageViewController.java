@@ -38,13 +38,6 @@ import ws.schild.jave.EncoderException;
  */
 public class DownloadPageViewController implements Initializable {
 
-    public Task<Void> task = new Task<Void>() {
-        @Override
-        protected Void call() throws Exception {
-            updateDownloadQueueListViewWithJavafxThread(true);
-            return null;
-        }
-    };
     private String titleName = "";
     private String channelName = "";
     private String durationTime = "";
