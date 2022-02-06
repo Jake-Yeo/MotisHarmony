@@ -9,3 +9,5 @@ https://www.youtube.com/watch?v=7814WeR0Xzo This link has no mime=audio and caus
 Ads can still be accidentally downloaded. Fix that problem. 
 
 https://www.youtube.com/playlist?list=PLleY9vT8KgEjaoNn9HwNceQ28i90HsqZE playlist may lead to infinite loop due to the video titled "MOSHi - dead feelings". Problem: Sometime the link parsed from the youtube url will only contain text. This text when copied and pasted into the browser may lead to the actual audio which can be downloaded.
+
+I put the ObservableList listener in the initializer for DownloadPageViewController. Since it can be intitallized more than once, everytime we switch to the DownloadPage a new listener will be created. Make it so that only one listener is created per launch 

@@ -70,7 +70,7 @@ public class LoginPageViewController implements Initializable {
     private Text pointThreeText;
 
     private void playFadeAnimation() throws InterruptedException {
-
+        //model.MusicPlayerManager.playMusic();
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.5), e -> {
             if (animationNum == 0) {
                 fadeTransition.setDuration(Duration.seconds(1));
