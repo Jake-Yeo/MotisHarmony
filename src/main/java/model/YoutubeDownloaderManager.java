@@ -55,6 +55,7 @@ public class YoutubeDownloaderManager {
     private static final String YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER = "https:";
     private static final String YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER = "range";
     private static ObservableList<String> youtubeUrlDownloadQueueList = FXCollections.observableArrayList();
+    private static ObservableList<String> errorList = FXCollections.observableArrayList();
 
     public static void setupChromeDriver() {
         //Set the Path of Executable Browser Driver
@@ -88,6 +89,10 @@ public class YoutubeDownloaderManager {
 
     public static ObservableList<String> getYoutubeUrlDownloadQueueList() {
         return youtubeUrlDownloadQueueList;
+    }
+
+    public static ObservableList<String> getErrorList() {
+        return errorList;
     }
 
     public static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
@@ -197,7 +202,7 @@ public class YoutubeDownloaderManager {
                 int count = 0;
                 String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlFromDownloadManager).getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
                 String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
-                try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
+                try (BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream()); FileOutputStream fos = new FileOutputStream(downloadedPath)) {
                     int i = 0;
                     final byte[] data = new byte[1024];
                     while ((count = bis.read(data)) != -1) {
@@ -231,7 +236,7 @@ public class YoutubeDownloaderManager {
             if (YoutubeVideoPageParser.isYoutubeLinkAvailableToPublic(youtubeUrlDownloadQueueList.get(0))) {//The youtube urls in the playlists are not checked, so we must check those here.
                 downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
             } else {
-                downloadPageViewController.addErrorToErrorListWithJavafxThread("WARNING! " + youtubeUrlDownloadQueueList.get(0) + " is likely an age restricted video, please find link which is not age restricted!", true);
+                downloadPageViewController.addErrorToErrorList(youtubeUrlDownloadQueueList.get(0) + " is likely an age restricted video, please find link which is not age restricted!");
             }
             youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
             //downloadPageViewController.updateDownloadQueueListViewWithJavafxThread(true);
