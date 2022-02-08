@@ -38,7 +38,7 @@
 
     .list-cell {
         -fx-background-radius: 4em;
-        -fx-text-fill: #ffffff7d;
+        -fx-text-fill: white;
         -fx-font: 10pt "Quicksand SemiBold";
     }
 }
