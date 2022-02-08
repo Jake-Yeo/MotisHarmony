@@ -42,7 +42,6 @@ import ws.schild.jave.EncoderException;
 public class YoutubeDownloaderManager {
 
     private static WebDriver driver;
-    private static boolean doneDownloading = true;
     private static boolean isChromeDriverActive = false;
     @FXML
     private static DownloadPageViewController downloadPageViewController = new DownloadPageViewController();
@@ -98,14 +97,12 @@ public class YoutubeDownloaderManager {
     public static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
         String[] youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
-        for (int i = 0; i < youtubePlaylistUrls.length;) {
-            if (doneDownloading = true) {
-                addYoutubeUrlsToDownloadQueue(youtubePlaylistUrls[i]);
-                System.out.println(i);
-                i++;
-            }
-
+        for (int i = 0; i < youtubePlaylistUrls.length;) {//This array coverts all the youtube urls into one url that can be consistently compared with each other
+            youtubePlaylistUrls[i] = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubePlaylistUrls[i]);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
+            System.out.println(i);
+            i++;
         }
+        youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrls);//Adds the entire string array of converted youtube urls to the download queue.
         isPlaylistUrlGetterCurrentlyGettingUrls = false;
     }
 
@@ -202,7 +199,7 @@ public class YoutubeDownloaderManager {
                 int count = 0;
                 String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlFromDownloadManager).getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
                 String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
-                try (BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream()); FileOutputStream fos = new FileOutputStream(downloadedPath)) {
+                try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
                     int i = 0;
                     final byte[] data = new byte[1024];
                     while ((count = bis.read(data)) != -1) {
@@ -225,7 +222,6 @@ public class YoutubeDownloaderManager {
                 System.out.println(youtubeUrlFromDownloadManager + " is age restricted! Please find another link of this video which isn't age restricted!");
             }
         }
-        doneDownloading = true;//needs to be outside the if statement!
     }
 
     public static void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
