@@ -8,7 +8,7 @@ package model;
  *
  * @author 1100007967
  */
-public class DataObject {
+public class UrlDataObject {
 
     private String videoTitle;
     private String videoDuration;
@@ -17,20 +17,11 @@ public class DataObject {
     private String errorMessage;
     private boolean didErrorOccur;
 
-    public DataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl) {
+    public UrlDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl) {
         this.videoTitle = videoTitle;
         this.videoDuration = videoDuration;
         this.channelName = channelName;
         this.thumbnailUrl = thumbnailUrl;
-    }
-
-    public DataObject(boolean didErrorOccur, String errorMessage) {
-        this.didErrorOccur = didErrorOccur;
-        this.errorMessage = errorMessage;
-    }
-
-    DataObject() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public String getTitle() {
@@ -47,13 +38,5 @@ public class DataObject {
 
     public String getThumbnailUrl() {
         return this.thumbnailUrl;
-    }
-
-    public String getErrorMessage() {
-        return this.errorMessage;
-    }
-
-    public boolean didErrorOccur() {
-        return this.didErrorOccur;
     }
 }
