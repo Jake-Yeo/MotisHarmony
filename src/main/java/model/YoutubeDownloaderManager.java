@@ -98,13 +98,17 @@ public class YoutubeDownloaderManager {
     public static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
         String[] youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
-        for (int i = 0; i < youtubePlaylistUrls.length;) {//This array coverts all the youtube urls into one url that can be consistently compared with each other
-            youtubePlaylistUrls[i] = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubePlaylistUrls[i]);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
-            System.out.println(i);
-            i++;
+        if (youtubePlaylistUrls != null) {
+            for (int i = 0; i < youtubePlaylistUrls.length;) {//This array coverts all the youtube urls into one url that can be consistently compared with each other
+                youtubePlaylistUrls[i] = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubePlaylistUrls[i]);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
+                System.out.println(i);
+                i++;
+            }
+            youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrls);//Adds the entire string array of converted youtube urls to the download queue.
+            isPlaylistUrlGetterCurrentlyGettingUrls = false;
+        } else {
+            errorList.add("Sorry we cannot download the url you entered at this time.");
         }
-        youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrls);//Adds the entire string array of converted youtube urls to the download queue.
-        isPlaylistUrlGetterCurrentlyGettingUrls = false;
     }
 
     public static boolean isPlaylistUrlGetterCurrentlyGettingUrls() {
@@ -196,41 +200,41 @@ public class YoutubeDownloaderManager {
         boolean skipAudioConversion = false;
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeUrlFromDownloadManager);
         if (!possibleYoutubeUrl.equals("error")) {
-                downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
-                int count = 0;
-                String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlFromDownloadManager).getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
-                String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
-                try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
-                    int i = 0;
-                    System.out.println("Stop downloading is " + DownloadPageViewController.getStopDownloading());
-                    final byte[] data = new byte[1024];
-                    while ((count = bis.read(data)) != -1) {
-                        if (DownloadPageViewController.getStopDownloading()) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
-                            removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
-                            skipAudioConversion = true;//This will prevent the program from attempting to convert a corrupted weba file to a wav file
-                            DownloadPageViewController.setStopDownloading(false);//This will allow the next song to be downloaded
-                            PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
-                            return;
-                        }
-                        i += count;
-                        fos.write(data, 0, count);
+            downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
+            int count = 0;
+            String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlFromDownloadManager).getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
+            String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
+            try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
+                int i = 0;
+                System.out.println("Stop downloading is " + DownloadPageViewController.getStopDownloading());
+                final byte[] data = new byte[1024];
+                while ((count = bis.read(data)) != -1) {
+                    if (DownloadPageViewController.getStopDownloading()) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
+                        removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
+                        skipAudioConversion = true;//This will prevent the program from attempting to convert a corrupted weba file to a wav file
+                        DownloadPageViewController.setStopDownloading(false);//This will allow the next song to be downloaded
+                        PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
+                        return;
                     }
-                } catch (IOException ex) {
-                    System.err.print("error downloading song");
+                    i += count;
+                    fos.write(data, 0, count);
                 }
-                if (skipAudioConversion) {//Skips the audio conversion
-                    return;
-                }
-                new Thread(//We use a thread so that it doesn't take an extra few seconds to download a youtube video, if the conversion cannot keep up then it will be added to the conversion queue.
-                        new Runnable() {
-                    public void run() {
-                        try {
-                            AudioConverterManager.addToConversionQueue(downloadedPath, youtubeTitleSafeName + ".weba");//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
-                        } catch (EncoderException ex) {
-                            Logger.getLogger(YoutubeDownloaderManager.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+            } catch (IOException ex) {
+                System.err.print("error downloading song");
+            }
+            if (skipAudioConversion) {//Skips the audio conversion
+                return;
+            }
+            new Thread(//We use a thread so that it doesn't take an extra few seconds to download a youtube video, if the conversion cannot keep up then it will be added to the conversion queue.
+                    new Runnable() {
+                public void run() {
+                    try {
+                        AudioConverterManager.addToConversionQueue(downloadedPath, youtubeTitleSafeName + ".weba");//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+                    } catch (EncoderException ex) {
+                        Logger.getLogger(YoutubeDownloaderManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }).start();
+                }
+            }).start();
         }
     }
 
@@ -243,7 +247,7 @@ public class YoutubeDownloaderManager {
             if (!errorData.didErrorOccur()) {//The youtube urls in the playlists are not checked, so we must check those here.
                 downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
             } else {
-                downloadPageViewController.addErrorToErrorList(errorData.getErrorMessage());
+                errorList.add(errorData.getErrorMessage());
             }
             if (removeFirstLink) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
                 youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
