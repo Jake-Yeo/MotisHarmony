@@ -74,7 +74,12 @@ public class BrowserPageViewController implements Initializable {
 
     @FXML
     public void downloadBrowserUrl(ActionEvent event) throws IOException {
-        YoutubeDownloaderManager.addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
+        new Thread(
+                new Runnable() {
+            public void run() {
+                YoutubeDownloaderManager.addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
+            }
+        }).start();
     }
 
     @FXML
