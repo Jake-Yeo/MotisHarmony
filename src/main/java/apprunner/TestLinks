@@ -1,0 +1,9 @@
+These are just lists of links which caused me problems in the past
+
+https://www.youtube.com/watch?v=cHc3cXXIydc&list=RDCLAK5uy_kb7EBi6y3GrtJri4_ZH56Ms786DFEimbM&start_radio=1 This link is the weird link which can be displayed in the whole list view.
+
+https://www.youtube.com/watch?v=ibXkjB67cyE This link has no mime=audio and causes an infinite while loop, either find a way to download, or make sure to add to the download error section. Try fixing problem by getting mp4 file from the network tab in the media section.
+
+https://www.youtube.com/watch?v=7814WeR0Xzo This link has no mime=audio and causes an infinite while loop
+
+https://www.youtube.com/playlist?list=PLleY9vT8KgEjaoNn9HwNceQ28i90HsqZE

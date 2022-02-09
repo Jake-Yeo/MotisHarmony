@@ -89,9 +89,12 @@ public class YoutubeVideoPageParser {
         }
         if (videoUrl.contains(YT_PLAYLIST_LIST_IDENTIFIER)) {
             videoUrl = convertToWholePlaylistView(videoUrl);
+            System.out.println("converted wholelist " + videoUrl);
         }
         try {
             html = getHtml(videoUrl);
+            PrintWriter pw = new PrintWriter(new FileWriter("html.txt"));
+            pw.print(html);
         } catch (Exception e) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is likely not a link!";
@@ -214,7 +217,12 @@ public class YoutubeVideoPageParser {
         youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
         String html = getHtml(youtubePlaylistUrl);
         html = infoParserToolTrimToStart(html, YT_PLAYLIST_START_IDENTIFIER);//This will find the start of the playlist information in the html thus getting rid of any urls that may interfere with this method
-        int playlistLength = Integer.parseInt(infoParserTool(html, YT_PLAYLIST_LENGTH_START_IDENTIFIER, YT_PLAYLIST_LENGTH_END_IDENTIFIER));//Since there is an unidentifiable amount of urls below the start of the playlist information section, we must get the length of the playlist so we can loop through only a certain amount of playlists. Error could occur if you are not at the actual playlist, you must be videwing a video from the playlist!
+        int playlistLength = 0;
+        try {//This is just incase the url tester fails to catch a really weird url which somehow manages to pass through. For example there's some weird youtube radio playlists that can load in whole views, so we need another way to identify them.
+            playlistLength = Integer.parseInt(infoParserTool(html, YT_PLAYLIST_LENGTH_START_IDENTIFIER, YT_PLAYLIST_LENGTH_END_IDENTIFIER));//Since there is an unidentifiable amount of urls below the start of the playlist information section, we must get the length of the playlist so we can loop through only a certain amount of playlists. Error could occur if you are not at the actual playlist, you must be videwing a video from the playlist!
+        } catch (Exception e) {
+            return null;
+        }
         String[] urlList = new String[playlistLength]; //This creates the String array which will hold information about the urls obtained from the playlist.      
         String urlListStringToSplit = "";//This will store urls taken from the playlist into the url so that we can compare urls and see if that url is already in the string
         String lastVideoUrlGotten = "";
