@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import model.MusicPlayerManager;
 import model.PathsManager;
 import model.YoutubeVideoPageParser;
