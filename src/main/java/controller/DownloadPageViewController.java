@@ -84,6 +84,8 @@ public class DownloadPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        updateErrorListViewWithJavafxThread(false);
+        updateDownloadQueueListViewWithJavafxThread(false);
         downloadQueueImageView.setImage(new Image(getClass().getResourceAsStream("/images/MotisHarmonyTriangleBackground.png")));
         downloadPageMainAnchor.setBackground(Background.EMPTY);//This will make the main anchor pane of the login page transparent for aethetics
         Rectangle clip = new Rectangle();
@@ -354,25 +356,7 @@ public class DownloadPageViewController implements Initializable {
         new Thread(
                 new Runnable() {
             public void run() {
-                String youtubeLinkTextOriginal = youtubeLinkTextFieldContent;
-                try {
-                    ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeLinkTextOriginal);
-                    if (!errorData.didErrorOccur()) {
-                        YoutubeDownloaderManager.addYoutubeLinkToDownloadQueue(youtubeLinkTextOriginal);
-                        updateDownloadQueueListViewWithJavafxThread(true);
-                        if (!YoutubeDownloaderManager.isAppDownloadingFromDownloadQueue()) {
-                            try {
-                                YoutubeDownloaderManager.downloadSongsFromDownloadQueue();
-                            } catch (Exception e) {
-                                Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, e);
-                            }
-                        }
-                    } else {
-                        addErrorToErrorList(errorData.getErrorMessage());
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                YoutubeDownloaderManager.addYoutubeLinkToDownloadQueueAndStartDownload(youtubeLinkTextFieldContent);
             }
         }).start();
     }

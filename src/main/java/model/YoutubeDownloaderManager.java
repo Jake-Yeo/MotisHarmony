@@ -57,7 +57,7 @@ public class YoutubeDownloaderManager {
     private static ObservableList<String> youtubeUrlDownloadQueueList = FXCollections.observableArrayList();
     private static ObservableList<String> errorList = FXCollections.observableArrayList();
 
-    public static void setupChromeDriver() {
+    private static void setupChromeDriver() {
         //Set the Path of Executable Browser Driver
         //System.setProperty("webdriver.chrome.driver", "chromedriver.exe");//We probably don't need this anymore because we automatically get the webdriver below
         WebDriverManager.chromedriver().setup();//This will automatically update the chrome webdriver to the proper version
@@ -67,11 +67,11 @@ public class YoutubeDownloaderManager {
         driver = new ChromeDriver(options);
     }
 
-    public static void quitChromeDriver() {
+    private static void quitChromeDriver() {
         driver.quit();
     }
 
-    public static void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
+    private static void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
         File youtubeUrlDownloadManagerFile = new File("YoutubeUrlsToDownload.txt");
         youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
         if (!youtubeUrlDownloadQueueList.contains(youtubeUrl)) {//Makes sure that a youtube url is not added to the download queue list multiple times
@@ -79,11 +79,11 @@ public class YoutubeDownloaderManager {
         }
     }
 
-    public static boolean isAppDownloadingFromDownloadQueue() {
+    private static boolean isAppDownloadingFromDownloadQueue() {
         return isChromeDriverActive;
     }
 
-    public static void setIsChromeDriverActive(boolean tf) {
+    private static void setIsChromeDriverActive(boolean tf) {
         isChromeDriverActive = tf;
     }
 
@@ -95,7 +95,7 @@ public class YoutubeDownloaderManager {
         return errorList;
     }
 
-    public static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
+    private static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
         String[] youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
         if (youtubePlaylistUrls != null) {
@@ -111,7 +111,7 @@ public class YoutubeDownloaderManager {
         }
     }
 
-    public static boolean isPlaylistUrlGetterCurrentlyGettingUrls() {
+    private static boolean isPlaylistUrlGetterCurrentlyGettingUrls() {
         return isPlaylistUrlGetterCurrentlyGettingUrls;
     }
 //method below may accidentally get ad, tho im not too sure how to fix or if that was due to a faulty input
@@ -182,20 +182,40 @@ public class YoutubeDownloaderManager {
 
     }
 
-    public static void addYoutubeLinkToDownloadQueue(String youtubeUrl) throws IOException {
+    private static void addYoutubeLinkToDownloadQueue(String youtubeUrl) throws IOException {
         if (YoutubeVideoPageParser.isLinkAPlaylist(youtubeUrl)) {
             addSongsFromPlaylistToDownloadQueue(youtubeUrl);
         } else {
             addYoutubeVideoUrlToDownloadQueue(youtubeUrl);
         }
     }
+    
+    public static void addYoutubeLinkToDownloadQueueAndStartDownload(String youtubeUrl) {
+        try {
+                    ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrl);
+                    if (!errorData.didErrorOccur()) {
+                        addYoutubeLinkToDownloadQueue(youtubeUrl);
+                        if (!isAppDownloadingFromDownloadQueue()) {
+                            try {
+                                downloadSongsFromDownloadQueue();
+                            } catch (Exception e) {
+                                Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, e);
+                            }
+                        }
+                    } else {
+                        errorList.add(errorData.getErrorMessage());
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+    }
 
-    public static void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
+    private static void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
         youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in maybe of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
         addYoutubeUrlsToDownloadQueue(youtubeUrl);
     }
 
-    public static void downloadYoutubeVideoUrl(String youtubeUrlFromDownloadManager) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
+    private static void downloadYoutubeVideoUrl(String youtubeUrlFromDownloadManager) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
         URL downloadURL = null;
         boolean skipAudioConversion = false;
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeUrlFromDownloadManager);
@@ -238,7 +258,7 @@ public class YoutubeDownloaderManager {
         }
     }
 
-    public static void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
+    private static void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
         setIsChromeDriverActive(true); // this will make sure that the chrome driver isn't restarted multiple times in order to increase download speed.
         setupChromeDriver();
         while (!youtubeUrlDownloadQueueList.isEmpty()) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
