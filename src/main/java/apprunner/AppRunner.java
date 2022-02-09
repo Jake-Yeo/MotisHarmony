@@ -26,6 +26,7 @@ public class AppRunner {
 
     public static void main(String[] args) throws MalformedURLException, IOException {//https://www.youtube.com/watch?v=cmSbXsFE3l8&list=PLyfE3pnEkrBMiCPLNDhft9hmeXK1wtkGF https://www.youtube.com/watch?v=kTJczUoc26U&list=PLMC9KNkIncKseYxDN2niH6glGRWKsLtde
         PathsManager.setUpFolders();
+        PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
         MainViewRunner.launchPanel(args);
 //playlist 511 index https://www.youtube.com/watch?v=RgKAFK5djSk&list=PLeCdlPO-XhWFzEVynMsmosfdRsIZXhZi0&index=1 // playlist with 5000 videos
         //   YoutubeDownloaderManager.downloadYoutubeVideoUrl("https://youtu.be/T_lC2O1oIew");       
