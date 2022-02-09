@@ -43,6 +43,7 @@ public class YoutubeDownloaderManager {
 
     private static WebDriver driver;
     private static boolean isChromeDriverActive = false;
+    private static boolean removeFirstLink = true;
     @FXML
     private static DownloadPageViewController downloadPageViewController = new DownloadPageViewController();
     private static boolean isPlaylistUrlGetterCurrentlyGettingUrls = false;
@@ -201,12 +202,19 @@ public class YoutubeDownloaderManager {
                 String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
                 try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
                     int i = 0;
+                    System.out.println("Stop downloading is " + DownloadPageViewController.getStopDownloading());
                     final byte[] data = new byte[1024];
                     while ((count = bis.read(data)) != -1) {
+                        if (DownloadPageViewController.getStopDownloading()) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
+                            DownloadPageViewController.setStopDownloading(false);//This will allow the next song to be downloaded
+                            removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user
+                            return;
+                        }
                         i += count;
                         fos.write(data, 0, count);
                     }
                 } catch (IOException ex) {
+                    System.err.print("error downloading song");
                 }
                 new Thread(//We use a thread so that it doesn't take an extra few seconds to download a youtube video, if the conversion cannot keep up then it will be added to the conversion queue.
                         new Runnable() {
@@ -234,11 +242,14 @@ public class YoutubeDownloaderManager {
             } else {
                 downloadPageViewController.addErrorToErrorList(youtubeUrlDownloadQueueList.get(0) + " is likely an age restricted video, please find link which is not age restricted!");
             }
-            youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
+            if (removeFirstLink) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
+                youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
+            }
+            removeFirstLink = true;
             //downloadPageViewController.updateDownloadQueueListViewWithJavafxThread(true);
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(false);
         }
-        YoutubeDownloaderManager.quitChromeDriver();
+        YoutubeDownloaderManager.quitChromeDriver();//Finally, when all the youtube videos have been downloaded, exit the download queue
         YoutubeDownloaderManager.setIsChromeDriverActive(false);
     }
 }

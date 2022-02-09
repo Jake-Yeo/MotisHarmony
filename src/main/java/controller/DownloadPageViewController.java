@@ -44,6 +44,7 @@ public class DownloadPageViewController implements Initializable {
     private String youtubeUrlToGetInfoFrom = "";
     private Image thumbnailImage;
     private static boolean firstLinkFromDownloadQueueIsDownloading = false;
+    private static boolean stopDownloading = false;
     private String youtubeLinkTextFieldContent = "";
     @FXML
     private TextField youtubeLinkField;
@@ -222,6 +223,14 @@ public class DownloadPageViewController implements Initializable {
         firstLinkFromDownloadQueueIsDownloading = tf;
     }
 
+    public static boolean getStopDownloading() {
+        return stopDownloading;
+    }
+
+    public static void setStopDownloading(boolean tf) {
+        stopDownloading = tf;
+    }
+
     /**
      * @param withJavafxThread use true to add with the javafx thread
      */
@@ -266,24 +275,17 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     private void clearQueueManager(ActionEvent event) throws IOException {
-        if (firstLinkFromDownloadQueueIsDownloading == true) {
-            YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().subList(1, YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().size()).clear();
-            updateDownloadQueueListViewWithJavafxThread(false);
-        } else {
-            YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().clear();
-            updateDownloadQueueListViewWithJavafxThread(false);
-        }
+        setStopDownloading(true);
+        YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().clear();
+        updateDownloadQueueListViewWithJavafxThread(false);
     }
 
     @FXML
     private void deleteSelectedLinkFromQueueManager(ActionEvent event) throws IOException {
         if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {
-            if (listViewDownloadManager.getSelectionModel().getSelectedIndex() == 0 && firstLinkFromDownloadQueueIsDownloading == true) {
-                addErrorToErrorList("Error the song you selected is currently being downloaded and cannot be deleted!");
-            } else {
-                YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().remove(listViewDownloadManager.getSelectionModel().getSelectedIndex());
-                updateDownloadQueueListViewWithJavafxThread(false);
-            }
+            setStopDownloading(true);
+            YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().remove(listViewDownloadManager.getSelectionModel().getSelectedIndex());
+            updateDownloadQueueListViewWithJavafxThread(false);
         } else {
             addErrorToErrorList("Error! Select something before you delete!");
         }
