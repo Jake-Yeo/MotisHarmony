@@ -356,7 +356,7 @@ public class DownloadPageViewController implements Initializable {
                 String youtubeLinkTextOriginal = youtubeLinkTextFieldContent;
                 try {
                     DataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeLinkTextOriginal);
-                    if (!errorData.getDidErrorOccur()) {
+                    if (!errorData.didErrorOccur()) {
                         YoutubeDownloaderManager.addYoutubeLinkToDownloadQueue(youtubeLinkTextOriginal);
                         updateDownloadQueueListViewWithJavafxThread(true);
                         if (!YoutubeDownloaderManager.isAppDownloadingFromDownloadQueue()) {
