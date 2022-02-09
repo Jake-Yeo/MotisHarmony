@@ -133,19 +133,6 @@ public class YoutubeVideoPageParser {
         return new ErrorDataObject(didErrorOccur, errorMessage);
     }
 
-    public static boolean isYoutubeLinkAvailableToPublic(String youtubeVideolink) throws IOException {//Ex is the youtube video link given not age resticted, private, unavailable?
-        String html = "";
-        try {
-            html = getHtml(youtubeVideolink);
-        } catch (Exception e) {
-            return false;
-        }
-        if (html.contains(YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER) || html.contains(YOUTUBE_VIDEO_UNAVAILABLE_IDENTIFIER) || html.contains(YOUTUBE_VIDEO_PRIVATE_IDENTIFIER)) {
-            return false;
-        }
-        return true;
-    }
-
     public static boolean isLinkAPlaylist(String link) {//make this more specific, radio and playlist links are indistinguishable, make sure to look at the html code too!//Should be able to be replaced with doesYoutubePlaylistExist
         if (link.contains(YT_PLAYLIST_LIST_IDENTIFIER)) {
             return true;
