@@ -63,15 +63,7 @@ public class PathsManager {//This class will handle all the folder and txt creat
             System.out.println("Directory " + folderOrTextPath.toString() + " already exists");
         }
     }
-    
-    public static void clearDownloadedWebaDirectory() throws IOException {
-        File webaDownloadsFolder = new File(WEBA_FOLDER_PATH.toString());
-        String[] webaToDeleteNames = webaDownloadsFolder.list();//This will get an array list of all the weba paths in the downloadedWebaDirectory. This array only contains the file names, but not the paths to the webaa files.
-        for (int i = 0; i < webaToDeleteNames.length; i++) {//This will delete the weba files inside the array list
-            Files.delete(Paths.get(WEBA_FOLDER_PATH.toString(), webaToDeleteNames[i]));//Constructs a path to the weba files which can then be deleted
-        }
-    }
-    
+
     public static void setLoggedInUserDataPath(String username) {//Sets up the path to the account folder of the user logged in
         loggedInUserDataPath = Paths.get(ACCOUNTS_DATA_PATH.toString(), username);
     }
@@ -82,6 +74,14 @@ public class PathsManager {//This class will handle all the folder and txt creat
         loggedInUserDownloadedMusicDataPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_MUSIC_DATA_TXT + ".txt");
         loggedInUserThumbnailsPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_THUMBNAIL_FOLDER);
         loggedInUserDownloadedMusicPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_AUDIO_FOLDER);
+    }
+
+    public static void clearDownloadedWebaDirectory() throws IOException {
+        File webaDownloadsFolder = new File(WEBA_FOLDER_PATH.toString());
+        String[] webaToDeleteNames = webaDownloadsFolder.list();//This will get an array list of all the weba paths in the downloadedWebaDirectory. This array only contains the file names, but not the paths to the webaa files.
+        for (int i = 0; i < webaToDeleteNames.length; i++) {//This will delete the weba files inside the array list
+            Files.delete(Paths.get(WEBA_FOLDER_PATH.toString(), webaToDeleteNames[i]));//Constructs a path to the weba files which can then be deleted
+        }
     }
 
     public static Path getLoggedInUserMusicFolderPath() {
