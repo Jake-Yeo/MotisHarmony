@@ -206,6 +206,7 @@ public class YoutubeDownloaderManager {
                     final byte[] data = new byte[1024];
                     while ((count = bis.read(data)) != -1) {
                         if (DownloadPageViewController.getStopDownloading()) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
+                            
                             removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
                             DownloadPageViewController.setStopDownloading(false);//This will allow the next song to be downloaded
                             PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
