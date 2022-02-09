@@ -78,14 +78,14 @@ public class YoutubeVideoPageParser {
         return html;
     }
 
-    public static DataObject isUrlValid(String videoUrl) throws IOException {
+    public static ErrorDataObject isUrlValid(String videoUrl) throws IOException {
         boolean didErrorOccur = false;
         String html = "";
         String errorMessage = "";
         if (!(videoUrl.contains("watch?v=") || videoUrl.contains("?list=") || videoUrl.contains("&list=") || videoUrl.contains("youtu.be"))) {
             didErrorOccur = true;
             errorMessage = "The url you input must be the link of a youtube playlist or video!";
-            return new DataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         if (videoUrl.contains(YT_PLAYLIST_LIST_IDENTIFIER)) {
             videoUrl = convertToWholePlaylistView(videoUrl);
@@ -95,42 +95,42 @@ public class YoutubeVideoPageParser {
         } catch (Exception e) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is likely not a link!";
-            return new DataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         if (html.contains(YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is age restricted and cannot be downloaded!";
-            return new DataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         if (html.contains(YOUTUBE_VIDEO_UNAVAILABLE_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is unavailable to the public!";
-            return new DataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         if (html.contains(YOUTUBE_VIDEO_PRIVATE_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is private and cannot be downloaded!";
-            return new DataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         if (html.contains(YOUTUBE_LIVESTREAM_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is a livestream and cannot be downloaded!";
-            return new DataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         if (html.contains(RADIO_PLAYLIST_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is a radio player and cannot be downloaded!";
-            return new DataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         if (html.contains(YOUTUBE_PLAYLIST_DOES_NOT_EXIST_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is a playlist that is either private or does not exist!";
-            return new DataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         didErrorOccur = false;
         errorMessage = null;
 
-        return new DataObject(didErrorOccur, errorMessage);
+        return new ErrorDataObject(didErrorOccur, errorMessage);
     }
 
     public static boolean isYoutubeLinkAvailableToPublic(String youtubeVideolink) throws IOException {//Ex is the youtube video link given not age resticted, private, unavailable?
@@ -191,7 +191,7 @@ public class YoutubeVideoPageParser {
         return YT_VIDEO_URL_STARTER + getYoutubeVideoID(youtubeUrl);
     }
 
-    public static DataObject getYoutubeVideoData(String youtubeUrl) throws IOException {
+    public static UrlDataObject getYoutubeVideoData(String youtubeUrl) throws IOException {
         String html = getHtml(youtubeUrl);
         String thumbnailUrl = infoParserTool(html, YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER, YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER);
         String channelName = infoParserTool(html, YOUTUBE_VIDEO_CHANNEL_NAME_START_IDENTIFIER, YOUTUBE_VIDEO_CHANNEL_NAME_END_IDENTIFIER);
@@ -219,7 +219,7 @@ public class YoutubeVideoPageParser {
         } else {
             videoDuration = durationMinutes + ":" + remaindingSeconds;
         }
-        DataObject youtubeVideoData = new DataObject(videoTitle, videoDuration, channelName, thumbnailUrl);
+        UrlDataObject youtubeVideoData = new UrlDataObject(videoTitle, videoDuration, channelName, thumbnailUrl);
         return youtubeVideoData;
     }
 
