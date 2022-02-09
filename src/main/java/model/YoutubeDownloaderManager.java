@@ -193,9 +193,9 @@ public class YoutubeDownloaderManager {
 
     public static void downloadYoutubeVideoUrl(String youtubeUrlFromDownloadManager) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
         URL downloadURL = null;
+        boolean skipAudioConversion = false;
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeUrlFromDownloadManager);
         if (!possibleYoutubeUrl.equals("error")) {
-            if (!(YoutubeVideoPageParser.getHtml(youtubeUrlFromDownloadManager).contains(YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER))) {//We can remove this if statement, we are handling it in another method
                 downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
                 int count = 0;
                 String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlFromDownloadManager).getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
@@ -207,6 +207,7 @@ public class YoutubeDownloaderManager {
                     while ((count = bis.read(data)) != -1) {
                         if (DownloadPageViewController.getStopDownloading()) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
                             removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
+                            skipAudioConversion = true;//This will prevent the program from attempting to convert a corrupted weba file to a wav file
                             DownloadPageViewController.setStopDownloading(false);//This will allow the next song to be downloaded
                             PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
                             return;
@@ -216,6 +217,9 @@ public class YoutubeDownloaderManager {
                     }
                 } catch (IOException ex) {
                     System.err.print("error downloading song");
+                }
+                if (skipAudioConversion) {//Skips the audio conversion
+                    return;
                 }
                 new Thread(//We use a thread so that it doesn't take an extra few seconds to download a youtube video, if the conversion cannot keep up then it will be added to the conversion queue.
                         new Runnable() {
@@ -227,9 +231,6 @@ public class YoutubeDownloaderManager {
                         }
                     }
                 }).start();
-            } else {
-                System.out.println(youtubeUrlFromDownloadManager + " is age restricted! Please find another link of this video which isn't age restricted!");
-            }
         }
     }
 
@@ -238,10 +239,11 @@ public class YoutubeDownloaderManager {
         setupChromeDriver();
         while (!youtubeUrlDownloadQueueList.isEmpty()) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(true);
-            if (YoutubeVideoPageParser.isYoutubeLinkAvailableToPublic(youtubeUrlDownloadQueueList.get(0))) {//The youtube urls in the playlists are not checked, so we must check those here.
+            DataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrlDownloadQueueList.get(0));
+            if (!errorData.didErrorOccur()) {//The youtube urls in the playlists are not checked, so we must check those here.
                 downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
             } else {
-                downloadPageViewController.addErrorToErrorList(youtubeUrlDownloadQueueList.get(0) + " is likely an age restricted video, please find link which is not age restricted!");
+                downloadPageViewController.addErrorToErrorList(errorData.getErrorMessage());
             }
             if (removeFirstLink) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
                 youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.

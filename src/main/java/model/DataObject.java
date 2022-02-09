@@ -53,7 +53,7 @@ public class DataObject {
         return this.errorMessage;
     }
 
-    public boolean getDidErrorOccur() {
+    public boolean didErrorOccur() {
         return this.didErrorOccur;
     }
 }
