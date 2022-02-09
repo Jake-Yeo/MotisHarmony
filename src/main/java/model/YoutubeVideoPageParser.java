@@ -145,7 +145,7 @@ public class YoutubeVideoPageParser {
         }
         return true;
     }
-    
+
     public static boolean isLinkAPlaylist(String link) {//make this more specific, radio and playlist links are indistinguishable, make sure to look at the html code too!//Should be able to be replaced with doesYoutubePlaylistExist
         if (link.contains(YT_PLAYLIST_LIST_IDENTIFIER)) {
             return true;
