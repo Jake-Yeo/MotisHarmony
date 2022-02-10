@@ -9,6 +9,9 @@ import com.sun.javafx.webkit.WebConsoleListener;
 import java.awt.MouseInfo;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
 import java.util.ResourceBundle;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -60,7 +63,7 @@ public class BrowserPageViewController implements Initializable {
         clip.setArcWidth(30);//this sets the rounded corners
         clip.setArcHeight(30);
         webViewMainAnchorPane.setClip(clip);
-        browserWebView.getEngine().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/538.19 (KHTML, like Gecko) JavaFX/8.0 Safari/538.19");
+        //browserWebView.getEngine().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/538.19 (KHTML, like Gecko) JavaFX/8.0 Safari/538.19");
         browserWebView.setContextMenuEnabled(true);
         /*WebConsoleListener.setDefaultListener(new WebConsoleListener() { //This does not work and causes an error
             @Override
@@ -70,6 +73,7 @@ public class BrowserPageViewController implements Initializable {
         });
          */
         browserWebView.getEngine().load("https://www.youtube.com/");//https://www.google.ca/videohp
+        browserWebView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
     }
 
     @FXML
