@@ -1,1 +1,3 @@
 Add firefox compatibility? Look here https://stackoverflow.com/questions/53286828/how-to-get-browser-network-logs-using-python-selenium Look at the comments with "Using python + selenium + firefox"
+
+Maybe don't muse selenium to get network data, look at these links instead https://stackoverflow.com/questions/61308457/how-to-get-xmlhttprequest-files-from-external-web-page-using-java and https://stackoverflow.com/questions/12916169/how-to-consume-rest-in-java

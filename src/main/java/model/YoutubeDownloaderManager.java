@@ -233,7 +233,6 @@ public class YoutubeDownloaderManager {
                         removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
                         skipAudioConversion = true;//This will prevent the program from attempting to convert a corrupted weba file to a wav file
                         DownloadPageViewController.setStopDownloading(false);//This will allow the next song to be downloaded
-                        PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
                         return;
                     }
                     i += count;
