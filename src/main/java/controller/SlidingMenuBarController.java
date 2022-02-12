@@ -32,6 +32,7 @@ public class SlidingMenuBarController implements Initializable {
     private SceneController sceneController = new SceneController();
     private boolean isSlidingMenuOpen = false;
     private TranslateTransition translateTransition = new TranslateTransition();
+    private BrowserPageViewController browserPageViewcontroller = new BrowserPageViewController();
     @FXML
     private Button switchToSettingsButton;
     @FXML
@@ -67,7 +68,8 @@ public class SlidingMenuBarController implements Initializable {
     }
 
     @FXML
-    private void switchToPlayer(ActionEvent event) {
+    private void switchToPlayer(ActionEvent event) throws IOException {
+        sceneController.switchToMusicPlayerPageView();
         System.out.println("player");
     }
 
@@ -200,6 +202,7 @@ public class SlidingMenuBarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        browserPageViewcontroller.turnOffWebEngine();
         slidingMenuMainAnchorPane.setLayoutX(-196);
 
     }

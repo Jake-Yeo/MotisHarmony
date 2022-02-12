@@ -7,6 +7,7 @@ package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,5 +29,11 @@ public class AccountDataManager {//This class will be used to manage all data ch
     
     public static String getTextFileContents(Path pathToTextFile) throws IOException {
         return Files.readString(pathToTextFile);
+    }
+    
+    public static void addSongToAccount(Path pathToAccessSong) throws IOException {
+        FileWriter fw = new FileWriter(PathsManager.getLoggedInUserSongsTxtPath().toString(), true);
+        fw.write(pathToAccessSong.toString() + System.lineSeparator());
+        fw.close();
     }
 }

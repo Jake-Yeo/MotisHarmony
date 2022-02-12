@@ -22,6 +22,7 @@ public class PathsManager {//This class will handle all the folder and txt creat
     private static final String ACCOUNTS_USERNAME_PASSWORD_TXT = "accountUserPass";//Txt file name for users usernames and passwords
     private static final String ACCOUNT_PLAYLIST_DATA_TXT = "playlistData";//Txt file name for where playlist data will be stored
     private static final String ACCOUNT_MUSIC_DATA_TXT = "downloadedMusicData";//Txt name for where all the music data will be stored
+    private static final String ACCOUNT_PATH_TO_SONGS_TXT = "pathToSongs";//Txt file name for where the paths to where the songs will be stored
     private static final String ACCOUNT_THUMBNAIL_FOLDER = "downloadedMusicThumbnails";//Folder name for where all downloaded thumbnails will be stored
     private static final String ACCOUNT_AUDIO_FOLDER = "downloadedMusic";//Folder name for where all files converted to wav will be stored
     private static final String WEBA_FOLDER = "downloadedWeba";//Folder name where all temporarily downloaded weba files will be stored
@@ -34,6 +35,7 @@ public class PathsManager {//This class will handle all the folder and txt creat
     private static Path loggedInUserSettingsPath = null;
     private static Path loggedInUserPlaylistsPath = null;
     private static Path loggedInUserDownloadedMusicDataPath = null;
+    private static Path loggedInUserSongsPathTxtPath = null;
     private static Path loggedInUserThumbnailsPath = null;
     private static Path loggedInUserDownloadedMusicPath = null;
 
@@ -47,9 +49,10 @@ public class PathsManager {//This class will handle all the folder and txt creat
     public static void setUpAccountFoldersAndTxtFiles(String username) throws IOException {
         createFolder(PathsManager.ACCOUNTS_DATA_PATH, username);//creates a folder in the Accounts folder that is named after the users name
         setLoggedInUserDataPath(username);//This will set up the path to the data of the account currently logged in
-        createTextFile(getLoggedInUserDataPath(), ACCOUNT_MUSIC_DATA_TXT);//This creates a text file//This is setting up all the text files which must be created for the AccountDataManager to work
+        createTextFile(getLoggedInUserDataPath(), ACCOUNT_MUSIC_DATA_TXT);//This creates a text file. This is setting up all the text files which must be created for the AccountDataManager to work
         createTextFile(getLoggedInUserDataPath(), ACCOUNT_PLAYLIST_DATA_TXT);//This creates a text file
         createTextFile(getLoggedInUserDataPath(), ACCOUNT_SETTING_DATA_TXT);//This creates a text file
+        createTextFile(getLoggedInUserDataPath(), ACCOUNT_PATH_TO_SONGS_TXT);//This creates a text file
         createFolder(getLoggedInUserDataPath(), ACCOUNT_AUDIO_FOLDER);//This creates a folder
         createFolder(getLoggedInUserDataPath(), ACCOUNT_THUMBNAIL_FOLDER);//This creates a text file
     }
@@ -72,6 +75,7 @@ public class PathsManager {//This class will handle all the folder and txt creat
         loggedInUserSettingsPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_SETTING_DATA_TXT + ".txt");
         loggedInUserPlaylistsPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_PLAYLIST_DATA_TXT + ".txt");
         loggedInUserDownloadedMusicDataPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_MUSIC_DATA_TXT + ".txt");
+        loggedInUserSongsPathTxtPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_PATH_TO_SONGS_TXT + ".txt");
         loggedInUserThumbnailsPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_THUMBNAIL_FOLDER);
         loggedInUserDownloadedMusicPath = Paths.get(loggedInUserDataPath.toString(), ACCOUNT_AUDIO_FOLDER);
     }
@@ -96,8 +100,16 @@ public class PathsManager {//This class will handle all the folder and txt creat
         return loggedInUserSettingsPath;
     }
 
-    public static Path getloggedInUserPlaylistsPath() {
+    public static Path getLoggedInUserPlaylistsTxtPath() {
         return loggedInUserPlaylistsPath;
+    }
+
+    /**
+     * This will return the path to the txt file which contains all the paths to
+     * the downloaded songs.
+     */
+    public static Path getLoggedInUserSongsTxtPath() {
+        return loggedInUserSongsPathTxtPath;
     }
 
     public static Path getLoggedInUserDownloadedMusicDataPath() {

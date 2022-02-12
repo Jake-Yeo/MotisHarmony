@@ -1,93 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DownloadPageViewController">
+<AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerViewController">
    <children>
-      <ImageView fx:id="downloadQueueImageView" fitHeight="577.0" fitWidth="886.0" pickOnBounds="true" />
-      <ListView fx:id="downloadErrorList" layoutX="487.0" layoutY="359.0" prefHeight="115.0" prefWidth="365.0" style="-fx-background-color: null; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: #4c154a; -fx-border-radius: 30px 30px 0 0; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
-      <Text fill="#ee4540" layoutX="523.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Download Errors">
-         <font>
-            <Font name="Quicksand SemiBold" size="23.0" />
-         </font>
-      </Text>
-      <ListView fx:id="videoInfoList" layoutX="486.0" layoutY="73.0" prefHeight="121.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0 0; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
-      <Text fill="#ee4540" layoutX="508.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selected video info">
-         <font>
-            <Font name="Quicksand SemiBold" size="23.0" />
-         </font>
-      </Text>
-      <AnchorPane layoutX="14.0" layoutY="42.0" prefHeight="481.0" prefWidth="458.0">
-         <children>
-            <Text fill="#ee4540" layoutX="20.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="📥" wrappingWidth="26.701171875">
-               <font>
-                  <Font name="Quicksand SemiBold" size="31.0" />
-               </font>
-            </Text>
-            <ListView fx:id="listViewDownloadManager" layoutX="20.0" layoutY="73.0" onMouseClicked="#displaySelectedVideoInfo" prefHeight="355.0" prefWidth="419.0" style="-fx-background-color: null; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0; -fx-border-width: 0 5px 0 5px 0; -fx-focus-color: white; -fx-padding: 5px;" />
-            <Button fx:id="downloadButton" layoutX="20.0" layoutY="31.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#downloadVideoOrPlaylist" onMouseEntered="#mouseEnterDownloadButton" onMouseExited="#mouseExitDownloadButton" onMousePressed="#mousePressedDownloadButton" onMouseReleased="#mouseReleasedDownloadButton" prefHeight="46.0" prefWidth="65.0" style="-fx-background-color: transparent; -fx-background-radius: 30px 0 0 0; -fx-border-color: #bc0c54; -fx-border-radius: 30px 0 0 0; -fx-border-width: 5px;" text="📥" textFill="#ee4540">
-               <font>
-                  <Font name="Quicksand SemiBold" size="19.0" />
-               </font>
-            </Button>
-            <TextField fx:id="youtubeLinkField" focusTraversable="false" layoutX="80.0" layoutY="31.0" onKeyPressed="#mouseEnterYoutubeLinkField" onMouseEntered="#mouseEnterYoutubeLinkField" onMouseExited="#mouseExitYoutubeLinkField" prefHeight="46.0" prefWidth="359.0" promptText="Enter a playlist or video link to download here!" style="-fx-background-color: transparent; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: #ee4540; -fx-background-radius: 0 30px 30px 0; -fx-border-color: #bc0c54; -fx-border-radius: 0 30px 0 0; -fx-border-width: 5px;">
-               <font>
-                  <Font name="Quicksand Medium" size="15.0" />
-               </font>
-            </TextField>
-            <Text fill="#ee4540" layoutX="53.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Download Queue">
-               <font>
-                  <Font name="Quicksand SemiBold" size="23.0" />
-               </font>
-            </Text>
-            <Button fx:id="deleteSelectedLinkButton" layoutX="20.0" layoutY="428.0" mnemonicParsing="false" onAction="#deleteSelectedLinkFromQueueManager" onMouseEntered="#mouseEnterDeleteSelectedLinkButton" onMouseExited="#mouseExitDeleteSelectedLinkButton" onMousePressed="#mousePressedDeleteSelectedLinkButton" onMouseReleased="#mouseReleasedDeleteSelectedLinkButton" prefHeight="49.0" prefWidth="208.0" style="-fx-background-color: transparent; -fx-background-radius: 0 0 0 30px; -fx-border-color: #4c154a; -fx-border-radius: 0 0 0 30px; -fx-border-width: 5px;" text="🗑Delete Selected Link" textFill="#4c154a">
-               <font>
-                  <Font name="Quicksand Regular" size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="clearQueueButton" layoutX="223.0" layoutY="428.0" mnemonicParsing="false" onAction="#clearQueueManager" onMouseEntered="#mouseEnterClearQueueButton" onMouseExited="#mouseExitClearQueueButton" onMousePressed="#mousePressedClearQueueButton" onMouseReleased="#mouseReleasedClearQueueButton" prefHeight="49.0" prefWidth="216.0" style="-fx-background-color: transparent; -fx-background-radius: 0 0 30px 0; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 0; -fx-border-width: 5px;" text="🗑Clear Queue" textFill="#4c154a">
-               <font>
-                  <Font name="Quicksand Regular" size="17.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
       <AnchorPane layoutX="831.0" layoutY="25.0" prefHeight="30.0" prefWidth="30.0">
          <children>
             <fx:include source="ExitButton.fxml" />
          </children>
       </AnchorPane>
-      <Button fx:id="deleteErrorListButton" layoutX="487.0" layoutY="469.0" mnemonicParsing="false" onAction="#clearDownloadErrorList" onMouseEntered="#mouseEnterDeleteErrorListButton" onMouseExited="#mouseExitDeleteErrorListButton" onMousePressed="#mousePressedDeleteErrorListButton" onMouseReleased="#mouseReleasedDeleteErrorListButton" prefHeight="49.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-background-radius: 0 0 30px 30px; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px;" text="🗑Delete Error List" textFill="#4c154a">
-         <font>
-            <Font name="Quicksand Regular" size="19.0" />
-         </font>
-      </Button>
-      <Text fill="#ee4540" layoutX="481.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🛈" wrappingWidth="26.701171875">
-         <font>
-            <Font name="Quicksand SemiBold" size="31.0" />
-         </font>
-      </Text>
-      <Text fill="#ee4540" layoutX="486.0" layoutY="354.0" strokeType="OUTSIDE" strokeWidth="0.0" text="⚠" wrappingWidth="30.0">
-         <font>
-            <Font name="Quicksand SemiBold" size="31.0" />
-         </font>
-      </Text>
       <AnchorPane fx:id="anchorPaneHoldingSlidingMenu" layoutY="528.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="49.0" prefWidth="245.0">
          <children>
             <fx:include source="SlidingMenuBar.fxml" />
          </children>
       </AnchorPane>
       <fx:include source="DragWindowButton.fxml" />
-      <AnchorPane fx:id="thumbnailAnchorPane" layoutX="486.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="137.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 30px 30px;">
-         <children>
-            <ImageView fx:id="thumbnailImageView" fitHeight="127.0" fitWidth="295.0" layoutX="35.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </AnchorPane>
+      <Button fx:id="playButton" layoutX="343.0" layoutY="264.0" mnemonicParsing="false" onAction="#playMusic" text="Play!" />
    </children>
 </AnchorPane>
