@@ -42,4 +42,11 @@ public class SceneController {
         MainViewRunner.getStage().setScene(scene);
         MainViewRunner.getStage().show();
     }
+    
+        public void switchToMusicPlayerPageView() throws IOException {
+        Parent root = loader.load(getClass().getResource("/fxml/MusicPlayerView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
+        Scene scene = new Scene(root, Color.TRANSPARENT);
+        MainViewRunner.getStage().setScene(scene);
+        MainViewRunner.getStage().show();
+    }
 }

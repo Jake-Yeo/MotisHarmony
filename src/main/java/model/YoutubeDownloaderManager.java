@@ -251,6 +251,8 @@ public class YoutubeDownloaderManager {
                         AudioConverterManager.addToConversionQueue(downloadedPath, youtubeTitleSafeName + ".weba");//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
                     } catch (EncoderException ex) {
                         Logger.getLogger(YoutubeDownloaderManager.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(YoutubeDownloaderManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }).start();

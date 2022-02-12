@@ -81,6 +81,10 @@ public class BrowserPageViewController implements Initializable {
         //      contextMenu.hide();
         //  }
     }
+    
+    public void turnOffWebEngine() {
+        //browserWebView.getEngine().load("https://www.youtube.com/");
+    }
 
     public void setUpContextMenu() {
         MenuItem downloadLink = new MenuItem("Download Video Audio");
