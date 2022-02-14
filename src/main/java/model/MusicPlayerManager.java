@@ -6,13 +6,11 @@
 package model;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import javafx.scene.media.Media;
 import java.util.Random;
-import java.util.Scanner;
 import javafx.scene.media.MediaPlayer;
 
 /**
@@ -24,7 +22,7 @@ public class MusicPlayerManager {
     public static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
 
     public static void playMusic() throws IOException {
-        String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split("/n");
+        String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
         System.out.println(Arrays.toString(musicPaths));
         Random randomNumGen = new Random(); 
         int indexOfNextSongToPlay = randomNumGen.nextInt(musicPaths.length);
