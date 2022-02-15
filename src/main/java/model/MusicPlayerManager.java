@@ -22,7 +22,6 @@ import javafx.scene.media.MediaPlayer;
 public class MusicPlayerManager {
 
     public static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
-    private static boolean listenerCreated = false;
     
     public static void playMusic() throws IOException {
         String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
@@ -33,7 +32,6 @@ public class MusicPlayerManager {
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         mediaPlayer = new MediaPlayer(media);
-        if (!listenerCreated) {
         mediaPlayer.setOnEndOfMedia(() -> {
             try {
                 playMusic();
@@ -41,8 +39,6 @@ public class MusicPlayerManager {
                 Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        listenerCreated = true;
-        }
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();
