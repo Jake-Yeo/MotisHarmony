@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.image.Image;
@@ -62,6 +63,18 @@ public class YoutubeVideoPageParser {
     private static final String YOUTUBE_VIDEO_LENGTH_IN_SECONDS_END_IDENTIFIER = "\"";
     private static final String YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER = "og:image\" content=\"";
     private static final String YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER = "\"";
+
+    private static final String youtubeActualStartIdentifierChangeVariableNamePlz = "PanelVideoRenderer\":{\"title\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_TITLES_START_IDENTIFIER = "simpleText\":\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_TITLES_END_IDENTIFIER = "\"},\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_CHANNEL_NAME_START_IDENTIFIER = "text\":\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_CHANNEL_NAME_END_IDENTIFIER = "\",\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_THUMBNAIL_URL_START_IDENTIFIER = "\"thumbnails\":[{\"url\":\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_THUMBNAIL_URL_END_IDENTIFIER = "\",\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_DURATION_START_IDENTIFIER = "simpleText\":\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_DURATION_END_IDENTIFIER = "\"}";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_ID_START_IDENTIFIER = "\"videoId\":\"";
+    private static final String YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER = "\",\"";
 
     public static String getHtml(String url) throws IOException {//To prevent an ip ban from websites, don't overuse this method.
         System.out.println("html getter called");
@@ -180,6 +193,10 @@ public class YoutubeVideoPageParser {
     public static String getRegularYoutubeUrl(String youtubeUrl) {//This will change a youtube url containing a time stamp, or a url that looks like this "https://youtu.be/fMriamkSXTk?t=3233" into this https://www.youtube.com/watch?v=fMriamkSXTk
         return YT_VIDEO_URL_STARTER + getYoutubeVideoID(youtubeUrl);
     }
+    
+    public static String constructYoutubeUrlViaID(String id) {
+        return YT_VIDEO_URL_STARTER + id;
+    }
 
     public static UrlDataObject getYoutubeVideoData(String youtubeUrl) throws IOException {
         String html = getHtml(youtubeUrl);
@@ -262,6 +279,60 @@ public class YoutubeVideoPageParser {
         System.out.println(urlList.length + " The length");//Sometimes the length may be different from what youtube states. This is because of a glitch in youtube where the same exact video are put into the youtube playlist twice.
 
         return urlList;
+    }
+
+    public static ArrayList<UrlDataObject> getPlaylistYoutubeUrlsNewMethodCode(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
+        youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
+        String html = getHtml(youtubePlaylistUrl);
+        ArrayList<UrlDataObject> urlDataList = new ArrayList<>();
+        //html = infoParserToolTrimToStart(html, YT_PLAYLIST_START_IDENTIFIER);//This will find the start of the playlist information in the html thus getting rid of any urls that may interfere with this method
+        int playlistLength = 0;
+        try {//This is just incase the url tester fails to catch a really weird url which somehow manages to pass through. For example there's some weird youtube radio playlists that can load in whole views, so we need another way to identify them.
+            playlistLength = Integer.parseInt(infoParserTool(html, YT_PLAYLIST_LENGTH_START_IDENTIFIER, YT_PLAYLIST_LENGTH_END_IDENTIFIER));//Since there is an unidentifiable amount of urls below the start of the playlist information section, we must get the length of the playlist so we can loop through only a certain amount of playlists. Error could occur if you are not at the actual playlist, you must be videwing a video from the playlist!
+        } catch (Exception e) {
+            return null;
+        }
+        String[] urlList = new String[playlistLength]; //This creates the String array which will hold information about the urls obtained from the playlist.      
+        String urlListStringToSplit = "";//This will store urls taken from the playlist into the url so that we can compare urls and see if that url is already in the string
+        String lastVideoUrlGotten = "";
+        int howManyVideoUrlsToObtain = 200;//This variable tells us how many video urls to obtain as this changes based on where we are in the playlist. This also fixes the bug where the download playlist button breaks after using it nine times. It happened because I instead used to use an instance variable which kept on incrementing it's value until eventually the inner for loop below stopped working after the button was pressed nine times.
+        int repeatAmt = (int) Math.floor(playlistLength / YT_PLAYLISTVIDEO_CAPPED_VIDEO_AMT) + 3; //200 goes into 502 twice. Since we want to get the last 102 videos we add one since we are flooring it. However, by adding 3 instead, we ensure that the user is able to download the maximum amount of youtube videos allowed in a playlist which is 5000
+        html = html.substring(0, html.lastIndexOf(YT_DOWNLOADABLE_PLAYLIST_END_IDENTIFIER));//This will cut off all the youtube urls which are not in the playlist when you only repeat through once. Also we do this last so as to not intefere with the code above
+        System.out.println("Reapeats " + repeatAmt);//tells us how many times the for loop will repeat
+        for (int timesRepeated = 0; timesRepeated < repeatAmt; timesRepeated++) {
+            System.out.println("Outer loop running");
+            html = infoParserToolTrimToStart(html, youtubeActualStartIdentifierChangeVariableNamePlz);//This will cut off all html up to the start of the first video in the playlist.
+            while (html.contains(youtubeActualStartIdentifierChangeVariableNamePlz)) {
+                System.out.println("while loop ran");
+                html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_TITLES_START_IDENTIFIER);
+                String videoTitle = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_TITLES_END_IDENTIFIER);;
+                html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_DURATION_START_IDENTIFIER);
+                String videoDuration = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_DURATION_END_IDENTIFIER);
+                html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_CHANNEL_NAME_START_IDENTIFIER);
+                String channelName = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_CHANNEL_NAME_END_IDENTIFIER);;
+                html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_THUMBNAIL_URL_START_IDENTIFIER);
+                String thumbnailUrl = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_THUMBNAIL_URL_END_IDENTIFIER);;
+                html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_ID_START_IDENTIFIER);
+                String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
+                String videoUrl = constructYoutubeUrlViaID(videoID);
+                if (true) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList
+                urlDataList.add(new UrlDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl));
+                }
+                lastVideoUrlGotten = videoUrl;
+            }
+            System.out.println(lastVideoUrlGotten + " video to make playlist with");
+            howManyVideoUrlsToObtain = howManyVideoUrlsToObtain * 2 - 1; //When we load a playlist from the index of 200, it loads up 399 videos. So we must set the YT_PLAYLISTVIDEO_CAPPED_VIDEO_AMT to 399 in order to get the other 199 videos we haven't downloaded yet. The other 200 videos we still loop through and attempt to store, but we have an if statement to prevent that.
+            html = getHtml(YT_PLAYLIST_AND_VIDEO_URL_START + getYoutubeVideoID(lastVideoUrlGotten) + YT_DOWNLOADABLE_PLAYLIST_LIST_ID_START_IDENTIFIER + getYoutubePlaylistListId(youtubePlaylistUrl)); //This will load up the new videos in the playlist
+            //html = infoParserToolTrimToStart(html, YT_PLAYLIST_START_IDENTIFIER);//This will find the start of the playlist information in the html thus getting rid of any urls that may interfere with this method
+            //html = html.substring(0, html.lastIndexOf(YT_DOWNLOADABLE_PLAYLIST_END_IDENTIFIER));//This will cut off all the youtube urls which are not in the playlist
+            //PrintWriter pw = new PrintWriter(new FileWriter("html.txt"));
+            // pw.print(urlListStringToSplit);
+            // pw.close();
+        }
+        urlList = urlListStringToSplit.trim().split(" ");//splits the string which collected the youtube urls in the playlist and turns it into an array
+        System.out.println(urlList.length + " The length");//Sometimes the length may be different from what youtube states. This is because of a glitch in youtube where the same exact video are put into the youtube playlist twice.
+
+        return urlDataList;
     }
 
     private static String infoParserTool(String passedHtml, String startIdentifier, String endIdentifier) {

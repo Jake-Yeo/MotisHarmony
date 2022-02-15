@@ -28,7 +28,8 @@ import view.MainViewRunner;
 public class AppRunner {
     
     public static void main(String[] args) throws MalformedURLException, IOException {//https://www.youtube.com/watch?v=cmSbXsFE3l8&list=PLyfE3pnEkrBMiCPLNDhft9hmeXK1wtkGF https://www.youtube.com/watch?v=kTJczUoc26U&list=PLMC9KNkIncKseYxDN2niH6glGRWKsLtde
-       
+       YoutubeVideoPageParser.getPlaylistYoutubeUrlsNewMethodCode("https://www.youtube.com/watch?v=j9ziXYpFs1I&list=PLleY9vT8KgEjaoNn9HwNceQ28i90HsqZE&index=1");
+       System.out.println(YoutubeVideoPageParser.getPlaylistYoutubeUrlsNewMethodCode("https://www.youtube.com/watch?v=j9ziXYpFs1I&list=PLleY9vT8KgEjaoNn9HwNceQ28i90HsqZE&index=1").size());
         PathsManager.setUpFolders();
         PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
         MainViewRunner.launchPanel(args);
