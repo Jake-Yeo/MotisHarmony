@@ -16,14 +16,16 @@ public class UrlDataObject {
     private String channelName;
     private String thumbnailUrl;
     private String errorMessage;
+    private String videoID;
     private boolean didErrorOccur;
 
-    public UrlDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl, String videoUrl) {
+    public UrlDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl, String videoUrl, String videoID) {
         this.videoTitle = videoTitle;
         this.videoDuration = videoDuration;
         this.channelName = channelName;
         this.thumbnailUrl = thumbnailUrl;
         this.videoUrl = videoUrl;
+        this.videoID = videoID;
     }
 
     public UrlDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl) {
