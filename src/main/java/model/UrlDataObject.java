@@ -55,4 +55,8 @@ public class UrlDataObject {
     public String getVideoUrl() {
         return this.videoUrl;
     }
+
+    public String getVideoID() {
+        return this.videoID;
+    }
 }

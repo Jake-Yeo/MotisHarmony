@@ -1,5 +1,7 @@
 Instead of just parsing the youtube urls from the playlists. Parse out the youtube titles, channel name, video length and image urls with  the following identifier PanelVideoRenderer":{"title"
 
+Fix this line if (!youtubeUrlDownloadQueueList.contains(youtubeUrl)) {
+
 Instead of just having an errorListView have an observable errorList in the model so that the controller can listen to list changes and update the errorListView accordingly.
 
 https://www.youtube.com/watch?v=cHc3cXXIydc&list=RDCLAK5uy_kb7EBi6y3GrtJri4_ZH56Ms786DFEimbM&start_radio=1 link creates an error when inputted into the download playlist or video url

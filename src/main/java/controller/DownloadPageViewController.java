@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,9 +40,6 @@ import ws.schild.jave.EncoderException;
  */
 public class DownloadPageViewController implements Initializable {
 
-    private String titleName = "";
-    private String channelName = "";
-    private String durationTime = "";
     private String youtubeUrlToGetInfoFrom = "";
     private Image thumbnailImage;
     private static boolean firstLinkFromDownloadQueueIsDownloading = false;
@@ -108,9 +106,9 @@ public class DownloadPageViewController implements Initializable {
         clip.setArcWidth(30);//this sets the rounded corners
         clip.setArcHeight(30);
         thumbnailAnchorPane.setClip(clip);
-        YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<String>() {
+        YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<UrlDataObject>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends String> arg0) {
+            public void onChanged(ListChangeListener.Change<? extends UrlDataObject> arg0) {
                 updateDownloadQueueListViewWithJavafxThread(true);
                 System.out.println("listener ran");
             }
@@ -266,13 +264,23 @@ public class DownloadPageViewController implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
+                    ObservableList<UrlDataObject> listOfUrlDataObjects = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList();
+                    String[] listOfTitlesToShow = new String[listOfUrlDataObjects.size()];
+                    for (int i = 0; i < listOfTitlesToShow.length; i++) {
+                        listOfTitlesToShow[i] = listOfUrlDataObjects.get(i).getTitle();
+                    }
                     listViewDownloadManager.getItems().clear();
-                    listViewDownloadManager.getItems().addAll(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList());
+                    listViewDownloadManager.getItems().addAll(listOfTitlesToShow);
                 }
             });
         } else {
+            ObservableList<UrlDataObject> listOfUrlDataObjects = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList();
+            String[] listOfTitlesToShow = new String[listOfUrlDataObjects.size()];
+            for (int i = 0; i < listOfTitlesToShow.length; i++) {
+                listOfTitlesToShow[i] = listOfUrlDataObjects.get(i).getTitle();
+            }
             listViewDownloadManager.getItems().clear();
-            listViewDownloadManager.getItems().addAll(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList());
+            listViewDownloadManager.getItems().addAll(listOfTitlesToShow);
         }
     }
 
@@ -299,26 +307,20 @@ public class DownloadPageViewController implements Initializable {
         if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {//Dont run the code if the user does not select anything
             if (!youtubeUrlToGetInfoFrom.equals(listViewDownloadManager.getSelectionModel().getSelectedItem())) { //Dont run the code if the user is trying to load the same info for the same url
                 videoInfoList.getItems().clear();
-                youtubeUrlToGetInfoFrom = listViewDownloadManager.getSelectionModel().getSelectedItem();//Must get the selected item url first for the if statement below to work
+                int urlDataObjectIndexToGet = listViewDownloadManager.getSelectionModel().getSelectedIndex();//Must get the selected item url first for the if statement below to work
                 new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx 
                         new Runnable() {
                     public void run() {
-                        try {
-                            UrlDataObject youtubeData = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlToGetInfoFrom);
-                            titleName = youtubeData.getTitle();
-                            channelName = youtubeData.getChannelName();
-                            durationTime = youtubeData.getVideoDuration();
-                            thumbnailImage = new Image(youtubeData.getThumbnailUrl());
-                        } catch (IOException ex) {
-                            Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        UrlDataObject youtubeData = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
+                        thumbnailImage = new Image(youtubeData.getThumbnailUrl());
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
                                 if (videoInfoList.getItems().size() != 3) {
-                                    videoInfoList.getItems().add("Music Title: " + titleName);
-                                    videoInfoList.getItems().add("Channel Name: " + channelName);
-                                    videoInfoList.getItems().add("Music Duration: " + durationTime);
+                                    videoInfoList.getItems().add("Music Title: " + youtubeData.getTitle());
+                                    videoInfoList.getItems().add("Channel Name: " + youtubeData.getChannelName());
+                                    videoInfoList.getItems().add("Music Duration: " + youtubeData.getVideoDuration());
+                                    videoInfoList.getItems().add("Video ID: " + youtubeData.getVideoID());
                                 }
                                 double w = 0;
                                 double h = 0;
