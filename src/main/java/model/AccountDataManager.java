@@ -20,20 +20,31 @@ import java.util.Scanner;
  */
 public class AccountDataManager {//This class will be used to manage all data changes made to a logged in account. If they change, add, remove a song or playlist, all of that will happen in this class    
 
-    public static void updateTextFile(Path pathToTextFile, String whatToPrintToTextFile) throws FileNotFoundException, IOException {
-        new File(pathToTextFile.toString());//Erases the contents of the file so it can be rewritten.
-        File file = new File(pathToTextFile.toString());
-        Scanner textScanner = new Scanner(file);
-        String textContents = Files.readString(pathToTextFile);
+    public static void urlDataObjectToAddToAccount(UrlDataObject urlDataObject) throws IOException {
+        updateSongsTxtPath(urlDataObject.getPathToWavFile());
+        updateDownloadedMusicData(urlDataObject);
     }
-    
+
+    public static void updateTextFile(Path pathToTextFile, String whatToAppendToTextFile) throws FileNotFoundException, IOException {
+        FileWriter fw = new FileWriter(pathToTextFile.toString(), true);
+        fw.write(whatToAppendToTextFile + System.lineSeparator());
+        fw.close();
+    }
+
     public static String getTextFileContents(Path pathToTextFile) throws IOException {
         return Files.readString(pathToTextFile);
     }
+
+    public static void updateSongsTxtPath(Path pathToAccessSong) throws IOException {
+        updateTextFile(PathsManager.getLoggedInUserSongsTxtPath(), pathToAccessSong.toString());
+    }
+
+    public static void updateSongsTxtPath(String pathToAccessSong) throws IOException {
+        updateTextFile(PathsManager.getLoggedInUserSongsTxtPath(), pathToAccessSong);
+    }
     
-    public static void addSongToAccount(Path pathToAccessSong) throws IOException {
-        FileWriter fw = new FileWriter(PathsManager.getLoggedInUserSongsTxtPath().toString(), true);
-        fw.write(pathToAccessSong.toString() + System.lineSeparator());
-        fw.close();
+    
+    public static void updateDownloadedMusicData(UrlDataObject dataUrlObject) throws IOException {
+        updateTextFile(PathsManager.getLoggedInUserDownloadedMusicDataPath(), dataUrlObject.toString());
     }
 }
