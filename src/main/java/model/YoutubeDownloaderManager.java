@@ -96,7 +96,7 @@ public class YoutubeDownloaderManager {
 
     private static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
-        ArrayList<UrlDataObject> youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrlsNewMethodCode(youtubePlaylistLink);
+        ArrayList<UrlDataObject> youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
         if (youtubePlaylistUrls == null) {
             errorList.add("Sorry we cannot download the url you entered at this time.");
             return;
@@ -209,14 +209,14 @@ public class YoutubeDownloaderManager {
         addYoutubeUrlsToDownloadQueue(youtubeUrl);
     }
 
-    private static void downloadYoutubeVideoUrl(String youtubeUrlFromDownloadManager) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
+    private static void downloadYoutubeVideoUrl(UrlDataObject youtubeUrlData) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
         URL downloadURL = null;
         boolean skipAudioConversion = false;
-        String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeUrlFromDownloadManager);
+        String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeUrlData.getVideoUrl());
         if (!possibleYoutubeUrl.equals("error")) {
             downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
             int count = 0;
-            String youtubeTitleSafeName = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrlFromDownloadManager).getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + YoutubeVideoPageParser.getYoutubeVideoID(youtubeUrlFromDownloadManager) + "]"; //Gets rid of foreign language characters;//Gets music title to use in the file name
+            String youtubeTitleSafeName = youtubeUrlData.getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + youtubeUrlData.getVideoID() + "]"; //Gets rid of ascii that may mess up file creation.
             String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
             try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
                 int i = 0;
@@ -260,7 +260,7 @@ public class YoutubeDownloaderManager {
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(true);
             ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrlDownloadQueueList.get(0).getVideoUrl());
             if (!errorData.didErrorOccur()) {//The youtube urls in the playlists are not checked, so we must check those here.
-                downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0).getVideoUrl());//Gets the first youtube url in the download queue list
+                downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
             } else {
                 errorList.add(errorData.getErrorMessage());
             }

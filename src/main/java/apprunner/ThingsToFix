@@ -1,6 +1,6 @@
-Instead of just parsing the youtube urls from the playlists. Parse out the youtube titles, channel name, video length and image urls with  the following identifier PanelVideoRenderer":{"title"
+Fix this line if (!youtubeUrlDownloadQueueList.contains(youtubeUrl)) { so that videos already in the download queue are not added again, and so that videos already downloaded are not added again
 
-Fix this line if (!youtubeUrlDownloadQueueList.contains(youtubeUrl)) {
+Instead of just parsing the youtube urls from the playlists. Parse out the youtube titles, channel name, video length and image urls with  the following identifier PanelVideoRenderer":{"title"
 
 Instead of just having an errorListView have an observable errorList in the model so that the controller can listen to list changes and update the errorListView accordingly.
 
