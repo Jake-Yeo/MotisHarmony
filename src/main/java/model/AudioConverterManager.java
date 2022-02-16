@@ -20,16 +20,16 @@ import ws.schild.jave.encode.EncodingAttributes;
  */
 public class AudioConverterManager {
 
-    private static ArrayList<String[]> conversionQueueList = new ArrayList<>();
+    private static ArrayList<UrlDataObject> conversionQueueList = new ArrayList<>();
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
     private static final String NEW_AUDIO_TYPE = ".wav";
     private static final String OLD_AUDIO_TYPE = ".weba";
 
-    private static void convertWebaToWav(String pathToWebaFile, String webaFileName) throws EncoderException, IOException {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
+    private static void convertWebaToWav(UrlDataObject urlDataObject) throws EncoderException, IOException {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
         conversionIsDone = false;
-        File source = new File(pathToWebaFile);
-        File target = new File(PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + (webaFileName.replace(OLD_AUDIO_TYPE, NEW_AUDIO_TYPE)));
+        File source = new File(urlDataObject.getPathToWebaFile());
+        File target = new File(urlDataObject.getPathToWavFile());
         //Audio Attributes                                       
         AudioAttributes audio = new AudioAttributes();
         audio.setCodec("pcm_s16le");
@@ -47,8 +47,8 @@ public class AudioConverterManager {
         System.out.println("done converting");
     }
 
-    public static void addToConversionQueue(String pathToWebaFile, String webaFileName) throws EncoderException, IOException {
-        conversionQueueList.add(new String[]{pathToWebaFile, webaFileName});
+    public static void addToConversionQueue(UrlDataObject urlDataObject) throws EncoderException, IOException {
+        conversionQueueList.add(urlDataObject);
         if (!coversionQueueHasStarted) {
             startConversionQueue();
         }
@@ -58,7 +58,7 @@ public class AudioConverterManager {
         coversionQueueHasStarted = true;
         while (!conversionQueueList.isEmpty()) {
             if (conversionIsDone) {
-                convertWebaToWav(conversionQueueList.get(0)[0], conversionQueueList.get(0)[1]);
+                convertWebaToWav(conversionQueueList.get(0));
             }
             coversionQueueHasStarted = false;
         }

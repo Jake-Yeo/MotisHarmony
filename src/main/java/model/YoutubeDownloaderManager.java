@@ -218,7 +218,9 @@ public class YoutubeDownloaderManager {
             int count = 0;
             String youtubeTitleSafeName = youtubeUrlData.getTitle().replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + youtubeUrlData.getVideoID() + "]"; //Gets rid of ascii that may mess up file creation.
             String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
-            try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(downloadedPath)) {
+            youtubeUrlData.setPathToWebaFile(downloadedPath);
+            youtubeUrlData.setPathToWavFile(PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + youtubeTitleSafeName + ".wav");
+            try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
                 int i = 0;
                 System.out.println("Stop downloading is " + DownloadPageViewController.getStopDownloading());
                 final byte[] data = new byte[1024];
@@ -242,7 +244,7 @@ public class YoutubeDownloaderManager {
                     new Runnable() {
                 public void run() {
                     try {
-                        AudioConverterManager.addToConversionQueue(downloadedPath, youtubeTitleSafeName + ".weba");//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+                        AudioConverterManager.addToConversionQueue(youtubeUrlData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
                     } catch (EncoderException ex) {
                         Logger.getLogger(YoutubeDownloaderManager.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
