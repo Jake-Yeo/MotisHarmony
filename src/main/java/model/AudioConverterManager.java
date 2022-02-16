@@ -43,7 +43,7 @@ public class AudioConverterManager {
         source.delete();
         conversionQueueList.remove(0);
         conversionIsDone = true;
-        AccountDataManager.addSongToAccount(target.toPath());//This will save the path of the wav file to the account data so that it can be accessed
+        AccountDataManager.urlDataObjectToAddToAccount(urlDataObject);//This will save the path of the wav file to the account data so that it can be accessed
         System.out.println("done converting");
     }
 
