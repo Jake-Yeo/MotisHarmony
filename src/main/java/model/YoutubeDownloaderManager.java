@@ -54,7 +54,7 @@ public class YoutubeDownloaderManager {
     private static final String YOUTUBE_AUDIO_SOURCE_IDENTIFIER = "mime=audio";
     private static final String YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER = "https:";
     private static final String YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER = "range";
-    private static ObservableList<String> youtubeUrlDownloadQueueList = FXCollections.observableArrayList();
+    private static ObservableList<UrlDataObject> youtubeUrlDownloadQueueList = FXCollections.observableArrayList();
     private static ObservableList<String> errorList = FXCollections.observableArrayList();
 
     private static void setupChromeDriver() {
@@ -72,10 +72,9 @@ public class YoutubeDownloaderManager {
     }
 
     private static void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
-        File youtubeUrlDownloadManagerFile = new File("YoutubeUrlsToDownload.txt");
         youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
         if (!youtubeUrlDownloadQueueList.contains(youtubeUrl)) {//Makes sure that a youtube url is not added to the download queue list multiple times
-            youtubeUrlDownloadQueueList.add(youtubeUrl);//adds the youtube url to the download queue
+            youtubeUrlDownloadQueueList.add(YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrl));//adds the youtube url to the download queue
         }
     }
 
@@ -87,7 +86,7 @@ public class YoutubeDownloaderManager {
         isChromeDriverActive = tf;
     }
 
-    public static ObservableList<String> getYoutubeUrlDownloadQueueList() {
+    public static ObservableList<UrlDataObject> getYoutubeUrlDownloadQueueList() {
         return youtubeUrlDownloadQueueList;
     }
 
@@ -97,18 +96,13 @@ public class YoutubeDownloaderManager {
 
     private static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
-        String[] youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
-        if (youtubePlaylistUrls != null) {
-            for (int i = 0; i < youtubePlaylistUrls.length;) {//This array coverts all the youtube urls into one url that can be consistently compared with each other
-                youtubePlaylistUrls[i] = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubePlaylistUrls[i]);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
-                System.out.println(i);
-                i++;
-            }
-            youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrls);//Adds the entire string array of converted youtube urls to the download queue.
-            isPlaylistUrlGetterCurrentlyGettingUrls = false;
-        } else {
+        ArrayList<UrlDataObject> youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrlsNewMethodCode(youtubePlaylistLink);
+        if (youtubePlaylistUrls == null) {
             errorList.add("Sorry we cannot download the url you entered at this time.");
+            return;
         }
+        youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrls);//Adds the entire string array of converted youtube urls to the download queue.
+        isPlaylistUrlGetterCurrentlyGettingUrls = false;
     }
 
     private static boolean isPlaylistUrlGetterCurrentlyGettingUrls() {
@@ -189,25 +183,25 @@ public class YoutubeDownloaderManager {
             addYoutubeVideoUrlToDownloadQueue(youtubeUrl);
         }
     }
-    
+
     public static void addYoutubeLinkToDownloadQueueAndStartDownload(String youtubeUrl) {
         try {
-                    ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrl);
-                    if (!errorData.didErrorOccur()) {
-                        addYoutubeLinkToDownloadQueue(youtubeUrl);
-                        if (!isAppDownloadingFromDownloadQueue()) {
-                            try {
-                                downloadSongsFromDownloadQueue();
-                            } catch (Exception e) {
-                                Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, e);
-                            }
-                        }
-                    } else {
-                        errorList.add(errorData.getErrorMessage());
+            ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrl);
+            if (!errorData.didErrorOccur()) {
+                addYoutubeLinkToDownloadQueue(youtubeUrl);
+                if (!isAppDownloadingFromDownloadQueue()) {
+                    try {
+                        downloadSongsFromDownloadQueue();
+                    } catch (Exception e) {
+                        Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, e);
                     }
-                } catch (IOException ex) {
-                    Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            } else {
+                errorList.add(errorData.getErrorMessage());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private static void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
@@ -264,9 +258,9 @@ public class YoutubeDownloaderManager {
         setupChromeDriver();
         while (!youtubeUrlDownloadQueueList.isEmpty()) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(true);
-            ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrlDownloadQueueList.get(0));
+            ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrlDownloadQueueList.get(0).getVideoUrl());
             if (!errorData.didErrorOccur()) {//The youtube urls in the playlists are not checked, so we must check those here.
-                downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
+                downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0).getVideoUrl());//Gets the first youtube url in the download queue list
             } else {
                 errorList.add(errorData.getErrorMessage());
             }

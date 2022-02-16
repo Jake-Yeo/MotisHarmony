@@ -301,10 +301,10 @@ public class YoutubeVideoPageParser {
         System.out.println("Reapeats " + repeatAmt);//tells us how many times the for loop will repeat
         for (int timesRepeated = 0; timesRepeated < repeatAmt; timesRepeated++) {
             System.out.println("Outer loop running");
-            html = infoParserToolTrimToStart(html, youtubeActualStartIdentifierChangeVariableNamePlz);//This will cut off all html up to the start of the first video in the playlist.
             while (html.contains(youtubeActualStartIdentifierChangeVariableNamePlz)) {
+                html = infoParserToolTrimToStart(html, youtubeActualStartIdentifierChangeVariableNamePlz);//This will cut off all html up to the start of the first video in the playlist.
                 System.out.println("while loop ran");
-                html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_TITLES_START_IDENTIFIER);
+                html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_TITLES_START_IDENTIFIER);//Make sure you cut off the top in the right order or we won't be able to parse the video info properly.
                 String videoTitle = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_TITLES_END_IDENTIFIER);
                 html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_CHANNEL_NAME_START_IDENTIFIER);
                 String channelName = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_CHANNEL_NAME_END_IDENTIFIER);
