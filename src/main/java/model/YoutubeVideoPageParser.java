@@ -10,7 +10,6 @@ import java.io.FileWriter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -99,8 +98,6 @@ public class YoutubeVideoPageParser {
         }
         try {
             html = getHtml(videoUrl);
-            PrintWriter pw = new PrintWriter(new FileWriter("html.txt"));
-            pw.print(html);
         } catch (Exception e) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is likely not a link!";
@@ -257,7 +254,7 @@ public class YoutubeVideoPageParser {
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
                 System.out.println(videoID);
-                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoID)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList
+                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoUrl) && !UrlDataObject.toString(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList()).contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList
                     urlDataList.add(new UrlDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
                     youtubeIdsCurrentlyInUrlDataList += videoID + " ";
                 }

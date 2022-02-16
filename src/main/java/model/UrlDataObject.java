@@ -4,6 +4,8 @@
  */
 package model;
 
+import javafx.collections.ObservableList;
+
 /**
  *
  * @author 1100007967
@@ -17,7 +19,8 @@ public class UrlDataObject {
     private String thumbnailUrl;
     private String errorMessage;
     private String videoID;
-    private boolean didErrorOccur;
+    private String pathToWebaFile;
+    private String pathToWavFile;
 
     public UrlDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl, String videoUrl, String videoID) {
         this.videoTitle = videoTitle;
@@ -26,14 +29,6 @@ public class UrlDataObject {
         this.thumbnailUrl = thumbnailUrl;
         this.videoUrl = videoUrl;
         this.videoID = videoID;
-    }
-
-    public UrlDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl) {
-        this.videoTitle = videoTitle;
-        this.videoDuration = videoDuration;
-        this.channelName = channelName;
-        this.thumbnailUrl = thumbnailUrl;
-        this.videoUrl = "";
     }
 
     public String getTitle() {
@@ -58,5 +53,34 @@ public class UrlDataObject {
 
     public String getVideoID() {
         return this.videoID;
+    }
+
+    public String getPathToWebaFile() {
+        return this.pathToWebaFile;
+    }
+
+    public String getPathToWavFile() {
+        return this.pathToWavFile;
+    }
+
+    public void setPathToWebaFile(String pathToWebaFile) {
+        this.pathToWebaFile = pathToWebaFile;
+    }
+
+       public void setPathToWavFile(String pathToWavFile) {
+        this.pathToWavFile = pathToWavFile;
+    }
+    
+    @Override
+    public String toString() {
+        return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile());
+    }
+
+    public static String toString(ObservableList<UrlDataObject> urlDataObjectArray) {
+        String stringToReturn = "";
+        for (int i = 0; i < urlDataObjectArray.size(); i++) {
+            stringToReturn += urlDataObjectArray.get(i).toString();
+        }
+        return stringToReturn;
     }
 }
