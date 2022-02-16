@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -254,7 +255,7 @@ public class YoutubeVideoPageParser {
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
                 System.out.println(videoID);
-                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoUrl) && !UrlDataObject.toString(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList()).contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList
+                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoUrl) && !UrlDataObject.toString(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Files.readString(PathsManager.getLoggedInUserDownloadedMusicDataPath()).contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList. This ensure that urls are not inputted into the downloadQueue multiple times
                     urlDataList.add(new UrlDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
                     youtubeIdsCurrentlyInUrlDataList += videoID + " ";
                 }
