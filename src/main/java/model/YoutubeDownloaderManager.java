@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -205,8 +206,10 @@ public class YoutubeDownloaderManager {
     }
 
     private static void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
-        youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in maybe of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
-        addYoutubeUrlsToDownloadQueue(youtubeUrl);
+        youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in may be of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
+        if (!UrlDataObject.toString(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList()).contains(youtubeUrl) && !Files.readString(PathsManager.getLoggedInUserDownloadedMusicDataPath()).contains(youtubeUrl)) {//Stops you from inputting the same url into the downloadQueue
+            addYoutubeUrlsToDownloadQueue(youtubeUrl);
+        }
     }
 
     private static void downloadYoutubeVideoUrl(UrlDataObject youtubeUrlData) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
@@ -220,7 +223,7 @@ public class YoutubeDownloaderManager {
             String downloadedPath = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + youtubeTitleSafeName + ".weba";
             youtubeUrlData.setPathToWebaFile(downloadedPath);
             youtubeUrlData.setPathToWavFile(PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + youtubeTitleSafeName + ".wav");
-            try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
+            try (BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream()); FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
                 int i = 0;
                 System.out.println("Stop downloading is " + DownloadPageViewController.getStopDownloading());
                 final byte[] data = new byte[1024];
