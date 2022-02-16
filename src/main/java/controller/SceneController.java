@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller;//This should actually be in the view package in order to follow proper MVC architecture
 
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;

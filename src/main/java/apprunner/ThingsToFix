@@ -1,5 +1,7 @@
 Fix this line if (!youtubeUrlDownloadQueueList.contains(youtubeUrl)) { so that videos already in the download queue are not added again, and so that videos already downloaded are not added again
 
+https://www.youtube.com/watch?v=M1hNOd12yJs The title is not displayed properly since it is in a foreign language.
+
 Instead of just parsing the youtube urls from the playlists. Parse out the youtube titles, channel name, video length and image urls with  the following identifier PanelVideoRenderer":{"title"
 
 Instead of just having an errorListView have an observable errorList in the model so that the controller can listen to list changes and update the errorListView accordingly.
