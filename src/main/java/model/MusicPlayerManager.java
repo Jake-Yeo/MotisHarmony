@@ -25,7 +25,7 @@ public class MusicPlayerManager {
     public static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
 
     public static void playMusic() throws IOException {
-        ArrayList<String> musicPaths = SongDataObject.getListOfSongPaths(AccountInitializer.getLoggedInAccount().getSongListFromAccount());
+        ArrayList<String> musicPaths = Account.getLoggedInAccount().getListOfSongPaths();
         //String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
         //System.out.println(Arrays.toString(musicPaths));
         Random randomNumGen = new Random();

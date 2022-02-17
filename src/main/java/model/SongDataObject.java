@@ -80,15 +80,6 @@ public class SongDataObject implements Serializable {
         return this.pathToThumbnail;
     }
 
-    public static ArrayList<String> getListOfSongPaths(ArrayList<SongDataObject> listOfSongDataObjects) {
-        ArrayList<String> listOfSongsToReturn = new ArrayList<>();
-        for (int i = 0; i < listOfSongDataObjects.size(); i++) {
-            listOfSongsToReturn.add(listOfSongDataObjects.get(i).getPathToWavFile());
-        }
-        System.out.println("This ran " + listOfSongsToReturn.size());
-        return listOfSongsToReturn;
-    }
-
     @Override
     public String toString() {
         return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile() + ", " + getSafeTitleName() + ", " + getPathToThumbnail());
