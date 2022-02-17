@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import view.SceneChanger;
@@ -21,12 +22,12 @@ import view.SceneChanger;
  *
  * @author Jake Yeo
  */
-public class Account implements Serializable {
+public class Account implements Serializable {//This class will store account username and their encrypted password, plus song data
 
+    private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
     private String username;
     private String password;
     private String key;
-    private final String seperator = ", ";
     transient private EncryptionDecryption aes = new EncryptionDecryption();
 
     Account(String username, String password) {
@@ -58,6 +59,18 @@ public class Account implements Serializable {
 
     public String getKey() {
         return this.key;
+    }
+
+    public void addSongDataObjectToAccount(SongDataObject songDataObject) {
+        this.songDataObjectList.add(songDataObject);
+    }
+
+    public void removeSongFromAccount(SongDataObject songDataObject) {
+        this.songDataObjectList.remove(songDataObject);
+    }
+    
+    public ArrayList<SongDataObject> getSongListFromAccount() {
+        return this.songDataObjectList;
     }
 
     public void serializeAccount() {

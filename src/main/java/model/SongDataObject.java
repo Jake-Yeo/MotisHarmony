@@ -4,14 +4,16 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import javafx.collections.ObservableList;
 
 /**
  *
  * @author 1100007967
  */
-public class SongDataObject {
+public class SongDataObject implements Serializable {
 
     private String videoTitle;
     private String videoUrl;
@@ -76,6 +78,15 @@ public class SongDataObject {
 
     public String getPathToThumbnail() {
         return this.pathToThumbnail;
+    }
+
+    public static ArrayList<String> getListOfSongPaths(ArrayList<SongDataObject> listOfSongDataObjects) {
+        ArrayList<String> listOfSongsToReturn = new ArrayList<>();
+        for (int i = 0; i < listOfSongDataObjects.size(); i++) {
+            listOfSongsToReturn.add(listOfSongDataObjects.get(i).getPathToWavFile());
+        }
+        System.out.println("This ran " + listOfSongsToReturn.size());
+        return listOfSongsToReturn;
     }
 
     @Override
