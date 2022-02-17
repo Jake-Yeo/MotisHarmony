@@ -17,9 +17,10 @@ import java.util.logging.Logger;
  *
  * @author Jake Yeo
  */
-public class AccountInitializer {
+public class AccountInitializer {//This class will set up the logged in account
 
     private SceneChanger sceneSwitcher = new SceneChanger();
+    private static Account loggedInAccount;
 
     /**
      * @param loginOrSignup true means signup, false means login text file
@@ -30,10 +31,10 @@ public class AccountInitializer {
 
     public void signup(String username, String password) throws IOException, Exception {//This will be used to create an account//Returns true if the signup is successful
 
-        Account account = new Account(username, password);
+        loggedInAccount = new Account(username, password);
         PathsManager.setUpAccountFoldersAndTxtFiles(username);
         PathsManager.setUpPathsInsideUserDataPath();//Basically we just set up paths for the folders and text files made above
-        account.serializeAccount();
+        loggedInAccount.serializeAccount();
         sceneSwitcher.switchToDownloadPageView();
         System.out.println(PathsManager.getLoggedInUserDataPath().toString());
     }
@@ -43,4 +44,9 @@ public class AccountInitializer {
         PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
         sceneSwitcher.switchToDownloadPageView();
     }
+    
+    public static Account getLoggedInAccount() {
+        return loggedInAccount;
+    }
+
 }

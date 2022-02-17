@@ -20,10 +20,12 @@ import javax.imageio.ImageIO;
  * @author Jake Yeo
  */
 public class AccountDataManager {//This class will be used to manage all data changes made to a logged in account. If they change, add, remove a song or playlist, all of that will happen in this class    
-
+    
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws IOException {
         updateSongsTxtPath(urlDataObject.getPathToWavFile());
         updateDownloadedMusicData(urlDataObject);
+        AccountInitializer.getLoggedInAccount().addSongDataObjectToAccount(urlDataObject);
+        AccountInitializer.getLoggedInAccount().serializeAccount();
         saveThumbnail(urlDataObject.getThumbnailUrl(), urlDataObject.getPathToThumbnail());
     }
 
