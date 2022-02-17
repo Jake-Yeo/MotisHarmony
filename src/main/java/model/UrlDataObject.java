@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.nio.file.Paths;
 import javafx.collections.ObservableList;
 
 /**
@@ -21,6 +22,8 @@ public class UrlDataObject {
     private String videoID;
     private String pathToWebaFile;
     private String pathToWavFile;
+    private String pathToThumbnail;
+    private String safeTitleName;
 
     public UrlDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl, String videoUrl, String videoID) {
         this.videoTitle = videoTitle;
@@ -29,6 +32,10 @@ public class UrlDataObject {
         this.thumbnailUrl = thumbnailUrl;
         this.videoUrl = videoUrl;
         this.videoID = videoID;
+        this.safeTitleName = videoTitle.replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "[" + videoID + "]"; //Gets rid of ascii that may mess up file creation.
+        this.pathToWebaFile = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + this.safeTitleName + ".weba";
+        this.pathToWavFile = PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + this.safeTitleName + ".wav";
+        this.pathToThumbnail = Paths.get(PathsManager.getLoggedInUserThumbnailsPath().toString(), (this.safeTitleName + ".png")).toString();
     }
 
     public String getTitle() {
@@ -63,17 +70,17 @@ public class UrlDataObject {
         return this.pathToWavFile;
     }
 
-    public void setPathToWebaFile(String pathToWebaFile) {
-        this.pathToWebaFile = pathToWebaFile;
+    public String getSafeTitleName() {
+        return this.safeTitleName;
     }
 
-       public void setPathToWavFile(String pathToWavFile) {
-        this.pathToWavFile = pathToWavFile;
+    public String getPathToThumbnail() {
+        return this.pathToThumbnail;
     }
-    
+
     @Override
     public String toString() {
-        return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile());
+        return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile() + ", " + getSafeTitleName() + ", " + getPathToThumbnail());
     }
 
     public static String toString(ObservableList<UrlDataObject> urlDataObjectArray) {
