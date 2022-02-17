@@ -5,6 +5,7 @@
  */
 package controller;
 
+import view.SceneChanger;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -55,7 +56,7 @@ public class LoginPageViewController implements Initializable {
     @FXML
     private Button loginButton;
 
-    private SceneController sceneController = new SceneController();
+    private SceneChanger sceneController = new SceneChanger();
     @FXML
     private Text motisHarmonyText;
     @FXML

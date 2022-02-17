@@ -6,7 +6,7 @@
 package model;
 
 import controller.LoginPageViewController;
-import controller.SceneController;
+import view.SceneChanger;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class Account {
 
     private String username;
     private String password;
-    private SceneController sceneSwitcher = new SceneController();
+    private SceneChanger sceneSwitcher = new SceneChanger();
 
     /**
      * @param loginOrSignup true means signup, false means login text file
