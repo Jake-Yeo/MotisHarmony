@@ -18,7 +18,7 @@ import java.util.Arrays;
  *
  * @author Jake Yeo
  */
-public class Account {
+public class AccountInitializer {
 
     private String username;
     private String password;
@@ -27,7 +27,7 @@ public class Account {
     /**
      * @param loginOrSignup true means signup, false means login text file
      */
-    public Account() {//Will login or create an account, will create the files necessary for the AccountDataManager to mange the account. If you login, all the account setup will happen in this class.
+    public AccountInitializer() {//Will login or create an account, will create the files necessary for the AccountDataManager to mange the account. If you login, all the account setup will happen in this class.
 
     }
 

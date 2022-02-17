@@ -18,7 +18,7 @@ import ws.schild.jave.encode.EncodingAttributes;
  *
  * @author Jake Yeo
  */
-public class AudioConverterManager {
+public class AudioConverter {
 
     private static ArrayList<SongDataObject> conversionQueueList = new ArrayList<>();
     private static boolean conversionIsDone = true;
