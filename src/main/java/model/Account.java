@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
+import java.io.Serializable;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,7 @@ import view.SceneChanger;
  *
  * @author Jake Yeo
  */
-public class Account {
+public class Account implements Serializable {
 
     private String username;
     private String password;
