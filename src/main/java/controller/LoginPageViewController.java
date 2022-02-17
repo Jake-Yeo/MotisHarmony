@@ -114,7 +114,7 @@ public class LoginPageViewController implements Initializable {
         //sceneController.switchToDownloadPageView();
     }
 
-    public void signup(ActionEvent event) throws IOException {
+    public void signup(ActionEvent event) throws IOException, Exception {
         acc.signup(usernameTextField.getText(), passwordPasswordField.getText());
         //sceneController.switchToDownloadPageView();
     }

@@ -8,9 +8,19 @@ package apprunner;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import model.EncryptionDecryption;
 import model.MusicPlayerManager;
 import model.PathsManager;
 import model.YoutubeVideoPageParser;
@@ -26,9 +36,8 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class AppRunner {
-    
-    public static void main(String[] args) throws MalformedURLException, IOException {//https://www.youtube.com/watch?v=cmSbXsFE3l8&list=PLyfE3pnEkrBMiCPLNDhft9hmeXK1wtkGF https://www.youtube.com/watch?v=kTJczUoc26U&list=PLMC9KNkIncKseYxDN2niH6glGRWKsLtde
-       //System.out.println(YoutubeVideoPageParser.getPlaylistYoutubeUrlsNewMethodCode("https://www.youtube.com/watch?v=ktvTqknDobU&list=PLzxEw1CbicllxqVJaN9hodbkMXNX0Cnds").size());
+
+    public static void main(String[] args) throws MalformedURLException, IOException, Exception {
         PathsManager.setUpFolders();
         PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
         MainViewRunner.launchPanel(args);

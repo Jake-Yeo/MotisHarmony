@@ -5,14 +5,12 @@
  */
 package model;
 
-import controller.LoginPageViewController;
 import view.SceneChanger;
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,24 +21,30 @@ public class AccountInitializer {
     private String username;
     private String password;
     private SceneChanger sceneSwitcher = new SceneChanger();
+    private final String seperator = ", ";
+    private EncryptionDecryption aes = new EncryptionDecryption();
 
     /**
      * @param loginOrSignup true means signup, false means login text file
      */
-    public AccountInitializer() {//Will login or create an account, will create the files necessary for the AccountDataManager to mange the account. If you login, all the account setup will happen in this class.
-
+    public AccountInitializer() {
+        try {
+        //Will login or create an account, will create the files necessary for the AccountDataManager to mange the account. If you login, all the account setup will happen in this class.
+        aes.init();
+        } catch (Exception ex) {
+            Logger.getLogger(AccountInitializer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public void signup(String username, String password) throws IOException {//This will be used to create an account//Returns true if the signup is successful
+    public void signup(String username, String password) throws IOException, Exception {//This will be used to create an account//Returns true if the signup is successful
         this.username = username;
-        this.password = password;
+        this.password = aes.encrypt(password);
         PathsManager.setUpAccountFoldersAndTxtFiles(this.username);//This will create a folder with the user's username and create all the folders and txt files withing that folder which are nessesary for the program to work
         PathsManager.setUpPathsInsideUserDataPath();//Basically we just set up paths for the folders and text files made above
 
         FileWriter fw = new FileWriter(PathsManager.ACCOUNT_USER_PASS_DATA_PATH.toString(), true);
         PrintWriter pw = new PrintWriter(fw);
-        pw.println(this.username);
-        pw.println(this.password);
+        pw.println(this.toString());
         fw.close();
         pw.close();
         sceneSwitcher.switchToDownloadPageView();
@@ -69,5 +73,10 @@ public class AccountInitializer {
 
     public String getPassword() {
         return this.password;
+    }
+
+    @Override
+    public String toString() {
+        return this.username + seperator + this.password + seperator + aes.getSecretKey();
     }
 }
