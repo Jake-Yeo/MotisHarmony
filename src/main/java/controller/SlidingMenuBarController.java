@@ -5,6 +5,7 @@
  */
 package controller;
 
+import view.SceneChanger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -29,7 +30,7 @@ import javafx.util.Duration;
  */
 public class SlidingMenuBarController implements Initializable {
 
-    private SceneController sceneController = new SceneController();
+    private SceneChanger sceneChanger = new SceneChanger();
     private boolean isSlidingMenuOpen = false;
     private TranslateTransition translateTransition = new TranslateTransition();
     private BrowserPageViewController browserPageViewcontroller = new BrowserPageViewController();
@@ -69,20 +70,19 @@ public class SlidingMenuBarController implements Initializable {
 
     @FXML
     private void switchToPlayer(ActionEvent event) throws IOException {
-        sceneController.switchToMusicPlayerPageView();
+        sceneChanger.switchToMusicPlayerPageView();
         System.out.println("player");
     }
 
     @FXML
     private void switchToBrowser(ActionEvent event) throws IOException {
-
-        sceneController.switchToBrowserPageView();
+        sceneChanger.switchToBrowserPageView();
         System.out.println("browser");
     }
 
     @FXML
     private void switchToDownloadPage(ActionEvent event) throws IOException {
-        sceneController.switchToDownloadPageView();
+        sceneChanger.switchToDownloadPageView();
         System.out.println("download");
     }
 
