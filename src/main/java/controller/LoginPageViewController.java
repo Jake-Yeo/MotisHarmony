@@ -29,7 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import model.AccountInitializer;
+import model.Account;
 
 /**
  * FXML Controller class
@@ -39,7 +39,6 @@ import model.AccountInitializer;
 public class LoginPageViewController implements Initializable {
 
     private int animationNum = 0;
-    private AccountInitializer acc = new AccountInitializer();
     private FadeTransition fadeTransition = new FadeTransition();
     @FXML
     private AnchorPane loginSignupMainAnchorPane;
@@ -110,12 +109,12 @@ public class LoginPageViewController implements Initializable {
 
     @FXML
     public void login(ActionEvent event) throws IOException {
-        acc.login(usernameTextField.getText(), passwordPasswordField.getText());
+        Account.login(usernameTextField.getText(), passwordPasswordField.getText());
         //sceneController.switchToDownloadPageView();
     }
 
     public void signup(ActionEvent event) throws IOException, Exception {
-        acc.signup(usernameTextField.getText(), passwordPasswordField.getText());
+        Account.signup(usernameTextField.getText(), passwordPasswordField.getText());
         //sceneController.switchToDownloadPageView();
     }
 
