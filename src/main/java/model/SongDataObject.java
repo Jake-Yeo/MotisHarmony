@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
  *
  * @author 1100007967
  */
-public class UrlDataObject {
+public class SongDataObject {
 
     private String videoTitle;
     private String videoUrl;
@@ -25,7 +25,7 @@ public class UrlDataObject {
     private String pathToThumbnail;
     private String safeTitleName;
 
-    public UrlDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl, String videoUrl, String videoID) {
+    public SongDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl, String videoUrl, String videoID) {
         this.videoTitle = videoTitle;
         this.videoDuration = videoDuration;
         this.channelName = channelName;
@@ -83,7 +83,7 @@ public class UrlDataObject {
         return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile() + ", " + getSafeTitleName() + ", " + getPathToThumbnail());
     }
 
-    public static String toString(ObservableList<UrlDataObject> urlDataObjectArray) {
+    public static String toString(ObservableList<SongDataObject> urlDataObjectArray) {
         String stringToReturn = "";
         for (int i = 0; i < urlDataObjectArray.size(); i++) {
             stringToReturn += urlDataObjectArray.get(i).toString();

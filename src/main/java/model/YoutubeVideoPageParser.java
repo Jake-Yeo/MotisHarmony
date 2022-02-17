@@ -189,7 +189,7 @@ public class YoutubeVideoPageParser {
         return YT_VIDEO_URL_STARTER + id;
     }
 
-    public static UrlDataObject getYoutubeVideoData(String youtubeUrl) throws IOException {
+    public static SongDataObject getYoutubeVideoData(String youtubeUrl) throws IOException {
         String html = getHtml(youtubeUrl);
         String thumbnailUrl = infoParserTool(html, YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER, YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER);
         String channelName = infoParserTool(html, YOUTUBE_VIDEO_CHANNEL_NAME_START_IDENTIFIER, YOUTUBE_VIDEO_CHANNEL_NAME_END_IDENTIFIER);
@@ -217,15 +217,15 @@ public class YoutubeVideoPageParser {
         } else {
             videoDuration = durationMinutes + ":" + remaindingSeconds;
         }
-        UrlDataObject youtubeVideoData = new UrlDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, youtubeUrl, getYoutubeVideoID(youtubeUrl));
+        SongDataObject youtubeVideoData = new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, youtubeUrl, getYoutubeVideoID(youtubeUrl));
         return youtubeVideoData;
     }
 
-    public static ArrayList<UrlDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
+    public static ArrayList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
         youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
         String html = getHtml(youtubePlaylistUrl);
         String youtubeIdsCurrentlyInUrlDataList = "";
-        ArrayList<UrlDataObject> urlDataList = new ArrayList<>();//This will return a list of UrlDataObjects containing data about the video duration, title, channel name etc.
+        ArrayList<SongDataObject> urlDataList = new ArrayList<>();//This will return a list of UrlDataObjects containing data about the video duration, title, channel name etc.
         //html = infoParserToolTrimToStart(html, YT_PLAYLIST_START_IDENTIFIER);//This will find the start of the playlist information in the html thus getting rid of any urls that may interfere with this method
         int playlistLength = 0;
         try {//This is just incase the url tester fails to catch a really weird url which somehow manages to pass through. For example there's some weird youtube radio playlists that can load in whole views, so we need another way to identify them.
@@ -255,8 +255,8 @@ public class YoutubeVideoPageParser {
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
                 System.out.println(videoID);
-                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoUrl) && !UrlDataObject.toString(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Files.readString(PathsManager.getLoggedInUserDownloadedMusicDataPath()).contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList. This ensure that urls are not inputted into the downloadQueue multiple times
-                    urlDataList.add(new UrlDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
+                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoUrl) && !SongDataObject.toString(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Files.readString(PathsManager.getLoggedInUserDownloadedMusicDataPath()).contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList. This ensure that urls are not inputted into the downloadQueue multiple times
+                    urlDataList.add(new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
                     youtubeIdsCurrentlyInUrlDataList += videoID + " ";
                 }
                 lastVideoUrlGotten = videoUrl;

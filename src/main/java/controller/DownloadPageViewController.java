@@ -28,7 +28,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.shape.Rectangle;
 import model.ErrorDataObject;
-import model.UrlDataObject;
+import model.SongDataObject;
 import model.YoutubeDownloaderManager;
 import model.YoutubeVideoPageParser;
 import ws.schild.jave.EncoderException;
@@ -106,9 +106,9 @@ public class DownloadPageViewController implements Initializable {
         clip.setArcWidth(30);//this sets the rounded corners
         clip.setArcHeight(30);
         thumbnailAnchorPane.setClip(clip);
-        YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<UrlDataObject>() {
+        YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<SongDataObject>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends UrlDataObject> arg0) {
+            public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
                 updateDownloadQueueListViewWithJavafxThread(true);
                 System.out.println("listener ran");
             }
@@ -264,7 +264,7 @@ public class DownloadPageViewController implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    ObservableList<UrlDataObject> listOfUrlDataObjects = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList();
+                    ObservableList<SongDataObject> listOfUrlDataObjects = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList();
                     String[] listOfTitlesToShow = new String[listOfUrlDataObjects.size()];
                     for (int i = 0; i < listOfTitlesToShow.length; i++) {
                         listOfTitlesToShow[i] = listOfUrlDataObjects.get(i).getTitle();
@@ -274,7 +274,7 @@ public class DownloadPageViewController implements Initializable {
                 }
             });
         } else {
-            ObservableList<UrlDataObject> listOfUrlDataObjects = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList();
+            ObservableList<SongDataObject> listOfUrlDataObjects = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList();
             String[] listOfTitlesToShow = new String[listOfUrlDataObjects.size()];
             for (int i = 0; i < listOfTitlesToShow.length; i++) {
                 listOfTitlesToShow[i] = listOfUrlDataObjects.get(i).getTitle();
@@ -311,7 +311,7 @@ public class DownloadPageViewController implements Initializable {
                 new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx 
                         new Runnable() {
                     public void run() {
-                        UrlDataObject youtubeData = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
+                        SongDataObject youtubeData = YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
                         thumbnailImage = new Image(youtubeData.getThumbnailUrl());
                         Platform.runLater(new Runnable() {
                             @Override
