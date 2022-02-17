@@ -20,13 +20,13 @@ import ws.schild.jave.encode.EncodingAttributes;
  */
 public class AudioConverterManager {
 
-    private static ArrayList<UrlDataObject> conversionQueueList = new ArrayList<>();
+    private static ArrayList<SongDataObject> conversionQueueList = new ArrayList<>();
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
     private static final String NEW_AUDIO_TYPE = ".wav";
     private static final String OLD_AUDIO_TYPE = ".weba";
 
-    private static void convertWebaToWav(UrlDataObject urlDataObject) throws EncoderException, IOException {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
+    private static void convertWebaToWav(SongDataObject urlDataObject) throws EncoderException, IOException {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
         conversionIsDone = false;
         File source = new File(urlDataObject.getPathToWebaFile());
         File target = new File(urlDataObject.getPathToWavFile());
@@ -47,7 +47,7 @@ public class AudioConverterManager {
         System.out.println("done converting");
     }
 
-    public static void addToConversionQueue(UrlDataObject urlDataObject) throws EncoderException, IOException {
+    public static void addToConversionQueue(SongDataObject urlDataObject) throws EncoderException, IOException {
         conversionQueueList.add(urlDataObject);
         if (!coversionQueueHasStarted) {
             startConversionQueue();

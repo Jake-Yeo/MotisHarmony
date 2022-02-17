@@ -103,6 +103,10 @@ public class PathsManager {//This class will handle all the folder and txt creat
     public static Path getLoggedInUserPlaylistsTxtPath() {
         return loggedInUserPlaylistsPath;
     }
+    
+    public static Path getLoggedInUserThumbnailsPath() {
+        return loggedInUserThumbnailsPath;
+    }
 
     /**
      * This will return the path to the txt file which contains all the paths to
