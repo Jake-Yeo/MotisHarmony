@@ -40,13 +40,12 @@ import ws.schild.jave.EncoderException;
  *
  * @author Jake Yeo
  */
-public class YoutubeDownloaderManager {
+public class YoutubeDownloader {
 
     private static WebDriver driver;
     private static boolean isChromeDriverActive = false;
     private static boolean removeFirstLink = true;
-    @FXML
-    private static DownloadPageViewController downloadPageViewController = new DownloadPageViewController();
+    private static boolean stopDownloading = false;
     private static boolean isPlaylistUrlGetterCurrentlyGettingUrls = false;
     private static final String YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER = "Age-restricted";
     private static final String YOUTUBE_AUDIO_SOURCE_AD_IDENTIFIER = "ctier";//Ad audio links are the only links that contain cteir in them
@@ -207,9 +206,13 @@ public class YoutubeDownloaderManager {
 
     private static void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
         youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in may be of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
-        if (!SongDataObject.toString(YoutubeDownloaderManager.getYoutubeUrlDownloadQueueList()).contains(youtubeUrl) && !Files.readString(PathsManager.getLoggedInUserDownloadedMusicDataPath()).contains(youtubeUrl)) {//Stops you from inputting the same url into the downloadQueue
+        if (!SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(youtubeUrl) && !Files.readString(PathsManager.getLoggedInUserDownloadedMusicDataPath()).contains(youtubeUrl)) {//Stops you from inputting the same url into the downloadQueue
             addYoutubeUrlsToDownloadQueue(youtubeUrl);
         }
+    }
+    
+    public static void setStopDownloading(boolean tf) {
+        stopDownloading = tf;
     }
 
     private static void downloadYoutubeVideoUrl(SongDataObject youtubeUrlData) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
@@ -219,15 +222,15 @@ public class YoutubeDownloaderManager {
         if (!possibleYoutubeUrl.equals("error")) {
             downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
             int count = 0;
-            try (BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream()); FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
+            try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
                 int i = 0;
-                System.out.println("Stop downloading is " + DownloadPageViewController.getStopDownloading());
+                System.out.println("Stop downloading is " + stopDownloading);
                 final byte[] data = new byte[1024];
                 while ((count = bis.read(data)) != -1) {
-                    if (DownloadPageViewController.getStopDownloading()) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
+                    if (stopDownloading) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
                         removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
                         skipAudioConversion = true;//This will prevent the program from attempting to convert a corrupted weba file to a wav file
-                        DownloadPageViewController.setStopDownloading(false);//This will allow the next song to be downloaded
+                        stopDownloading = false;//This will allow the next song to be downloaded
                         return;
                     }
                     i += count;
@@ -243,11 +246,11 @@ public class YoutubeDownloaderManager {
                     new Runnable() {
                 public void run() {
                     try {
-                        AudioConverterManager.addToConversionQueue(youtubeUrlData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+                        AudioConverter.addToConversionQueue(youtubeUrlData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
                     } catch (EncoderException ex) {
-                        Logger.getLogger(YoutubeDownloaderManager.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
-                        Logger.getLogger(YoutubeDownloaderManager.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }).start();
@@ -272,7 +275,7 @@ public class YoutubeDownloaderManager {
             //downloadPageViewController.updateDownloadQueueListViewWithJavafxThread(true);
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(false);
         }
-        YoutubeDownloaderManager.quitChromeDriver();//Finally, when all the youtube videos have been downloaded, exit the download queue
-        YoutubeDownloaderManager.setIsChromeDriverActive(false);
+        YoutubeDownloader.quitChromeDriver();//Finally, when all the youtube videos have been downloaded, exit the download queue
+        YoutubeDownloader.setIsChromeDriverActive(false);
     }
 }

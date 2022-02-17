@@ -29,7 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import model.Account;
+import model.AccountInitializer;
 
 /**
  * FXML Controller class
@@ -39,7 +39,7 @@ import model.Account;
 public class LoginPageViewController implements Initializable {
 
     private int animationNum = 0;
-    private Account acc = new Account();
+    private AccountInitializer acc = new AccountInitializer();
     private FadeTransition fadeTransition = new FadeTransition();
     @FXML
     private AnchorPane loginSignupMainAnchorPane;

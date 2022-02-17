@@ -19,7 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import model.YoutubeDownloaderManager;
+import model.YoutubeDownloader;
 
 /**
  * FXML Controller class
@@ -68,7 +68,7 @@ public class BrowserPageViewController implements Initializable {
         new Thread(
                 new Runnable() {
             public void run() {
-                YoutubeDownloaderManager.addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
+                YoutubeDownloader.addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
             }
         }).start();
     }
