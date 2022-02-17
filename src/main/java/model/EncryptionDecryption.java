@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.security.InvalidKeyException;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -35,6 +36,11 @@ public class EncryptionDecryption {
         encryptionCipher.init(Cipher.ENCRYPT_MODE, key);
         byte[] encryptedBytes = encryptionCipher.doFinal(passwordInBytes);
         return encode(encryptedBytes);
+    }
+
+    public void setEncryptionCipher(SecretKey key) throws Exception {
+        encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
+        encryptionCipher.init(Cipher.ENCRYPT_MODE, key);
     }
 
     public String decrypt(String encryptedPassword) throws Exception {
