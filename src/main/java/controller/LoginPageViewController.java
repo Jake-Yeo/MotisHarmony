@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +31,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.Accounts;
+import model.ErrorDataObject;
+import model.YoutubeDownloader;
 
 /**
  * FXML Controller class
@@ -68,6 +71,8 @@ public class LoginPageViewController implements Initializable {
     private Text pointTwoText;
     @FXML
     private Text pointThreeText;
+    @FXML
+    private Text errorText;
 
     private void playFadeAnimation() throws InterruptedException {
         //model.MusicPlayerManager.playMusic();
@@ -109,13 +114,34 @@ public class LoginPageViewController implements Initializable {
 
     @FXML
     public void login(ActionEvent event) throws IOException, Exception {
-        Accounts.login(usernameTextField.getText(), passwordPasswordField.getText());
+        ErrorDataObject errObj = Accounts.login(usernameTextField.getText(), passwordPasswordField.getText());
+        if (errObj.didErrorOccur()) {
+            setErrorTextViewWithJavafxThread(true, errObj.getErrorMessage());
+        }
         //sceneController.switchToDownloadPageView();
     }
 
+    @FXML
     public void signup(ActionEvent event) throws IOException, Exception {
-        Accounts.signup(usernameTextField.getText(), passwordPasswordField.getText());
+        ErrorDataObject errObj = Accounts.signup(usernameTextField.getText(), passwordPasswordField.getText());
+        if (errObj.didErrorOccur()) {
+            setErrorTextViewWithJavafxThread(true, errObj.getErrorMessage());
+        }
         //sceneController.switchToDownloadPageView();
+    }
+
+    @FXML
+    public void setErrorTextViewWithJavafxThread(boolean withJavafxThread, String textToDisplay) {
+        if (withJavafxThread) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    errorText.setText(textToDisplay);
+                }
+            });
+        } else {
+            errorText.setText(textToDisplay);
+        }
     }
 
     @FXML

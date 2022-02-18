@@ -5,6 +5,7 @@
  */
 package model;
 
+import controller.LoginPageViewController;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import view.SceneChanger;
 public class Accounts implements Serializable {//This class will store account username and their encrypted password, plus song data
 
     private static SceneChanger sceneSwitcher = new SceneChanger();
+    private static LoginPageViewController loginPageViewController = new LoginPageViewController();
     private static Accounts loggedInAccount;
     private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
     private String username;
@@ -115,25 +117,32 @@ public class Accounts implements Serializable {//This class will store account u
         return accountToReturn;
     }
 
-    public static void signup(String username, String password) throws IOException, Exception {//This will be used to create an account//Returns true if the signup is successful
+    public static ErrorDataObject signup(String username, String password) throws IOException, Exception {//This will be used to create an account//Returns true if the signup is successful
         AccountsDataManager accDataMan = new AccountsDataManager();
         if (!accDataMan.accListContainWantedName(username)) {
             loggedInAccount = new Accounts(username, password);
+            try {
+                PathsManager.setUpAccountFoldersAndTxtFiles(username);
+                PathsManager.setUpPathsInsideUserDataPath();//Basically we just set up paths for the folders and text files made above
+            } catch (Exception e) {
+                return new ErrorDataObject(true, "Username is not available");
+            }
             accDataMan.addAccNameToList(username);//This will add the username to the list so that accounts with the same usernames cannot be created.
             accDataMan.serializeAccMan();//This will save the contents of the ArrayList
-            PathsManager.setUpAccountFoldersAndTxtFiles(username);
-            PathsManager.setUpPathsInsideUserDataPath();//Basically we just set up paths for the folders and text files made above
             System.out.println(loggedInAccount.getKey());
             loggedInAccount.serializeAccount();
             sceneSwitcher.switchToDownloadPageView();
             System.out.println(PathsManager.getLoggedInUserDataPath().toString());
+        } else {
+            return new ErrorDataObject(true, "Username is not available");
         }
+        return new ErrorDataObject(false, "");
     }
 
-    public static void login(String username, String password) throws IOException, Exception {//This will be used to login to an account//Returns true if login is successful
+    public static ErrorDataObject login(String username, String password) throws IOException, Exception {//This will be used to login to an account//Returns true if login is successful
         AccountsDataManager accDataMan = new AccountsDataManager();
         if (!accDataMan.accListContainWantedName(username)) {
-            return;
+            return new ErrorDataObject(true, "Account does not exist or password is wrong");
         }
         PathsManager.setLoggedInUserDataPath(username);//We need to set up this path first to access the contents of the account the user is trying to log into.
         Accounts accToLoginTo = deserializeAccount(username);
@@ -142,7 +151,10 @@ public class Accounts implements Serializable {//This class will store account u
             PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
             loggedInAccount = accToLoginTo;//Set the logged in account
             sceneSwitcher.switchToDownloadPageView();
+        } else {
+            return new ErrorDataObject(true, "Account does not exist or password is wrong");
         }
+        return new ErrorDataObject(false, "");
     }
 
     public static Accounts getLoggedInAccount() {

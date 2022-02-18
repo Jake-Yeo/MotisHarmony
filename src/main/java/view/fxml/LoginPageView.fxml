@@ -61,6 +61,7 @@
                         <Font name="Quicksand SemiBold" size="21.0" />
                     </font>
                 </PasswordField>
+            <Text fx:id="errorText" fill="#2d142c" layoutX="82.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="297.13671875" />
             </children>
         </AnchorPane>
         <AnchorPane fx:id="infoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="577.0" prefWidth="461.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #511a3e, #791c48, #a22049, #c72c41);">
