@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerViewController">
@@ -17,5 +18,10 @@
       </AnchorPane>
       <fx:include source="DragWindowButton.fxml" />
       <Button fx:id="playButton" layoutX="343.0" layoutY="264.0" mnemonicParsing="false" onAction="#playMusic" text="Play!" />
+      <Button fx:id="nextButton" layoutX="408.0" layoutY="264.0" mnemonicParsing="false" onAction="#nextSong" text="Next" />
+      <Button fx:id="pauseButton" layoutX="470.0" layoutY="264.0" mnemonicParsing="false" onAction="#pauseMusic" text="Pause" />
+      <Button fx:id="resumeButton" layoutX="536.0" layoutY="264.0" mnemonicParsing="false" onAction="#resumeMusic" text="Resume" />
+      <Slider fx:id="seekSlider" layoutX="344.0" layoutY="300.0" prefHeight="14.0" prefWidth="253.0" />
+      <Slider fx:id="volumeSlider" layoutX="642.0" layoutY="230.0" max="1.0" orientation="VERTICAL" />
    </children>
 </AnchorPane>

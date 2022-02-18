@@ -46,4 +46,25 @@ public class MusicPlayerManager {
         System.out.println("finished playling");
         //playMusic();
     }
+
+    public static void nextSong() throws IOException {
+        mediaPlayer.stop();
+        playMusic();
+    }
+
+    public static void pauseSong() {
+        mediaPlayer.pause();
+    }
+
+    public static void resumeSong() {
+        mediaPlayer.play();
+    }
+
+    public static double getCurrentSongDurationInSec() {
+        return mediaPlayer.getTotalDuration().toSeconds();
+    }
+    
+    public static MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
 }
