@@ -16,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
@@ -28,12 +30,16 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     private ArrayList<String> listOfAccountNames;
 
-    public void init() throws Exception {
+    AccountsDataManager() {
         try {
             this.listOfAccountNames = deserializeAccMan().listOfAccountNames;
         } catch (Exception e) {
             this.listOfAccountNames = new ArrayList<>();
-            serializeAccMan();
+            try {
+                serializeAccMan();
+            } catch (Exception ex) {
+                Logger.getLogger(AccountsDataManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -73,7 +79,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     public static AccountsDataManager deserializeAccMan() throws Exception {
         AccountsDataManager accManToReturn = null;
-        FileInputStream fileIn = new FileInputStream(PathsManager.LIST_OF_ACCOUNT_NAMES_PATH.toString().toString());
+        FileInputStream fileIn = new FileInputStream(PathsManager.LIST_OF_ACCOUNT_NAMES_PATH.toString());
         ObjectInputStream in = new ObjectInputStream(fileIn);
         accManToReturn = (AccountsDataManager) in.readObject();
         in.close();
