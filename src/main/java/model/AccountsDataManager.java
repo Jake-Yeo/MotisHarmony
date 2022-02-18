@@ -59,7 +59,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
 
-    public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws IOException {
+    public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {
         Accounts.getLoggedInAccount().addSongDataObjectToAccount(urlDataObject);
         Accounts.getLoggedInAccount().serializeAccount();
         saveThumbnail(urlDataObject.getThumbnailUrl(), urlDataObject.getPathToThumbnail());

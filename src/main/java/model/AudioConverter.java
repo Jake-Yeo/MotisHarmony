@@ -26,7 +26,7 @@ public class AudioConverter {
     private static final String NEW_AUDIO_TYPE = ".wav";
     private static final String OLD_AUDIO_TYPE = ".weba";
 
-    private static void convertWebaToWav(SongDataObject urlDataObject) throws EncoderException, IOException {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
+    private static void convertWebaToWav(SongDataObject urlDataObject) throws EncoderException, IOException, Exception {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
         conversionIsDone = false;
         File source = new File(urlDataObject.getPathToWebaFile());
         File target = new File(urlDataObject.getPathToWavFile());
@@ -47,14 +47,14 @@ public class AudioConverter {
         System.out.println("done converting");
     }
 
-    public static void addToConversionQueue(SongDataObject urlDataObject) throws EncoderException, IOException {
+    public static void addToConversionQueue(SongDataObject urlDataObject) throws EncoderException, IOException, Exception {
         conversionQueueList.add(urlDataObject);
         if (!coversionQueueHasStarted) {
             startConversionQueue();
         }
     }
 
-    private static void startConversionQueue() throws EncoderException, IOException {//When using this class you probably should put your code in a thread
+    private static void startConversionQueue() throws EncoderException, IOException, Exception {//When using this class you probably should put your code in a thread
         coversionQueueHasStarted = true;
         while (!conversionQueueList.isEmpty()) {
             if (conversionIsDone) {

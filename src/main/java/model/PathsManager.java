@@ -30,20 +30,20 @@ public class PathsManager {//This class will handle all the folder and txt creat
     private static Path loggedInUserThumbnailsPath = null;
     private static Path loggedInUserDownloadedMusicPath = null;
 
-    public static void setUpFolders() throws IOException {
+    public static void setUpFolders() throws Exception {
         createFolder(Paths.get(System.getProperty("user.home")), APP_DATA_FOLDER_NAME);
         createFolder(APP_DATA_FOLDER_PATH, ACCOUNTS_DATA_FOLDER_NAME);
         createFolder(APP_DATA_FOLDER_PATH, WEBA_FOLDER);
     }
 
-    public static void setUpAccountFoldersAndTxtFiles(String username) throws IOException {
+    public static void setUpAccountFoldersAndTxtFiles(String username) throws Exception {
         createFolder(PathsManager.ACCOUNTS_DATA_PATH, username);//creates a folder in the Accounts folder that is named after the users name
         setLoggedInUserDataPath(username);//This will set up the path to the data of the account currently logged in
         createFolder(getLoggedInUserDataPath(), ACCOUNT_AUDIO_FOLDER);//This creates a folder
         createFolder(getLoggedInUserDataPath(), ACCOUNT_THUMBNAIL_FOLDER);//This creates a text file
     }
 
-    public static void createFolder(Path whereToCreateFolder, String folderName) throws IOException {
+    public static void createFolder(Path whereToCreateFolder, String folderName) throws Exception {
         Path folderOrTextPath = null;
         folderOrTextPath = Paths.get(whereToCreateFolder.toString(), folderName);
         if (!Files.exists(folderOrTextPath)) {
