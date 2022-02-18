@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SecretKey;
 import view.SceneChanger;
 
 /**
@@ -29,13 +30,12 @@ public class Accounts implements Serializable {//This class will store account u
     private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
     private String username;
     private String password;
-    private String key;
+    private SecretKey key;
     transient private EncryptionDecryption aes = new EncryptionDecryption();
 
     Accounts(String username, String password) {
         this.username = username;
         try {
-            aes.init();
             this.password = aes.encrypt(password);
         } catch (Exception ex) {
             Logger.getLogger(Accounts.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,7 +59,7 @@ public class Accounts implements Serializable {//This class will store account u
         return this.password;
     }
 
-    public String getKey() {
+    public SecretKey getKey() {
         return this.key;
     }
 
@@ -117,23 +117,31 @@ public class Accounts implements Serializable {//This class will store account u
 
     public static void signup(String username, String password) throws IOException, Exception {//This will be used to create an account//Returns true if the signup is successful
         AccountsDataManager accDataMan = new AccountsDataManager();
-        accDataMan.init();//Must initialize the object for it to work
         if (!accDataMan.accListContainWantedName(username)) {
             loggedInAccount = new Accounts(username, password);
             accDataMan.addAccNameToList(username);//This will add the username to the list so that accounts with the same usernames cannot be created.
             accDataMan.serializeAccMan();//This will save the contents of the ArrayList
             PathsManager.setUpAccountFoldersAndTxtFiles(username);
             PathsManager.setUpPathsInsideUserDataPath();//Basically we just set up paths for the folders and text files made above
+            System.out.println(loggedInAccount.getKey());
             loggedInAccount.serializeAccount();
             sceneSwitcher.switchToDownloadPageView();
             System.out.println(PathsManager.getLoggedInUserDataPath().toString());
         }
     }
 
-    public static void login(String username, String password) throws IOException {//This will be used to login to an account//Returns true if login is successful
-        PathsManager.setLoggedInUserDataPath(username);
-        PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
-        sceneSwitcher.switchToDownloadPageView();
+    public static void login(String username, String password) throws IOException, Exception {//This will be used to login to an account//Returns true if login is successful
+        AccountsDataManager accDataMan = new AccountsDataManager();
+        if (!accDataMan.accListContainWantedName(username)) {
+            return;
+        }
+        PathsManager.setLoggedInUserDataPath(username);//We need to set up this path first to access the contents of the account the user is trying to log into.
+        Accounts accToLoginTo = deserializeAccount(username);
+        EncryptionDecryption aes = new EncryptionDecryption(accToLoginTo.getKey());
+        if (password.equals(aes.decrypt(accToLoginTo.getPassword()))) {
+            PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
+            sceneSwitcher.switchToDownloadPageView();
+        }
     }
 
     public static Accounts getLoggedInAccount() {

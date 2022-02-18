@@ -108,7 +108,7 @@ public class LoginPageViewController implements Initializable {
     }
 
     @FXML
-    public void login(ActionEvent event) throws IOException {
+    public void login(ActionEvent event) throws IOException, Exception {
         Accounts.login(usernameTextField.getText(), passwordPasswordField.getText());
         //sceneController.switchToDownloadPageView();
     }

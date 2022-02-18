@@ -5,10 +5,13 @@
  */
 package model;
 
-import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -24,32 +27,55 @@ public class EncryptionDecryption {
     private Cipher encryptionCipher;
     private int T_LEN = 128;
 
-    public void init() throws Exception {
-        KeyGenerator generator = KeyGenerator.getInstance("AES");
-        generator.init(KEY_SIZE);
-        key = generator.generateKey();
+    Cipher ecipher;
+    Cipher dcipher;
+
+    public EncryptionDecryption() {
+        KeyGenerator generator = null;
+        try {
+            generator = KeyGenerator.getInstance("AES");
+            generator.init(KEY_SIZE);
+            this.key = generator.generateKey();
+            ecipher = Cipher.getInstance("AES");
+            dcipher = Cipher.getInstance("AES");
+            ecipher.init(Cipher.ENCRYPT_MODE, key);
+            dcipher.init(Cipher.DECRYPT_MODE, key);
+        } catch (Exception ex) {
+            Logger.getLogger(EncryptionDecryption.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public String encrypt(String password) throws Exception {
-        byte[] passwordInBytes = password.getBytes();
-        encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
-        encryptionCipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] encryptedBytes = encryptionCipher.doFinal(passwordInBytes);
-        return encode(encryptedBytes);
+    public EncryptionDecryption(SecretKey key) {
+        this.key = key;
+        try {
+            ecipher = Cipher.getInstance("AES");
+            dcipher = Cipher.getInstance("AES");
+            ecipher.init(Cipher.ENCRYPT_MODE, key);
+            dcipher.init(Cipher.DECRYPT_MODE, key);
+        } catch (Exception ex) {
+            Logger.getLogger(EncryptionDecryption.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public void setEncryptionCipher(SecretKey key) throws Exception {
-        encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
-        encryptionCipher.init(Cipher.ENCRYPT_MODE, key);
+    public String encrypt(String str) throws Exception {
+        // Encode the string into bytes using utf-8
+        byte[] utf8 = str.getBytes("UTF8");
+
+        // Encrypt
+        byte[] enc = ecipher.doFinal(utf8);
+
+        // Encode bytes to base64 to get a string
+        return encode(enc);
     }
 
-    public String decrypt(String encryptedPassword) throws Exception {
-        byte[] passwordInBytes = decode(encryptedPassword);
-        Cipher decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
-        GCMParameterSpec spce = new GCMParameterSpec(T_LEN, encryptionCipher.getIV());
-        decryptionCipher.init(Cipher.DECRYPT_MODE, key, spce);
-        byte[] decryptedBytes = decryptionCipher.doFinal(passwordInBytes);
-        return new String(decryptedBytes);
+    public String decrypt(String str) throws Exception {
+        // Decode base64 to get bytes
+        byte[] dec = decode(str);
+
+        byte[] utf8 = dcipher.doFinal(dec);
+
+        // Decode using utf-8
+        return new String(utf8, "UTF8");
     }
 
     private String encode(byte[] data) {
@@ -60,8 +86,8 @@ public class EncryptionDecryption {
         return Base64.getDecoder().decode(data);
     }
 
-    public String getSecretKey() {
-        return Base64.getEncoder().encodeToString(key.getEncoded());
+    public SecretKey getSecretKey() {
+        return this.key;
     }
 
     public void setSecretKey(SecretKey key) {
