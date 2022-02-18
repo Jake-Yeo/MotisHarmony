@@ -1,3 +1,5 @@
+Sometimes, youtube playlists such as this one https://www.youtube.com/playlist?list=PLleY9vT8KgEjp4k7I4Uv-H7dMEX_eObND may have duplicate videos in them. The duplicated videos are then added to the downloaded queue which may mess up the music player. Fix the program to remove these duplicate videos.
+
 Fix this line if (!youtubeUrlDownloadQueueList.contains(youtubeUrl)) { so that videos already in the download queue are not added again, and so that videos already downloaded are not added again
 
 https://www.youtube.com/watch?v=M1hNOd12yJs The title is not displayed properly since it is in a foreign language.
