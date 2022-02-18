@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import model.EncryptionDecryption;
+import model.Encryption;
 import model.MusicPlayerManager;
 import model.PathsManager;
 import model.YoutubeVideoPageParser;
@@ -38,10 +38,6 @@ import view.MainViewRunner;
 public class AppRunner {
 
     public static void main(String[] args) throws MalformedURLException, IOException, Exception {
-        EncryptionDecryption aes = new EncryptionDecryption();
-        String encryptedString = aes.encrypt("hello");
-        System.out.println(encryptedString);
-        System.out.println(aes.decrypt(encryptedString));
         PathsManager.setUpFolders();
         PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
         MainViewRunner.launchPanel(args);
