@@ -24,19 +24,14 @@ public class Encryption {
     private Cipher encryptionCipher;
     private int T_LEN = 128;
 
-    Cipher ecipher;
-    Cipher dcipher;
-
     public Encryption() {
         KeyGenerator generator = null;
         try {
             generator = KeyGenerator.getInstance("AES");
             generator.init(KEY_SIZE);
             this.key = generator.generateKey();
-            ecipher = Cipher.getInstance("AES");
-            dcipher = Cipher.getInstance("AES");
-            ecipher.init(Cipher.ENCRYPT_MODE, key);
-            dcipher.init(Cipher.DECRYPT_MODE, key);
+            encryptionCipher = Cipher.getInstance("AES");
+            encryptionCipher.init(Cipher.ENCRYPT_MODE, key);
         } catch (Exception ex) {
             Logger.getLogger(Encryption.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -45,10 +40,8 @@ public class Encryption {
     public Encryption(SecretKey key) {
         this.key = key;
         try {
-            ecipher = Cipher.getInstance("AES");
-            dcipher = Cipher.getInstance("AES");
-            ecipher.init(Cipher.ENCRYPT_MODE, key);
-            dcipher.init(Cipher.DECRYPT_MODE, key);
+            encryptionCipher = Cipher.getInstance("AES");
+            encryptionCipher.init(Cipher.ENCRYPT_MODE, key);
         } catch (Exception ex) {
             Logger.getLogger(Encryption.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,7 +49,7 @@ public class Encryption {
 
     public String encrypt(String str) throws Exception {
         byte[] utf8 = str.getBytes("UTF8");
-        byte[] enc = ecipher.doFinal(utf8);
+        byte[] enc = encryptionCipher.doFinal(utf8);
         return encode(enc);
     }
 
