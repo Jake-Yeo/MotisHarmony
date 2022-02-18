@@ -19,14 +19,13 @@ public class PathsManager {//This class will handle all the folder and txt creat
 
     private static final String APP_DATA_FOLDER_NAME = "MotisHarmony";//Folder name for where all the MotisHarmony data will be stored
     private static final String ACCOUNTS_DATA_FOLDER_NAME = "accounts";//Folder name for where all created accounts will be stored
-    private static final String ACCOUNTS_USERNAME_TXT = "accountUsernames";//Txt file name for users usernames and passwords
     private static final String ACCOUNT_THUMBNAIL_FOLDER = "downloadedMusicThumbnails";//Folder name for where all downloaded thumbnails will be stored
     private static final String ACCOUNT_AUDIO_FOLDER = "downloadedMusic";//Folder name for where all files converted to wav will be stored
     private static final String WEBA_FOLDER = "downloadedWeba";//Folder name where all temporarily downloaded weba files will be stored
     public static final Path APP_DATA_FOLDER_PATH = Paths.get(System.getProperty("user.home"), APP_DATA_FOLDER_NAME);//Path to the APP_DATA_FOLDER_NAME
     public static final Path ACCOUNTS_DATA_PATH = Paths.get(APP_DATA_FOLDER_PATH.toString(), ACCOUNTS_DATA_FOLDER_NAME);//Path to the DOWNLOADS_FOLDER_NAME
+    public static final Path LIST_OF_ACCOUNT_NAMES_PATH = Paths.get(PathsManager.APP_DATA_FOLDER_PATH.toString(), "AccNameList.ser");
     public static final Path WEBA_FOLDER_PATH = Paths.get(APP_DATA_FOLDER_PATH.toString(), WEBA_FOLDER);//Path to the WEBA_FOLDER because it would be better to just use one folder to hold the weba audio files rather than if every account had their own weba audio files. Weba files get deleted right after they are converted anyway.
-    public static final Path ACCOUNT_USER_PASS_DATA_PATH = Paths.get(APP_DATA_FOLDER_PATH.toString(), ACCOUNTS_USERNAME_TXT + ".txt");//Path to the ACCOUNTS_USERNAME_TXT
     private static Path loggedInUserDataPath = null;//The below paths are just the paths which will lead to the folders withing the accounts folder
     private static Path loggedInUserThumbnailsPath = null;
     private static Path loggedInUserDownloadedMusicPath = null;
@@ -35,7 +34,6 @@ public class PathsManager {//This class will handle all the folder and txt creat
         createFolder(Paths.get(System.getProperty("user.home")), APP_DATA_FOLDER_NAME);
         createFolder(APP_DATA_FOLDER_PATH, ACCOUNTS_DATA_FOLDER_NAME);
         createFolder(APP_DATA_FOLDER_PATH, WEBA_FOLDER);
-        createTextFile(APP_DATA_FOLDER_PATH, ACCOUNTS_USERNAME_TXT);
     }
 
     public static void setUpAccountFoldersAndTxtFiles(String username) throws IOException {
