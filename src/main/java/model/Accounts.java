@@ -31,12 +31,12 @@ public class Accounts implements Serializable {//This class will store account u
     private String username;
     private String password;
     private SecretKey key;
-    transient private EncryptionDecryption aes = new EncryptionDecryption();
+    transient private Encryption aes = new Encryption();
 
     Accounts(String username, String password) {
         this.username = username;
         try {
-            this.password = aes.encrypt(password);
+            this.password = aes.sha256Hash(aes.encrypt(password));
         } catch (Exception ex) {
             Logger.getLogger(Accounts.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -137,8 +137,8 @@ public class Accounts implements Serializable {//This class will store account u
         }
         PathsManager.setLoggedInUserDataPath(username);//We need to set up this path first to access the contents of the account the user is trying to log into.
         Accounts accToLoginTo = deserializeAccount(username);
-        EncryptionDecryption aes = new EncryptionDecryption(accToLoginTo.getKey());
-        if (password.equals(aes.decrypt(accToLoginTo.getPassword()))) {
+        Encryption aes = new Encryption(accToLoginTo.getKey());
+        if (aes.sha256Hash(aes.encrypt(password)).equals(accToLoginTo.getPassword())) {
             PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
             loggedInAccount = accToLoginTo;//Set the logged in account
             sceneSwitcher.switchToDownloadPageView();
