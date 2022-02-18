@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -59,15 +58,6 @@ public class Encryption {
 
     public SecretKey getSecretKey() {
         return this.key;
-    }
-
-    public void setSecretKey(SecretKey key) {
-        this.key = key;
-    }
-
-    public SecretKey stringToSecretKey(String key) {
-        byte[] decodedKey = Base64.getDecoder().decode(key);
-        return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
     }
 
     public String sha256Hash(String password) {
