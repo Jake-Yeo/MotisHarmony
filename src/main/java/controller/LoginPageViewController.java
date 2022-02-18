@@ -114,20 +114,18 @@ public class LoginPageViewController implements Initializable {
 
     @FXML
     public void login(ActionEvent event) throws IOException, Exception {
-        ErrorDataObject errObj = Accounts.login(usernameTextField.getText(), passwordPasswordField.getText());
+        ErrorDataObject errObj = Accounts.login(usernameTextField.getText(), passwordPasswordField.getText());//This line will attempt to login, it will return true if successful
         if (errObj.didErrorOccur()) {
             setErrorTextViewWithJavafxThread(true, errObj.getErrorMessage());
         }
-        //sceneController.switchToDownloadPageView();
     }
 
     @FXML
     public void signup(ActionEvent event) throws IOException, Exception {
-        ErrorDataObject errObj = Accounts.signup(usernameTextField.getText(), passwordPasswordField.getText());
+        ErrorDataObject errObj = Accounts.signup(usernameTextField.getText(), passwordPasswordField.getText());//This line will attempt to signup, it will return true if successful
         if (errObj.didErrorOccur()) {
             setErrorTextViewWithJavafxThread(true, errObj.getErrorMessage());
         }
-        //sceneController.switchToDownloadPageView();
     }
 
     @FXML

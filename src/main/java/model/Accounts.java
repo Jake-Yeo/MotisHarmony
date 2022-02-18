@@ -27,7 +27,6 @@ import view.SceneChanger;
 public class Accounts implements Serializable {//This class will store account username and their encrypted password, plus song data
 
     private static SceneChanger sceneSwitcher = new SceneChanger();
-    private static LoginPageViewController loginPageViewController = new LoginPageViewController();
     private static Accounts loggedInAccount;
     private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
     private String username;
@@ -91,47 +90,44 @@ public class Accounts implements Serializable {//This class will store account u
         return listOfSongsToReturn;
     }
 
-    public void serializeAccount() {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), this.username + ".acc").toString());
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(this);
-            out.close();
-            fileOut.close();
-        } catch (IOException i) {
-            i.printStackTrace();
-        }
+    public void serializeAccount() throws Exception {
+        FileOutputStream fileOut = new FileOutputStream(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), this.username + ".acc").toString());
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        out.writeObject(this);
+        out.close();
+        fileOut.close();
     }
 
-    public static Accounts deserializeAccount(String username) {
-        Accounts accountToReturn = null;
-        try {
-            FileInputStream fileIn = new FileInputStream(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), username + ".acc").toString());
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            accountToReturn = (Accounts) in.readObject();
-            in.close();
-            fileIn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static Accounts deserializeAccount(String username) throws Exception {
+        FileInputStream fileIn = new FileInputStream(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), username + ".acc").toString());
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        Accounts accountToReturn = (Accounts) in.readObject();
+        in.close();
+        fileIn.close();
         return accountToReturn;
     }
 
-    public static ErrorDataObject signup(String username, String password) throws IOException, Exception {//This will be used to create an account//Returns true if the signup is successful
+    public static ErrorDataObject signup(String username, String password) throws IOException, Exception {//This will be used to create an account. Returns true if the signup is successful
         AccountsDataManager accDataMan = new AccountsDataManager();
-        if (!accDataMan.accListContainWantedName(username)) {
-            loggedInAccount = new Accounts(username, password);
+        if (username.trim().equals("") || password.trim().equals("")) {//checks if the user put just whitespace as their username or password.
+            return new ErrorDataObject(true, "Username or password cannot remain empty");
+        }
+        if (username.contains("\\") || username.contains("/")) {//Makes sure the user does not use / or \ in their username
+            return new ErrorDataObject(true, "\"\\\" and \"/\" are not allowed in the username");
+        }
+        if (!accDataMan.accListContainWantedName(username)) {//Makes sure that the user cannot use someone elses username to signup.
+            loggedInAccount = new Accounts(username, password);//Sets the logged in account
             try {
                 PathsManager.setUpAccountFoldersAndTxtFiles(username);
                 PathsManager.setUpPathsInsideUserDataPath();//Basically we just set up paths for the folders and text files made above
+                loggedInAccount.serializeAccount();//If the username contains "/" or "\\" the serialization will fail, so we put it in a try catch loop.
             } catch (Exception e) {
                 return new ErrorDataObject(true, "Username is not available");
             }
             accDataMan.addAccNameToList(username);//This will add the username to the list so that accounts with the same usernames cannot be created.
             accDataMan.serializeAccMan();//This will save the contents of the ArrayList
-            System.out.println(loggedInAccount.getKey());
-            loggedInAccount.serializeAccount();
-            sceneSwitcher.switchToDownloadPageView();
+
+            sceneSwitcher.switchToDownloadPageView();//The Account signup was successful and we can now let the user use the application
             System.out.println(PathsManager.getLoggedInUserDataPath().toString());
         } else {
             return new ErrorDataObject(true, "Username is not available");
@@ -139,25 +135,31 @@ public class Accounts implements Serializable {//This class will store account u
         return new ErrorDataObject(false, "");
     }
 
-    public static ErrorDataObject login(String username, String password) throws IOException, Exception {//This will be used to login to an account//Returns true if login is successful
-        AccountsDataManager accDataMan = new AccountsDataManager();
-        if (!accDataMan.accListContainWantedName(username)) {
+    public static ErrorDataObject login(String username, String password) throws IOException, Exception {//This will be used to login to an account. Returns true if login is successful
+        AccountsDataManager accDataMan = new AccountsDataManager();//This object contains the names of all the accoutns created
+        if (!accDataMan.accListContainWantedName(username)) {//Makes sure the account the user is trying to log into exists
             return new ErrorDataObject(true, "Account does not exist or password is wrong");
         }
-        PathsManager.setLoggedInUserDataPath(username);//We need to set up this path first to access the contents of the account the user is trying to log into.
-        Accounts accToLoginTo = deserializeAccount(username);
-        Encryption aes = new Encryption(accToLoginTo.getKey());
-        if (aes.sha256Hash(aes.encrypt(password)).equals(accToLoginTo.getPassword())) {
+        Encryption aes = null;
+        Accounts accToLoginTo = null;
+        try {
+            PathsManager.setLoggedInUserDataPath(username);//We need to set up this path first to access the contents of the account the user is trying to log into.
+            accToLoginTo = deserializeAccount(username);//If the username entered contains "/" or "\\" then deserialization will fail, so we put it in a try catch loop.
+            aes = new Encryption(accToLoginTo.getKey());
+        } catch (Exception e) {
+            return new ErrorDataObject(true, "Account does not exist or password is wrong");
+        }
+        if (aes.sha256Hash(aes.encrypt(password)).equals(accToLoginTo.getPassword())) {//Hashes the encrypted password entered to check if it equals the hash stored in the acccount object
             PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
             loggedInAccount = accToLoginTo;//Set the logged in account
-            sceneSwitcher.switchToDownloadPageView();
+            sceneSwitcher.switchToDownloadPageView();//The login was successful and we can now let the user use the application
         } else {
             return new ErrorDataObject(true, "Account does not exist or password is wrong");
         }
         return new ErrorDataObject(false, "");
     }
 
-    public static Accounts getLoggedInAccount() {
+    public static Accounts getLoggedInAccount() {//This will return the current logged in account to allow easy manipulation of its data
         return loggedInAccount;
     }
 }

@@ -247,9 +247,7 @@ public class YoutubeDownloader {
                 public void run() {
                     try {
                         AudioConverter.addToConversionQueue(youtubeUrlData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
-                    } catch (EncoderException ex) {
-                        Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
