@@ -29,7 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import model.Account;
+import model.Accounts;
 
 /**
  * FXML Controller class
@@ -109,12 +109,12 @@ public class LoginPageViewController implements Initializable {
 
     @FXML
     public void login(ActionEvent event) throws IOException {
-        Account.login(usernameTextField.getText(), passwordPasswordField.getText());
+        Accounts.login(usernameTextField.getText(), passwordPasswordField.getText());
         //sceneController.switchToDownloadPageView();
     }
 
     public void signup(ActionEvent event) throws IOException, Exception {
-        Account.signup(usernameTextField.getText(), passwordPasswordField.getText());
+        Accounts.signup(usernameTextField.getText(), passwordPasswordField.getText());
         //sceneController.switchToDownloadPageView();
     }
 

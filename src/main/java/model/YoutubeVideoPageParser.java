@@ -255,7 +255,7 @@ public class YoutubeVideoPageParser {
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
                 System.out.println(videoID);
-                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoUrl) && !SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Account.getLoggedInAccount().getListOfSongUrls().contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList. This ensure that urls are not inputted into the downloadQueue multiple times
+                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoUrl) && !SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList. This ensure that urls are not inputted into the downloadQueue multiple times
                     urlDataList.add(new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
                     youtubeIdsCurrentlyInUrlDataList += videoID + " ";
                 }
