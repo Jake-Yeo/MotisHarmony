@@ -140,6 +140,7 @@ public class Accounts implements Serializable {//This class will store account u
         EncryptionDecryption aes = new EncryptionDecryption(accToLoginTo.getKey());
         if (password.equals(aes.decrypt(accToLoginTo.getPassword()))) {
             PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
+            loggedInAccount = accToLoginTo;//Set the logged in account
             sceneSwitcher.switchToDownloadPageView();
         }
     }
