@@ -90,6 +90,10 @@ public class Accounts implements Serializable {//This class will store account u
         return listOfSongsToReturn;
     }
 
+    public ArrayList<SongDataObject> getListOfSongDataObjects() {
+        return songDataObjectList;
+    }
+
     public void serializeAccount() throws Exception {
         FileOutputStream fileOut = new FileOutputStream(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), this.username + ".acc").toString());
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -147,6 +151,7 @@ public class Accounts implements Serializable {//This class will store account u
             accToLoginTo = deserializeAccount(username);//If the username entered contains "/" or "\\" then deserialization will fail, so we put it in a try catch loop.
             aes = new Encryption(accToLoginTo.getKey());
         } catch (Exception e) {
+            System.err.println("error deserializing account");
             return new ErrorDataObject(true, "Account does not exist or password is wrong");
         }
         if (aes.sha256Hash(aes.encrypt(password)).equals(accToLoginTo.getPassword())) {//Hashes the encrypted password entered to check if it equals the hash stored in the acccount object
@@ -154,6 +159,7 @@ public class Accounts implements Serializable {//This class will store account u
             loggedInAccount = accToLoginTo;//Set the logged in account
             sceneSwitcher.switchToDownloadPageView();//The login was successful and we can now let the user use the application
         } else {
+            System.err.println("password is wrong");
             return new ErrorDataObject(true, "Account does not exist or password is wrong");
         }
         return new ErrorDataObject(false, "");
