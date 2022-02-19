@@ -25,7 +25,7 @@ import view.SceneChanger;
  * @author Jake Yeo
  */
 public class Accounts implements Serializable {//This class will store account username and their encrypted password, plus song data
-
+    private static final long serialVersionUID = 4655882630581250278L;
     private static SceneChanger sceneSwitcher = new SceneChanger();
     private static Accounts loggedInAccount;
     private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
@@ -152,6 +152,7 @@ public class Accounts implements Serializable {//This class will store account u
             aes = new Encryption(accToLoginTo.getKey());
         } catch (Exception e) {
             System.err.println("error deserializing account");
+            e.printStackTrace();
             return new ErrorDataObject(true, "Account does not exist or password is wrong");
         }
         if (aes.sha256Hash(aes.encrypt(password)).equals(accToLoginTo.getPassword())) {//Hashes the encrypted password entered to check if it equals the hash stored in the acccount object

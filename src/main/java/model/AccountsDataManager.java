@@ -28,6 +28,7 @@ import javax.imageio.ImageIO;
  */
 public class AccountsDataManager implements Serializable {//This class will be used to manage all data changes made to a logged in account. If they change, add, remove a song or playlist, all of that will happen in this class    
 
+    private static final long serialVersionUID = 4655882630581250278L;
     private ArrayList<String> listOfAccountNames;
 
     AccountsDataManager() {

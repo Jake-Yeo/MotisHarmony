@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
  */
 public class SongDataObject implements Serializable {
 
+    private static final long serialVersionUID = 4655882630581250278L;
     private String videoTitle;
     private String videoUrl;
     private String videoDuration;

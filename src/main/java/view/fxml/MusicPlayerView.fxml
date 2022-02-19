@@ -25,8 +25,8 @@
       <Button fx:id="pauseButton" layoutX="458.0" layoutY="391.0" mnemonicParsing="false" onAction="#pauseMusic" text="Pause" />
       <Button fx:id="resumeButton" layoutX="524.0" layoutY="391.0" mnemonicParsing="false" onAction="#resumeMusic" text="Resume" />
       <Slider fx:id="seekSlider" layoutX="332.0" layoutY="427.0" prefHeight="14.0" prefWidth="253.0" />
-      <Slider fx:id="volumeSlider" layoutX="630.0" layoutY="357.0" max="1.0" orientation="VERTICAL" />
-      <Text fx:id="timeText" fill="WHITE" layoutX="230.0" layoutY="438.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="47.0" />
+      <Slider fx:id="volumeSlider" layoutX="303.0" layoutY="346.0" max="1.0" orientation="VERTICAL" />
+      <Text fx:id="timeText" fill="WHITE" layoutX="593.0" layoutY="438.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="103.0" />
       <ListView fx:id="songInfoViewList" layoutX="77.0" layoutY="101.0" prefHeight="200.0" prefWidth="200.0" />
       <ImageView fx:id="thumbnailImageView" fitHeight="185.0" fitWidth="276.0" layoutX="425.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true" />
    </children>
