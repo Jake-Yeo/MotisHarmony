@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,22 +52,31 @@ public class MusicPlayerViewController implements Initializable {
     @FXML
     private void playMusic(ActionEvent event) throws IOException {
         MusicPlayerManager.playMusic();
-        volumeSlider.setOnMouseClicked((MouseEvent mouseEvent) -> {
-            MusicPlayerManager.getMediaPlayer().setVolume(volumeSlider.getValue());
+        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(
+                    ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                MusicPlayerManager.getMediaPlayer().setVolume(volumeSlider.getValue());
+            }
         });
-        seekSlider.setOnMousePressed((MouseEvent mouseEvent) -> {
-            MusicPlayerManager.getMediaPlayer().seek(Duration.seconds(seekSlider.getValue()));
-        });
-        seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {
-        });
-        MusicPlayerManager.getMediaPlayer().totalDurationProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
-            seekSlider.maxProperty().bind(Bindings.createDoubleBinding(
-                    () -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(),
-                    MusicPlayerManager.getMediaPlayer().totalDurationProperty()));
 
-            seekSlider.setValue(newValue.toSeconds());
-
+        seekSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(
+                    ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                MusicPlayerManager.getMediaPlayer().seek(Duration.seconds(seekSlider.getValue()));
+            }
         });
+
+        MusicPlayerManager.getMediaPlayer().setOnReady(new Runnable() {
+            public void run() {
+                MusicPlayerManager.getMediaPlayer().totalDurationProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
+                    seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));
+                    seekSlider.setValue(newValue.toSeconds());
+                });
+            }
+        });
+
     }
 
     @FXML
