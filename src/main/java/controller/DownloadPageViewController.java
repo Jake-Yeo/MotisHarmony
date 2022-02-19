@@ -309,6 +309,7 @@ public class DownloadPageViewController implements Initializable {
                             public void run() {
                                 if (videoInfoList.getItems().size() != 3) {
                                     videoInfoList.getItems().add("Music Title: " + youtubeData.getTitle());
+                                    System.out.println(youtubeData.getTitle());
                                     videoInfoList.getItems().add("Channel Name: " + youtubeData.getChannelName());
                                     videoInfoList.getItems().add("Music Duration: " + youtubeData.getVideoDuration());
                                     videoInfoList.getItems().add("Video Url: " + youtubeData.getVideoUrl());
