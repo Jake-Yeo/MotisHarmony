@@ -36,7 +36,7 @@ import model.YoutubeVideoPageParser;
  * @author 1100007967
  */
 public class MusicPlayerViewController implements Initializable {
-    
+
     @FXML
     private AnchorPane downloadPageMainAnchor;
     @FXML
@@ -59,10 +59,14 @@ public class MusicPlayerViewController implements Initializable {
     private ListView<String> songInfoViewList;
     @FXML
     private ImageView thumbnailImageView;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        if (MusicPlayerManager.getSongObjectBeingPlayed() != null) {
+            updateInfoDisplays();
+        }
+
         if (MusicPlayerManager.getMediaPlayer() != null) {
             volumeSlider.setValue(MusicPlayerManager.getVolume());
             seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));
@@ -71,24 +75,24 @@ public class MusicPlayerViewController implements Initializable {
             volumeSlider.setValue(1);
         }
     }
-    
+
     @FXML
     private void playMusic(ActionEvent event) throws IOException {
         MusicPlayerManager.playMusic();
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
     }
-    
+
     @FXML
     private void pauseMusic(ActionEvent event) throws IOException {
         MusicPlayerManager.pauseSong();
     }
-    
+
     @FXML
     private void resumeMusic(ActionEvent event) throws IOException {
         MusicPlayerManager.resumeSong();
     }
-    
+
     @FXML
     private void nextSong(ActionEvent event) throws IOException {
         seekSlider.setValue(0);
@@ -96,7 +100,7 @@ public class MusicPlayerViewController implements Initializable {
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
     }
-    
+
     private void updateInfoDisplays() {
         songInfoViewList.getItems().clear();
         songInfoViewList.getItems().add("Song name: " + MusicPlayerManager.getSongObjectBeingPlayed().getTitle());
@@ -104,7 +108,7 @@ public class MusicPlayerViewController implements Initializable {
         songInfoViewList.getItems().add("Song duration: " + MusicPlayerManager.getSongObjectBeingPlayed().getVideoDuration());
         thumbnailImageView.setImage(new Image(MusicPlayerManager.getSongObjectBeingPlayed().getPathToThumbnail()));
     }
-    
+
     private String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
         boolean getTotalSecondsInHourFormat = false;
         String totalTime = getCurrentTimeString(totalSeconds, false);
@@ -114,7 +118,7 @@ public class MusicPlayerViewController implements Initializable {
         String currentSeconds = getCurrentTimeString(currentseconds, getTotalSecondsInHourFormat);
         return currentSeconds + "/" + totalTime;
     }
-    
+
     private String getCurrentTimeString(int seconds, boolean inHourFormat) {
         String videoDuration = "";
         String stringDurationMinutes = "";
@@ -142,7 +146,7 @@ public class MusicPlayerViewController implements Initializable {
         }
         return videoDuration;
     }
-    
+
     public void init() {
         MusicPlayerManager.getMediaPlayer().setOnEndOfMedia(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
@@ -155,7 +159,7 @@ public class MusicPlayerViewController implements Initializable {
                 }
             }
         });
-        
+
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(
@@ -163,29 +167,29 @@ public class MusicPlayerViewController implements Initializable {
                 MusicPlayerManager.getMediaPlayer().setVolume(volumeSlider.getValue());
             }
         });
-        
+
         seekSlider.setOnMousePressed((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             MusicPlayerManager.pauseSong();//Pause the song so there is no weird audio
         });
-        
+
         seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             MusicPlayerManager.getMediaPlayer().seek(Duration.seconds(seekSlider.getValue()));//Set where to resume the song
             MusicPlayerManager.resumeSong();//Resume the song once the user releases their mous key
         });
-        
+
         MusicPlayerManager.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.
             public void run() {
                 MusicPlayerManager.getMediaPlayer().setVolume(volumeSlider.getValue());//Sets the volume
                 seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
             }
         });
-        
+
         MusicPlayerManager.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {//This will automatically update the seekSlider to match the current position of the song
             public void invalidated(Observable ov) {
                 seekSlider.setValue(MusicPlayerManager.getMediaPlayer().getCurrentTime().toSeconds());
                 timeText.setText(getCurrentTimeStringFormatted((int) Math.floor(MusicPlayerManager.getMediaPlayer().getCurrentTime().toSeconds()), (int) Math.floor(MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds())));
             }
         });
-        
+
     }
 }

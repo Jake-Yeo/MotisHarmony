@@ -10,6 +10,7 @@ import java.io.FileWriter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -74,8 +75,7 @@ public class YoutubeVideoPageParser {
         String html = "";
         URL ytLink = new URL(url);
         BufferedReader in = null;
-        in = new BufferedReader(
-                new InputStreamReader(ytLink.openStream()));
+        in = new BufferedReader(new InputStreamReader(ytLink.openStream(), "UTF-8"));//Foreign characters will be displayed properly
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
             html += inputLine;

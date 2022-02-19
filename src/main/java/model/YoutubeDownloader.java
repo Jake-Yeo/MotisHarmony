@@ -210,7 +210,7 @@ public class YoutubeDownloader {
             addYoutubeUrlsToDownloadQueue(youtubeUrl);
         }
     }
-    
+
     public static void setStopDownloading(boolean tf) {
         stopDownloading = tf;
     }
@@ -222,7 +222,8 @@ public class YoutubeDownloader {
         if (!possibleYoutubeUrl.equals("error")) {
             downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
             int count = 0;
-            try ( BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
+            try (
+                     BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
                 int i = 0;
                 System.out.println("Stop downloading is " + stopDownloading);
                 final byte[] data = new byte[1024];
