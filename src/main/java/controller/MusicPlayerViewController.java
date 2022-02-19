@@ -7,6 +7,11 @@ package controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,7 +31,7 @@ import model.YoutubeDownloader;
  * @author 1100007967
  */
 public class MusicPlayerViewController implements Initializable {
-
+    
     @FXML
     private AnchorPane downloadPageMainAnchor;
     @FXML
@@ -43,15 +48,48 @@ public class MusicPlayerViewController implements Initializable {
     private Slider seekSlider;
     @FXML
     private Slider volumeSlider;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        volumeSlider.setValue(1);
     }
-
+    
     @FXML
     private void playMusic(ActionEvent event) throws IOException {
         MusicPlayerManager.playMusic();
+        init();
+    }
+    
+    @FXML
+    private void pauseMusic(ActionEvent event) throws IOException {
+        MusicPlayerManager.pauseSong();
+    }
+    
+    @FXML
+    private void resumeMusic(ActionEvent event) throws IOException {
+        MusicPlayerManager.resumeSong();
+    }
+    
+    @FXML
+    private void nextSong(ActionEvent event) throws IOException {
+        seekSlider.setValue(0);
+        MusicPlayerManager.nextSong();
+        init();
+    }
+    
+    public void init() {
+        MusicPlayerManager.getMediaPlayer().setOnEndOfMedia(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
+            public void run() {
+                try {
+                    MusicPlayerManager.playMusic();
+                    init();
+                } catch (IOException ex) {
+                    Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(
@@ -59,39 +97,33 @@ public class MusicPlayerViewController implements Initializable {
                 MusicPlayerManager.getMediaPlayer().setVolume(volumeSlider.getValue());
             }
         });
-
-        seekSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(
-                    ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                MusicPlayerManager.getMediaPlayer().seek(Duration.seconds(seekSlider.getValue()));
-            }
+        
+        seekSlider.setOnMousePressed((MouseEvent mouseEvent) -> {//This handles the seeking of the song
+            MusicPlayerManager.pauseSong();//Pause the song so there is no weird audio
         });
-
-        MusicPlayerManager.getMediaPlayer().setOnReady(new Runnable() {
+        
+        seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
+            MusicPlayerManager.getMediaPlayer().seek(Duration.seconds(seekSlider.getValue()));//Set where to resume the song
+            MusicPlayerManager.resumeSong();//Resume the song once the user releases their mous key
+        });
+        
+        MusicPlayerManager.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.
             public void run() {
-                MusicPlayerManager.getMediaPlayer().totalDurationProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
-                    seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));
-                    seekSlider.setValue(newValue.toSeconds());
-                });
+                MusicPlayerManager.getMediaPlayer().setVolume(volumeSlider.getValue());//Sets the volume
+                seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
             }
         });
-
-    }
-
-    @FXML
-    private void pauseMusic(ActionEvent event) throws IOException {
-        MusicPlayerManager.pauseSong();
-    }
-
-    @FXML
-    private void resumeMusic(ActionEvent event) throws IOException {
-        MusicPlayerManager.resumeSong();
-    }
-
-    @FXML
-    private void nextSong(ActionEvent event) throws IOException {
-        seekSlider.setValue(0);
-        MusicPlayerManager.nextSong();
+        
+        MusicPlayerManager.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {//This will automatically update the seekSlider to match the current position of the song
+            public void invalidated(Observable ov) {
+                seekSlider.setValue(MusicPlayerManager.getMediaPlayer().getCurrentTime().toSeconds());
+            }
+        });
+        
+        MusicPlayerManager.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov) {
+                seekSlider.setValue(MusicPlayerManager.getMediaPlayer().getCurrentTime().toSeconds());
+            }
+        });
     }
 }
