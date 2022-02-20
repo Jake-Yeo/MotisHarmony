@@ -4,8 +4,11 @@
  */
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +21,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
@@ -25,6 +33,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.AudioSpectrumListener;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.MusicPlayerManager;
@@ -59,6 +69,12 @@ public class MusicPlayerViewController implements Initializable {
     private ListView<String> songInfoViewList;
     @FXML
     private ImageView thumbnailImageView;
+    @FXML
+    private AreaChart<String, Number> spektrum;
+    private XYChart.Data[] series1Data;
+    private static final int BANDS = 100;
+    private static final double INTERVAL = 0.005;
+    private static final double DROPDOWN = 1;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -74,6 +90,17 @@ public class MusicPlayerViewController implements Initializable {
         } else {
             volumeSlider.setValue(1);
         }
+
+        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+        XYChart.Data[] series1Data = new XYChart.Data[BANDS];
+        for (int i = 0; i < series1Data.length; i++) {
+            series1Data[i] = new XYChart.Data<>(Integer.toString(i + 1), 0);
+            series1.getData().add(series1Data[i]);
+        }
+        spektrum.getData().add(series1);
+        spektrum.getYAxis().setAutoRanging(false);
+        spektrum.getStylesheets().add("/css/fxplayer.css");
+        ((NumberAxis)spektrum.getYAxis()).setUpperBound(70);
     }
 
     @FXML
@@ -81,6 +108,20 @@ public class MusicPlayerViewController implements Initializable {
         MusicPlayerManager.playMusic();
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
+        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+        series1Data = new XYChart.Data[BANDS + 2];
+        for (int i = 0; i < series1Data.length; i++) {
+            series1Data[i] = new XYChart.Data<>(Integer.toString(i + 1), 0);
+            //noinspection unchecked
+            series1.getData().add(series1Data[i]);
+        }
+        spektrum.getData().add(series1);
+        Node fill = series1.getNode().lookup(".chart-series-area-fill"); // only for AreaChart
+        Node line = series1.getNode().lookup(".chart-series-area-line");
+
+        fill.setStyle("-fx-fill: linear-gradient(to bottom, #ee4540, #c12c4e, #8e224e, #5b1d43, #2d142c);");
+        line.setStyle("-fx-stroke: transparent");
+
     }
 
     @FXML
@@ -99,6 +140,7 @@ public class MusicPlayerViewController implements Initializable {
         MusicPlayerManager.nextSong();
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
+
     }
 
     private void updateInfoDisplays() {
@@ -181,6 +223,9 @@ public class MusicPlayerViewController implements Initializable {
             public void run() {
                 MusicPlayerManager.setVolume(volumeSlider.getValue());//Sets the volume
                 seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
+                MusicPlayerManager.getMediaPlayer().setAudioSpectrumListener(new SpektrumListener());
+                MusicPlayerManager.getMediaPlayer().setAudioSpectrumNumBands(BANDS);
+                MusicPlayerManager.getMediaPlayer().setAudioSpectrumInterval(INTERVAL);
             }
         });
 
@@ -191,5 +236,42 @@ public class MusicPlayerViewController implements Initializable {
             }
         });
 
+    }
+
+    private class SpektrumListener implements AudioSpectrumListener {
+
+        float[] buffer = createFilledBuffer(BANDS, MusicPlayerManager.getMediaPlayer().getAudioSpectrumThreshold());
+
+        @Override
+        public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
+
+            for (int i = 0; i < magnitudes.length; i++) {
+                if (magnitudes[i] >= buffer[i]) {
+                    buffer[i] = magnitudes[i];
+                    series1Data[i].setYValue(magnitudes[i] - MusicPlayerManager.getMediaPlayer().getAudioSpectrumThreshold());
+                } else {
+                    series1Data[i].setYValue(buffer[i] - MusicPlayerManager.getMediaPlayer().getAudioSpectrumThreshold());
+                    buffer[i] -= 0.25;
+                }
+            }
+        }
+    }
+
+    private float[] createFilledBuffer(int size, float fillValue) {
+        float[] floats = new float[size];
+        Arrays.fill(floats, fillValue);
+        return floats;
+    }
+
+    private class PreparationWorker implements Runnable {
+
+        public void run() {
+
+            //videoView.setMediaPlayer(mediaplayer);
+            MusicPlayerManager.getMediaPlayer().setAudioSpectrumListener(new SpektrumListener());
+            MusicPlayerManager.getMediaPlayer().setAudioSpectrumNumBands(BANDS);
+            MusicPlayerManager.getMediaPlayer().setAudioSpectrumInterval(INTERVAL);
+
+        }
     }
 }
