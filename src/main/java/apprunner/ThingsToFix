@@ -1,3 +1,5 @@
+https://www.youtube.com/watch?v=VyvhvlYvRnc skips past all the identifiers when in playlist
+
 There's a bug where the app cannot deserialize an account.
 
 Sometimes, youtube playlists such as this one https://www.youtube.com/playlist?list=PLleY9vT8KgEjp4k7I4Uv-H7dMEX_eObND may have duplicate videos in them. The duplicated videos are then added to the downloaded queue which may mess up the music player. Fix the program to remove these duplicate videos.

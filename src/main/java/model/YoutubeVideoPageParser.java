@@ -45,6 +45,7 @@ public class YoutubeVideoPageParser {
     private final static String YT_DOWNLOADABLE_PLAYLIST_LIST_PARAM_STARTER = "&list=";
     private final static int YT_PLAYLISTVIDEO_CAPPED_VIDEO_AMT = 200;
     private static final String YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER = "Age-restricted";
+    private static final String YOUTUBE_VIDEO_HARM_RESTRICTED_IDENTIFIER = "The following content may contain suicide or self-harm topics";
     private static final String YOUTUBE_VIDEO_UNAVAILABLE_IDENTIFIER = "Video unavailable";
     private static final String YOUTUBE_PLAYLIST_DOES_NOT_EXIST_IDENTIFIER = "The playlist does not exist";
     private static final String YOUTUBE_VIDEO_PRIVATE_IDENTIFIER = "This video is private";
@@ -105,6 +106,11 @@ public class YoutubeVideoPageParser {
             return new ErrorDataObject(didErrorOccur, errorMessage);
         }
         if (html.contains(YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER)) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " is age restricted and cannot be downloaded!";
+            return new ErrorDataObject(didErrorOccur, errorMessage);
+        }
+        if (html.contains(YOUTUBE_VIDEO_HARM_RESTRICTED_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is age restricted and cannot be downloaded!";
             return new ErrorDataObject(didErrorOccur, errorMessage);
