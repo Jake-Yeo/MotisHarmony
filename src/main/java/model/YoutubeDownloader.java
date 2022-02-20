@@ -253,6 +253,9 @@ public class YoutubeDownloader {
                     }
                 }
             }).start();
+        } else {
+            errorList.add(youtubeUrlData + " could not be downloaded at this time, please try again later or find an alternative link");
+            System.err.print("Failed to download this song");
         }
     }
 
