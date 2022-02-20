@@ -15,6 +15,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 /**
  *
@@ -22,6 +23,7 @@ import javafx.scene.media.MediaPlayer;
  */
 public class MusicPlayerManager {
 
+    private static boolean paused = false;
     private static int volume;
     private static SongDataObject songObjectBeingPlayed;
     public static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
@@ -57,25 +59,43 @@ public class MusicPlayerManager {
 
     public static void pauseSong() {
         mediaPlayer.pause();
+        paused = true;
     }
 
     public static void resumeSong() {
         mediaPlayer.play();
+        paused = false;
     }
 
-    public static double getCurrentSongDurationInSec() {
-        return mediaPlayer.getTotalDuration().toSeconds();
-    }
-    
     public static MediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
-    
+
     public static double getVolume() {
         return mediaPlayer.getVolume();
     }
-    
+
     public static SongDataObject getSongObjectBeingPlayed() {
         return songObjectBeingPlayed;
+    }
+
+    public static boolean isSongPaused() {
+        return paused;
+    }
+
+    public static void setVolume(double volume) {
+        mediaPlayer.setVolume(volume);
+    }
+
+    public static void seekTo(Duration duration) {
+        mediaPlayer.seek(duration);
+    }
+
+    public static double getTotalDurationInSeconds() {
+        return MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds();
+    }
+
+    public static double getCurrentTimeInSeconds() {
+        return MusicPlayerManager.getMediaPlayer().getCurrentTime().toSeconds();
     }
 }
