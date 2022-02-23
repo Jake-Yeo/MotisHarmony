@@ -1,4 +1,4 @@
-You can input the same video in the download page twice by first entering https://www.youtube.com/watch?v=BsMEof_fKUg and then by entering https://www.youtube.com/watch?v=BsMEof_fKUghttps://www.youtube.com/watch?v=BsMEof_fKUg
+Handle exceptions causes when account has not yet downloaded a song and user attempts to download song.
 
 https://www.youtube.com/watch?v=VyvhvlYvRnc skips past all the identifiers when in playlist
 
