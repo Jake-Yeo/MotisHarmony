@@ -58,6 +58,9 @@ public class YoutubeVideoPageParser {
     private static final String YOUTUBE_VIDEO_LENGTH_IN_SECONDS_END_IDENTIFIER = "\"";
     private static final String YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER = "og:image\" content=\"";
     private static final String YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER = "\"";
+    private static final String YOUTUBE_VIDEO_INFO_START_IDENTIFIER = "videoPrimaryInfoRenderer";
+    private static final String YOUTUBE_VIDEO_ID_START_IDENTIFIER = "videoId\":\"";
+    private static final String YOUTUBE_VIDEO_ID_END_IDENTIFIER = "\"";
 
     private static final String YOUTUBE_PLAYLIST_VIDEO_INFO_START_IDENTIFIER = "PanelVideoRenderer\":{\"title\"";//This identifies the start of the playlist, and also identifies the start of video info for all videos in the playlist.
     private static final String YOUTUBE_PLAYLIST_VIDEO_TITLES_START_IDENTIFIER = "simpleText\":\"";
@@ -200,6 +203,8 @@ public class YoutubeVideoPageParser {
         String thumbnailUrl = infoParserTool(html, YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER, YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER);
         String channelName = infoParserTool(html, YOUTUBE_VIDEO_CHANNEL_NAME_START_IDENTIFIER, YOUTUBE_VIDEO_CHANNEL_NAME_END_IDENTIFIER);
         String videoTitle = infoParserTool(html, YT_TITLE_START_IDENTIFIER, YT_TITLE_END_IDENTIFIER);
+        String youtubeVideoId = infoParserTool(infoParserToolTrimToStart(html, YOUTUBE_VIDEO_INFO_START_IDENTIFIER), YOUTUBE_VIDEO_ID_START_IDENTIFIER, YOUTUBE_VIDEO_ID_END_IDENTIFIER);
+        System.out.println(youtubeVideoId);
         videoTitle = videoTitle.replace("&#39;", "'"); //Replaces the apostrophe identifier with apostrophe
         //title = title.replaceAll("[^\\x20-\\x7e]", ""); //Gets rid of foreign language characters
         videoTitle = videoTitle.trim().replaceAll(" +", " ");
@@ -223,7 +228,7 @@ public class YoutubeVideoPageParser {
         } else {
             videoDuration = durationMinutes + ":" + remaindingSeconds;
         }
-        SongDataObject youtubeVideoData = new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, youtubeUrl, getYoutubeVideoID(youtubeUrl));
+        SongDataObject youtubeVideoData = new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, constructYoutubeUrlViaID(youtubeVideoId), youtubeVideoId);
         return youtubeVideoData;
     }
 

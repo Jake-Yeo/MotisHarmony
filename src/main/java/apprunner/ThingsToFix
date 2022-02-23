@@ -1,3 +1,5 @@
+You can input the same video in the download page twice by first entering https://www.youtube.com/watch?v=BsMEof_fKUg and then by entering https://www.youtube.com/watch?v=BsMEof_fKUghttps://www.youtube.com/watch?v=BsMEof_fKUg
+
 https://www.youtube.com/watch?v=VyvhvlYvRnc skips past all the identifiers when in playlist
 
 There's a bug where the app cannot deserialize an account.
