@@ -23,7 +23,7 @@ public class AudioConverter {
     private static ArrayList<SongDataObject> conversionQueueList = new ArrayList<>();
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
-    private static final String NEW_AUDIO_TYPE = ".wav";
+    private static final String NEW_AUDIO_TYPE = "mp3";
     private static final String OLD_AUDIO_TYPE = ".weba";
 
     private static void convertWebaToWav(SongDataObject urlDataObject) throws EncoderException, IOException, Exception {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
@@ -32,10 +32,13 @@ public class AudioConverter {
         File target = new File(urlDataObject.getPathToWavFile());
         //Audio Attributes                                       
         AudioAttributes audio = new AudioAttributes();
-        audio.setCodec("pcm_s16le");
+        audio.setCodec("libmp3lame");
+        audio.setBitRate(128000);
+        audio.setChannels(2);
+        audio.setSamplingRate(44100);
         //Encoding attributes                                       
         EncodingAttributes attrs = new EncodingAttributes();
-        attrs.setOutputFormat("wav");
+        attrs.setOutputFormat(NEW_AUDIO_TYPE);
         attrs.setAudioAttributes(audio);
         //Encode                                                    
         Encoder encoder = new Encoder();
