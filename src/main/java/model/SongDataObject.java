@@ -35,7 +35,7 @@ public class SongDataObject implements Serializable {
         this.thumbnailUrl = thumbnailUrl;
         this.videoUrl = videoUrl;
         this.videoID = videoID;
-        this.safeTitleName = videoTitle.replaceAll("[ \\[\\]<>/\\\":.\\\\;|,*/?!@#$%^&~`]", "") + "(" + videoID + ")"; //Gets rid of ascii that may mess up file creation.
+        this.safeTitleName = videoTitle.replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "")  + "(" + videoID + ")"; //Gets rid all special characters that may mess up file path
         this.pathToWebaFile = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + this.safeTitleName + ".weba";
         this.pathToWavFile = PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + this.safeTitleName + ".wav";
         this.pathToThumbnail = Paths.get(PathsManager.getLoggedInUserThumbnailsPath().toString(), (this.safeTitleName + ".png")).toString();

@@ -72,7 +72,7 @@ public class MusicPlayerViewController implements Initializable {
     @FXML
     private AreaChart<String, Number> spektrum;
     private XYChart.Data[] series1Data;
-    private static final int BANDS = 100;
+    private static final int BANDS = 500;
     private static final double INTERVAL = 0.005;
     private static final double DROPDOWN = 1;
 
