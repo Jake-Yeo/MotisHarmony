@@ -23,6 +23,7 @@ import javafx.stage.StageStyle;
 public class MainViewRunner extends Application {
 
     public static Stage stageToReturn;
+    public static SceneChanger sceneChanger;
 
     public static void launchPanel(String[] args) {
         launch(args);
@@ -44,9 +45,23 @@ public class MainViewRunner extends Application {
         stage.initStyle(StageStyle.TRANSPARENT);
 
         ArrayList<String> array = new ArrayList<>();
+        SceneChanger screenController = new SceneChanger(scene);
+
+        screenController.addScreen("LoginPage", FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml")));
+        screenController.addScreen("DownloadPage", FXMLLoader.load(getClass().getResource("/fxml/DownloadPageView.fxml")));
+        screenController.addScreen("BrowserPage", FXMLLoader.load(getClass().getResource("/fxml/BrowserPageView.fxml")));
+        screenController.addScreen("MusicPlayerPage", FXMLLoader.load(getClass().getResource("/fxml/MusicPlayerView.fxml")));
+        screenController.activate("LoginPage");
+        sceneChanger = screenController;
+
+
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/MotisHarmonyIcon.png")));
         stage.setScene(scene);
         setStage(stage);
         stage.show();
+    }
+    
+    public static SceneChanger getSceneChanger() {
+        return sceneChanger;
     }
 }

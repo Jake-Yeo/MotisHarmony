@@ -6,9 +6,11 @@
 package view;//This should actually be in the view package in order to follow proper MVC architecture
 
 import java.io.IOException;
+import java.util.HashMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import view.MainViewRunner;
 
@@ -17,36 +19,44 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class SceneChanger {
+
     private FXMLLoader loader = new FXMLLoader();
-    
+
     public SceneChanger() {
     }
-    
-    public void switchToDownloadPageView() throws IOException {
-        Parent root = loader.load(getClass().getResource("/fxml/DownloadPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
-        Scene scene = new Scene(root, Color.TRANSPARENT);
-        MainViewRunner.getStage().setScene(scene);
-        MainViewRunner.getStage().show();
+
+    private HashMap<String, Pane> screenMap = new HashMap<>();
+    private Scene main;
+
+    public SceneChanger(Scene main) {
+        this.main = main;
     }
 
-    public void switchToLoginPageView() throws IOException {
-        Parent root = loader.load(getClass().getResource("/fxml/LoginPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
-        Scene scene = new Scene(root, Color.TRANSPARENT);
-        MainViewRunner.getStage().setScene(scene);
-        MainViewRunner.getStage().show();
+    protected void addScreen(String name, Pane pane) {
+        screenMap.put(name, pane);
     }
 
-    public void switchToBrowserPageView() throws IOException {
-        Parent root = loader.load(getClass().getResource("/fxml/BrowserPageView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
-        Scene scene = new Scene(root, Color.TRANSPARENT);
-        MainViewRunner.getStage().setScene(scene);
-        MainViewRunner.getStage().show();
+    protected void removeScreen(String name) {
+        screenMap.remove(name);
     }
-    
-        public void switchToMusicPlayerPageView() throws IOException {
-        Parent root = loader.load(getClass().getResource("/fxml/MusicPlayerView.fxml"));//if the fxml file is in another package you must put /"package name here"/"fxml file name here"
-        Scene scene = new Scene(root, Color.TRANSPARENT);
-        MainViewRunner.getStage().setScene(scene);
-        MainViewRunner.getStage().show();
+
+    protected void activate(String name) {
+        main.setRoot(screenMap.get(name));
+    }
+
+    public static void switchToDownloadPageView() throws IOException {
+        MainViewRunner.getSceneChanger().activate("DownloadPage");
+    }
+
+    public static void switchToLoginPageView() throws IOException {
+        MainViewRunner.getSceneChanger().activate("LoginPage");
+    }
+
+    public static void switchToBrowserPageView() throws IOException {
+        MainViewRunner.getSceneChanger().activate("BrowserPage");
+    }
+
+    public static void switchToMusicPlayerPageView() throws IOException {
+        MainViewRunner.getSceneChanger().activate("MusicPlayerPage");
     }
 }
