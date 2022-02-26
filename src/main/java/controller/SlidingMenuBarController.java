@@ -22,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+import view.MainViewRunner;
 
 /**
  * FXML Controller class
@@ -51,19 +52,37 @@ public class SlidingMenuBarController implements Initializable {
 
     @FXML
     private void menuOpenClose(ActionEvent event) {
-        if (translateTransition.getStatus() != Status.RUNNING) {//prevents the user from spam clicking the menu button and glitching it out
-            if (!isSlidingMenuOpen) {
-                translateTransition.setDuration(Duration.seconds(0.2));
-                translateTransition.setToX(196);
-                translateTransition.setNode(slidingMenuMainAnchorPane);
-                translateTransition.play();
-                isSlidingMenuOpen = !isSlidingMenuOpen;
-            } else {
-                translateTransition.setDuration(Duration.seconds(0.2));
-                translateTransition.setToX(0);
-                translateTransition.setNode(slidingMenuMainAnchorPane);
-                translateTransition.play();
-                isSlidingMenuOpen = !isSlidingMenuOpen;
+        if (slidingMenuMainAnchorPane.getLayoutX() < -50) {//Since the menu is loaded open, we must set the x position to a negative number first, this will handle translations when the menu is first initallized.
+            if (translateTransition.getStatus() != Status.RUNNING) {//prevents the user from spam clicking the menu button and glitching it out
+                if (!isSlidingMenuOpen) {
+                    translateTransition.setDuration(Duration.seconds(0.2));
+                    translateTransition.setToX(196);
+                    translateTransition.setNode(slidingMenuMainAnchorPane);
+                    translateTransition.play();
+                    isSlidingMenuOpen = !isSlidingMenuOpen;
+                } else {
+                    translateTransition.setDuration(Duration.seconds(0.2));
+                    translateTransition.setToX(0);
+                    translateTransition.setNode(slidingMenuMainAnchorPane);
+                    translateTransition.play();
+                    isSlidingMenuOpen = !isSlidingMenuOpen;
+                }
+            }
+        } else {//This will handle translations when the menu is left open and not set to a closed position
+            if (translateTransition.getStatus() != Status.RUNNING) {//prevents the user from spam clicking the menu button and glitching it out
+                if (!isSlidingMenuOpen) {
+                    translateTransition.setDuration(Duration.seconds(0.2));
+                    translateTransition.setToX(-196);
+                    translateTransition.setNode(slidingMenuMainAnchorPane);
+                    translateTransition.play();
+                    isSlidingMenuOpen = !isSlidingMenuOpen;
+                } else {
+                    translateTransition.setDuration(Duration.seconds(0.2));
+                    translateTransition.setToX(0);
+                    translateTransition.setNode(slidingMenuMainAnchorPane);
+                    translateTransition.play();
+                    isSlidingMenuOpen = !isSlidingMenuOpen;
+                }
             }
         }
     }
@@ -87,7 +106,8 @@ public class SlidingMenuBarController implements Initializable {
     }
 
     @FXML
-    private void switchToSettings(ActionEvent event) {
+    private void switchToSettings(ActionEvent event
+    ) {
         System.out.println("settings");
     }
 
@@ -200,10 +220,14 @@ public class SlidingMenuBarController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb
+    ) {
         // TODO
         browserPageViewcontroller.turnOffWebEngine();
-        slidingMenuMainAnchorPane.setLayoutX(-196);
+        if (!MainViewRunner.getSlideBarRanOnce()) {
+            slidingMenuMainAnchorPane.setLayoutX(-196);
+            MainViewRunner.setSlideBarRanOnce(true);
+        }
 
     }
 

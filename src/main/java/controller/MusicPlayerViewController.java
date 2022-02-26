@@ -35,6 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.MusicPlayerManager;
@@ -79,6 +80,14 @@ public class MusicPlayerViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(downloadPageMainAnchor.widthProperty());
+        clip.heightProperty().bind(downloadPageMainAnchor.heightProperty());
+        clip.setArcWidth(50);//this sets the rounded corners
+        clip.setArcHeight(50);
+        downloadPageMainAnchor.setClip(clip);
+        
         if (MusicPlayerManager.getSongObjectBeingPlayed() != null) {
             updateInfoDisplays();
         }
