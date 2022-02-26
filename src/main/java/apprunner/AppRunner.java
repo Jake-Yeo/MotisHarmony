@@ -38,9 +38,6 @@ import view.MainViewRunner;
 public class AppRunner {
 
     public static void main(String[] args) throws MalformedURLException, IOException, Exception {
-        int b = 1;
-        int c = b++;
-        System.out.println(b);
         
         PathsManager.setUpFolders();
         PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
