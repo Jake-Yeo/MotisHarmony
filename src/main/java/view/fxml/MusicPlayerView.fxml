@@ -8,11 +8,12 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerViewController">
    <children>
-      <AreaChart fx:id="spektrum" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutX="-43.0" layoutY="-5.0" legendVisible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="1171.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+      <AreaChart fx:id="spektrum" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutX="-43.0" layoutY="-5.0" legendVisible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="1171.0" style="-fx-background-color: transparent; -fx-opacity: 0;" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -31,14 +32,52 @@
          </children>
       </AnchorPane>
       <fx:include source="DragWindowButton.fxml" />
-      <Button fx:id="playButton" layoutX="331.0" layoutY="391.0" mnemonicParsing="false" onAction="#playMusic" text="Play!" />
-      <Button fx:id="nextButton" layoutX="396.0" layoutY="391.0" mnemonicParsing="false" onAction="#nextSong" text="Next" />
-      <Button fx:id="pauseButton" layoutX="458.0" layoutY="391.0" mnemonicParsing="false" onAction="#pauseMusic" text="Pause" />
-      <Button fx:id="resumeButton" layoutX="524.0" layoutY="391.0" mnemonicParsing="false" onAction="#resumeMusic" text="Resume" />
-      <Slider fx:id="seekSlider" layoutX="332.0" layoutY="427.0" prefHeight="14.0" prefWidth="253.0" />
-      <Slider fx:id="volumeSlider" layoutX="303.0" layoutY="346.0" max="1.0" orientation="VERTICAL" />
-      <Text fx:id="timeText" fill="WHITE" layoutX="593.0" layoutY="438.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="103.0" />
-      <ListView fx:id="songInfoViewList" layoutX="77.0" layoutY="101.0" prefHeight="200.0" prefWidth="200.0" />
-      <ImageView fx:id="thumbnailImageView" fitHeight="185.0" fitWidth="276.0" layoutX="425.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="playButton" layoutX="322.0" layoutY="411.0" mnemonicParsing="false" onAction="#playMusic" text="Play!" />
+      <Button fx:id="nextButton" layoutX="387.0" layoutY="411.0" mnemonicParsing="false" onAction="#nextSong" text="Next" />
+      <Button fx:id="pauseButton" layoutX="449.0" layoutY="411.0" mnemonicParsing="false" onAction="#pauseMusic" text="Pause" />
+      <Button fx:id="resumeButton" layoutX="515.0" layoutY="411.0" mnemonicParsing="false" onAction="#resumeMusic" text="Resume" />
+      <Slider fx:id="volumeSlider" layoutX="854.0" layoutY="423.0" max="1.0" orientation="VERTICAL" />
+      <Text fx:id="timeText" fill="WHITE" layoutX="344.0" layoutY="185.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="103.0" />
+      <ListView fx:id="songInfoViewList" layoutX="357.0" layoutY="198.0" prefHeight="200.0" prefWidth="200.0" />
+      <ImageView fx:id="thumbnailImageView" fitHeight="185.0" fitWidth="276.0" layoutX="319.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <AnchorPane layoutX="296.0" layoutY="452.0" prefHeight="111.0" prefWidth="322.0" style="-fx-background-color: linear-gradient(to bottom, #ee4540, #c12c4e, #8e224e, #5b1d43, #2d142c); -fx-background-radius: 50px;">
+         <children>
+            <Slider fx:id="seekSlider" layoutX="23.0" layoutY="35.0" prefHeight="14.0" prefWidth="276.0" />
+            <AnchorPane layoutX="49.0" layoutY="64.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="216.0">
+               <children>
+                  <Button layoutX="87.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="41.0" style="-fx-padding: 0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #C72C41;" text="▶" textFill="#c72c41">
+                     <font>
+                        <Font name="Quicksand Light" size="28.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="41.0" style="-fx-padding: 0 0 3 7; -fx-background-color: transparent;" text="⏭ " textFill="#c72c41">
+                     <font>
+                        <Font name="Quicksand Light" size="23.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="46.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="41.0" style="-fx-padding: 0 0 3 7; -fx-background-color: transparent;" text="⏭ " textFill="#c72c41">
+                     <font>
+                        <Font name="Quicksand Light" size="23.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="169.0" layoutY="-4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="49.0" prefWidth="47.0" style="-fx-padding: 0 0 0 3; -fx-border-width: 3px; -fx-background-color: transparent;" text="🔀" textFill="#c72c41">
+                     <font>
+                        <Font name="Quicksand Light" size="20.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="2.0" layoutY="-4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="49.0" prefWidth="47.0" style="-fx-padding: 0 0 0 0; -fx-border-width: 3px; -fx-background-color: transparent;" text="🔁" textFill="#c72c41">
+                     <font>
+                        <Font name="Quicksand Light" size="20.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <Text layoutX="34.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="time" wrappingWidth="30.0" />
+            <Text layoutX="269.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="time" wrappingWidth="30.0" />
+            <Text layoutX="34.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Song name, Creator name" wrappingWidth="231.0" />
+         </children>
+      </AnchorPane>
+      <ListView layoutX="45.0" layoutY="61.0" prefHeight="426.0" prefWidth="200.0" />
+      <ListView layoutX="631.0" layoutY="55.0" prefHeight="426.0" prefWidth="200.0" />
    </children>
 </AnchorPane>
