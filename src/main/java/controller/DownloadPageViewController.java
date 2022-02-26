@@ -102,8 +102,8 @@ public class DownloadPageViewController implements Initializable {
         clip = new Rectangle();
         clip.widthProperty().bind(thumbnailAnchorPane.widthProperty());
         clip.heightProperty().bind(thumbnailAnchorPane.heightProperty());
-        clip.setArcWidth(30);//this sets the rounded corners
-        clip.setArcHeight(30);
+        clip.setArcWidth(50);//this sets the rounded corners
+        clip.setArcHeight(50);
         thumbnailAnchorPane.setClip(clip);
         YoutubeDownloader.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<SongDataObject>() {
             @Override

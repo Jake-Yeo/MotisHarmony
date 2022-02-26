@@ -24,6 +24,7 @@ public class MainViewRunner extends Application {
 
     public static Stage stageToReturn;
     public static SceneChanger sceneChanger;
+    public static boolean slideBarLoaded = false;
 
     public static void launchPanel(String[] args) {
         launch(args);
@@ -63,5 +64,13 @@ public class MainViewRunner extends Application {
     
     public static SceneChanger getSceneChanger() {
         return sceneChanger;
+    }
+    
+    public static boolean getSlideBarRanOnce() {
+        return slideBarLoaded;
+    }
+    
+    public static void setSlideBarRanOnce(boolean tf) {
+        slideBarLoaded = tf;
     }
 }

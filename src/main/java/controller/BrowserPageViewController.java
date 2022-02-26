@@ -47,8 +47,8 @@ public class BrowserPageViewController implements Initializable {
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(webViewMainAnchorPane.widthProperty());
         clip.heightProperty().bind(webViewMainAnchorPane.heightProperty());
-        clip.setArcWidth(30);//this sets the rounded corners
-        clip.setArcHeight(30);
+        clip.setArcWidth(50);//this sets the rounded corners
+        clip.setArcHeight(50);
         webViewMainAnchorPane.setClip(clip);
         //browserWebView.getEngine().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/538.19 (KHTML, like Gecko) JavaFX/8.0 Safari/538.19");
         browserWebView.setContextMenuEnabled(true);
@@ -81,7 +81,7 @@ public class BrowserPageViewController implements Initializable {
         //      contextMenu.hide();
         //  }
     }
-    
+
     public void turnOffWebEngine() {
         //browserWebView.getEngine().load("https://www.youtube.com/");
     }
