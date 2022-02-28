@@ -27,7 +27,9 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,10 +50,17 @@ import model.YoutubeVideoPageParser;
  */
 public class MusicPlayerViewController implements Initializable {
 
+    private ContextMenu contextMenu = new ContextMenu();
     @FXML
     private AnchorPane downloadPageMainAnchor;
     @FXML
+    private Text songInfoText;
+    @FXML
     private AnchorPane anchorPaneHoldingSlidingMenu;
+    @FXML
+    private ListView<String> playlistList;
+    @FXML
+    private ListView<String> songList;
     @FXML
     private Button playButton;
     @FXML
@@ -110,6 +119,7 @@ public class MusicPlayerViewController implements Initializable {
         spektrum.getYAxis().setAutoRanging(false);
         spektrum.getStylesheets().add("/css/fxplayer.css");
         ((NumberAxis)spektrum.getYAxis()).setUpperBound(70);
+        seekSlider.getStylesheets().add("/css/customSlider.css");
     }
 
     @FXML
@@ -154,6 +164,7 @@ public class MusicPlayerViewController implements Initializable {
 
     private void updateInfoDisplays() {
         songInfoViewList.getItems().clear();
+        songInfoText.setText("Song name: " + MusicPlayerManager.getSongObjectBeingPlayed().getTitle() + "Song creator: " + MusicPlayerManager.getSongObjectBeingPlayed().getChannelName());
         songInfoViewList.getItems().add("Song name: " + MusicPlayerManager.getSongObjectBeingPlayed().getTitle());
         songInfoViewList.getItems().add("Song creator: " + MusicPlayerManager.getSongObjectBeingPlayed().getChannelName());
         songInfoViewList.getItems().add("Song duration: " + MusicPlayerManager.getSongObjectBeingPlayed().getVideoDuration());
@@ -282,5 +293,13 @@ public class MusicPlayerViewController implements Initializable {
             MusicPlayerManager.getMediaPlayer().setAudioSpectrumInterval(INTERVAL);
 
         }
+    }
+    
+        public void setUpContextMenu() {
+        MenuItem downloadLink = new MenuItem("Download Video Audio");
+        downloadLink.setOnAction(e -> System.out.println("Go Forward"));
+
+
+        contextMenu.getItems().addAll(downloadLink);
     }
 }
