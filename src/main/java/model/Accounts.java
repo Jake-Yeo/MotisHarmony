@@ -25,6 +25,7 @@ import view.SceneChanger;
  * @author Jake Yeo
  */
 public class Accounts implements Serializable {//This class will store account username and their encrypted password, plus song data
+
     private static final long serialVersionUID = 4655882630581250278L;
     private static SceneChanger sceneSwitcher = new SceneChanger();
     private static Accounts loggedInAccount;
@@ -32,6 +33,7 @@ public class Accounts implements Serializable {//This class will store account u
     private String username;
     private String password;
     private SecretKey key;
+    private PlaylistDataObject playlistDataObject = new PlaylistDataObject();
     transient private Encryption aes = new Encryption();
 
     Accounts(String username, String password) {
@@ -64,14 +66,6 @@ public class Accounts implements Serializable {//This class will store account u
         return this.key;
     }
 
-    public void addSongDataObjectToAccount(SongDataObject songDataObject) {
-        this.songDataObjectList.add(songDataObject);
-    }
-
-    public void removeSongFromAccount(SongDataObject songDataObject) {
-        this.songDataObjectList.remove(songDataObject);
-    }
-
     public ArrayList<String> getListOfSongPaths() {
         ArrayList<String> listOfSongsToReturn = new ArrayList<>();
         for (int i = 0; i < songDataObjectList.size(); i++) {
@@ -91,7 +85,19 @@ public class Accounts implements Serializable {//This class will store account u
     }
 
     public ArrayList<SongDataObject> getListOfSongDataObjects() {
-        return songDataObjectList;
+        return this.songDataObjectList;
+    }
+
+    public void addSongDataObjectToAccount(SongDataObject songDataObject) {
+        this.songDataObjectList.add(songDataObject);
+    }
+
+    public void removeSongFromAccount(SongDataObject songDataObject) {
+        this.songDataObjectList.remove(songDataObject);
+    }
+
+    public PlaylistDataObject getPlaylistDataObject() {
+        return this.playlistDataObject;
     }
 
     public void serializeAccount() throws Exception {
@@ -124,6 +130,7 @@ public class Accounts implements Serializable {//This class will store account u
             try {
                 PathsManager.setUpAccountFoldersAndTxtFiles(username);
                 PathsManager.setUpPathsInsideUserDataPath();//Basically we just set up paths for the folders and text files made above
+                loggedInAccount.playlistDataObject.createPlaylist("All Songs");
                 loggedInAccount.serializeAccount();//If the username contains "/" or "\\" the serialization will fail, so we put it in a try catch loop.
             } catch (Exception e) {
                 return new ErrorDataObject(true, "Username is not available");

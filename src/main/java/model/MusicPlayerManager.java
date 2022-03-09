@@ -26,7 +26,7 @@ public class MusicPlayerManager {
     private static boolean paused = false;
     private static int volume;
     private static SongDataObject songObjectBeingPlayed;
-    public static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
+    private static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
 
     public static void playMusic() throws IOException {
         ArrayList<SongDataObject> songDataObjects = Accounts.getLoggedInAccount().getListOfSongDataObjects();
@@ -92,10 +92,10 @@ public class MusicPlayerManager {
     }
 
     public static double getTotalDurationInSeconds() {
-        return MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds();
+        return mediaPlayer.getTotalDuration().toSeconds();
     }
 
     public static double getCurrentTimeInSeconds() {
-        return MusicPlayerManager.getMediaPlayer().getCurrentTime().toSeconds();
+        return mediaPlayer.getCurrentTime().toSeconds();
     }
 }
