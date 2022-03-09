@@ -40,6 +40,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import model.Accounts;
 import model.MusicPlayerManager;
 import model.YoutubeDownloader;
 import model.YoutubeVideoPageParser;

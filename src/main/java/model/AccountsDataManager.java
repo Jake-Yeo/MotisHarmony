@@ -59,9 +59,14 @@ public class AccountsDataManager implements Serializable {//This class will be u
             return false;
         }
     }
+    
+    public static void createPlaylist(String name) {
+        Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(name);
+    }
 
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {
         Accounts.getLoggedInAccount().addSongDataObjectToAccount(urlDataObject);
+        Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", urlDataObject);
         Accounts.getLoggedInAccount().serializeAccount();
         saveThumbnail(urlDataObject.getThumbnailUrl(), urlDataObject.getPathToThumbnail());
     }
