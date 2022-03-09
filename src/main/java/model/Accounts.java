@@ -33,7 +33,7 @@ public class Accounts implements Serializable {//This class will store account u
     private String username;
     private String password;
     private SecretKey key;
-    private PlaylistDataObject playlistDataObject = new PlaylistDataObject();
+    private PlaylistMap playlistDataObject = new PlaylistMap();
     transient private Encryption aes = new Encryption();
 
     Accounts(String username, String password) {
@@ -96,7 +96,7 @@ public class Accounts implements Serializable {//This class will store account u
         this.songDataObjectList.remove(songDataObject);
     }
 
-    public PlaylistDataObject getPlaylistDataObject() {
+    public PlaylistMap getPlaylistDataObject() {
         return this.playlistDataObject;
     }
 
