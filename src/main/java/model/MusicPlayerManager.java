@@ -14,6 +14,8 @@ import javafx.scene.media.Media;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
@@ -27,6 +29,8 @@ public class MusicPlayerManager {
     private static int volume;
     private static SongDataObject songObjectBeingPlayed;
     private static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
+    private static ObservableList<ArrayList<SongDataObject>> playlistList = FXCollections.observableArrayList();
+    private static ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
 
     public static void playMusic() throws IOException {
         ArrayList<SongDataObject> songDataObjects = Accounts.getLoggedInAccount().getListOfSongDataObjects();
@@ -65,6 +69,14 @@ public class MusicPlayerManager {
     public static void resumeSong() {
         mediaPlayer.play();
         paused = false;
+    }
+
+    public static ObservableList<ArrayList<SongDataObject>> getPlaylistList() {
+        return playlistList;
+    }
+    
+        public static ObservableList<SongDataObject> getCurrentSongList() {
+        return currentSongList;
     }
 
     public static MediaPlayer getMediaPlayer() {

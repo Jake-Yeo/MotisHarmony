@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 
-public class PlaylistDataObject implements Serializable {
+public class PlaylistMap implements Serializable {
 
     private static final long serialVersionUID = 4655882630581250278L;
 
@@ -31,6 +31,13 @@ public class PlaylistDataObject implements Serializable {
     }
 
     public void addSongToPlaylist(String playlistName, SongDataObject song) {
-        playlistMap.get(playlistName).add(song);
+        this.playlistMap.get(playlistName).add(song);
     }
+    
+    public HashMap<String, ArrayList<SongDataObject>> getMapOfPlaylists() {
+        return this.playlistMap;
+    }
+    
+    
+
 }
