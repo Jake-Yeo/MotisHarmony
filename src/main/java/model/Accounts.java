@@ -17,7 +17,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.fxml.FXMLLoader;
 import javax.crypto.SecretKey;
+import view.MainViewRunner;
 import view.SceneChanger;
 
 /**
@@ -137,7 +139,10 @@ public class Accounts implements Serializable {//This class will store account u
             }
             accDataMan.addAccNameToList(username);//This will add the username to the list so that accounts with the same usernames cannot be created.
             accDataMan.serializeAccMan();//This will save the contents of the ArrayList
-
+            //Since these classes need an account to be created in order to initialize, we must set up the accounts first before adding these
+            MainViewRunner.getSceneChanger().addScreen("DownloadPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/DownloadPageView.fxml")));
+            MainViewRunner.getSceneChanger().addScreen("BrowserPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/BrowserPageView.fxml")));
+            MainViewRunner.getSceneChanger().addScreen("MusicPlayerPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/MusicPlayerView.fxml")));
             sceneSwitcher.switchToDownloadPageView();//The Account signup was successful and we can now let the user use the application
             System.out.println(PathsManager.getLoggedInUserDataPath().toString());
         } else {
@@ -165,6 +170,10 @@ public class Accounts implements Serializable {//This class will store account u
         if (aes.sha256Hash(aes.encrypt(password)).equals(accToLoginTo.getPassword())) {//Hashes the encrypted password entered to check if it equals the hash stored in the acccount object
             PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
             loggedInAccount = accToLoginTo;//Set the logged in account
+            //Since these classes need an account to be created in order to initialize, we must set up the accounts first before adding these
+            MainViewRunner.getSceneChanger().addScreen("DownloadPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/DownloadPageView.fxml")));
+            MainViewRunner.getSceneChanger().addScreen("BrowserPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/BrowserPageView.fxml")));
+            MainViewRunner.getSceneChanger().addScreen("MusicPlayerPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/MusicPlayerView.fxml")));
             sceneSwitcher.switchToDownloadPageView();//The login was successful and we can now let the user use the application
         } else {
             System.err.println("password is wrong");

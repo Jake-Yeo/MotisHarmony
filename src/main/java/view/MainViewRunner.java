@@ -49,9 +49,6 @@ public class MainViewRunner extends Application {
         SceneChanger screenController = new SceneChanger(scene);
 
         screenController.addScreen("LoginPage", FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml")));
-        screenController.addScreen("DownloadPage", FXMLLoader.load(getClass().getResource("/fxml/DownloadPageView.fxml")));
-        screenController.addScreen("BrowserPage", FXMLLoader.load(getClass().getResource("/fxml/BrowserPageView.fxml")));
-        screenController.addScreen("MusicPlayerPage", FXMLLoader.load(getClass().getResource("/fxml/MusicPlayerView.fxml")));
         screenController.activate("LoginPage");
         sceneChanger = screenController;
 
