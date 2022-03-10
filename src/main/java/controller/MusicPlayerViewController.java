@@ -22,6 +22,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -56,7 +57,7 @@ import model.YoutubeVideoPageParser;
  * @author 1100007967
  */
 public class MusicPlayerViewController implements Initializable, PropertyChangeListener {
-    
+
     private ContextMenu contextMenu = new ContextMenu();
     @FXML
     private AnchorPane downloadPageMainAnchor;
@@ -86,7 +87,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private ListView<String> songInfoViewList;
     @FXML
     private ImageView thumbnailImageView;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -97,11 +98,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         clip.setArcWidth(50);//this sets the rounded corners
         clip.setArcHeight(50);
         downloadPageMainAnchor.setClip(clip);
-        
+
         if (MusicPlayerManager.getSongObjectBeingPlayed() != null) {
             updateInfoDisplays();
         }
-        
+
         if (MusicPlayerManager.getMediaPlayer() != null) {
             volumeSlider.setValue(MusicPlayerManager.getVolume());
             seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));
@@ -110,7 +111,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             volumeSlider.setValue(1);
         }
         seekSlider.getStylesheets().add("/css/customSlider.css");
-        
+
         MusicPlayerManager.getCurrentSongList().addListener(new ListChangeListener<SongDataObject>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
@@ -127,33 +128,33 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         updatePlaylistList();
         //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
-    
+
     @FXML
     private void playMusic(ActionEvent event) throws IOException {
         MusicPlayerManager.playMusic();
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
     }
-    
+
     @FXML
     private void pauseMusic(ActionEvent event) throws IOException {
         MusicPlayerManager.pauseSong();
     }
-    
+
     @FXML
     private void resumeMusic(ActionEvent event) throws IOException {
         MusicPlayerManager.resumeSong();
     }
-    
+
     @FXML
     private void nextSong(ActionEvent event) throws IOException {
         seekSlider.setValue(0);
         MusicPlayerManager.nextSong();
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
-        
+
     }
-    
+
     private void updateInfoDisplays() {
         songInfoViewList.getItems().clear();
         songInfoText.setText("Song name: " + MusicPlayerManager.getSongObjectBeingPlayed().getTitle() + "Song creator: " + MusicPlayerManager.getSongObjectBeingPlayed().getChannelName());
@@ -162,7 +163,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songInfoViewList.getItems().add("Song duration: " + MusicPlayerManager.getSongObjectBeingPlayed().getVideoDuration());
         thumbnailImageView.setImage(new Image(MusicPlayerManager.getSongObjectBeingPlayed().getPathToThumbnail()));
     }
-    
+
     private String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
         boolean getTotalSecondsInHourFormat = false;
         String totalTime = getCurrentTimeString(totalSeconds, false);
@@ -172,7 +173,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         String currentSeconds = getCurrentTimeString(currentseconds, getTotalSecondsInHourFormat);
         return currentSeconds + "/" + totalTime;
     }
-    
+
     private String getCurrentTimeString(int seconds, boolean inHourFormat) {
         String videoDuration = "";
         String stringDurationMinutes = "";
@@ -200,7 +201,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         return videoDuration;
     }
-    
+
     public void init() {
         MusicPlayerManager.getMediaPlayer().setOnEndOfMedia(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
@@ -213,7 +214,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 }
             }
         });
-        
+
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(
@@ -221,48 +222,60 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 MusicPlayerManager.setVolume(volumeSlider.getValue());
             }
         });
-        
+
         seekSlider.setOnMousePressed((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             MusicPlayerManager.pauseSong();//Pause the song so there is no weird audio
         });
-        
+
         seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             MusicPlayerManager.seekTo(Duration.seconds(seekSlider.getValue()));//Set where to resume the song
             MusicPlayerManager.resumeSong();//Resume the song once the user releases their mous key
         });
-        
+
         MusicPlayerManager.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.
             public void run() {
                 MusicPlayerManager.setVolume(volumeSlider.getValue());//Sets the volume
                 seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
             }
         });
-        
+
         MusicPlayerManager.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {//This will automatically update the seekSlider to match the current position of the song
             public void invalidated(Observable ov) {
                 seekSlider.setValue(MusicPlayerManager.getCurrentTimeInSeconds());
                 timeText.setText(getCurrentTimeStringFormatted((int) Math.floor(MusicPlayerManager.getCurrentTimeInSeconds()), (int) Math.floor(MusicPlayerManager.getTotalDurationInSeconds())));
             }
         });
-        
+
     }
-    
+
     public void setUpContextMenu() {
         MenuItem downloadLink = new MenuItem("Download Video Audio");
         downloadLink.setOnAction(e -> System.out.println("Go Forward"));
-        
+
         contextMenu.getItems().addAll(downloadLink);
     }
-    
+
     private void updatePlaylistList() {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         playlistList.getItems().addAll(map.getMapOfPlaylists().keySet().toArray(new String[map.getMapOfPlaylists().keySet().size()]));
     }
-    
+
+    @FXML
     private void updateCurrentSongList() {
-        
+        PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
+        int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();
+        String keyValue = playlistList.getItems().get(selectedIndex);
+        System.out.println(keyValue);
+        ArrayList<SongDataObject> songDataObjectsToAdd = map.getMapOfPlaylists().get(keyValue);
+        String[] arrayOfSongNames = new String[songDataObjectsToAdd.size()];
+        for (int i = 0; i < arrayOfSongNames.length; i++) {
+            arrayOfSongNames[i] = songDataObjectsToAdd.get(i).getTitle();
+        }
+        //we clear the list and then put the new list of song names in
+        songList.getItems().clear();
+        songList.getItems().addAll(arrayOfSongNames);
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         updatePlaylistList();
