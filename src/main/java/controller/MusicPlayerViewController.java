@@ -115,13 +115,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         MusicPlayerManager.getCurrentSongList().addListener(new ListChangeListener<SongDataObject>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
-                updateCurrentSongList();
-                System.out.println("listener ran");
-            }
-        });
-        MusicPlayerManager.getPlaylistList().addListener(new ListChangeListener<ArrayList<SongDataObject>>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends ArrayList<SongDataObject>> arg0) {
+                //we update the model here, then we can change the view if we were to reorder the model as well
+                updateViewCurrentSongList();
                 System.out.println("listener ran");
             }
         });
@@ -259,17 +254,21 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         playlistList.getItems().addAll(map.getMapOfPlaylists().keySet().toArray(new String[map.getMapOfPlaylists().keySet().size()]));
     }
-
     @FXML
-    private void updateCurrentSongList() {
+    private void updateModelCurrentSongList() {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();
         String keyValue = playlistList.getItems().get(selectedIndex);
         System.out.println(keyValue);
         ArrayList<SongDataObject> songDataObjectsToAdd = map.getMapOfPlaylists().get(keyValue);
-        String[] arrayOfSongNames = new String[songDataObjectsToAdd.size()];
+        MusicPlayerManager.getCurrentSongList().clear();
+        MusicPlayerManager.getCurrentSongList().addAll(songDataObjectsToAdd);
+    }
+
+    private void updateViewCurrentSongList() {
+        String[] arrayOfSongNames = new String[MusicPlayerManager.getCurrentSongList().size()];
         for (int i = 0; i < arrayOfSongNames.length; i++) {
-            arrayOfSongNames[i] = songDataObjectsToAdd.get(i).getTitle();
+            arrayOfSongNames[i] = MusicPlayerManager.getCurrentSongList().get(i).getTitle();
         }
         //we clear the list and then put the new list of song names in
         songList.getItems().clear();

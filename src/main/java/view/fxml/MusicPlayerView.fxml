@@ -66,7 +66,7 @@
             <Text fx:id="songInfoText" fill="#5c1c48" layoutX="34.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Song name, Creator name" wrappingWidth="231.0" />
          </children>
       </AnchorPane>
-      <ListView fx:id="playlistList" layoutX="45.0" layoutY="61.0" onMouseClicked="#updateCurrentSongList" prefHeight="426.0" prefWidth="200.0" />
+      <ListView fx:id="playlistList" layoutX="45.0" layoutY="61.0" onMouseClicked="#updateModelCurrentSongList" prefHeight="426.0" prefWidth="200.0" />
       <ListView fx:id="songList" layoutX="631.0" layoutY="55.0" prefHeight="426.0" prefWidth="200.0" />
    </children>
 </AnchorPane>
