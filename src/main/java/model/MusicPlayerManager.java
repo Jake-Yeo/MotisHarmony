@@ -29,7 +29,6 @@ public class MusicPlayerManager {
     private static int volume;
     private static SongDataObject songObjectBeingPlayed;
     private static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
-    private static ObservableList<ArrayList<SongDataObject>> playlistList = FXCollections.observableArrayList();
     private static ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
 
     public static void playMusic() throws IOException {
@@ -71,11 +70,7 @@ public class MusicPlayerManager {
         paused = false;
     }
 
-    public static ObservableList<ArrayList<SongDataObject>> getPlaylistList() {
-        return playlistList;
-    }
-    
-        public static ObservableList<SongDataObject> getCurrentSongList() {
+    public static ObservableList<SongDataObject> getCurrentSongList() {
         return currentSongList;
     }
 
