@@ -4,6 +4,7 @@
  */
 package controller;
 
+import java.awt.MouseInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -40,6 +41,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioSpectrumListener;
@@ -132,7 +134,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
         updatePlaylistList();
-
+        setUpContextMenu();
         //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
 
@@ -262,11 +264,26 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     }
 
-    public void setUpContextMenu() {
-        MenuItem downloadLink = new MenuItem("Download Video Audio");
-        downloadLink.setOnAction(e -> System.out.println("Go Forward"));
+    public void contextMenuPlayOption() {
+        MusicPlayerManager.playSong(MusicPlayerManager.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
+        init();//initalize again because a new MediaPlayer is made
+        updateInfoDisplays();
+    }
 
+    public void setUpContextMenu() {
+        MenuItem downloadLink = new MenuItem("Play Song");
+        downloadLink.setOnAction(e -> contextMenuPlayOption());
         contextMenu.getItems().addAll(downloadLink);
+    }
+
+    @FXML
+    public void showContextMenu(MouseEvent e) {
+        if (e.getButton() == MouseButton.SECONDARY) {
+            System.out.println("worked");
+            contextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+        } else {
+            contextMenu.hide();
+        }
     }
 
     private void updatePlaylistList() {

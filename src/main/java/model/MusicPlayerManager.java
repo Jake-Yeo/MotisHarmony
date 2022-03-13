@@ -55,6 +55,25 @@ public class MusicPlayerManager {
         //playMusic();
     }
 
+    public static void playSong(SongDataObject songToPlay) {
+        songObjectBeingPlayed = songToPlay;
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+        File file = new File(songToPlay.getPathToWavFile());//replace with correct path when testing
+        System.out.println("song playing: " + file.toPath().toString());
+        Media media = new Media(file.toURI().toASCIIString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setOnEndOfMedia(() -> {
+            try {
+                playMusic();
+            } catch (IOException ex) {
+                Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        mediaPlayer.play();
+    }
+
     public static void nextSong() throws IOException {
         mediaPlayer.stop();
         playMusic();
