@@ -22,16 +22,19 @@ public class PlaylistMap implements Serializable {
 
     private HashMap<String, ArrayList<SongDataObject>> playlistMap = new HashMap<>();//Using a HashMap we can easily give playlists names
 
-    public void createPlaylist(String name) {
+    public void createPlaylist(String name) throws Exception {
         this.playlistMap.put(name, new ArrayList<SongDataObject>());
+        Accounts.getLoggedInAccount().serializeAccount();
     }
 
-    public void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) {
+    public void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
         this.playlistMap.get(playlistName).addAll(listOfSongs);
+        Accounts.getLoggedInAccount().serializeAccount();
     }
 
-    public void addSongToPlaylist(String playlistName, SongDataObject song) {
+    public void addSongToPlaylist(String playlistName, SongDataObject song) throws Exception {
         this.playlistMap.get(playlistName).add(song);
+        Accounts.getLoggedInAccount().serializeAccount();
     }
     
     public HashMap<String, ArrayList<SongDataObject>> getMapOfPlaylists() {

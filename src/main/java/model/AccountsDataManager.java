@@ -60,7 +60,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
     
-    public static void createPlaylist(String name) {
+    public static void createPlaylist(String name) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(name);
     }
 

@@ -34,8 +34,10 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -46,6 +48,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.Accounts;
+import model.AccountsDataManager;
 import model.MusicPlayerManager;
 import model.PlaylistMap;
 import model.SongDataObject;
@@ -87,6 +90,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private ListView<String> songInfoViewList;
     @FXML
     private ImageView thumbnailImageView;
+    @FXML
+    private Text currentTimeText;
+    @FXML
+    private Text totalTimeText;
+    @FXML
+    private Button addPlaylistButton;
+    @FXML
+    private TextField playlistNameTextField;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -121,7 +132,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
         updatePlaylistList();
+
         //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
+    }
+
+    @FXML
+    private void createNewPlaylist(ActionEvent event) throws Exception {
+        AccountsDataManager.createPlaylist(playlistNameTextField.getText());
+        updatePlaylistList();
+        playlistNameTextField.clear();
     }
 
     @FXML
@@ -252,8 +271,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     private void updatePlaylistList() {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
+        playlistList.getItems().clear();
         playlistList.getItems().addAll(map.getMapOfPlaylists().keySet().toArray(new String[map.getMapOfPlaylists().keySet().size()]));
     }
+
     @FXML
     private void updateModelCurrentSongList() {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
