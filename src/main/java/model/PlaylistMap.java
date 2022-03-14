@@ -31,9 +31,16 @@ public class PlaylistMap implements Serializable {
         this.playlistMap.get(playlistName).addAll(listOfSongs);
         Accounts.getLoggedInAccount().serializeAccount();
     }
-    
+
     public void deletePlaylist(String playlistName) throws Exception {
         this.playlistMap.remove(playlistName);
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
+
+    public void removeSongFromPlaylist(String playlistName, int[] indiciesToRemove) throws Exception {
+        for (int i = 0; i < indiciesToRemove.length; i++) {
+            this.playlistMap.get(playlistName).remove(indiciesToRemove[i]);
+        }
         Accounts.getLoggedInAccount().serializeAccount();
     }
 
@@ -41,11 +48,9 @@ public class PlaylistMap implements Serializable {
         this.playlistMap.get(playlistName).add(song);
         Accounts.getLoggedInAccount().serializeAccount();
     }
-    
+
     public HashMap<String, ArrayList<SongDataObject>> getMapOfPlaylists() {
         return this.playlistMap;
     }
-    
-    
 
 }
