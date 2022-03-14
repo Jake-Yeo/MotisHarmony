@@ -67,7 +67,8 @@ import model.YoutubeVideoPageParser;
  */
 public class MusicPlayerViewController implements Initializable, PropertyChangeListener {
 
-    private ContextMenu contextMenu = new ContextMenu();
+    private ContextMenu songListContextMenu = new ContextMenu();
+    private ContextMenu playlistListContextMenu = new ContextMenu();
     @FXML
     private AnchorPane downloadPageMainAnchor;
     @FXML
@@ -140,7 +141,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
         updatePlaylistList();
-        setUpSongListContextMenu();
+        setUpContextMenus();
         comboBox.setVisibleRowCount(16);
         MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -301,6 +302,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         comboBox.show();
     }
 
+    public void contextMenuDeletePlaylistOption() throws Exception {
+        AccountsDataManager.deletePlaylist(playlistList.getSelectionModel().getSelectedItem());
+        updatePlaylistList();
+    }
+
     public void updatePlaylistToAddToChoiceBox() {
         comboBox.getItems().clear();
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
@@ -310,21 +316,42 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
-    public void setUpSongListContextMenu() {
+    public void setUpContextMenus() {
         MenuItem playSong = new MenuItem("Play Song");
         playSong.setOnAction(e -> contextMenuPlaySongOption());
         MenuItem addToPlaylist = new MenuItem("Add To Playlist");
         addToPlaylist.setOnAction(e -> contextMenuAddToPlaylistOption());
-        contextMenu.getItems().addAll(playSong, addToPlaylist);
+        songListContextMenu.getItems().addAll(playSong, addToPlaylist);
+        MenuItem deletePlaylist = new MenuItem("Delete Playlist");
+        deletePlaylist.setOnAction(e -> {
+            try {
+                contextMenuDeletePlaylistOption();
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        playlistListContextMenu.getItems().add(deletePlaylist);
     }
 
     @FXML
     public void showSongListContextMenu(MouseEvent e) {
         if (e.getButton() == MouseButton.SECONDARY) {
             System.out.println("worked");
-            contextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+            songListContextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
         } else {
-            contextMenu.hide();
+            songListContextMenu.hide();
+        }
+    }
+
+    @FXML
+    public void showPlaylistListContextMenu(MouseEvent e) {
+        if (e.getButton() == MouseButton.SECONDARY) {
+            System.out.println("worked");
+            updateModelCurrentSongList();
+            playlistListContextMenu.show(playlistList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+        } else {
+            playlistListContextMenu.hide();
+            updateModelCurrentSongList();
         }
     }
 
@@ -334,7 +361,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playlistList.getItems().addAll(map.getMapOfPlaylists().keySet().toArray(new String[map.getMapOfPlaylists().keySet().size()]));
     }
 
-    @FXML
     private void updateModelCurrentSongList() {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();

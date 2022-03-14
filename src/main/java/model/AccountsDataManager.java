@@ -71,6 +71,10 @@ public class AccountsDataManager implements Serializable {//This class will be u
     public static void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
     }
+    
+    public static void deletePlaylist(String playlistName) throws Exception {
+        Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
+    }
 
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {
         Accounts.getLoggedInAccount().addSongDataObjectToAccount(urlDataObject);
