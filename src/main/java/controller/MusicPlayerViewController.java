@@ -319,7 +319,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     public void deleteSongFromPlaylistOption() throws Exception {
         SongDataObject[] sdoToRemove = new SongDataObject[songList.selectionModelProperty().get().getSelectedIndices().size()];
         for (int i = 0; i < sdoToRemove.length; i++) {
-            sdoToRemove[i] = MusicPlayerManager.getCurrentSongList().get(i);
+            sdoToRemove[i] = MusicPlayerManager.getCurrentSongList().get(songList.selectionModelProperty().get().getSelectedIndices().get(i));
         }
         AccountsDataManager.removeSongFromPlaylist(playlistList.getSelectionModel().getSelectedItem(), sdoToRemove);
         updateModelCurrentSongList();
