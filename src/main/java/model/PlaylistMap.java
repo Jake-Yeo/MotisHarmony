@@ -31,6 +31,11 @@ public class PlaylistMap implements Serializable {
         this.playlistMap.get(playlistName).addAll(listOfSongs);
         Accounts.getLoggedInAccount().serializeAccount();
     }
+    
+    public void deletePlaylist(String playlistName) throws Exception {
+        this.playlistMap.remove(playlistName);
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
 
     public void addSongToPlaylist(String playlistName, SongDataObject song) throws Exception {
         this.playlistMap.get(playlistName).add(song);
