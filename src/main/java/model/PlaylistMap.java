@@ -12,7 +12,10 @@ package model;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 
@@ -37,10 +40,9 @@ public class PlaylistMap implements Serializable {
         Accounts.getLoggedInAccount().serializeAccount();
     }
 
-    public void removeSongFromPlaylist(String playlistName, int[] indiciesToRemove) throws Exception {
-        for (int i = 0; i < indiciesToRemove.length; i++) {
-            this.playlistMap.get(playlistName).remove(indiciesToRemove[i]);
-        }
+    public void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {
+        List sdoToRemove = Arrays.asList(sdoArray);
+        this.playlistMap.get(playlistName).removeAll(sdoToRemove);
         Accounts.getLoggedInAccount().serializeAccount();
     }
 

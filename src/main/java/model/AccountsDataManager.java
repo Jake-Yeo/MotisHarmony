@@ -76,8 +76,8 @@ public class AccountsDataManager implements Serializable {//This class will be u
         Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
     }
     
-    public static void removeSongFromPlaylist(String playlistName, int[] inidiciesToRemove) throws Exception {
-        Accounts.getLoggedInAccount().getPlaylistDataObject().removeSongFromPlaylist(playlistName, inidiciesToRemove);
+    public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {
+        Accounts.getLoggedInAccount().getPlaylistDataObject().removeSongFromPlaylist(playlistName, sdoArray);
     }
     
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {
