@@ -1,0 +1,37 @@
+name: Build Release Jar
+
+on:
+  release:
+    types: [ created ]
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          server-id: github
+          settings-path: ${{ github.workspace }}
+
+      - name: Cache Maven Dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - run: mvn -B package --file pom.xml -Pjavafx
+
+      - name: Archive Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: motisharmony-windows
+          path: target/*.jar
