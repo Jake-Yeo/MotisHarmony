@@ -68,6 +68,10 @@ public class AccountsDataManager implements Serializable {//This class will be u
         Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
     }
 
+    public static void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
+        Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
+    }
+
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {
         Accounts.getLoggedInAccount().addSongDataObjectToAccount(urlDataObject);
         Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", urlDataObject);
