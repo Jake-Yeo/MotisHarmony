@@ -316,12 +316,29 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
+    public void deleteSongFromPlaylistOption() throws Exception {
+        int[] indiciesToRemove = new int[songList.selectionModelProperty().get().getSelectedIndices().size()];
+        for (int i = 0; i < songList.selectionModelProperty().get().getSelectedIndices().size(); i++) {
+            indiciesToRemove[i] = songList.selectionModelProperty().get().getSelectedIndices().get(i);
+        }
+        AccountsDataManager.removeSongFromPlaylist(playlistList.getSelectionModel().getSelectedItem(), indiciesToRemove);
+        updateModelCurrentSongList();
+    }
+
     public void setUpContextMenus() {
         MenuItem playSong = new MenuItem("Play Song");
         playSong.setOnAction(e -> contextMenuPlaySongOption());
         MenuItem addToPlaylist = new MenuItem("Add To Playlist");
         addToPlaylist.setOnAction(e -> contextMenuAddToPlaylistOption());
-        songListContextMenu.getItems().addAll(playSong, addToPlaylist);
+        MenuItem deleteFromPlaylist = new MenuItem("Delete From Playlist");
+        deleteFromPlaylist.setOnAction(e -> {
+            try {
+                deleteSongFromPlaylistOption();
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        songListContextMenu.getItems().addAll(playSong, addToPlaylist, deleteFromPlaylist);
         MenuItem deletePlaylist = new MenuItem("Delete Playlist");
         deletePlaylist.setOnAction(e -> {
             try {
