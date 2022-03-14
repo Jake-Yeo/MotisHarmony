@@ -59,9 +59,13 @@ public class AccountsDataManager implements Serializable {//This class will be u
             return false;
         }
     }
-    
+
     public static void createPlaylist(String name) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(name);
+    }
+
+    public static void addSongToPlaylist(String playlistName, SongDataObject sdo) throws Exception {
+        Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
     }
 
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {

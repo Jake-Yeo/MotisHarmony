@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,8 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -100,6 +103,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private Button addPlaylistButton;
     @FXML
     private TextField playlistNameTextField;
+    @FXML
+    private ComboBox<String> comboBox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -135,7 +140,17 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         });
         updatePlaylistList();
         setUpContextMenu();
+        comboBox.setVisibleRowCount(16);
         //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
+    }
+
+    @FXML
+    private void onComboBoxClicked(ActionEvent e) throws Exception {
+        if (comboBox.getSelectionModel().selectedIndexProperty().get() >= 0) {
+            System.out.println(comboBox.getSelectionModel().getSelectedItem());
+            AccountsDataManager.addSongToPlaylist(comboBox.getSelectionModel().getSelectedItem(), MusicPlayerManager.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
+        }
+        System.out.println(comboBox.getSelectionModel().selectedIndexProperty().get());
     }
 
     @FXML
@@ -270,10 +285,26 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         updateInfoDisplays();
     }
 
+    public void contextMenuAddToPlaylistOption() {
+        updatePlaylistToAddToChoiceBox();
+        comboBox.show();
+    }
+
+    public void updatePlaylistToAddToChoiceBox() {
+        comboBox.getItems().clear();
+        PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
+        String[] arrayOfPlaylistNames = map.getMapOfPlaylists().keySet().toArray(new String[map.getMapOfPlaylists().keySet().size()]);
+        for (int i = 0; i < arrayOfPlaylistNames.length; i++) {
+            comboBox.getItems().add(arrayOfPlaylistNames[i]);
+        }
+    }
+
     public void setUpContextMenu() {
-        MenuItem downloadLink = new MenuItem("Play Song");
-        downloadLink.setOnAction(e -> contextMenuPlayOption());
-        contextMenu.getItems().addAll(downloadLink);
+        MenuItem playSong = new MenuItem("Play Song");
+        playSong.setOnAction(e -> contextMenuPlayOption());
+        MenuItem addToPlaylist = new MenuItem("Add To Playlist");
+        addToPlaylist.setOnAction(e -> contextMenuAddToPlaylistOption());
+        contextMenu.getItems().addAll(playSong, addToPlaylist);
     }
 
     @FXML
