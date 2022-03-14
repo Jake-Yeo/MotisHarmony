@@ -69,7 +69,7 @@
          </children>
       </AnchorPane>
       <ListView fx:id="playlistList" layoutX="45.0" layoutY="82.0" onMouseClicked="#updateModelCurrentSongList" prefHeight="405.0" prefWidth="200.0" />
-      <ListView fx:id="songList" layoutX="631.0" layoutY="86.0" onMouseClicked="#showContextMenu" prefHeight="405.0" prefWidth="200.0" />
+      <ListView fx:id="songList" layoutX="631.0" layoutY="86.0" onMouseClicked="#showSongListContextMenu" prefHeight="405.0" prefWidth="200.0" />
       <Button fx:id="addPlaylistButton" layoutX="45.0" layoutY="55.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="25.0" prefWidth="77.0" text="add playlist" />
       <TextField fx:id="playlistNameTextField" layoutX="123.0" layoutY="55.0" prefHeight="25.0" prefWidth="121.0" promptText="Enter Playlist Name" />
       <ComboBox fx:id="comboBox" layoutX="631.0" layoutY="59.0" onAction="#onComboBoxClicked" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent; visibility: false;" />
