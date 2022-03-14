@@ -32,7 +32,7 @@ public class MusicPlayerManager {
     private static ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
 
     public static void playMusic() throws IOException {
-        ArrayList<SongDataObject> songDataObjects = Accounts.getLoggedInAccount().getListOfSongDataObjects();
+        ObservableList<SongDataObject> songDataObjects = currentSongList;
         //String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
         //System.out.println(Arrays.toString(musicPaths));
         Random randomNumGen = new Random();
@@ -91,6 +91,11 @@ public class MusicPlayerManager {
 
     public static ObservableList<SongDataObject> getCurrentSongList() {
         return currentSongList;
+    }
+
+    public static void updateSongList(ArrayList<SongDataObject> sdota) {
+        MusicPlayerManager.getCurrentSongList().clear();
+        MusicPlayerManager.getCurrentSongList().addAll(sdota);
     }
 
     public static MediaPlayer getMediaPlayer() {
