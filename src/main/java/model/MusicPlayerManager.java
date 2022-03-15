@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import javafx.scene.media.Media;
 import java.util.Random;
 import java.util.logging.Level;
@@ -99,6 +100,95 @@ public class MusicPlayerManager {
         MusicPlayerManager.getCurrentSongList().addAll(sdota);
     }
 
+    public static void sortCurrentSongList(String sortType) {
+        if (sortType.equals("A-Z")) {
+            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+                @Override
+                public int compare(Object sdo1, Object sdo2) {
+                    SongDataObject firstSdo = (SongDataObject) sdo1;
+                    SongDataObject secondSdo = (SongDataObject) sdo2;
+                    int returnValue;
+                    if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) < 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) > 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(sortType);
+            //updateViewCurrentSongList();
+        } else if (sortType.equals("Z-A")) {
+            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+                @Override
+                public int compare(Object sdo1, Object sdo2) {
+                    SongDataObject firstSdo = (SongDataObject) sdo1;
+                    SongDataObject secondSdo = (SongDataObject) sdo2;
+                    int returnValue;
+                    if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) > 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) < 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(sortType);
+            //updateViewCurrentSongList();
+        } else if (sortType.equals("A-Z By Artist")) {
+            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+                @Override
+                public int compare(Object sdo1, Object sdo2) {
+                    SongDataObject firstSdo = (SongDataObject) sdo1;
+                    SongDataObject secondSdo = (SongDataObject) sdo2;
+                    int returnValue;
+                    if (firstSdo.getChannelName().compareTo(secondSdo.getChannelName()) < 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstSdo.getChannelName().compareTo(secondSdo.getChannelName()) > 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(sortType);
+            //updateViewCurrentSongList();
+
+        } else if (sortType.equals("Z-A By Artist")) {
+            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+                @Override
+                public int compare(Object sdo1, Object sdo2) {
+                    SongDataObject firstSdo = (SongDataObject) sdo1;
+                    SongDataObject secondSdo = (SongDataObject) sdo2;
+                    int returnValue;
+                    if (firstSdo.getChannelName().compareTo(secondSdo.getChannelName()) > 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstSdo.getChannelName().compareTo(secondSdo.getChannelName()) < 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(sortType);
+            //updateViewCurrentSongList();
+        }
+    }
+
     public static MediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
@@ -114,11 +204,11 @@ public class MusicPlayerManager {
     public static boolean isSongPaused() {
         return paused;
     }
-    
+
     public static boolean isMusicPlayerInitialized() {
         return musicPlayerInitalized;
     }
-    
+
     public static void setMusicPlayerInitialized(boolean tf) {
         musicPlayerInitalized = tf;
     }

@@ -27,6 +27,7 @@ public class SongDataObject implements Serializable {
     private String pathToWavFile;
     private String pathToThumbnail;
     private String safeTitleName;
+    private int orderAdded;
 
     public SongDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl, String videoUrl, String videoID) {
         this.videoTitle = videoTitle;
@@ -35,10 +36,18 @@ public class SongDataObject implements Serializable {
         this.thumbnailUrl = thumbnailUrl;
         this.videoUrl = videoUrl;
         this.videoID = videoID;
-        this.safeTitleName = videoTitle.replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "")  + "(" + videoID + ")"; //Gets rid all special characters that may mess up file path
+        this.safeTitleName = videoTitle.replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "(" + videoID + ")"; //Gets rid all special characters that may mess up file path
         this.pathToWebaFile = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + this.safeTitleName + ".weba";
         this.pathToWavFile = PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + this.safeTitleName + ".mp3";
         this.pathToThumbnail = Paths.get(PathsManager.getLoggedInUserThumbnailsPath().toString(), (this.safeTitleName + ".png")).toString();
+    }
+
+    public int getOrderAdded() {
+        return this.orderAdded;
+    }
+
+    public void setOrderAdded(int order) {
+        this.orderAdded = order;
     }
 
     public String getTitle() {
