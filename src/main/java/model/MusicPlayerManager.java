@@ -27,13 +27,51 @@ import javafx.util.Duration;
 public class MusicPlayerManager {
 
     private static boolean paused = false;
+    private static int indexForOrderedPlay = 0;
     private static boolean musicPlayerInitalized = false;
     private static int volume;
+    private static String playType = "Ordered Play";
     private static SongDataObject songObjectBeingPlayed;
     private static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
     private static ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
 
-    public static void playMusic() throws IOException {
+    public static String getPlayType() {
+        return playType;
+    }
+
+    public static void setPlayType(String type) {
+        playType = type;
+    }
+
+    public static void updatePlayTypeAtEndOfMedia() {
+        if (playType.equals("Random Play")) {
+            mediaPlayer.setOnEndOfMedia(() -> {
+                try {
+                    randomPlay();
+                } catch (IOException ex) {
+                    Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        } else if (playType.equals("Ordered Play")) {
+            mediaPlayer.setOnEndOfMedia(() -> {
+                try {
+                    orderedPlay();
+                } catch (IOException ex) {
+                    Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        }
+    }
+
+    public static void play() throws IOException {
+        if (playType.equals("Random Play")) {
+            randomPlay();
+        } else if (playType.equals("Ordered Play")) {
+            orderedPlay();
+        }
+    }
+
+    public static void randomPlay() throws IOException {
         ObservableList<SongDataObject> songDataObjects = currentSongList;
         //String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
         //System.out.println(Arrays.toString(musicPaths));
@@ -45,13 +83,28 @@ public class MusicPlayerManager {
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setOnEndOfMedia(() -> {
-            try {
-                playMusic();
-            } catch (IOException ex) {
-                Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+        updatePlayTypeAtEndOfMedia();
+        mediaPlayer.play();
+        System.out.println("finished playling");
+        //playMusic();
+    }
+
+    public static void setIndexForOrderedPlay(int index) {
+        indexForOrderedPlay = index;
+    }
+
+    public static void orderedPlay() throws IOException {
+        if (indexForOrderedPlay > currentSongList.size() - 1) {
+            indexForOrderedPlay = 0;
+        }
+        ObservableList<SongDataObject> songDataObjects = currentSongList;
+        songObjectBeingPlayed = songDataObjects.get(indexForOrderedPlay);
+        File file = new File(songDataObjects.get(indexForOrderedPlay).getPathToWavFile());//replace with correct path when testing
+        System.out.println("song playing: " + file.toPath().toString());
+        Media media = new Media(file.toURI().toASCIIString());
+        mediaPlayer = new MediaPlayer(media);
+        indexForOrderedPlay++;
+        updatePlayTypeAtEndOfMedia();
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();
@@ -68,7 +121,7 @@ public class MusicPlayerManager {
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setOnEndOfMedia(() -> {
             try {
-                playMusic();
+                randomPlay();
             } catch (IOException ex) {
                 Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -78,7 +131,7 @@ public class MusicPlayerManager {
 
     public static void nextSong() throws IOException {
         mediaPlayer.stop();
-        playMusic();
+        play();
     }
 
     public static void pauseSong() {
@@ -90,7 +143,7 @@ public class MusicPlayerManager {
         mediaPlayer.play();
         paused = false;
     }
-    
+
     public static void setPaused(boolean tf) {
         paused = tf;
     }

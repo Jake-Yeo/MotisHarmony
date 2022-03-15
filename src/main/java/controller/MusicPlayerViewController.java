@@ -200,7 +200,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @FXML
     private void playMusic(ActionEvent event) throws IOException {
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
-            MusicPlayerManager.playMusic();
+            MusicPlayerManager.play();
             init();//initalize again because a new MediaPlayer is made
             updateInfoDisplays();
             MusicPlayerManager.setMusicPlayerInitialized(true);
@@ -277,7 +277,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         MusicPlayerManager.getMediaPlayer().setOnEndOfMedia(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
                 try {
-                    MusicPlayerManager.playMusic();
+                    MusicPlayerManager.play();
                     init();
                     updateInfoDisplays();
                 } catch (IOException ex) {
