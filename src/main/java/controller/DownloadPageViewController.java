@@ -294,7 +294,7 @@ public class DownloadPageViewController implements Initializable {
             if (!youtubeUrlToGetInfoFrom.equals(listViewDownloadManager.getSelectionModel().getSelectedItem())) { //Dont run the code if the user is trying to load the same info for the same url
                 videoInfoList.getItems().clear();
                 int urlDataObjectIndexToGet = listViewDownloadManager.getSelectionModel().getSelectedIndex();//Must get the selected item url first for the if statement below to work
-                new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx 
+                new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.
                         new Runnable() {
                     public void run() {
                         SongDataObject youtubeData = YoutubeDownloader.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
