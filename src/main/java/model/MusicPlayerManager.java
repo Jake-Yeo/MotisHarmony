@@ -90,6 +90,10 @@ public class MusicPlayerManager {
         mediaPlayer.play();
         paused = false;
     }
+    
+    public static void setPaused(boolean tf) {
+        paused = tf;
+    }
 
     public static ObservableList<SongDataObject> getCurrentSongList() {
         return currentSongList;
