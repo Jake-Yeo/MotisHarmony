@@ -40,6 +40,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -80,13 +81,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @FXML
     private ListView<String> songList;
     @FXML
-    private Button playButton;
-    @FXML
     private Button nextButton;
-    @FXML
-    private Button pauseButton;
-    @FXML
-    private Button resumeButton;
     @FXML
     private Slider seekSlider;
     @FXML
@@ -107,6 +102,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private TextField playlistNameTextField;
     @FXML
     private ComboBox<String> comboBox;
+    @FXML
+    private Button playButton;
+    @FXML
+    private Button previousButton;
+    @FXML
+    private Button shuffleButton;
+    @FXML
+    private Button loopButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -145,6 +148,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         comboBox.setVisibleRowCount(16);
         MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        playButton.textOverrunProperty().set(OverrunStyle.CLIP);
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
 
@@ -174,19 +178,22 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @FXML
     private void playMusic(ActionEvent event) throws IOException {
-        MusicPlayerManager.playMusic();
-        init();//initalize again because a new MediaPlayer is made
-        updateInfoDisplays();
-    }
-
-    @FXML
-    private void pauseMusic(ActionEvent event) throws IOException {
-        MusicPlayerManager.pauseSong();
-    }
-
-    @FXML
-    private void resumeMusic(ActionEvent event) throws IOException {
-        MusicPlayerManager.resumeSong();
+        if (!MusicPlayerManager.isMusicPlayerInitialized()) {
+            MusicPlayerManager.playMusic();
+            init();//initalize again because a new MediaPlayer is made
+            updateInfoDisplays();
+            MusicPlayerManager.setMusicPlayerInitialized(true);
+            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setText("⏸︎");
+        } else if (!MusicPlayerManager.isSongPaused()) {
+            MusicPlayerManager.pauseSong();
+            playButton.setStyle("-fx-padding:  0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setText("▶");
+        } else {
+            MusicPlayerManager.resumeSong();
+            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setText("⏸︎");
+        }
     }
 
     @FXML
@@ -293,6 +300,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     public void contextMenuPlaySongOption() {
         MusicPlayerManager.playSong(MusicPlayerManager.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
+        playButton.setStyle("-fx-padding:  0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setText("▶");
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
     }
@@ -305,6 +314,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     public void contextMenuDeletePlaylistOption() throws Exception {
         AccountsDataManager.deletePlaylist(playlistList.getSelectionModel().getSelectedItem());
         updatePlaylistList();
+        MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());
     }
 
     public void updatePlaylistToAddToChoiceBox() {

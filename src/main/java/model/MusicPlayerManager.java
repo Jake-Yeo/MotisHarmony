@@ -26,6 +26,7 @@ import javafx.util.Duration;
 public class MusicPlayerManager {
 
     private static boolean paused = false;
+    private static boolean musicPlayerInitalized = false;
     private static int volume;
     private static SongDataObject songObjectBeingPlayed;
     private static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
@@ -112,6 +113,14 @@ public class MusicPlayerManager {
 
     public static boolean isSongPaused() {
         return paused;
+    }
+    
+    public static boolean isMusicPlayerInitialized() {
+        return musicPlayerInitalized;
+    }
+    
+    public static void setMusicPlayerInitialized(boolean tf) {
+        musicPlayerInitalized = tf;
     }
 
     public static void setVolume(double volume) {

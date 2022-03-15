@@ -90,6 +90,7 @@ public class DownloadPageViewController implements Initializable {
         clip.heightProperty().bind(downloadPageMainAnchor.heightProperty());
         clip.setArcWidth(50);//this sets the rounded corners
         clip.setArcHeight(50);
+        downloadPageMainAnchor.setClip(clip);
         //listViewDownloadManager.getSelectionModel().getSelectedIndex();//This will get the index of the selected item
         listViewDownloadManager.setBackground(Background.EMPTY);
         listViewDownloadManager.getStylesheets().add("/css/customScrollBar.css");
@@ -98,13 +99,7 @@ public class DownloadPageViewController implements Initializable {
         downloadErrorList.getStylesheets().add("/css/customListView.css");
         videoInfoList.getStylesheets().add("/css/customScrollBar.css");
         videoInfoList.getStylesheets().add("/css/customListView.css");
-        downloadPageMainAnchor.setClip(clip);
-        clip = new Rectangle();
-        clip.widthProperty().bind(thumbnailAnchorPane.widthProperty());
-        clip.heightProperty().bind(thumbnailAnchorPane.heightProperty());
-        clip.setArcWidth(50);//this sets the rounded corners
-        clip.setArcHeight(50);
-        thumbnailAnchorPane.setClip(clip);
+
         YoutubeDownloader.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<SongDataObject>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
@@ -334,7 +329,7 @@ public class DownloadPageViewController implements Initializable {
                                 thumbnailImageView.setY((thumbnailImageView.getFitHeight() - h) / 2);
 
                                 thumbnailImageView.setImage(thumbnailImage);
-                                thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 30px 30px;");
+                                thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 33px 33px;");
                             }
                         });
                     }

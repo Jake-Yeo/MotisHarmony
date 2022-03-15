@@ -84,7 +84,7 @@
          </children>
       </AnchorPane>
       <fx:include source="DragWindowButton.fxml" />
-      <AnchorPane fx:id="thumbnailAnchorPane" layoutX="486.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="137.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 30px 30px;">
+      <AnchorPane fx:id="thumbnailAnchorPane" layoutX="486.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="137.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 33px 33px;">
          <children>
             <ImageView fx:id="thumbnailImageView" fitHeight="127.0" fitWidth="295.0" layoutX="35.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
          </children>
