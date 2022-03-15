@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -23,6 +24,7 @@ import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -110,6 +112,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private Button shuffleButton;
     @FXML
     private Button loopButton;
+    @FXML
+    private ChoiceBox<String> sortChoiceBox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -149,7 +153,44 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         playButton.textOverrunProperty().set(OverrunStyle.CLIP);
+        sortChoiceBox.getItems().add("A-Z");
+        sortChoiceBox.getItems().add("Oldest");
+        sortChoiceBox.getItems().add("Newest");
+        sortChoiceBox.getItems().add("A-Z By Artist");
+        sortChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            try {
+                sortModelSongList(newValue);
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
+    }
+
+    private void sortModelSongList(String valueSelected) throws Exception {
+        if (valueSelected.equals("A-Z")) {
+            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+                @Override
+                public int compare(Object sdo1, Object sdo2) {
+                    SongDataObject firstSdo = (SongDataObject) sdo1;
+                    SongDataObject secondSdo = (SongDataObject) sdo2;
+                    int returnValue;
+                    if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) < 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) > 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(valueSelected);
+            //updateViewCurrentSongList();
+            return;
+        }
     }
 
     @FXML
@@ -371,7 +412,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     @FXML
-    public void showPlaylistListContextMenu(MouseEvent e) {
+    public void showPlaylistListContextMenu(MouseEvent e) throws Exception {
         if (e.getButton() == MouseButton.SECONDARY) {
             System.out.println("worked");
             updateModelCurrentSongList();
@@ -388,13 +429,17 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playlistList.getItems().addAll(map.getMapOfPlaylists().keySet().toArray(new String[map.getMapOfPlaylists().keySet().size()]));
     }
 
-    private void updateModelCurrentSongList() {
+    private void updateModelCurrentSongList() throws Exception {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();
         String keyValue = playlistList.getItems().get(selectedIndex);
         System.out.println(keyValue);
         ArrayList<SongDataObject> songDataObjectsToAdd = map.getMapOfPlaylists().get(keyValue);
         MusicPlayerManager.updateSongList(songDataObjectsToAdd);//Updates the currentSongList. SongListView automatically updates
+        if (sortChoiceBox.getValue() != null) {
+            //automatically sort the ModelSongList
+            sortModelSongList(sortChoiceBox.getValue());
+        }
     }
 
     private void updateViewCurrentSongList() {
