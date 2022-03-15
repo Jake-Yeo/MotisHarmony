@@ -290,7 +290,7 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     private void displaySelectedVideoInfo() {
-        if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {//Dont run the code if the user does not select anything
+        if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {//Dont run the code if the user does not select anything.
             if (!youtubeUrlToGetInfoFrom.equals(listViewDownloadManager.getSelectionModel().getSelectedItem())) { //Dont run the code if the user is trying to load the same info for the same url
                 videoInfoList.getItems().clear();
                 int urlDataObjectIndexToGet = listViewDownloadManager.getSelectionModel().getSelectedIndex();//Must get the selected item url first for the if statement below to work
