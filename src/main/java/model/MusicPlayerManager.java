@@ -186,6 +186,48 @@ public class MusicPlayerManager {
             });
             System.out.println(sortType);
             //updateViewCurrentSongList();
+        } else if (sortType.equals("Oldest Added")) {
+            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+                @Override
+                public int compare(Object sdo1, Object sdo2) {
+                    SongDataObject firstSdo = (SongDataObject) sdo1;
+                    SongDataObject secondSdo = (SongDataObject) sdo2;
+                    int returnValue;
+                    if (firstSdo.getOrderAdded() < secondSdo.getOrderAdded()) {
+                        returnValue = 0;
+                    } else {
+                        if (firstSdo.getOrderAdded() > secondSdo.getOrderAdded()) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(sortType);
+            //updateViewCurrentSongList();
+        } else if (sortType.equals("Newest Added")) {
+            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+                @Override
+                public int compare(Object sdo1, Object sdo2) {
+                    SongDataObject firstSdo = (SongDataObject) sdo1;
+                    SongDataObject secondSdo = (SongDataObject) sdo2;
+                    int returnValue;
+                    if (firstSdo.getOrderAdded() > secondSdo.getOrderAdded()) {
+                        returnValue = 0;
+                    } else {
+                        if (firstSdo.getOrderAdded() < secondSdo.getOrderAdded()) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(sortType);
+            //updateViewCurrentSongList();
         }
     }
 

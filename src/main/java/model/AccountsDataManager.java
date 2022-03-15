@@ -30,7 +30,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     private static final long serialVersionUID = 4655882630581250278L;
     private ArrayList<String> listOfAccountNames;
-    
+
     AccountsDataManager() {
         try {
             this.listOfAccountNames = deserializeAccMan().listOfAccountNames;
@@ -43,15 +43,15 @@ public class AccountsDataManager implements Serializable {//This class will be u
             }
         }
     }
-    
+
     public void addAccNameToList(String accName) {
         this.listOfAccountNames.add(accName);
     }
-    
+
     public void removeAccNameToList(String accName) {
         this.listOfAccountNames.remove(accName);
     }
-    
+
     public boolean accListContainWantedName(String accName) {
         if (this.listOfAccountNames.contains(accName)) {
             return true;
@@ -59,38 +59,43 @@ public class AccountsDataManager implements Serializable {//This class will be u
             return false;
         }
     }
-    
+
     public static void createPlaylist(String name) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(name);
     }
-    
+
     public static void addSongToPlaylist(String playlistName, SongDataObject sdo) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
     }
-    
+
     public static void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
     }
-    
+
     public static void deletePlaylist(String playlistName) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
     }
-    
+
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().removeSongFromPlaylist(playlistName, sdoArray);
     }
-    
+
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {
+        if (Accounts.getLoggedInAccount().getListOfSongDataObjects().size() == 0) {
+            urlDataObject.setOrderAdded(0);
+        } else {
+            urlDataObject.setOrderAdded(Accounts.getLoggedInAccount().getListOfSongDataObjects().get(Accounts.getLoggedInAccount().getListOfSongDataObjects().size() - 1).getOrderAdded() + 1);
+        }
         Accounts.getLoggedInAccount().addSongDataObjectToAccount(urlDataObject);
         Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", urlDataObject);
         Accounts.getLoggedInAccount().serializeAccount();
         saveThumbnail(urlDataObject.getThumbnailUrl(), urlDataObject.getPathToThumbnail());
     }
-    
+
     private static void saveThumbnail(String thumbnailUrl, String pathToDownloadTo) throws IOException {
         ImageIO.write(SwingFXUtils.fromFXImage(new Image(thumbnailUrl), null), "png", new File(pathToDownloadTo));
     }
-    
+
     public void serializeAccMan() throws Exception {
         FileOutputStream fileOut = new FileOutputStream(PathsManager.LIST_OF_ACCOUNT_NAMES_PATH.toString());
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -98,7 +103,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         out.close();
         fileOut.close();
     }
-    
+
     public static AccountsDataManager deserializeAccMan() throws Exception {
         AccountsDataManager accManToReturn = null;
         FileInputStream fileIn = new FileInputStream(PathsManager.LIST_OF_ACCOUNT_NAMES_PATH.toString());
