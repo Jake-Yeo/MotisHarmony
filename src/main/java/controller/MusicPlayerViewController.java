@@ -138,19 +138,28 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             volumeSlider.setValue(1);
         }
         seekSlider.getStylesheets().add("/css/customSlider.css");
+        updatePlaylistList();
+        setUpContextMenus();
+        comboBox.setVisibleRowCount(16);
+        MusicPlayerManager.setCurrentPlaylistPlayling("All Songs");
+        playlistList.getSelectionModel().select("All Songs");
+        MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
 
+        updateViewCurrentSongList();//Since we change the model but do not have a change listener we must manually change the view during initialization
+        MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();//Since we change the model but do not have a change listener we must manually sync the model during initialization
         MusicPlayerManager.getCurrentSongList().addListener(new ListChangeListener<SongDataObject>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
                 //we update the model here, then we can change the view if we were to reorder the model as well
                 updateViewCurrentSongList();
+                if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
+                    //If the view of the same playlist which is currently playing is changed, then those changes will be synced with the model
+                    MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
+                }
                 System.out.println("listener ran");
             }
         });
-        updatePlaylistList();
-        setUpContextMenus();
-        comboBox.setVisibleRowCount(16);
-        MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
+
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         playButton.textOverrunProperty().set(OverrunStyle.CLIP);
         sortChoiceBox.getItems().add("A-Z");
@@ -166,11 +175,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        sortChoiceBox.getSelectionModel().select("A-Z");
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
 
     private void sortModelCurrentSongList(String sortType) throws Exception {
         MusicPlayerManager.sortCurrentSongList(sortType);
+        if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
+            MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
+        }
     }
 
     @FXML
@@ -221,6 +234,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private void nextSong(ActionEvent event) throws IOException {
         seekSlider.setValue(0);
         MusicPlayerManager.nextSong();
+        playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setText("⏸︎");
+        MusicPlayerManager.setPaused(false);
+        MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
 
@@ -320,7 +337,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void contextMenuPlaySongOption() {
+        MusicPlayerManager.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
+        MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
+        //Code above will set which songs from which playlist to play next after the song which is currently playing has finsihed
         MusicPlayerManager.playSong(MusicPlayerManager.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
+        MusicPlayerManager.setIndexForOrderedPlay(songList.getSelectionModel().getSelectedIndex() + 1);
         MusicPlayerManager.setPaused(false);
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
             MusicPlayerManager.setMusicPlayerInitialized(true);
@@ -360,6 +381,16 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         updateModelCurrentSongList();
     }
 
+    public void playPlaylistOption() {
+        //This will set which songs from which playlist to play next after the song which is currently playing has finsihed
+        if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
+            return;
+        }
+        MusicPlayerManager.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
+        MusicPlayerManager.setIndexForOrderedPlay(0);
+        MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
+    }
+
     public void setUpContextMenus() {
         MenuItem playSong = new MenuItem("Play Song");
         playSong.setOnAction(e -> contextMenuPlaySongOption());
@@ -382,7 +413,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        playlistListContextMenu.getItems().add(deletePlaylist);
+        MenuItem playPlaylist = new MenuItem("Play Playlist");
+        playPlaylist.setOnAction(e -> playPlaylistOption());
+        playlistListContextMenu.getItems().addAll(deletePlaylist, playPlaylist);
     }
 
     @FXML

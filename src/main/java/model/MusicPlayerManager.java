@@ -34,6 +34,23 @@ public class MusicPlayerManager {
     private static SongDataObject songObjectBeingPlayed;
     private static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
     private static ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
+    private static ObservableList<SongDataObject> playlistSongsPlaying = FXCollections.observableArrayList();
+    private static String currentPlaylistPlayling;
+
+    public static void setCurrentPlaylistPlayling(String playlistName) {
+        currentPlaylistPlayling = playlistName;
+    }
+
+    public static String getCurrentPlaylistPlayling() {
+        return currentPlaylistPlayling;
+    }
+
+    public static void syncPlaylistSongsPlaylingWithCurentSongsList() {
+        playlistSongsPlaying.clear();
+        for (int i = 0; i < currentSongList.size(); i++) {
+            playlistSongsPlaying.add(currentSongList.get(i));
+        }
+    }
 
     public static String getPlayType() {
         return playType;
@@ -72,7 +89,7 @@ public class MusicPlayerManager {
     }
 
     public static void randomPlay() throws IOException {
-        ObservableList<SongDataObject> songDataObjects = currentSongList;
+        ObservableList<SongDataObject> songDataObjects = playlistSongsPlaying;
         //String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
         //System.out.println(Arrays.toString(musicPaths));
         Random randomNumGen = new Random();
@@ -94,10 +111,10 @@ public class MusicPlayerManager {
     }
 
     public static void orderedPlay() throws IOException {
-        if (indexForOrderedPlay > currentSongList.size() - 1) {
+        if (indexForOrderedPlay > playlistSongsPlaying.size() - 1) {
             indexForOrderedPlay = 0;
         }
-        ObservableList<SongDataObject> songDataObjects = currentSongList;
+        ObservableList<SongDataObject> songDataObjects = playlistSongsPlaying;
         songObjectBeingPlayed = songDataObjects.get(indexForOrderedPlay);
         File file = new File(songDataObjects.get(indexForOrderedPlay).getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
@@ -150,6 +167,10 @@ public class MusicPlayerManager {
 
     public static ObservableList<SongDataObject> getCurrentSongList() {
         return currentSongList;
+    }
+    
+    public static ObservableList<SongDataObject> getPlaylistSongsPlaying() {
+        return playlistSongsPlaying;
     }
 
     public static void updateSongList(ArrayList<SongDataObject> sdota) {
