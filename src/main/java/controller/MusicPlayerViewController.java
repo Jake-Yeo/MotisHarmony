@@ -183,6 +183,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @FXML
     private void shuffleButtonOnAction() {
         if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
+            MusicPlayerManager.getSongHistory().clear();//Just in case
             MusicPlayerManager.setPlayType("Random Play");
             shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
             shuffleButton.setTextFill(Paint.valueOf("#d07ccc"));
@@ -249,29 +250,31 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
+    public void setUpPlayButton() {
+        seekSlider.setValue(0);
+        playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setText("⏸︎");
+        MusicPlayerManager.setPaused(false);
+        init();//initalize again because a new MediaPlayer is made
+        updateInfoDisplays();
+    }
+
     @FXML
     private void previousSong() throws IOException {
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
             onFirstMusicPlayerPlay();
         }
         if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
-            seekSlider.setValue(0);
-            MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) - 1);
-            MusicPlayerManager.nextOrPrevSong();
-            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-            playButton.setText("⏸︎");
-            MusicPlayerManager.setPaused(false);
-            init();//initalize again because a new MediaPlayer is made
-            updateInfoDisplays();
+            MusicPlayerManager.getSongHistory().clear();
+            setUpPlayButton();
         } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
-            seekSlider.setValue(0);
-            MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) - 1);
-            MusicPlayerManager.nextOrPrevSong();
-            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-            playButton.setText("⏸︎");
-            MusicPlayerManager.setPaused(false);
-            init();//initalize again because a new MediaPlayer is made
-            updateInfoDisplays();
+            int indexOfPrevSong = MusicPlayerManager.getSongHistory().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) - 1;
+            if (indexOfPrevSong < 0) {
+                return;
+            } else {
+                MusicPlayerManager.playSong(MusicPlayerManager.getSongHistory().get(indexOfPrevSong));
+                setUpPlayButton();
+            }
         }
     }
 
@@ -281,16 +284,19 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             onFirstMusicPlayerPlay();
         }
         if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
-            seekSlider.setValue(0);
-            MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
-            MusicPlayerManager.nextOrPrevSong();
-            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-            playButton.setText("⏸︎");
-            MusicPlayerManager.setPaused(false);
-            init();//initalize again because a new MediaPlayer is made
-            updateInfoDisplays();
+            MusicPlayerManager.getSongHistory().clear();
+            setUpPlayButton();
         } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
-
+            int indexOfNextSong = MusicPlayerManager.getSongHistory().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1;
+            if (indexOfNextSong > MusicPlayerManager.getSongHistory().size() - 1) {
+                System.out.println("got random");
+                MusicPlayerManager.smartPlay();
+                setUpPlayButton();
+                return;
+            } else {
+                MusicPlayerManager.playSong(MusicPlayerManager.getSongHistory().get(indexOfNextSong));
+                setUpPlayButton();
+            }
         }
 
     }
@@ -389,6 +395,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void contextMenuPlaySongOption() {
+        if (!MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
+            MusicPlayerManager.getSongHistory().clear();
+        }
         MusicPlayerManager.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
         MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
         //Code above will set which songs from which playlist to play next after the song which is currently playing has finsihed
@@ -438,6 +447,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
             return;
         }
+        MusicPlayerManager.getSongHistory().clear();
         MusicPlayerManager.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
         MusicPlayerManager.setIndexForOrderedPlay(0);
         MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();

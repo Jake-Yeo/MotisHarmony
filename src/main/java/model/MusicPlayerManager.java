@@ -39,7 +39,7 @@ public class MusicPlayerManager {
     private static int posInSongHistory = 0;
     private static String currentPlaylistPlayling;
 
-    private static ArrayList<SongDataObject> getSongHistory() {
+    public static ArrayList<SongDataObject> getSongHistory() {
         return songHistory;
     }
 
@@ -123,6 +123,7 @@ public class MusicPlayerManager {
     }
 
     public static void orderedPlay() throws IOException {
+        songHistory.clear();
         if (indexForOrderedPlay > playlistSongsPlaying.size() - 1) {
             indexForOrderedPlay = 0;
         }
