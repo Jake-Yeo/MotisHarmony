@@ -53,6 +53,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -179,6 +180,34 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
 
+    @FXML
+    private void shuffleButtonOnAction() {
+        if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
+            MusicPlayerManager.setPlayType("Random Play");
+            shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
+            shuffleButton.setTextFill(Paint.valueOf("#d07ccc"));
+        } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
+            MusicPlayerManager.setPlayType("Ordered Play");
+            shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
+            shuffleButton.setTextFill(Paint.valueOf("#f04444"));
+        }
+    }
+
+    @FXML
+    private void previousSong() throws IOException {
+        if (!MusicPlayerManager.isMusicPlayerInitialized()) {
+            onFirstMusicPlayerPlay();
+        }
+        seekSlider.setValue(0);
+        MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) - 1);
+        MusicPlayerManager.nextOrPrevSong();
+        playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setText("⏸︎");
+        MusicPlayerManager.setPaused(false);
+        init();//initalize again because a new MediaPlayer is made
+        updateInfoDisplays();
+    }
+
     private void sortModelCurrentSongList(String sortType) throws Exception {
         MusicPlayerManager.sortCurrentSongList(sortType);
         if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
@@ -210,15 +239,20 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playlistNameTextField.clear();
     }
 
+    private void onFirstMusicPlayerPlay() throws IOException {
+        MusicPlayerManager.smartPlay();
+        init();//initalize again because a new MediaPlayer is made
+        updateInfoDisplays();
+        MusicPlayerManager.setMusicPlayerInitialized(true);
+        MusicPlayerManager.setPaused(false);
+        playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setText("⏸︎");
+    }
+
     @FXML
     private void playMusic(ActionEvent event) throws IOException {
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
-            MusicPlayerManager.play();
-            init();//initalize again because a new MediaPlayer is made
-            updateInfoDisplays();
-            MusicPlayerManager.setMusicPlayerInitialized(true);
-            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-            playButton.setText("⏸︎");
+            onFirstMusicPlayerPlay();
         } else if (!MusicPlayerManager.isSongPaused()) {
             MusicPlayerManager.pauseSong();
             playButton.setStyle("-fx-padding:  0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
@@ -232,12 +266,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @FXML
     private void nextSong(ActionEvent event) throws IOException {
+        if (!MusicPlayerManager.isMusicPlayerInitialized()) {
+            onFirstMusicPlayerPlay();
+        }
         seekSlider.setValue(0);
-        MusicPlayerManager.nextSong();
+        MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
+        MusicPlayerManager.nextOrPrevSong();
         playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
         playButton.setText("⏸︎");
         MusicPlayerManager.setPaused(false);
-        MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
 
@@ -294,7 +331,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         MusicPlayerManager.getMediaPlayer().setOnEndOfMedia(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
                 try {
-                    MusicPlayerManager.play();
+                    MusicPlayerManager.smartPlay();
                     init();
                     updateInfoDisplays();
                 } catch (IOException ex) {

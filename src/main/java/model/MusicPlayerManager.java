@@ -80,7 +80,7 @@ public class MusicPlayerManager {
         }
     }
 
-    public static void play() throws IOException {
+    public static void smartPlay() throws IOException {
         if (playType.equals("Random Play")) {
             randomPlay();
         } else if (playType.equals("Ordered Play")) {
@@ -114,6 +114,9 @@ public class MusicPlayerManager {
         if (indexForOrderedPlay > playlistSongsPlaying.size() - 1) {
             indexForOrderedPlay = 0;
         }
+        if (indexForOrderedPlay < 0) {
+            indexForOrderedPlay = playlistSongsPlaying.size() - 1;
+        }
         ObservableList<SongDataObject> songDataObjects = playlistSongsPlaying;
         songObjectBeingPlayed = songDataObjects.get(indexForOrderedPlay);
         File file = new File(songDataObjects.get(indexForOrderedPlay).getPathToWavFile());//replace with correct path when testing
@@ -146,9 +149,9 @@ public class MusicPlayerManager {
         mediaPlayer.play();
     }
 
-    public static void nextSong() throws IOException {
+    public static void nextOrPrevSong() throws IOException {
         mediaPlayer.stop();
-        play();
+        smartPlay();
     }
 
     public static void pauseSong() {
@@ -168,7 +171,7 @@ public class MusicPlayerManager {
     public static ObservableList<SongDataObject> getCurrentSongList() {
         return currentSongList;
     }
-    
+
     public static ObservableList<SongDataObject> getPlaylistSongsPlaying() {
         return playlistSongsPlaying;
     }
