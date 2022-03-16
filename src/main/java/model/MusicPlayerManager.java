@@ -35,7 +35,17 @@ public class MusicPlayerManager {
     private static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
     private static ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
     private static ObservableList<SongDataObject> playlistSongsPlaying = FXCollections.observableArrayList();
+    private static ArrayList<SongDataObject> songHistory = new ArrayList<>();
+    private static int posInSongHistory = 0;
     private static String currentPlaylistPlayling;
+
+    private static ArrayList<SongDataObject> getSongHistory() {
+        return songHistory;
+    }
+
+    private static int getPosInSongHistory() {
+        return posInSongHistory;
+    }
 
     public static void setCurrentPlaylistPlayling(String playlistName) {
         currentPlaylistPlayling = playlistName;
@@ -96,6 +106,8 @@ public class MusicPlayerManager {
         System.out.println(songDataObjects.size());
         int indexOfNextSongToPlay = randomNumGen.nextInt(songDataObjects.size());
         songObjectBeingPlayed = songDataObjects.get(indexOfNextSongToPlay);
+        songHistory.add(songObjectBeingPlayed);
+        posInSongHistory = songHistory.size() - 1;
         File file = new File(songDataObjects.get(indexOfNextSongToPlay).getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
