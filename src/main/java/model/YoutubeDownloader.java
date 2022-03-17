@@ -222,11 +222,12 @@ public class YoutubeDownloader {
         if (!possibleYoutubeUrl.equals("error")) {
             downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
             int count = 0;
+            long timeStart = System.currentTimeMillis();
             try (
                      BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
                 int i = 0;
                 System.out.println("Stop downloading is " + stopDownloading);
-                final byte[] data = new byte[1024];
+                final byte[] data = new byte[256000];
                 while ((count = bis.read(data)) != -1) {
                     if (stopDownloading) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
                         removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
@@ -240,6 +241,7 @@ public class YoutubeDownloader {
             } catch (IOException ex) {
                 System.err.print("error downloading song");
             }
+            System.out.println("Time taken to download: " + (System.currentTimeMillis() - timeStart) / 1000 + " Seconds");
             if (skipAudioConversion) {//Skips the audio conversion
                 return;
             }
