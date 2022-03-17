@@ -547,13 +547,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     private void updateViewCurrentSongList() {
-        String[] arrayOfSongNames = new String[MusicPlayerManager.getCurrentSongList().size()];
-        for (int i = 0; i < arrayOfSongNames.length; i++) {
-            arrayOfSongNames[i] = MusicPlayerManager.getCurrentSongList().get(i).getTitle();
-        }
         //we clear the list and then put the new list of song names in
         songList.getItems().clear();
-        songList.getItems().addAll(arrayOfSongNames);
+        songList.getItems().addAll(MusicPlayerManager.getArrayOfNamesInCurrentSongList());
     }
 
     @Override
