@@ -451,30 +451,21 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     public void updatePlaylistToAddToChoiceBox() {
         comboBox.getItems().clear();
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
-        String[] arrayOfPlaylistNames = map.getMapOfPlaylists().keySet().toArray(new String[map.getMapOfPlaylists().keySet().size()]);
-        for (int i = 0; i < arrayOfPlaylistNames.length; i++) {
-            comboBox.getItems().add(arrayOfPlaylistNames[i]);
-        }
+        comboBox.getItems().addAll(map.getArrayOfPlaylistNames());
     }
 
     public void deleteSongFromPlaylistOption() throws Exception {
-        SongDataObject[] sdoToRemove = new SongDataObject[songList.selectionModelProperty().get().getSelectedIndices().size()];
-        for (int i = 0; i < sdoToRemove.length; i++) {
-            sdoToRemove[i] = MusicPlayerManager.getCurrentSongList().get(songList.selectionModelProperty().get().getSelectedIndices().get(i));
-        }
-        AccountsDataManager.removeSongFromPlaylist(playlistList.getSelectionModel().getSelectedItem(), sdoToRemove);
+        AccountsDataManager.removeSongFromPlaylist(playlistList.getSelectionModel().getSelectedItem(), MusicPlayerManager.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
         updateModelCurrentSongList();
     }
 
     public void playPlaylistOption() {
-        //This will set which songs from which playlist to play next after the song which is currently playing has finsihed
-        if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
-            return;
-        }
-        MusicPlayerManager.getSongHistory().clear();
-        MusicPlayerManager.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
-        MusicPlayerManager.setIndexForOrderedPlay(0);
-        MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
+        MusicPlayerManager.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+    }
+
+    public void deleteSongFromAccountOption() throws IOException, Exception {
+        AccountsDataManager.deleteSong(MusicPlayerManager.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
+        updateModelCurrentSongList();
     }
 
     public void setUpContextMenus() {
@@ -490,7 +481,17 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        songListContextMenu.getItems().addAll(playSong, addToPlaylist, deleteFromPlaylist);
+        MenuItem deleteSong = new MenuItem("Delete From Account");
+        deleteSong.setOnAction(e -> {
+            try {
+                deleteSongFromAccountOption();
+            } catch (IOException ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        songListContextMenu.getItems().addAll(playSong, addToPlaylist, deleteFromPlaylist, deleteSong);
         MenuItem deletePlaylist = new MenuItem("Delete Playlist");
         deletePlaylist.setOnAction(e -> {
             try {
@@ -529,7 +530,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private void updatePlaylistList() {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         playlistList.getItems().clear();
-        playlistList.getItems().addAll(map.getMapOfPlaylists().keySet().toArray(new String[map.getMapOfPlaylists().keySet().size()]));
+        playlistList.getItems().addAll(map.getArrayOfPlaylistNames());
     }
 
     private void updateModelCurrentSongList() throws Exception {

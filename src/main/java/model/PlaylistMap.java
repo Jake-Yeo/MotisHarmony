@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 
 public class PlaylistMap implements Serializable {
@@ -27,32 +28,30 @@ public class PlaylistMap implements Serializable {
 
     public void createPlaylist(String name) throws Exception {
         this.playlistMap.put(name, new ArrayList<SongDataObject>());
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
         this.playlistMap.get(playlistName).addAll(listOfSongs);
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public void deletePlaylist(String playlistName) throws Exception {
         this.playlistMap.remove(playlistName);
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {
         List sdoToRemove = Arrays.asList(sdoArray);
         this.playlistMap.get(playlistName).removeAll(sdoToRemove);
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public void addSongToPlaylist(String playlistName, SongDataObject song) throws Exception {
         this.playlistMap.get(playlistName).add(song);
-        Accounts.getLoggedInAccount().serializeAccount();
+    }
+
+    public String[] getArrayOfPlaylistNames() {
+        return this.playlistMap.keySet().toArray(new String[this.playlistMap.keySet().size()]);
     }
 
     public HashMap<String, ArrayList<SongDataObject>> getMapOfPlaylists() {
         return this.playlistMap;
     }
-
 }

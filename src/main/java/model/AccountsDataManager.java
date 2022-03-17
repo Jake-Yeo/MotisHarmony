@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,22 +64,39 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     public static void createPlaylist(String name) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(name);
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
+
+    public static void deleteSong(SongDataObject[] sdoToRemove) throws IOException, Exception {
+        String[] arrayOfPlaylistSongs = Accounts.getLoggedInAccount().getPlaylistDataObject().getArrayOfPlaylistNames();
+        for (int j = 0; j < sdoToRemove.length; j++) {
+            for (int i = 0; i < arrayOfPlaylistSongs.length; i++) {
+                Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(arrayOfPlaylistSongs[i]).remove(sdoToRemove[j]);
+            }
+            Files.delete(Paths.get(sdoToRemove[j].getPathToWavFile()));
+            Files.delete(Paths.get(sdoToRemove[j].getPathToThumbnail()));
+        }
+        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void addSongToPlaylist(String playlistName, SongDataObject sdo) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
+        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
+        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void deletePlaylist(String playlistName) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
+        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {
         Accounts.getLoggedInAccount().getPlaylistDataObject().removeSongFromPlaylist(playlistName, sdoArray);
+        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {

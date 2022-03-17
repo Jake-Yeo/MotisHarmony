@@ -51,6 +51,25 @@ public class MusicPlayerManager {
         posInSongHistory = value;
     }
 
+    public static SongDataObject[] getArrayOfSdoFromCurrentSongListViaIndicies(ObservableList<Integer> indicies) {
+        SongDataObject[] sdoGotten = new SongDataObject[indicies.size()];
+        for (int i = 0; i < sdoGotten.length; i++) {
+            sdoGotten[i] = currentSongList.get(indicies.get(i));
+        }
+        return sdoGotten;
+    }
+
+    public static void playThisPlaylist(String playlistName) {
+        //This will set which songs from which playlist to play next after the song which is currently playing has finsihed
+        if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistName)) {
+            return;
+        }
+        MusicPlayerManager.getSongHistory().clear();
+        MusicPlayerManager.setCurrentPlaylistPlayling(playlistName);
+        MusicPlayerManager.setIndexForOrderedPlay(0);
+        MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
+    }
+
     public static void setCurrentPlaylistPlayling(String playlistName) {
         currentPlaylistPlayling = playlistName;
     }
