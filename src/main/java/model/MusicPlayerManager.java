@@ -43,8 +43,12 @@ public class MusicPlayerManager {
         return songHistory;
     }
 
-    private static int getPosInSongHistory() {
+    public static int getPosInSongHistory() {
         return posInSongHistory;
+    }
+
+    public static void setPosInSongHistory(int value) {
+        posInSongHistory = value;
     }
 
     public static void setCurrentPlaylistPlayling(String playlistName) {

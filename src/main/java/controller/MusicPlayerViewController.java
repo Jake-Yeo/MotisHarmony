@@ -270,11 +270,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             MusicPlayerManager.nextOrPrevSong();
             setUpPlayButton();
         } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
-            int indexOfPrevSong = MusicPlayerManager.getSongHistory().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) - 1;
+            int indexOfPrevSong = MusicPlayerManager.getPosInSongHistory() - 1;
             if (indexOfPrevSong < 0) {
                 return;
             } else {
                 MusicPlayerManager.playSong(MusicPlayerManager.getSongHistory().get(indexOfPrevSong));
+                MusicPlayerManager.setPosInSongHistory(MusicPlayerManager.getPosInSongHistory() - 1);
                 setUpPlayButton();
             }
         }
@@ -291,7 +292,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             MusicPlayerManager.nextOrPrevSong();
             setUpPlayButton();
         } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
-            int indexOfNextSong = MusicPlayerManager.getSongHistory().lastIndexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1;
+            int indexOfNextSong = MusicPlayerManager.getPosInSongHistory() + 1;
             if (indexOfNextSong > MusicPlayerManager.getSongHistory().size() - 1) {
                 System.out.println("got random");
                 MusicPlayerManager.nextOrPrevSong();
@@ -299,6 +300,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 return;
             } else {
                 MusicPlayerManager.playSong(MusicPlayerManager.getSongHistory().get(indexOfNextSong));
+                MusicPlayerManager.setPosInSongHistory(MusicPlayerManager.getPosInSongHistory() + 1);
                 setUpPlayButton();
             }
         }
