@@ -1,3 +1,5 @@
+Bug where a song may only be partially downloaded
+
 Handle exceptions causes when account has not yet downloaded a song and user attempts to download song.
 
 https://www.youtube.com/watch?v=VyvhvlYvRnc skips past all the identifiers when in playlist
