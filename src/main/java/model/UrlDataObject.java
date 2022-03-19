@@ -11,23 +11,23 @@ import java.io.Serializable;
  *
  * @author Jake Yeo
  */
-public class LinkData implements Serializable {
+public class UrlDataObject implements Serializable {
 
     private static final long serialVersionUID = 4655882630581250278L;
     private String bookMarkName;
-    private String link;
+    private String url;
 
-    LinkData(String bookMarkName, String link) {
+    UrlDataObject(String bookMarkName, String url) {
         this.bookMarkName = bookMarkName;
-        this.link = link;
+        this.url = url;
     }
 
-    public String getLink() {
-        return this.link;
+    public String getUrl() {
+        return this.url;
     }
 
-    public void setLink(String newLink) {
-        this.link = newLink;
+    public void setUrl(String newUrl) {
+        this.url = newUrl;
     }
 
     public String getBookMarkName() {

@@ -73,8 +73,16 @@ public class YoutubeDownloader {
 
     private static void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
         youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
-        if (!youtubeUrlDownloadQueueList.contains(youtubeUrl)) {//Makes sure that a youtube url is not added to the download queue list multiple times
-            youtubeUrlDownloadQueueList.add(YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrl));//adds the youtube url to the download queue
+        if (!SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(youtubeUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubeUrl)) {//Makes sure that a youtube url is not added to the download queue list multiple times
+            SongDataObject sdoToAddToDownloadQueue = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrl);
+            //We check here again because the user has the ability to add two links which lead to the same video, we must get the video data and check again
+            if (!SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(sdoToAddToDownloadQueue.getVideoUrl()) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(sdoToAddToDownloadQueue.getVideoUrl())) {
+                youtubeUrlDownloadQueueList.add(sdoToAddToDownloadQueue);//adds the youtube url to the download queue
+            } else {
+                errorList.add(youtubeUrl + " has already been added to the download queue, or has already been downloaded");
+            }
+        } else {
+            errorList.add(youtubeUrl + " has already been added to the download queue, or has already been downloaded");
         }
     }
 
@@ -101,6 +109,15 @@ public class YoutubeDownloader {
             errorList.add("Sorry we cannot download the url you entered at this time.");
             return;
         }
+        ArrayList<SongDataObject> sdosToRemoveFromYoutubePlaylistUrls = new ArrayList<>();
+        //This for loop will get a list of songs which have already been downloaded, or are already in the download manager
+        for (int i = 0; i < youtubePlaylistUrls.size(); i++) {
+            if (!SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(youtubePlaylistUrls.get(i).getVideoUrl()) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubePlaylistUrls.get(i).getVideoUrl())) {
+                sdosToRemoveFromYoutubePlaylistUrls.add(youtubePlaylistUrls.get(i));
+            }
+        }
+        //We remove the list we got from the above for loop and remove it from the youtubePlaylistUrls list
+        youtubePlaylistUrls.removeAll(sdosToRemoveFromYoutubePlaylistUrls);
         youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrls);//Adds the entire string array of converted youtube urls to the download queue.
         isPlaylistUrlGetterCurrentlyGettingUrls = false;
     }
@@ -208,6 +225,8 @@ public class YoutubeDownloader {
         youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in may be of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
         if (!SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(youtubeUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubeUrl)) {//Stops you from inputting the same url into the downloadQueue
             addYoutubeUrlsToDownloadQueue(youtubeUrl);
+        } else {
+            errorList.add(youtubeUrl + " has already been added to the download queue, or has already been downloaded");
         }
     }
 

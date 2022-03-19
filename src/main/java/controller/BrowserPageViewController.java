@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
@@ -36,6 +37,8 @@ public class BrowserPageViewController implements Initializable {
     private AnchorPane webViewMainAnchorPane;
     @FXML
     private Button downloadUrlButton;
+    @FXML
+    private ComboBox<String> bookMarkComboBox;
 
     /**
      * Initializes the controller class.

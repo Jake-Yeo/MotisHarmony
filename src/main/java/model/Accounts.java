@@ -32,7 +32,7 @@ public class Accounts implements Serializable {//This class will store account u
     private static SceneChanger sceneSwitcher = new SceneChanger();
     private static Accounts loggedInAccount;
     private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
-    //private ArrayList
+    private ArrayList<UrlDataObject> urlDataObjectList = new ArrayList<>();
     private String username;
     private String password;
     private SecretKey key;
@@ -89,6 +89,10 @@ public class Accounts implements Serializable {//This class will store account u
 
     public ArrayList<SongDataObject> getListOfSongDataObjects() {
         return this.songDataObjectList;
+    }
+    
+    public ArrayList<UrlDataObject> getListOfUrlDataObjects() {
+        return this.urlDataObjectList;
     }
 
     public void addSongDataObjectToAccount(SongDataObject songDataObject) {
