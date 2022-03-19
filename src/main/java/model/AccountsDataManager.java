@@ -123,16 +123,16 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
 
-    public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {
+    public static void songDataObjectToAddToAccount(SongDataObject songDataObject) throws Exception {
         if (Accounts.getLoggedInAccount().getListOfSongDataObjects().size() == 0) {
-            urlDataObject.setOrderAdded(0);
+            songDataObject.setOrderAdded(0);
         } else {
-            urlDataObject.setOrderAdded(Accounts.getLoggedInAccount().getListOfSongDataObjects().get(Accounts.getLoggedInAccount().getListOfSongDataObjects().size() - 1).getOrderAdded() + 1);
+            songDataObject.setOrderAdded(Accounts.getLoggedInAccount().getListOfSongDataObjects().get(Accounts.getLoggedInAccount().getListOfSongDataObjects().size() - 1).getOrderAdded() + 1);
         }
-        Accounts.getLoggedInAccount().addSongDataObjectToAccount(urlDataObject);
-        Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", urlDataObject);
+        Accounts.getLoggedInAccount().addSongDataObjectToAccount(songDataObject);
+        Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", songDataObject);
         Accounts.getLoggedInAccount().serializeAccount();
-        saveThumbnail(urlDataObject.getThumbnailUrl(), urlDataObject.getPathToThumbnail());
+        saveThumbnail(songDataObject.getThumbnailUrl(), songDataObject.getPathToThumbnail());
     }
 
     private static void saveThumbnail(String thumbnailUrl, String pathToDownloadTo) throws IOException {

@@ -26,10 +26,10 @@ public class AudioConverter {
     private static final String NEW_AUDIO_TYPE = "mp3";
     private static final String OLD_AUDIO_TYPE = ".weba";
 
-    private static void convertWebaToWav(SongDataObject urlDataObject) throws EncoderException, IOException, Exception {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
+    private static void convertWebaToWav(SongDataObject songDataObject) throws EncoderException, IOException, Exception {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
         conversionIsDone = false;
-        File source = new File(urlDataObject.getPathToWebaFile());
-        File target = new File(urlDataObject.getPathToWavFile());
+        File source = new File(songDataObject.getPathToWebaFile());
+        File target = new File(songDataObject.getPathToWavFile());
         //Audio Attributes                                       
         AudioAttributes audio = new AudioAttributes();
         audio.setCodec("libmp3lame");
@@ -46,12 +46,12 @@ public class AudioConverter {
         source.delete();
         conversionQueueList.remove(0);
         conversionIsDone = true;
-        AccountsDataManager.urlDataObjectToAddToAccount(urlDataObject);//This will save the path of the wav file to the account data so that it can be accessed
+        AccountsDataManager.songDataObjectToAddToAccount(songDataObject);//This will save the path of the wav file to the account data so that it can be accessed
         System.out.println("done converting");
     }
 
-    public static void addToConversionQueue(SongDataObject urlDataObject) throws EncoderException, IOException, Exception {
-        conversionQueueList.add(urlDataObject);
+    public static void addToConversionQueue(SongDataObject songDataObject) throws EncoderException, IOException, Exception {
+        conversionQueueList.add(songDataObject);
         if (!coversionQueueHasStarted) {
             startConversionQueue();
         }

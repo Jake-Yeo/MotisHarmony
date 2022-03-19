@@ -11,4 +11,8 @@ package model;
  */
 public class BrowserManager {
     
+    public static void addToBookmarks() {
+        
+    }
+    
 }

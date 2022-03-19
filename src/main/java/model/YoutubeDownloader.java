@@ -215,16 +215,16 @@ public class YoutubeDownloader {
         stopDownloading = tf;
     }
 
-    private static void downloadYoutubeVideoUrl(SongDataObject youtubeUrlData) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
+    private static void downloadYoutubeVideoUrl(SongDataObject youtubeSongData) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
         URL downloadURL = null;
         boolean skipAudioConversion = false;
-        String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeUrlData.getVideoUrl());
+        String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeSongData.getVideoUrl());
         if (!possibleYoutubeUrl.equals("error")) {
             downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
             int count = 0;
             long timeStart = System.currentTimeMillis();
             try (
-                     BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeUrlData.getPathToWebaFile())) {
+                     BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeSongData.getPathToWebaFile())) {
                 int i = 0;
                 System.out.println("Stop downloading is " + stopDownloading);
                 final byte[] data = new byte[256000];
@@ -249,14 +249,14 @@ public class YoutubeDownloader {
                     new Runnable() {
                 public void run() {
                     try {
-                        AudioConverter.addToConversionQueue(youtubeUrlData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+                        AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
                     } catch (Exception ex) {
                         Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }).start();
         } else {
-            errorList.add(youtubeUrlData + " could not be downloaded at this time, please try again later or find an alternative link");
+            errorList.add(youtubeSongData + " could not be downloaded at this time, please try again later or find an alternative link");
             System.err.print("Failed to download this song");
         }
     }

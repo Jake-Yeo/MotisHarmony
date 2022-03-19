@@ -95,10 +95,10 @@ public class SongDataObject implements Serializable {
         return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile() + ", " + getSafeTitleName() + ", " + getPathToThumbnail());
     }
 
-    public static String toString(ObservableList<SongDataObject> urlDataObjectArray) {
+    public static String toString(ObservableList<SongDataObject> songDataObjectArray) {
         String stringToReturn = "";
-        for (int i = 0; i < urlDataObjectArray.size(); i++) {
-            stringToReturn += urlDataObjectArray.get(i).toString();
+        for (int i = 0; i < songDataObjectArray.size(); i++) {
+            stringToReturn += songDataObjectArray.get(i).toString();
         }
         return stringToReturn;
     }

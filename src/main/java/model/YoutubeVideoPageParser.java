@@ -232,8 +232,8 @@ public class YoutubeVideoPageParser {
     public static ArrayList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
         youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
         String html = getHtml(youtubePlaylistUrl);
-        String youtubeIdsCurrentlyInUrlDataList = "";
-        ArrayList<SongDataObject> urlDataList = new ArrayList<>();//This will return a list of UrlDataObjects containing data about the video duration, title, channel name etc.
+        String youtubeIdsCurrentlyInSongDataList = "";
+        ArrayList<SongDataObject> songDataList = new ArrayList<>();//This will return a list of songDataObjects containing data about the video duration, title, channel name etc.
         //html = infoParserToolTrimToStart(html, YT_PLAYLIST_START_IDENTIFIER);//This will find the start of the playlist information in the html thus getting rid of any urls that may interfere with this method
         int playlistLength = 0;
         try {//This is just incase the url tester fails to catch a really weird url which somehow manages to pass through. For example there's some weird youtube radio playlists that can load in whole views, so we need another way to identify them.
@@ -263,9 +263,9 @@ public class YoutubeVideoPageParser {
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
                 System.out.println(videoID);
-                if (!youtubeIdsCurrentlyInUrlDataList.contains(videoUrl) && !SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the UrlDataObject to the UrlDataList. This ensure that urls are not inputted into the downloadQueue multiple times
-                    urlDataList.add(new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
-                    youtubeIdsCurrentlyInUrlDataList += videoID + " ";
+                if (!youtubeIdsCurrentlyInSongDataList.contains(videoUrl) && !SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the SongDataObject to the SongDataList. This ensure that urls are not inputted into the downloadQueue multiple times
+                    songDataList.add(new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
+                    youtubeIdsCurrentlyInSongDataList += videoID + " ";
                 }
                 lastVideoUrlGotten = videoUrl;
             }
@@ -275,7 +275,7 @@ public class YoutubeVideoPageParser {
             System.out.println(lastVideoUrlGotten + " video to make playlist with");
             html = getHtml(YT_PLAYLIST_AND_VIDEO_URL_START + getYoutubeVideoID(lastVideoUrlGotten) + YT_DOWNLOADABLE_PLAYLIST_LIST_ID_START_IDENTIFIER + getYoutubePlaylistListId(youtubePlaylistUrl)); //This will load up the new videos in the playlist
         }
-        return urlDataList;
+        return songDataList;
     }
 
     private static String infoParserTool(String passedHtml, String startIdentifier, String endIdentifier) {

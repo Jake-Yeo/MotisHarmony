@@ -32,6 +32,7 @@ public class Accounts implements Serializable {//This class will store account u
     private static SceneChanger sceneSwitcher = new SceneChanger();
     private static Accounts loggedInAccount;
     private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
+    //private ArrayList
     private String username;
     private String password;
     private SecretKey key;
