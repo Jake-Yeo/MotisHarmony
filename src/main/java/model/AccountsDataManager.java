@@ -63,7 +63,8 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void createPlaylist(String playlistName) throws Exception {
-        if (!playlistName.equals("All Songs")) {
+        //If statement makes sure that the user does not accidentally delete a playlist by creating two playlists with the same name
+        if (!playlistName.equals("All Songs") && !Arrays.asList(Accounts.getLoggedInAccount().getPlaylistDataObject().getArrayOfPlaylistNames()).contains(playlistName)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(playlistName);
             Accounts.getLoggedInAccount().serializeAccount();
         }
