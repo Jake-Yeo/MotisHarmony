@@ -110,15 +110,27 @@ public class YoutubeDownloader {
             return;
         }
         ArrayList<SongDataObject> sdosToRemoveFromYoutubePlaylistUrls = new ArrayList<>();
-        //This for loop will get a list of songs which have already been downloaded, or are already in the download manager
+        ArrayList<SongDataObject> youtubePlaylistUrlsNoDupe = new ArrayList<>();
+        //There is a youtube bug where two of the same videos are added to one playlist, this will completely break the program, we prevent this by removing duplicate videos which were in the youtube playlist
+        ArrayList<String> sdoIdArray = SongDataObject.getYoutubeIdList(youtubePlaylistUrls);
+        ArrayList<String> sdoCompareToArray = new ArrayList<>(sdoIdArray.size());
         for (int i = 0; i < youtubePlaylistUrls.size(); i++) {
-            if (SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(youtubePlaylistUrls.get(i).getVideoUrl()) || Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubePlaylistUrls.get(i).getVideoUrl())) {
-                sdosToRemoveFromYoutubePlaylistUrls.add(youtubePlaylistUrls.get(i));
+            if (!sdoCompareToArray.contains(sdoIdArray.get(i))) {
+                youtubePlaylistUrlsNoDupe.add(youtubePlaylistUrls.get(i));
+                sdoCompareToArray.add(youtubePlaylistUrls.get(i).getVideoID());
             }
         }
+
+        //This for loop will get a list of songs which have already been downloaded, or are already in the download manager
+        for (int i = 0; i < youtubePlaylistUrlsNoDupe.size(); i++) {
+            if (SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(youtubePlaylistUrlsNoDupe.get(i).getVideoUrl()) || Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubePlaylistUrls.get(i).getVideoUrl())) {
+                sdosToRemoveFromYoutubePlaylistUrls.add(youtubePlaylistUrlsNoDupe.get(i));
+            }
+        }
+
         //We remove the list we got from the above for loop and remove it from the youtubePlaylistUrls list
-        youtubePlaylistUrls.removeAll(sdosToRemoveFromYoutubePlaylistUrls);
-        youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrls);//Adds the entire string array of converted youtube urls to the download queue.
+        youtubePlaylistUrlsNoDupe.removeAll(sdosToRemoveFromYoutubePlaylistUrls);
+        youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrlsNoDupe);//Adds the entire string array of converted youtube urls to the download queue.
         isPlaylistUrlGetterCurrentlyGettingUrls = false;
     }
 

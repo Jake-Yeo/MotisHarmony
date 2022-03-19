@@ -94,6 +94,14 @@ public class SongDataObject implements Serializable {
     public String toString() {
         return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile() + ", " + getSafeTitleName() + ", " + getPathToThumbnail());
     }
+    
+    public static ArrayList<String> getYoutubeIdList(ArrayList<SongDataObject> sdoList) {
+        ArrayList<String> sdoIdArray = new ArrayList<String>(sdoList.size());
+        for (int i = 0; i < sdoList.size(); i++) {
+            sdoIdArray.add(sdoList.get(i).getVideoID());
+        }
+        return sdoIdArray;
+    }
 
     public static String toString(ObservableList<SongDataObject> songDataObjectArray) {
         String stringToReturn = "";
