@@ -85,6 +85,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void addSongToPlaylist(String playlistName, SongDataObject sdo) throws Exception {
+        //If the song is already present in the playlist then remove it
         if (!playlistName.equals("All Songs") && !Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName).contains(sdo)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
             Accounts.getLoggedInAccount().serializeAccount();
@@ -94,6 +95,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
     public static void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
         ArrayList<SongDataObject> songsInPlaylist = Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName);
         ArrayList<SongDataObject> songsToRemoveFromList = new ArrayList<>();
+        //This for loop will remove all the songs in the listOfSongs which are already present in the playlist
         for (int i = 0; i < listOfSongs.size(); i++) {
             if (songsInPlaylist.contains(listOfSongs.get(i))) {
                 songsToRemoveFromList.add(listOfSongs.get(i));
