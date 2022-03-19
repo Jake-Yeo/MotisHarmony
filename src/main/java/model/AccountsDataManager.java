@@ -62,14 +62,16 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
 
-    public static void createPlaylist(String name) throws Exception {
-        Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(name);
-        Accounts.getLoggedInAccount().serializeAccount();
+    public static void createPlaylist(String playlistName) throws Exception {
+        if (!playlistName.equals("All Songs")) {
+            Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(playlistName);
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
     }
 
     public static void deleteSong(SongDataObject[] sdoToRemove) throws IOException, Exception {
         String[] arrayOfPlaylistSongs = Accounts.getLoggedInAccount().getPlaylistDataObject().getArrayOfPlaylistNames();
-        
+
         for (int j = 0; j < sdoToRemove.length; j++) {
             for (int i = 0; i < arrayOfPlaylistSongs.length; i++) {
                 Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(arrayOfPlaylistSongs[i]).remove(sdoToRemove[j]);
@@ -82,23 +84,32 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void addSongToPlaylist(String playlistName, SongDataObject sdo) throws Exception {
-        Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
-        Accounts.getLoggedInAccount().serializeAccount();
+        if (!playlistName.equals("All Songs")) {
+            Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
     }
 
     public static void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
-        Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
-        Accounts.getLoggedInAccount().serializeAccount();
+        if (!playlistName.equals("All Songs")) {
+            Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
     }
 
     public static void deletePlaylist(String playlistName) throws Exception {
-        Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
-        Accounts.getLoggedInAccount().serializeAccount();
+        //All Songs is a unique playlist which musn't be editied
+        if (!playlistName.equals("All Songs")) {
+            Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
     }
 
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {
-        Accounts.getLoggedInAccount().getPlaylistDataObject().removeSongFromPlaylist(playlistName, sdoArray);
-        Accounts.getLoggedInAccount().serializeAccount();
+        if (!playlistName.equals("All Songs")) {
+            Accounts.getLoggedInAccount().getPlaylistDataObject().removeSongFromPlaylist(playlistName, sdoArray);
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
     }
 
     public static void urlDataObjectToAddToAccount(SongDataObject urlDataObject) throws Exception {

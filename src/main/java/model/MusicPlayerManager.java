@@ -177,7 +177,8 @@ public class MusicPlayerManager {
     public static void playSong(SongDataObject songToPlay) {
         songObjectBeingPlayed = songToPlay;
         if (mediaPlayer != null) {
-            mediaPlayer.stop();
+             mediaPlayer.stop();
+                mediaPlayer.dispose();
         }
         File file = new File(songToPlay.getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
@@ -194,7 +195,8 @@ public class MusicPlayerManager {
     }
 
     public static void nextOrPrevSong() throws IOException {
-        mediaPlayer.stop();
+         mediaPlayer.stop();
+                mediaPlayer.dispose();
         smartPlay();
     }
 

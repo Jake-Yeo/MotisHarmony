@@ -536,13 +536,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private void updateModelCurrentSongList() throws Exception {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();
-        String keyValue = playlistList.getItems().get(selectedIndex);
-        System.out.println(keyValue);
-        ArrayList<SongDataObject> songDataObjectsToAdd = map.getMapOfPlaylists().get(keyValue);
-        MusicPlayerManager.updateSongList(songDataObjectsToAdd);//Updates the currentSongList. SongListView automatically updates
-        if (sortChoiceBox.getValue() != null) {
-            //automatically sort the ModelSongList
-            sortModelCurrentSongList(sortChoiceBox.getValue());
+        if (selectedIndex != -1) {
+            String keyValue = playlistList.getItems().get(selectedIndex);
+            System.out.println(keyValue);
+            ArrayList<SongDataObject> songDataObjectsToAdd = map.getMapOfPlaylists().get(keyValue);
+            MusicPlayerManager.updateSongList(songDataObjectsToAdd);//Updates the currentSongList. SongListView automatically updates
+            if (sortChoiceBox.getValue() != null) {
+                //automatically sort the ModelSongList
+                sortModelCurrentSongList(sortChoiceBox.getValue());
+            }
         }
     }
 
