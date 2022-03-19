@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 /**
  *
@@ -70,6 +71,17 @@ public class PathsManager {//This class will handle all the folder and txt creat
         }
     }
 
+    public static void deleteAllItemsInDownloadQueue() throws Exception {
+        AccountsDataManager adm = AccountsDataManager.deserializeAccMan();
+        ArrayList<SongDataObject> sdoDataToDeleteFromFiles = adm.getDeletionQueue();
+        for (int i = 0; i < sdoDataToDeleteFromFiles.size(); i++) {
+            Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToWavFile()));
+            Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToThumbnail()));
+        }
+        adm.getDeletionQueue().clear();
+        adm.serializeAccMan();
+    }
+
     public static Path getLoggedInUserMusicFolderPath() {
         return loggedInUserDownloadedMusicPath;
     }
@@ -77,7 +89,7 @@ public class PathsManager {//This class will handle all the folder and txt creat
     public static Path getLoggedInUserDataPath() {
         return loggedInUserDataPath;
     }
-    
+
     public static Path getLoggedInUserThumbnailsPath() {
         return loggedInUserThumbnailsPath;
     }

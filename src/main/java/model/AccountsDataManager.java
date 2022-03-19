@@ -5,6 +5,7 @@
  */
 package model;
 
+import com.beust.jcommander.internal.Lists;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,7 +18,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
@@ -32,18 +35,32 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     private static final long serialVersionUID = 4655882630581250278L;
     private ArrayList<String> listOfAccountNames;
+    //We need the deletion queue below because the .dispose() method on the mediaPlayer has some asynchronous-ness to it so we simply delete the files when we start up the app.
+    private ArrayList<SongDataObject> deletionQueue;
 
-    AccountsDataManager() {
+    public AccountsDataManager() {
         try {
-            this.listOfAccountNames = deserializeAccMan().listOfAccountNames;
+            AccountsDataManager adm = deserializeAccMan();
+            this.listOfAccountNames = adm.listOfAccountNames;
+            this.deletionQueue = adm.deletionQueue;
         } catch (Exception e) {
             this.listOfAccountNames = new ArrayList<>();
+            this.deletionQueue = new ArrayList<>();
             try {
                 serializeAccMan();
             } catch (Exception ex) {
                 Logger.getLogger(AccountsDataManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void addSongDataObjectToDeletionQueue(SongDataObject sdo) throws Exception {
+        this.deletionQueue.add(sdo);
+        serializeAccMan();
+    }
+   
+    public ArrayList<SongDataObject> getDeletionQueue() {
+        return this.deletionQueue;
     }
 
     public void addAccNameToList(String accName) {
@@ -78,9 +95,10 @@ public class AccountsDataManager implements Serializable {//This class will be u
                 Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(arrayOfPlaylistSongs[i]).remove(sdoToRemove[j]);
             }
             Accounts.getLoggedInAccount().removeSongFromAccount(sdoToRemove[j]);
-            Files.delete(Paths.get(sdoToRemove[j].getPathToWavFile()));
-            Files.delete(Paths.get(sdoToRemove[j].getPathToThumbnail()));
         }
+        AccountsDataManager adm = deserializeAccMan();
+        adm.deletionQueue.addAll(Arrays.asList(sdoToRemove));
+        adm.serializeAccMan();
         Accounts.getLoggedInAccount().serializeAccount();
     }
 

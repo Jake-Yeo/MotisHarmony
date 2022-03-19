@@ -112,7 +112,7 @@ public class YoutubeDownloader {
         ArrayList<SongDataObject> sdosToRemoveFromYoutubePlaylistUrls = new ArrayList<>();
         //This for loop will get a list of songs which have already been downloaded, or are already in the download manager
         for (int i = 0; i < youtubePlaylistUrls.size(); i++) {
-            if (!SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(youtubePlaylistUrls.get(i).getVideoUrl()) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubePlaylistUrls.get(i).getVideoUrl())) {
+            if (SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(youtubePlaylistUrls.get(i).getVideoUrl()) || Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubePlaylistUrls.get(i).getVideoUrl())) {
                 sdosToRemoveFromYoutubePlaylistUrls.add(youtubePlaylistUrls.get(i));
             }
         }

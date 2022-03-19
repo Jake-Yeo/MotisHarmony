@@ -8,25 +8,9 @@ package apprunner;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.nio.file.Paths;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import model.Encryption;
-import model.MusicPlayerManager;
+import model.AccountsDataManager;
 import model.PathsManager;
-import model.YoutubeVideoPageParser;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import view.MainViewRunner;
 
 //import ws.schild.jave.process.ffmpeg.DefaultFFMPEGLocator;
@@ -39,8 +23,11 @@ public class AppRunner {
 
     public static void main(String[] args) throws MalformedURLException, IOException, Exception {
         
+        //Set up the AccountsDataManager object below since we need to clear the deletion queue
+        AccountsDataManager adm = new AccountsDataManager();
         PathsManager.setUpFolders();
         PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
+        PathsManager.deleteAllItemsInDownloadQueue();//This will delete all the files associated with the SongDataObjects in the deletion queue
         MainViewRunner.launchPanel(args);
 //playlist 511 index https://www.youtube.com/watch?v=RgKAFK5djSk&list=PLeCdlPO-XhWFzEVynMsmosfdRsIZXhZi0&index=1 // playlist with 5000 videos
         //   YoutubeDownloaderManager.downloadYoutubeVideoUrl("https://youtu.be/T_lC2O1oIew");       
