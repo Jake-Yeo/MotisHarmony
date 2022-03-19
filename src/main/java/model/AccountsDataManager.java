@@ -85,13 +85,21 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void addSongToPlaylist(String playlistName, SongDataObject sdo) throws Exception {
-        if (!playlistName.equals("All Songs")) {
+        if (!playlistName.equals("All Songs") && !Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName).contains(sdo)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
             Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
     public static void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
+        ArrayList<SongDataObject> songsInPlaylist = Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName);
+        ArrayList<SongDataObject> songsToRemoveFromList = new ArrayList<>();
+        for (int i = 0; i < listOfSongs.size(); i++) {
+            if (songsInPlaylist.contains(listOfSongs.get(i))) {
+                songsToRemoveFromList.add(listOfSongs.get(i));
+            }
+        }
+        listOfSongs.removeAll(songsToRemoveFromList);
         if (!playlistName.equals("All Songs")) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
             Accounts.getLoggedInAccount().serializeAccount();
