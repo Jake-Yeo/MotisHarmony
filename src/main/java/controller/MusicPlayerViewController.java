@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +30,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
@@ -36,9 +38,12 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -64,13 +69,14 @@ import model.PlaylistMap;
 import model.SongDataObject;
 import model.YoutubeDownloader;
 import model.YoutubeVideoPageParser;
+import view.MainViewRunner;
 
 /**
  *
  * @author 1100007967
  */
 public class MusicPlayerViewController implements Initializable, PropertyChangeListener {
-
+    
     private ContextMenu songListContextMenu = new ContextMenu();
     private ContextMenu playlistListContextMenu = new ContextMenu();
     @FXML
@@ -115,7 +121,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private Button loopButton;
     @FXML
     private ChoiceBox<String> sortChoiceBox;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -126,11 +132,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         clip.setArcWidth(50);//this sets the rounded corners
         clip.setArcHeight(50);
         downloadPageMainAnchor.setClip(clip);
-
+        
         if (MusicPlayerManager.getSongObjectBeingPlayed() != null) {
             updateInfoDisplays();
         }
-
+        
         if (MusicPlayerManager.getMediaPlayer() != null) {
             volumeSlider.setValue(MusicPlayerManager.getVolume());
             seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));
@@ -160,7 +166,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 System.out.println("listener ran");
             }
         });
-
+        
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         playButton.textOverrunProperty().set(OverrunStyle.CLIP);
         sortChoiceBox.getItems().add("A-Z");
@@ -179,7 +185,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         sortChoiceBox.getSelectionModel().select("A-Z");
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
-
+    
     @FXML
     private void shuffleButtonOnAction() {
         if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
@@ -193,7 +199,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             shuffleButton.setTextFill(Paint.valueOf("#f04444"));
         }
     }
-
+    
     private void sortModelCurrentSongList(String sortType) throws Exception {
         //we sort the view of the current playlist selected
         MusicPlayerManager.sortCurrentSongList(sortType);
@@ -202,7 +208,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
         }
     }
-
+    
     @FXML
     private void onComboBoxClicked(ActionEvent e) throws Exception {
         if (comboBox.getSelectionModel().selectedIndexProperty().get() >= 0) {
@@ -219,14 +225,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         System.out.println(comboBox.getSelectionModel().selectedIndexProperty().get());
     }
-
+    
     @FXML
     private void createNewPlaylist(ActionEvent event) throws Exception {
         AccountsDataManager.createPlaylist(playlistNameTextField.getText());
         updatePlaylistList();
         playlistNameTextField.clear();
     }
-
+    
     private void onFirstMusicPlayerPlay() throws IOException {
         MusicPlayerManager.smartPlay();
         init();//initalize again because a new MediaPlayer is made
@@ -236,7 +242,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
         playButton.setText("⏸︎");
     }
-
+    
     @FXML
     private void playMusic(ActionEvent event) throws IOException {
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
@@ -251,7 +257,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             playButton.setText("⏸︎");
         }
     }
-
+    
     public void setUpPlayButton() {
         seekSlider.setValue(0);
         playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
@@ -260,7 +266,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
     }
-
+    
     @FXML
     private void previousSong() throws IOException {
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
@@ -290,7 +296,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         }
     }
-
+    
     @FXML
     private void nextSong(ActionEvent event) throws IOException {
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
@@ -322,9 +328,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 setUpPlayButton();
             }
         }
-
+        
     }
-
+    
     private void updateInfoDisplays() {
         songInfoViewList.getItems().clear();
         songInfoText.setText("Song name: " + MusicPlayerManager.getSongObjectBeingPlayed().getTitle() + "Song creator: " + MusicPlayerManager.getSongObjectBeingPlayed().getChannelName());
@@ -333,7 +339,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songInfoViewList.getItems().add("Song duration: " + MusicPlayerManager.getSongObjectBeingPlayed().getVideoDuration());
         thumbnailImageView.setImage(new Image(MusicPlayerManager.getSongObjectBeingPlayed().getPathToThumbnail()));
     }
-
+    
     private String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
         boolean getTotalSecondsInHourFormat = false;
         String totalTime = getCurrentTimeString(totalSeconds, false);
@@ -343,7 +349,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         String currentSeconds = getCurrentTimeString(currentseconds, getTotalSecondsInHourFormat);
         return currentSeconds + "/" + totalTime;
     }
-
+    
     private String getCurrentTimeString(int seconds, boolean inHourFormat) {
         String videoDuration = "";
         String stringDurationMinutes = "";
@@ -371,7 +377,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         return videoDuration;
     }
-
+    
     public void init() {
         MusicPlayerManager.getMediaPlayer().setOnEndOfMedia(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
@@ -384,7 +390,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 }
             }
         });
-
+        
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(
@@ -392,32 +398,32 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 MusicPlayerManager.setVolume(volumeSlider.getValue());
             }
         });
-
+        
         seekSlider.setOnMousePressed((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             MusicPlayerManager.pauseSong();//Pause the song so there is no weird audio
         });
-
+        
         seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             MusicPlayerManager.seekTo(Duration.seconds(seekSlider.getValue()));//Set where to resume the song
             MusicPlayerManager.resumeSong();//Resume the song once the user releases their mous key
         });
-
+        
         MusicPlayerManager.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.
             public void run() {
                 MusicPlayerManager.setVolume(volumeSlider.getValue());//Sets the volume
                 seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
             }
         });
-
+        
         MusicPlayerManager.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {//This will automatically update the seekSlider to match the current position of the song
             public void invalidated(Observable ov) {
                 seekSlider.setValue(MusicPlayerManager.getCurrentTimeInSeconds());
                 timeText.setText(getCurrentTimeStringFormatted((int) Math.floor(MusicPlayerManager.getCurrentTimeInSeconds()), (int) Math.floor(MusicPlayerManager.getTotalDurationInSeconds())));
             }
         });
-
+        
     }
-
+    
     public void contextMenuPlaySongOption() {
         if (!MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
             MusicPlayerManager.getSongHistory().clear();
@@ -436,39 +442,66 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
     }
-
+    
     public void contextMenuAddToPlaylistOption() {
         updatePlaylistToAddToChoiceBox();
         comboBox.show();
     }
-
+    
     public void contextMenuDeletePlaylistOption() throws Exception {
         AccountsDataManager.deletePlaylist(playlistList.getSelectionModel().getSelectedItem());
         updatePlaylistList();
         MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());
     }
-
+    
     public void updatePlaylistToAddToChoiceBox() {
         comboBox.getItems().clear();
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         comboBox.getItems().addAll(map.getArrayOfPlaylistNames());
     }
-
+    
     public void deleteSongFromPlaylistOption() throws Exception {
         AccountsDataManager.removeSongFromPlaylist(playlistList.getSelectionModel().getSelectedItem(), MusicPlayerManager.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
         updateModelCurrentSongList();
     }
-
+    
     public void playPlaylistOption() {
         MusicPlayerManager.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
     }
-
+    
     public void deleteSongFromAccountOption() throws IOException, Exception {
         AccountsDataManager.deleteSong(MusicPlayerManager.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
         updateModelCurrentSongList();
     }
-
+    
+    public void editSongDataOption() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/SongDialogEditor.fxml"));
+        DialogPane songDialogEditor = fxmlLoader.load();
+        SongDialogEditorController sdeController = fxmlLoader.getController();
+        int indexOfSongToDisplay = songList.selectionModelProperty().get().getSelectedIndex();
+        SongDataObject sdoToEdit = MusicPlayerManager.getCurrentSongList().get(indexOfSongToDisplay);
+        sdeController.setDialogSongDisplay(sdoToEdit);
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setDialogPane(songDialogEditor);
+        dialog.setTitle("hi");
+        Optional<ButtonType> buttonClicked = dialog.showAndWait();
+        if (buttonClicked.get() == ButtonType.APPLY) {
+            sdeController.applyDataChangesToSongDataObject(sdoToEdit);
+        } else if (buttonClicked.get() == ButtonType.CANCEL) {
+            return;
+        }
+    }
+    
     public void setUpContextMenus() {
+        MenuItem editSongData = new MenuItem("Edit Song Data");
+        editSongData.setOnAction(e -> {
+            try {
+                editSongDataOption();
+            } catch (IOException ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         MenuItem playSong = new MenuItem("Play Song");
         playSong.setOnAction(e -> contextMenuPlaySongOption());
         MenuItem addToPlaylist = new MenuItem("Add To Playlist");
@@ -491,7 +524,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        songListContextMenu.getItems().addAll(playSong, addToPlaylist, deleteFromPlaylist, deleteSong);
+        songListContextMenu.getItems().addAll(editSongData, playSong, addToPlaylist, deleteFromPlaylist, deleteSong);
         MenuItem deletePlaylist = new MenuItem("Delete Playlist");
         deletePlaylist.setOnAction(e -> {
             try {
@@ -504,7 +537,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playPlaylist.setOnAction(e -> playPlaylistOption());
         playlistListContextMenu.getItems().addAll(deletePlaylist, playPlaylist);
     }
-
+    
     @FXML
     public void showSongListContextMenu(MouseEvent e) {
         if (e.getButton() == MouseButton.SECONDARY) {
@@ -514,7 +547,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             songListContextMenu.hide();
         }
     }
-
+    
     @FXML
     public void showPlaylistListContextMenu(MouseEvent e) throws Exception {
         if (e.getButton() == MouseButton.SECONDARY) {
@@ -526,13 +559,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             updateModelCurrentSongList();
         }
     }
-
+    
     private void updatePlaylistList() {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         playlistList.getItems().clear();
         playlistList.getItems().addAll(map.getArrayOfPlaylistNames());
     }
-
+    
     private void updateModelCurrentSongList() throws Exception {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();
@@ -547,13 +580,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         }
     }
-
+    
     private void updateViewCurrentSongList() {
         //we clear the list and then put the new list of song names in
         songList.getItems().clear();
         songList.getItems().addAll(MusicPlayerManager.getArrayOfNamesInCurrentSongList());
     }
-
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         updatePlaylistList();

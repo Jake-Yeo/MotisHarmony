@@ -57,7 +57,7 @@ public class AudioConverter {
         }
     }
 
-    private static void startConversionQueue() throws EncoderException, IOException, Exception {//When using this class you probably should put your code in a thread
+    private static void startConversionQueue() throws EncoderException, IOException, Exception {//We should probably get rid of the conversion queue
         coversionQueueHasStarted = true;
         while (!conversionQueueList.isEmpty()) {
             if (conversionIsDone) {

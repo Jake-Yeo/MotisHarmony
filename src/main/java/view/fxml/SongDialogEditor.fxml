@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+
+<DialogPane prefHeight="167.0" prefWidth="268.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SongDialogEditorController">
+   <content>
+      <AnchorPane id="AnchorPane" prefHeight="141.0" prefWidth="268.0">
+         <children>
+            <TextField fx:id="songTextField" layoutX="92.0" layoutY="42.0" />
+            <TextField fx:id="artistTextField" layoutX="92.0" layoutY="75.0" />
+            <Text layoutX="30.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Song" wrappingWidth="44.13671875" />
+            <Text layoutX="30.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist" wrappingWidth="44.13671875" />
+         </children>
+      </AnchorPane>
+   </content>
+   <buttonTypes>
+      <ButtonType fx:constant="APPLY" />
+      <ButtonType fx:constant="CANCEL" />
+   </buttonTypes>
+</DialogPane>

@@ -43,6 +43,14 @@ public class SongDataObject implements Serializable {
         this.pathToThumbnail = Paths.get(PathsManager.getLoggedInUserThumbnailsPath().toString(), (this.safeTitleName + ".png")).toString();
     }
 
+    public void setVideoTitle(String newTitle) {
+        this.videoTitle = newTitle;
+    }
+
+    public void setChannelName(String newChannelName) {
+        this.channelName = newChannelName;
+    }
+
     public int getOrderAdded() {
         return this.orderAdded;
     }
@@ -95,7 +103,7 @@ public class SongDataObject implements Serializable {
     public String toString() {
         return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile() + ", " + getSafeTitleName() + ", " + getPathToThumbnail());
     }
-    
+
     public static ArrayList<String> getYoutubeIdList(ArrayList<SongDataObject> sdoList) {
         ArrayList<String> sdoIdArray = new ArrayList<String>(sdoList.size());
         for (int i = 0; i < sdoList.size(); i++) {
