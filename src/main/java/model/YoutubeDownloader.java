@@ -254,8 +254,9 @@ public class YoutubeDownloader {
             downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
             int count = 0;
             long timeStart = System.currentTimeMillis();
-            try (
-                     BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());  FileOutputStream fos = new FileOutputStream(youtubeSongData.getPathToWebaFile())) {
+            try {
+                BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());
+                FileOutputStream fos = new FileOutputStream(youtubeSongData.getPathToWebaFile());
                 int i = 0;
                 System.out.println("Stop downloading is " + stopDownloading);
                 final byte[] data = new byte[256000];
