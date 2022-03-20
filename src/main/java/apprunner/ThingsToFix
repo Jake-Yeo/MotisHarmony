@@ -1,3 +1,5 @@
+Increase download speed! We must keep the range parameter in the link, change the first part to 0 instead! Example: range=0-99999999999999999999
+
 Bug where a song may only be partially downloaded
 
 Handle exceptions causes when account has not yet downloaded a song and user attempts to download song.

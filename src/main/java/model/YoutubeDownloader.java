@@ -251,6 +251,8 @@ public class YoutubeDownloader {
         boolean skipAudioConversion = false;
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeSongData.getVideoUrl());
         if (!possibleYoutubeUrl.equals("error")) {
+            //We add range=0-99999999999999999999 to the url below to bypass throttling which speeds up download times by nearly 95 times!
+            possibleYoutubeUrl = possibleYoutubeUrl + "range=0-99999999999999999999";
             downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
             int count = 0;
             long timeStart = System.currentTimeMillis();
