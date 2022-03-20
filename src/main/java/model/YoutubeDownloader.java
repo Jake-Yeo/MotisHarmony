@@ -279,16 +279,13 @@ public class YoutubeDownloader {
             if (skipAudioConversion) {//Skips the audio conversion
                 return;
             }
-            new Thread(//We use a thread so that it doesn't take an extra few seconds to download a youtube video, if the conversion cannot keep up then it will be added to the conversion queue.
-                    new Runnable() {
-                public void run() {
-                    try {
-                        AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
-                    } catch (Exception ex) {
-                        Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }).start();
+            //We no longer create a new thread everytime we run the AudioConverter below, this will give time for the chrome driver to "breath" and will prevent massive lag.
+            try {
+                AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+            } catch (Exception ex) {
+                Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                  
         } else {
             errorList.add(youtubeSongData + " could not be downloaded at this time, please try again later or find an alternative link");
             System.err.print("Failed to download this song");
