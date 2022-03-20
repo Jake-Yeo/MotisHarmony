@@ -105,7 +105,7 @@ public class BrowserPageViewController implements Initializable {
         browserWebView.getEngine().executeScript("history.forward()");
     }
 
-    private void downloadVideoOrPlaylist() throws IOException {//we may have to prevent button spamming
+    private void downloadVideoOrPlaylist() throws IOException {//we may have to prevent button spamming.
         new Thread(
                 new Runnable() {
             public void run() {
