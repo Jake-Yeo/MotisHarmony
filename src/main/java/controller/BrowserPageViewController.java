@@ -5,9 +5,13 @@
  */
 package controller;
 
+import java.awt.MouseInfo;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
@@ -62,6 +67,7 @@ public class BrowserPageViewController implements Initializable {
             }
         });
          */
+        browserWebView.setContextMenuEnabled(false);
         browserWebView.getEngine().load("https://www.youtube.com/");//https://www.google.ca/videohp
         browserWebView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
     }
@@ -78,30 +84,54 @@ public class BrowserPageViewController implements Initializable {
 
     @FXML
     public void showContextMenu(MouseEvent e) {
-        //if (e.getButton() == MouseButton.SECONDARY) {
-        //     contextMenu.show(browserWebView, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
-        // } else {
-        //      contextMenu.hide();
-        //  }
+        if (e.getButton() == MouseButton.SECONDARY) {
+            contextMenu.show(browserWebView, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+        } else {
+            contextMenu.hide();
+        }
     }
 
     public void turnOffWebEngine() {
         //browserWebView.getEngine().load("https://www.youtube.com/");
     }
 
+    @FXML
+    public void goBack() {
+        browserWebView.getEngine().executeScript("history.back()");
+    }
+
+    @FXML
+    public void goForward() {
+        browserWebView.getEngine().executeScript("history.forward()");
+    }
+
+    private void downloadVideoOrPlaylist() throws IOException {//we may have to prevent button spamming
+        new Thread(
+                new Runnable() {
+            public void run() {
+                YoutubeDownloader.addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
+            }
+        }).start();
+    }
+
     public void setUpContextMenu() {
         MenuItem downloadLink = new MenuItem("Download Video Audio");
-        downloadLink.setOnAction(e -> System.out.println("Go Forward"));
+        downloadLink.setOnAction(e -> {
+            try {
+                downloadVideoOrPlaylist();
+            } catch (IOException ex) {
+                Logger.getLogger(BrowserPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
 
         MenuItem reload = new MenuItem("Reload");
         reload.setOnAction(e -> browserWebView.getEngine().reload());
 
-        MenuItem goOneSiteBack = new MenuItem("Go Back");
-        goOneSiteBack.setOnAction(e -> System.out.println("Go Back"));
+        MenuItem goBack = new MenuItem("Go Back");
+        goBack.setOnAction(e -> goBack());
 
-        MenuItem goOneSiteForward = new MenuItem("Hide Images");
-        goOneSiteForward.setOnAction(e -> System.out.println("Go Forward"));
-
-        contextMenu.getItems().addAll(reload, goOneSiteBack, goOneSiteForward, downloadLink);
+        MenuItem goForward = new MenuItem("Go Forward");
+        goForward.setOnAction(e -> goForward());
+        contextMenu.getItems().addAll(reload, goBack, goForward, downloadLink);
     }
 }

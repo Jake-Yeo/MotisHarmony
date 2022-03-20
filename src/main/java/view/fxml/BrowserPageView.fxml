@@ -21,5 +21,7 @@
       </AnchorPane>
       <Button fx:id="downloadUrlButton" layoutY="230.0" mnemonicParsing="false" onAction="#downloadBrowserUrl" prefHeight="25.0" prefWidth="48.0" text="📥" />
       <ComboBox fx:id="bookMarkComboBox" layoutY="189.0" prefHeight="25.0" prefWidth="48.0" />
+      <Button fx:id="backButton" layoutY="76.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="22.0" text="Button" />
+      <Button fx:id="forwardButton" layoutX="25.0" layoutY="76.0" mnemonicParsing="false" onAction="#goForward" prefHeight="25.0" prefWidth="22.0" text="Button" />
    </children>
 </AnchorPane>
