@@ -215,12 +215,24 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             if (songList.getSelectionModel().getSelectedIndices().size() == 1) {
                 System.out.println(comboBox.getSelectionModel().getSelectedItem());
                 AccountsDataManager.addSongToPlaylist(comboBox.getSelectionModel().getSelectedItem(), MusicPlayerManager.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
+                //The if statment below ensures that if the user were to remove a song from a playlist, and then add that song back, and then not refresh that playlist, then if they are currently playing that playlist, that song which was added will be played if the user is using ordered or random play
+                if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(comboBox.getSelectionModel().getSelectedItem())) {
+                    MusicPlayerManager.getPlaylistSongsPlaying().clear();
+                    MusicPlayerManager.getPlaylistSongsPlaying().addAll(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistList.getSelectionModel().getSelectedItem()));
+                    MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
+                }
             } else {
                 ArrayList<SongDataObject> sdoToAddToPlaylist = new ArrayList<>(songList.getSelectionModel().getSelectedIndices().size());
                 for (int i = 0; i < songList.getSelectionModel().getSelectedIndices().size(); i++) {
                     sdoToAddToPlaylist.add(MusicPlayerManager.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndices().get(i)));
                 }
                 AccountsDataManager.addSongToPlaylist(comboBox.getSelectionModel().getSelectedItem(), sdoToAddToPlaylist);
+                //The if statment below ensures that if the user were to remove a song from a playlist, and then add that song back, and then not refresh that playlist, then if they are currently playing that playlist, that song which was added will be played if the user is using ordered or random play
+                if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(comboBox.getSelectionModel().getSelectedItem())) {
+                    MusicPlayerManager.getPlaylistSongsPlaying().clear();
+                    MusicPlayerManager.getPlaylistSongsPlaying().addAll(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistList.getSelectionModel().getSelectedItem()));
+                    MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
+                }
             }
         }
         System.out.println(comboBox.getSelectionModel().selectedIndexProperty().get());
