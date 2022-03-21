@@ -576,6 +576,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(songDialogEditor);
         dialog.setTitle("hi");
+        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
+        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             sdeController.applyDataChangesToSongDataObject(sdoToEdit);
@@ -595,6 +597,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(playlistDialogEditor);
         dialog.setTitle("hi");
+        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
+        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             pdeController.updatePlaylistName(playlistSong);
