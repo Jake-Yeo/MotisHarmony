@@ -148,6 +148,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         updatePlaylistList();
         setUpContextMenus();
         comboBox.setVisibleRowCount(16);
+        comboBox.setMaxWidth(200);
+        comboBox.getStylesheets().add("/css/comboBox.css");
         MusicPlayerManager.setCurrentPlaylistPlayling("All Songs");
         playlistList.getSelectionModel().select("All Songs");
         MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
@@ -183,6 +185,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
         sortChoiceBox.getSelectionModel().select("A-Z");
+        
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
 

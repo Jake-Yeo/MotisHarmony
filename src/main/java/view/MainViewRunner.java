@@ -42,6 +42,7 @@ public class MainViewRunner extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml"));//The file must be in the package this line is in!! if not you must do /"package name here"/"fxml file name here"
         Scene scene = new Scene(root, Color.TRANSPARENT);
+        scene.getStylesheets().add(getClass().getResource("/css/contextMenu.css").toExternalForm());
         stage.setTitle("MotisHarmony");
         stage.initStyle(StageStyle.TRANSPARENT);
 
@@ -52,21 +53,20 @@ public class MainViewRunner extends Application {
         screenController.activate("LoginPage");
         sceneChanger = screenController;
 
-
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/MotisHarmonyIcon.png")));
         stage.setScene(scene);
         setStage(stage);
         stage.show();
     }
-    
+
     public static SceneChanger getSceneChanger() {
         return sceneChanger;
     }
-    
+
     public static boolean getSlideBarRanOnce() {
         return slideBarLoaded;
     }
-    
+
     public static void setSlideBarRanOnce(boolean tf) {
         slideBarLoaded = tf;
     }
