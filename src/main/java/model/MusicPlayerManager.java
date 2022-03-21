@@ -227,9 +227,9 @@ public class MusicPlayerManager {
         MusicPlayerManager.getCurrentSongList().addAll(sdota);
     }
 
-    public static void sortCurrentSongList(String sortType) {
+    public static void sortCurrentSongList(String sortType, ObservableList<SongDataObject> listToSort) {
         if (sortType.equals("A-Z")) {
-            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+            FXCollections.sort(listToSort, new Comparator() {
                 @Override
                 public int compare(Object sdo1, Object sdo2) {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
@@ -250,7 +250,7 @@ public class MusicPlayerManager {
             System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("Z-A")) {
-            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+            FXCollections.sort(listToSort, new Comparator() {
                 @Override
                 public int compare(Object sdo1, Object sdo2) {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
@@ -271,7 +271,7 @@ public class MusicPlayerManager {
             System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("A-Z By Artist")) {
-            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+            FXCollections.sort(listToSort, new Comparator() {
                 @Override
                 public int compare(Object sdo1, Object sdo2) {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
@@ -293,7 +293,7 @@ public class MusicPlayerManager {
             //updateViewCurrentSongList();
 
         } else if (sortType.equals("Z-A By Artist")) {
-            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+            FXCollections.sort(listToSort, new Comparator() {
                 @Override
                 public int compare(Object sdo1, Object sdo2) {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
@@ -314,7 +314,7 @@ public class MusicPlayerManager {
             System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("Oldest Added")) {
-            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+            FXCollections.sort(listToSort, new Comparator() {
                 @Override
                 public int compare(Object sdo1, Object sdo2) {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
@@ -335,7 +335,7 @@ public class MusicPlayerManager {
             System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("Newest Added")) {
-            FXCollections.sort(MusicPlayerManager.getCurrentSongList(), new Comparator() {
+            FXCollections.sort(listToSort, new Comparator() {
                 @Override
                 public int compare(Object sdo1, Object sdo2) {
                     SongDataObject firstSdo = (SongDataObject) sdo1;

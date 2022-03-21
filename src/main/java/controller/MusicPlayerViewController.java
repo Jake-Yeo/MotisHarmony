@@ -202,7 +202,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     private void sortModelCurrentSongList(String sortType) throws Exception {
         //we sort the view of the current playlist selected
-        MusicPlayerManager.sortCurrentSongList(sortType);
+        MusicPlayerManager.sortCurrentSongList(sortType, MusicPlayerManager.getCurrentSongList());
         //If the current playlist selected is the same as the current playlist playing then we update the next song to play to match the view of the current playlist selected
         if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
             MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
@@ -219,6 +219,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(comboBox.getSelectionModel().getSelectedItem())) {
                     MusicPlayerManager.getPlaylistSongsPlaying().clear();
                     MusicPlayerManager.getPlaylistSongsPlaying().addAll(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistList.getSelectionModel().getSelectedItem()));
+                    if (sortChoiceBox.getValue() != null) {
+                        //automatically sort the PlaylistSongsPlaying
+                        MusicPlayerManager.sortCurrentSongList(sortChoiceBox.getValue(), MusicPlayerManager.getPlaylistSongsPlaying());
+                    }
                     MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
                 }
             } else {
@@ -231,6 +235,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(comboBox.getSelectionModel().getSelectedItem())) {
                     MusicPlayerManager.getPlaylistSongsPlaying().clear();
                     MusicPlayerManager.getPlaylistSongsPlaying().addAll(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistList.getSelectionModel().getSelectedItem()));
+                    if (sortChoiceBox.getValue() != null) {
+                        //automatically sort the PlaylistSongsPlaying
+                        MusicPlayerManager.sortCurrentSongList(sortChoiceBox.getValue(), MusicPlayerManager.getPlaylistSongsPlaying());
+                    }
                     MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
                 }
             }
