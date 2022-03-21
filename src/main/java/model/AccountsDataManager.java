@@ -53,12 +53,12 @@ public class AccountsDataManager implements Serializable {//This class will be u
             }
         }
     }
-    
+
     public void addSongDataObjectToDeletionQueue(SongDataObject sdo) throws Exception {
         this.deletionQueue.add(sdo);
         serializeAccMan();
     }
-   
+
     public ArrayList<SongDataObject> getDeletionQueue() {
         return this.deletionQueue;
     }
@@ -130,6 +130,13 @@ public class AccountsDataManager implements Serializable {//This class will be u
         //All Songs is a unique playlist which musn't be editied
         if (!playlistName.equals("All Songs")) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
+    }
+
+    public static void renamePlaylist(String playlistToRename, String newPlaylistName) throws Exception {
+        if (!playlistToRename.equals("All Songs")) {
+            Accounts.getLoggedInAccount().getPlaylistDataObject().renamePlaylist(playlistToRename, newPlaylistName);
             Accounts.getLoggedInAccount().serializeAccount();
         }
     }

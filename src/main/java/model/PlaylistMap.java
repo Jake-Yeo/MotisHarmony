@@ -46,6 +46,11 @@ public class PlaylistMap implements Serializable {
     public void addSongToPlaylist(String playlistName, SongDataObject song) throws Exception {
         this.playlistMap.get(playlistName).add(song);
     }
+    
+    public void renamePlaylist(String playlistToRename, String newName) throws Exception {
+        this.playlistMap.put(newName, this.playlistMap.get(playlistToRename));
+        deletePlaylist(playlistToRename);
+    }
 
     public String[] getArrayOfPlaylistNames() {
         return this.playlistMap.keySet().toArray(new String[this.playlistMap.keySet().size()]);
