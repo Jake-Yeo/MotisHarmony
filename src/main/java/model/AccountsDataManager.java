@@ -135,7 +135,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void renamePlaylist(String playlistToRename, String newPlaylistName) throws Exception {
-        if (!playlistToRename.equals("All Songs")) {
+        if (!playlistToRename.equals("All Songs") && !playlistToRename.equals(newPlaylistName)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().renamePlaylist(playlistToRename, newPlaylistName);
             Accounts.getLoggedInAccount().serializeAccount();
         }
