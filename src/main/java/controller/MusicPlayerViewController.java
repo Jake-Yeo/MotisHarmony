@@ -121,6 +121,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private Button loopButton;
     @FXML
     private ChoiceBox<String> sortChoiceBox;
+    @FXML
+    private ChoiceBox<String> sortPlaylistChoiceBox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -145,8 +147,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             volumeSlider.setValue(1);
         }
         seekSlider.getStylesheets().add("/css/customSlider.css");
-        updatePlaylistList();
+        try {
+            updatePlaylistList();
+        } catch (Exception ex) {
+            Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         setUpContextMenus();
+        comboBox.setVisible(false);
+        sortChoiceBox.setVisible(false);
+        sortPlaylistChoiceBox.setVisible(false);
         comboBox.setVisibleRowCount(16);
         comboBox.setMaxWidth(200);
         comboBox.getStylesheets().add("/css/comboBox.css");
@@ -186,6 +195,20 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         });
         sortChoiceBox.getSelectionModel().select("A-Z");
 
+        sortPlaylistChoiceBox.getItems().add("A-Z");
+        sortPlaylistChoiceBox.getItems().add("Z-A");
+        sortPlaylistChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            try {
+                if (newValue != null) {
+                    //updatePlaylistList() automatically sorts the list
+                    updatePlaylistList();
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        sortPlaylistChoiceBox.getSelectionModel().select("A-Z");
+
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
 
@@ -209,6 +232,51 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         //If the current playlist selected is the same as the current playlist playing then we update the next song to play to match the view of the current playlist selected
         if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
             MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
+        }
+    }
+
+    private void sortPlaylistList(String sortType) throws Exception {
+        //we sort the view of the current playlist selected
+        if (sortType.equals("A-Z")) {
+            FXCollections.sort(playlistList.getItems(), new Comparator() {
+                @Override
+                public int compare(Object string1, Object string2) {
+                    String firstString = (String) string1;
+                    String secondString = (String) string2;
+                    int returnValue;
+                    if (firstString.compareTo(secondString) < 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstString.compareTo(secondString) > 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(sortType);
+            //updateViewCurrentSongList();
+        } else if (sortType.equals("Z-A")) {
+            FXCollections.sort(playlistList.getItems(), new Comparator() {
+                @Override
+                public int compare(Object string1, Object string2) {
+                    String firstString = (String) string1;
+                    String secondString = (String) string2;
+                    int returnValue;
+                    if (firstString.compareTo(secondString) > 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstString.compareTo(secondString) < 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
         }
     }
 
@@ -536,7 +604,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
+    public void sortPlaylistOption() throws Exception {
+        sortPlaylistChoiceBox.show();
+    }
+
     public void setUpContextMenus() {
+        MenuItem sortSongList = new MenuItem("Sort Song List");
+        sortSongList.setOnAction(e -> sortChoiceBox.show());
         MenuItem editSongData = new MenuItem("Edit Song Data");
         editSongData.setOnAction(e -> {
             try {
@@ -567,7 +641,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        songListContextMenu.getItems().addAll(editSongData, playSong, addToPlaylist, deleteFromPlaylist, deleteSong);
+        songListContextMenu.getItems().addAll(sortSongList, editSongData, playSong, addToPlaylist, deleteFromPlaylist, deleteSong);
+        MenuItem sortPlaylist = new MenuItem("Sort Playlist");
+        sortPlaylist.setOnAction(e -> sortPlaylistChoiceBox.show());
         MenuItem editPlaylistName = new MenuItem("Edit Playlist Name");
         editPlaylistName.setOnAction(e -> {
             try {
@@ -588,7 +664,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         });
         MenuItem playPlaylist = new MenuItem("Play Playlist");
         playPlaylist.setOnAction(e -> playPlaylistOption());
-        playlistListContextMenu.getItems().addAll(editPlaylistName, playPlaylist, deletePlaylist);
+        playlistListContextMenu.getItems().addAll(sortPlaylist, editPlaylistName, playPlaylist, deletePlaylist);
     }
 
     @FXML
@@ -613,10 +689,16 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
-    private void updatePlaylistList() {
+    private void updatePlaylistList() throws Exception {
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         playlistList.getItems().clear();
         playlistList.getItems().addAll(map.getArrayOfPlaylistNames());
+        if (sortPlaylistChoiceBox.getSelectionModel().getSelectedItem() != null) {
+            sortPlaylistList(sortPlaylistChoiceBox.getSelectionModel().getSelectedItem());
+        }
+        //Make sure that All Songs is always at the very top of the list
+        playlistList.getItems().remove("All Songs");
+        playlistList.getItems().add(0, "All Songs");
     }
 
     private void updateModelCurrentSongList() throws Exception {
@@ -642,6 +724,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        updatePlaylistList();
+        try {
+            updatePlaylistList();
+        } catch (Exception ex) {
+            Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
