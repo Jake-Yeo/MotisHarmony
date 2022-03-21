@@ -287,7 +287,7 @@ public class YoutubeDownloader {
             }
                   
         } else {
-            errorList.add(youtubeSongData + " could not be downloaded at this time, please try again later or find an alternative link");
+            errorList.add(youtubeSongData.getVideoUrl() + " could not be downloaded at this time, please try again later or find an alternative link");
             System.err.print("Failed to download this song");
         }
     }
