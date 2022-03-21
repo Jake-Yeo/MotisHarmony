@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -90,7 +91,7 @@ public class Accounts implements Serializable {//This class will store account u
     public ArrayList<SongDataObject> getListOfSongDataObjects() {
         return this.songDataObjectList;
     }
-    
+
     public ArrayList<UrlDataObject> getListOfUrlDataObjects() {
         return this.urlDataObjectList;
     }
@@ -108,6 +109,7 @@ public class Accounts implements Serializable {//This class will store account u
     }
 
     public void serializeAccount() throws Exception {
+        System.out.println(this.username);
         FileOutputStream fileOut = new FileOutputStream(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), this.username + ".acc").toString());
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
         out.writeObject(this);
@@ -122,6 +124,19 @@ public class Accounts implements Serializable {//This class will store account u
         in.close();
         fileIn.close();
         return accountToReturn;
+    }
+
+    public static Accounts deserializeAccountFromPath(String pathToAccount) throws Exception {
+        FileInputStream fileIn = new FileInputStream(pathToAccount);
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        Accounts accountToReturn = (Accounts) in.readObject();
+        in.close();
+        fileIn.close();
+        return accountToReturn;
+    }
+
+    public static void setLoggedInAccount(Accounts acc) {
+        loggedInAccount = acc;
     }
 
     public static ErrorDataObject signup(String username, String password) throws IOException, Exception {//This will be used to create an account. Returns true if the signup is successful
@@ -143,7 +158,7 @@ public class Accounts implements Serializable {//This class will store account u
                 return new ErrorDataObject(true, "Username is not available");
             }
             accDataMan.addAccNameToList(username);//This will add the username to the list so that accounts with the same usernames cannot be created.
-            accDataMan.serializeAccMan();//This will save the contents of the ArrayList
+            accDataMan.setPathOfAccToAutoLogIn(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), loggedInAccount.getUsername() + ".acc").toString());
             //Since these classes need an account to be created in order to initialize, we must set up the accounts first before adding these
             MainViewRunner.getSceneChanger().addScreen("DownloadPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/DownloadPageView.fxml")));
             MainViewRunner.getSceneChanger().addScreen("BrowserPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/BrowserPageView.fxml")));
@@ -175,6 +190,7 @@ public class Accounts implements Serializable {//This class will store account u
         if (aes.sha256Hash(aes.encrypt(password)).equals(accToLoginTo.getPassword())) {//Hashes the encrypted password entered to check if it equals the hash stored in the acccount object
             PathsManager.setUpPathsInsideUserDataPath();//We must run this method after using the setLoggedInUserDataPath so that we actually set up the correct paths
             loggedInAccount = accToLoginTo;//Set the logged in account
+            accDataMan.setPathOfAccToAutoLogIn(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), loggedInAccount.getUsername() + ".acc").toString());
             //Since these classes need an account to be created in order to initialize, we must set up the accounts first before adding these
             MainViewRunner.getSceneChanger().addScreen("DownloadPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/DownloadPageView.fxml")));
             MainViewRunner.getSceneChanger().addScreen("BrowserPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/BrowserPageView.fxml")));

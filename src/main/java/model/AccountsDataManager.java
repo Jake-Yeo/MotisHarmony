@@ -35,6 +35,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     private static final long serialVersionUID = 4655882630581250278L;
     private ArrayList<String> listOfAccountNames;
+    private String pathToAccToAutoLogIn;
     //We need the deletion queue below because the .dispose() method on the mediaPlayer has some asynchronous-ness to it so we simply delete the files when we start up the app.
     private ArrayList<SongDataObject> deletionQueue;
 
@@ -43,6 +44,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
             AccountsDataManager adm = deserializeAccMan();
             this.listOfAccountNames = adm.listOfAccountNames;
             this.deletionQueue = adm.deletionQueue;
+            this.pathToAccToAutoLogIn = adm.getAccPathToAutoLogIn();
         } catch (Exception e) {
             this.listOfAccountNames = new ArrayList<>();
             this.deletionQueue = new ArrayList<>();
@@ -58,17 +60,28 @@ public class AccountsDataManager implements Serializable {//This class will be u
         this.deletionQueue.add(sdo);
         serializeAccMan();
     }
+    
+    public void setPathOfAccToAutoLogIn(String pathToAcc) throws Exception {
+        pathToAccToAutoLogIn = pathToAcc;
+        serializeAccMan();
+    }
+    
+    public String getAccPathToAutoLogIn() {
+        return this.pathToAccToAutoLogIn;
+    }
 
     public ArrayList<SongDataObject> getDeletionQueue() {
         return this.deletionQueue;
     }
 
-    public void addAccNameToList(String accName) {
+    public void addAccNameToList(String accName) throws Exception {
         this.listOfAccountNames.add(accName);
+        serializeAccMan();
     }
 
-    public void removeAccNameToList(String accName) {
+    public void removeAccNameToList(String accName) throws Exception {
         this.listOfAccountNames.remove(accName);
+        serializeAccMan();
     }
 
     public boolean accListContainWantedName(String accName) {
