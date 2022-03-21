@@ -40,10 +40,6 @@ public class BrowserPageViewController implements Initializable {
     private WebEngine engine;
     @FXML
     private AnchorPane webViewMainAnchorPane;
-    @FXML
-    private Button downloadUrlButton;
-    @FXML
-    private ComboBox<String> bookMarkComboBox;
 
     /**
      * Initializes the controller class.
@@ -72,7 +68,6 @@ public class BrowserPageViewController implements Initializable {
         browserWebView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
     }
 
-    @FXML
     public void downloadBrowserUrl(ActionEvent event) throws IOException {
         new Thread(
                 new Runnable() {
@@ -82,7 +77,6 @@ public class BrowserPageViewController implements Initializable {
         }).start();
     }
 
-    @FXML
     public void showContextMenu(MouseEvent e) {
         if (e.getButton() == MouseButton.SECONDARY) {
             contextMenu.show(browserWebView, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
@@ -95,12 +89,10 @@ public class BrowserPageViewController implements Initializable {
         //browserWebView.getEngine().load("https://www.youtube.com/");
     }
 
-    @FXML
     public void goBack() {
         browserWebView.getEngine().executeScript("history.back()");
     }
 
-    @FXML
     public void goForward() {
         browserWebView.getEngine().executeScript("history.forward()");
     }

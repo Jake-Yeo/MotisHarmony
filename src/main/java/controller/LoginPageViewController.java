@@ -118,6 +118,8 @@ public class LoginPageViewController implements Initializable {
         if (errObj.didErrorOccur()) {
             setErrorTextViewWithJavafxThread(true, errObj.getErrorMessage());
         }
+        usernameTextField.clear();
+        passwordPasswordField.clear();
     }
 
     @FXML
@@ -126,6 +128,8 @@ public class LoginPageViewController implements Initializable {
         if (errObj.didErrorOccur()) {
             setErrorTextViewWithJavafxThread(true, errObj.getErrorMessage());
         }
+        usernameTextField.clear();
+        passwordPasswordField.clear();
     }
 
     @FXML

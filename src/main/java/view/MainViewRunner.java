@@ -65,6 +65,7 @@ public class MainViewRunner extends Application {
             screenController.addScreen("DownloadPage", FXMLLoader.load(getClass().getResource("/fxml/DownloadPageView.fxml")));
             screenController.addScreen("BrowserPage", FXMLLoader.load(getClass().getResource("/fxml/BrowserPageView.fxml")));
             screenController.addScreen("MusicPlayerPage", FXMLLoader.load(getClass().getResource("/fxml/MusicPlayerView.fxml")));
+            screenController.addScreen("SettingsPage", FXMLLoader.load(getClass().getResource("/fxml/SettingsPageView.fxml")));
             screenController.switchToDownloadPageView();//The Account signup was successful and we can now let the user use the application
         } else {
             screenController.switchToLoginPageView();

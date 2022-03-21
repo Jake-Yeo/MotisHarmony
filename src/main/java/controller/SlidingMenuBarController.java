@@ -106,8 +106,8 @@ public class SlidingMenuBarController implements Initializable {
     }
 
     @FXML
-    private void switchToSettings(ActionEvent event
-    ) {
+    private void switchToSettings(ActionEvent event) throws IOException {
+        sceneChanger.switchToSettingsPageView();
         System.out.println("settings");
     }
 

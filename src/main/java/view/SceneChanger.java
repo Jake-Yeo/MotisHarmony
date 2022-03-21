@@ -59,4 +59,8 @@ public class SceneChanger {
     public static void switchToMusicPlayerPageView() throws IOException {
         MainViewRunner.getSceneChanger().activate("MusicPlayerPage");
     }
+
+    public static void switchToSettingsPageView() throws IOException {
+        MainViewRunner.getSceneChanger().activate("SettingsPage");
+    }
 }
