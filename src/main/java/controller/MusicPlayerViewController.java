@@ -185,7 +185,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
         sortChoiceBox.getSelectionModel().select("A-Z");
-        
+
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
 
@@ -511,6 +511,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             sdeController.applyDataChangesToSongDataObject(sdoToEdit);
+            updateViewCurrentSongList();
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             return;
         }
@@ -636,7 +637,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private void updateViewCurrentSongList() {
         //we clear the list and then put the new list of song names in
         songList.getItems().clear();
-        songList.getItems().addAll(MusicPlayerManager.getArrayOfNamesInCurrentSongList());
+        songList.getItems().addAll(MusicPlayerManager.getArrayOfSongInfoInCurrentSongList());
     }
 
     @Override

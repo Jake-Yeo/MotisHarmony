@@ -43,10 +43,10 @@ public class MusicPlayerManager {
         return songHistory;
     }
 
-    public static String[] getArrayOfNamesInCurrentSongList() {
+    public static String[] getArrayOfSongInfoInCurrentSongList() {
         String[] arrayOfSongNames = new String[getCurrentSongList().size()];
         for (int i = 0; i < arrayOfSongNames.length; i++) {
-            arrayOfSongNames[i] = MusicPlayerManager.getCurrentSongList().get(i).getTitle();
+            arrayOfSongNames[i] = MusicPlayerManager.getCurrentSongList().get(i).getTitle() + "\nBy: " + MusicPlayerManager.getCurrentSongList().get(i).getChannelName();
         }
         return arrayOfSongNames;
     }
