@@ -580,8 +580,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         updateModelCurrentSongList();
     }
 
-    public void playPlaylistOption() {
-        MusicPlayerManager.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+    public void playPlaylistOption() throws IOException {
+        if (MusicPlayerManager.isMusicPlayerInitialized()) {
+            MusicPlayerManager.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+        } else {
+            MusicPlayerManager.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+            onFirstMusicPlayerPlay();
+        }
     }
 
     public void deleteSongFromAccountOption() throws IOException, Exception {
@@ -691,7 +696,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
         MenuItem playPlaylist = new MenuItem("Play Playlist");
-        playPlaylist.setOnAction(e -> playPlaylistOption());
+        playPlaylist.setOnAction(e -> {
+            try {
+                playPlaylistOption();
+            } catch (IOException ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         playlistListContextMenu.getItems().addAll(sortPlaylist, editPlaylistName, playPlaylist, deletePlaylist);
     }
 
