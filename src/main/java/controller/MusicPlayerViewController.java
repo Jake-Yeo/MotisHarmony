@@ -248,6 +248,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
+    @FXML
+    private void loopButtonOnAction() {
+        if (MusicPlayerManager.getPlaySongInLoop()) {
+            MusicPlayerManager.setPlaySongInLoop(false);
+        } else {
+            MusicPlayerManager.setPlaySongInLoop(true);
+        }
+    }
+
     private void sortModelCurrentSongList(String sortType) throws Exception {
         //we sort the view of the current playlist selected
         MusicPlayerManager.sortCurrentSongList(sortType, MusicPlayerManager.getCurrentSongList());
@@ -386,27 +395,34 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             //This line basically initializes the MusicPlayer so that it is not null and can be used
             onFirstMusicPlayerPlay();
         }
-        if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
-            //This will clear the songHistory(), remember it is only used to keep track of songs when shuffling
-            MusicPlayerManager.getSongHistory().clear();
-            //The code below will let the MusicPlayerManager know to play the next song
-            MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) - 1);
-            MusicPlayerManager.nextOrPrevSong();
-            //This code will set up the play button and audio info displays
-            setUpPlayButton();
-        } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
-            //We get the index of the next song to keep track of which song to play next in the song history
-            int indexOfPrevSong = MusicPlayerManager.getPosInSongHistory() - 1;
-            //If there is no song left to play in the song history then do nothing because we are getting the previous song, there is no previous song left
-            if (indexOfPrevSong < 0) {
-                return;
-            } else {
-                //If there is a previous song to play then we play it
-                MusicPlayerManager.playSong(MusicPlayerManager.getSongHistory().get(indexOfPrevSong));
-                //We keep track of the position we are on in the songHistory
-                MusicPlayerManager.setPosInSongHistory(MusicPlayerManager.getPosInSongHistory() - 1);
+        if (!MusicPlayerManager.getPlaySongInLoop()) {
+            if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
+                //This will clear the songHistory(), remember it is only used to keep track of songs when shuffling
+                MusicPlayerManager.getSongHistory().clear();
+                //The code below will let the MusicPlayerManager know to play the next song
+                MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) - 1);
+                MusicPlayerManager.nextOrPrevSong();
+                //This code will set up the play button and audio info displays
                 setUpPlayButton();
+            } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
+                //We get the index of the next song to keep track of which song to play next in the song history
+                int indexOfPrevSong = MusicPlayerManager.getPosInSongHistory() - 1;
+                //If there is no song left to play in the song history then do nothing because we are getting the previous song, there is no previous song left
+                if (indexOfPrevSong < 0) {
+                    return;
+                } else {
+                    //If there is a previous song to play then we play it
+                    MusicPlayerManager.playSong(MusicPlayerManager.getSongHistory().get(indexOfPrevSong));
+                    //We keep track of the position we are on in the songHistory
+                    MusicPlayerManager.setPosInSongHistory(MusicPlayerManager.getPosInSongHistory() - 1);
+                    setUpPlayButton();
+                }
             }
+        } else {
+            //Since the looping code in in the manager, we just need to run code from the manager and update the UI
+            MusicPlayerManager.nextOrPrevSong();
+            init();//initalize again because a new MediaPlayer is made
+            updateInfoDisplays();
         }
     }
 
@@ -416,30 +432,37 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             //This line basically initializes the MusicPlayer so that it is not null and can be used
             onFirstMusicPlayerPlay();
         }
-        if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
-            //This will clear the songHistory(), remember it is only used to keep track of songs when shuffling
-            MusicPlayerManager.getSongHistory().clear();
-            //The code below will let the MusicPlayerManager know to play the next song
-            MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
-            MusicPlayerManager.nextOrPrevSong();
-            //This code will set up the play button and audio info displays
-            setUpPlayButton();
-        } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
-            //We get the index of the next song to keep track of which song to play next in the song history
-            int indexOfNextSong = MusicPlayerManager.getPosInSongHistory() + 1;
-            //If there is no next song left to play in the song history, then we play a random song and add that to our song history
-            if (indexOfNextSong > MusicPlayerManager.getSongHistory().size() - 1) {
-                System.out.println("got random");
+        if (!MusicPlayerManager.getPlaySongInLoop()) {
+            if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
+                //This will clear the songHistory(), remember it is only used to keep track of songs when shuffling
+                MusicPlayerManager.getSongHistory().clear();
+                //The code below will let the MusicPlayerManager know to play the next song
+                MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
                 MusicPlayerManager.nextOrPrevSong();
+                //This code will set up the play button and audio info displays
                 setUpPlayButton();
-                return;
-            } else {
-                //If there is a next song to play in our songHistory then we used the indexOfNextSong to find the next song to play
-                MusicPlayerManager.playSong(MusicPlayerManager.getSongHistory().get(indexOfNextSong));
-                //We increment the position in the songHistory to keep track of wether or not we have to get a random song or not
-                MusicPlayerManager.setPosInSongHistory(MusicPlayerManager.getPosInSongHistory() + 1);
-                setUpPlayButton();
+            } else if (MusicPlayerManager.getPlayType().equals("Random Play")) {
+                //We get the index of the next song to keep track of which song to play next in the song history
+                int indexOfNextSong = MusicPlayerManager.getPosInSongHistory() + 1;
+                //If there is no next song left to play in the song history, then we play a random song and add that to our song history
+                if (indexOfNextSong > MusicPlayerManager.getSongHistory().size() - 1) {
+                    System.out.println("got random");
+                    MusicPlayerManager.nextOrPrevSong();
+                    setUpPlayButton();
+                    return;
+                } else {
+                    //If there is a next song to play in our songHistory then we use the indexOfNextSong to find the next song to play
+                    MusicPlayerManager.playSong(MusicPlayerManager.getSongHistory().get(indexOfNextSong));
+                    //We increment the position in the songHistory to keep track of wether or not we have to get a random song or not
+                    MusicPlayerManager.setPosInSongHistory(MusicPlayerManager.getPosInSongHistory() + 1);
+                    setUpPlayButton();
+                }
             }
+        } else {
+            //Since the looping code in in the manager, we just need to run code from the manager and update the UI
+            MusicPlayerManager.nextOrPrevSong();
+            init();//initalize again because a new MediaPlayer is made
+            updateInfoDisplays();
         }
 
     }

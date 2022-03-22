@@ -29,6 +29,7 @@ public class MusicPlayerManager {
     private static boolean paused = false;
     private static int indexForOrderedPlay = 0;
     private static boolean musicPlayerInitalized = false;
+    private static boolean playSongInLoop = false;
     private static int volume;
     private static String playType = "Ordered Play";
     private static SongDataObject songObjectBeingPlayed;
@@ -39,6 +40,14 @@ public class MusicPlayerManager {
     private static int posInSongHistory = 0;
     private static String currentPlaylistPlayling;
     private static double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
+
+    public static boolean getPlaySongInLoop() {
+        return playSongInLoop;
+    }
+
+    public static void setPlaySongInLoop(boolean tf) {
+        playSongInLoop = tf;
+    }
 
     public static double getSliderVolume() {
         return sliderVolume;
@@ -111,31 +120,59 @@ public class MusicPlayerManager {
     }
 
     public static void updatePlayTypeAtEndOfMedia() {
-        if (playType.equals("Random Play")) {
+        System.out.println(playSongInLoop);
+        if (!playSongInLoop) {
+            if (playType.equals("Random Play")) {
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    try {
+                        randomPlay();
+                    } catch (IOException ex) {
+                        Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+            } else if (playType.equals("Ordered Play")) {
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    try {
+                        orderedPlay();
+                    } catch (IOException ex) {
+                        Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+            }
+        } else {
             mediaPlayer.setOnEndOfMedia(() -> {
-                try {
-                    randomPlay();
-                } catch (IOException ex) {
-                    Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        } else if (playType.equals("Ordered Play")) {
-            mediaPlayer.setOnEndOfMedia(() -> {
-                try {
-                    orderedPlay();
-                } catch (IOException ex) {
-                    Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                loopPlay();
             });
         }
     }
 
     public static void smartPlay() throws IOException {
-        if (playType.equals("Random Play")) {
-            randomPlay();
-        } else if (playType.equals("Ordered Play")) {
-            orderedPlay();
+        if (!musicPlayerInitalized) {
+            if (playType.equals("Random Play")) {
+                randomPlay();
+            } else if (playType.equals("Ordered Play")) {
+                orderedPlay();
+            }
+        } else if (playSongInLoop) {
+            loopPlay();
+        } else {
+            if (playType.equals("Random Play")) {
+                randomPlay();
+            } else if (playType.equals("Ordered Play")) {
+                orderedPlay();
+            }
         }
+
+    }
+
+    public static void loopPlay() {
+        File file = new File(songObjectBeingPlayed.getPathToWavFile());
+        System.out.println("song playing: " + file.toPath().toString());
+        Media media = new Media(file.toURI().toASCIIString());
+        mediaPlayer = new MediaPlayer(media);
+        updatePlayTypeAtEndOfMedia();
+        mediaPlayer.play();
+        System.out.println("finished playling");
     }
 
     public static void randomPlay() throws IOException {
