@@ -66,6 +66,7 @@ import model.Accounts;
 import model.AccountsDataManager;
 import model.MusicPlayerManager;
 import model.PlaylistMap;
+import model.SettingsObject;
 import model.SongDataObject;
 import model.YoutubeDownloader;
 import model.YoutubeVideoPageParser;
@@ -127,7 +128,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(downloadPageMainAnchor.widthProperty());
         clip.heightProperty().bind(downloadPageMainAnchor.heightProperty());
@@ -144,8 +144,16 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));
             init();
         } else {
-            volumeSlider.setValue(1);
+            volumeSlider.setValue(Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume());
         }
+        volumeSlider.setOnMouseReleased(e -> {
+            try {
+                MusicPlayerManager.setSliderVolume(volumeSlider.getValue());
+                AccountsDataManager.updateVolumeSettings();
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         seekSlider.getStylesheets().add("/css/customSlider.css");
         try {
             updatePlaylistList();
@@ -188,12 +196,20 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         sortChoiceBox.getItems().add("Newest Added");
         sortChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             try {
-                sortModelCurrentSongList(newValue);
+                if (newValue != null) {
+                    sortModelCurrentSongList(newValue);
+                    try {
+                        AccountsDataManager.updateCurrentSongListSortType(newValue);
+                    } catch (Exception ex) {
+                        Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             } catch (Exception ex) {
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        sortChoiceBox.getSelectionModel().select("A-Z");
+        System.out.println("SongList sort " + Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
+        sortChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
 
         sortPlaylistChoiceBox.getItems().add("A-Z");
         sortPlaylistChoiceBox.getItems().add("Z-A");
@@ -202,13 +218,19 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 if (newValue != null) {
                     //updatePlaylistList() automatically sorts the list
                     updatePlaylistList();
+                    System.out.println("Save thingsjfoiajweoifj");
+                    try {
+                        AccountsDataManager.updateCurrentPlaylistListSortType(newValue);
+                    } catch (Exception ex) {
+                        Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             } catch (Exception ex) {
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        sortPlaylistChoiceBox.getSelectionModel().select("A-Z");
-
+        System.out.println("PlaylistList sort" + Accounts.getLoggedInAccount().getSettingsObject().getPlaylistListSortPreference());
+        sortPlaylistChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getPlaylistListSortPreference());
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
     }
 
@@ -487,6 +509,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             public void changed(
                     ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
                 MusicPlayerManager.setVolume(volumeSlider.getValue());
+                MusicPlayerManager.setSliderVolume(volumeSlider.getValue());
             }
         });
 
@@ -502,6 +525,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         MusicPlayerManager.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.
             public void run() {
                 MusicPlayerManager.setVolume(volumeSlider.getValue());//Sets the volume
+                MusicPlayerManager.setSliderVolume(volumeSlider.getValue());
                 seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
             }
         });

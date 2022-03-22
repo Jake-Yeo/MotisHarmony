@@ -38,6 +38,15 @@ public class MusicPlayerManager {
     private static ArrayList<SongDataObject> songHistory = new ArrayList<>();
     private static int posInSongHistory = 0;
     private static String currentPlaylistPlayling;
+    private static double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
+
+    public static double getSliderVolume() {
+        return sliderVolume;
+    }
+
+    public static void setSliderVolume(double volume) {
+        sliderVolume = volume;
+    }
 
     public static ArrayList<SongDataObject> getSongHistory() {
         return songHistory;
@@ -177,8 +186,8 @@ public class MusicPlayerManager {
     public static void playSong(SongDataObject songToPlay) {
         songObjectBeingPlayed = songToPlay;
         if (mediaPlayer != null) {
-             mediaPlayer.stop();
-                mediaPlayer.dispose();
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
         }
         File file = new File(songToPlay.getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
@@ -195,8 +204,8 @@ public class MusicPlayerManager {
     }
 
     public static void nextOrPrevSong() throws IOException {
-         mediaPlayer.stop();
-                mediaPlayer.dispose();
+        mediaPlayer.stop();
+        mediaPlayer.dispose();
         smartPlay();
     }
 
@@ -363,7 +372,7 @@ public class MusicPlayerManager {
     }
 
     public static double getVolume() {
-        return mediaPlayer.getVolume();
+        return sliderVolume;
     }
 
     public static SongDataObject getSongObjectBeingPlayed() {

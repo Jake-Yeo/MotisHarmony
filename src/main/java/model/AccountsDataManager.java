@@ -60,12 +60,12 @@ public class AccountsDataManager implements Serializable {//This class will be u
         this.deletionQueue.add(sdo);
         serializeAccMan();
     }
-    
+
     public void setPathOfAccToAutoLogIn(String pathToAcc) throws Exception {
         pathToAccToAutoLogIn = pathToAcc;
         serializeAccMan();
     }
-    
+
     public String getAccPathToAutoLogIn() {
         return this.pathToAccToAutoLogIn;
     }
@@ -89,6 +89,33 @@ public class AccountsDataManager implements Serializable {//This class will be u
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static void updateVolumeSettings() throws Exception {
+        if (Accounts.getLoggedInAccount() != null) {
+            SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
+            accSo.setPrefVolume(MusicPlayerManager.getSliderVolume());
+            Accounts.getLoggedInAccount().serializeAccount();
+            System.out.println("Setting saved");
+        }
+    }
+
+    public static void updateCurrentPlaylistListSortType(String sortType) throws Exception {
+        if (Accounts.getLoggedInAccount() != null) {
+            SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
+            accSo.setPlaylistListSortPreference(sortType);
+            Accounts.getLoggedInAccount().serializeAccount();
+            System.out.println("Setting saved");
+        }
+    }
+
+    public static void updateCurrentSongListSortType(String sortType) throws Exception {
+        if (Accounts.getLoggedInAccount() != null) {
+            SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
+            accSo.setSongListSortPreference(sortType);
+            Accounts.getLoggedInAccount().serializeAccount();
+            System.out.println("Setting saved");
         }
     }
 

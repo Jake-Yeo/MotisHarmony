@@ -37,6 +37,7 @@ public class Accounts implements Serializable {//This class will store account u
     private String username;
     private String password;
     private SecretKey key;
+    private SettingsObject settingsObject = new SettingsObject();
     private PlaylistMap playlistDataObject = new PlaylistMap();
     transient private Encryption aes = new Encryption();
 
@@ -52,6 +53,10 @@ public class Accounts implements Serializable {//This class will store account u
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public SettingsObject getSettingsObject() {
+        return settingsObject;
     }
 
     public void setPassword(String password) {
@@ -163,6 +168,7 @@ public class Accounts implements Serializable {//This class will store account u
             MainViewRunner.getSceneChanger().addScreen("DownloadPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/DownloadPageView.fxml")));
             MainViewRunner.getSceneChanger().addScreen("BrowserPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/BrowserPageView.fxml")));
             MainViewRunner.getSceneChanger().addScreen("MusicPlayerPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/MusicPlayerView.fxml")));
+            MainViewRunner.getSceneChanger().addScreen("SettingsPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/SettingsPageView.fxml")));
             sceneSwitcher.switchToDownloadPageView();//The Account signup was successful and we can now let the user use the application
             System.out.println(PathsManager.getLoggedInUserDataPath().toString());
         } else {
@@ -195,6 +201,7 @@ public class Accounts implements Serializable {//This class will store account u
             MainViewRunner.getSceneChanger().addScreen("DownloadPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/DownloadPageView.fxml")));
             MainViewRunner.getSceneChanger().addScreen("BrowserPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/BrowserPageView.fxml")));
             MainViewRunner.getSceneChanger().addScreen("MusicPlayerPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/MusicPlayerView.fxml")));
+            MainViewRunner.getSceneChanger().addScreen("SettingsPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/SettingsPageView.fxml")));
             sceneSwitcher.switchToDownloadPageView();//The login was successful and we can now let the user use the application
         } else {
             System.err.println("password is wrong");

@@ -7,12 +7,18 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javafx.application.Platform.exit;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import model.Accounts;
+import model.AccountsDataManager;
+import model.MusicPlayerManager;
+import model.SettingsObject;
 import view.MainViewRunner;
 
 /**
@@ -57,7 +63,7 @@ public class ExitButtonController implements Initializable {//if you want to cha
 
     @FXML
     private void exitAppMainButton(ActionEvent event) {
-        exit();
+        System.exit(0);
     }
 
     @FXML
