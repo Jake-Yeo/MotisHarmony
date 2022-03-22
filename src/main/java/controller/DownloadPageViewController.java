@@ -103,7 +103,7 @@ public class DownloadPageViewController implements Initializable {
         downloadErrorList.getStylesheets().add("/css/customListView.css");
         videoInfoList.getStylesheets().add("/css/customScrollBar.css");
         videoInfoList.getStylesheets().add("/css/customListView.css");
-        if (Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue() && !Accounts.getLoggedInAccount().getSongsInQueueList().isEmpty()) {
+        if (Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue() && !Accounts.getLoggedInAccount().getSongsInQueueList().isEmpty() && Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue()) {
             YoutubeDownloader.getYoutubeUrlDownloadQueueList().addAll(Accounts.getLoggedInAccount().getSongsInQueueList());
             updateDownloadQueueListViewWithJavafxThread(true);
             new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.

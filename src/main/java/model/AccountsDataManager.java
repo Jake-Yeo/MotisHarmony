@@ -102,6 +102,11 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
 
+    public static void setSaveDownloadQueue(boolean tf) throws Exception {
+        Accounts.getLoggedInAccount().getSettingsObject().setSaveDownloadQueue(tf);
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
+
     public static void updateSongsInQueueList(ObservableList<SongDataObject> songsToUpdateWith) throws Exception {
         if (Accounts.getLoggedInAccount() != null) {
             Accounts.getLoggedInAccount().getSongsInQueueList().clear();

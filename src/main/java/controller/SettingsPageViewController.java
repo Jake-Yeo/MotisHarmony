@@ -7,10 +7,13 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.layout.AnchorPane;
 import model.Accounts;
 import model.AccountsDataManager;
@@ -28,6 +31,8 @@ public class SettingsPageViewController implements Initializable {
     private AnchorPane settingsViewMainAnchorPane;
     @FXML
     private Button logoutButton;
+    @FXML
+    private RadioButton saveDownloadQueueRadioButton;
 
     /**
      * Initializes the controller class.
@@ -35,6 +40,7 @@ public class SettingsPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        saveDownloadQueueRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue());
     }
 
     @FXML
@@ -46,6 +52,16 @@ public class SettingsPageViewController implements Initializable {
         Accounts.setLoggedInAccount(null);
         YoutubeDownloader.getYoutubeUrlDownloadQueueList().clear();
         MainViewRunner.getSceneChanger().switchToLoginPageView();
+    }
+
+    @FXML
+    private void updateSaveDownloadQueue(ActionEvent event) throws Exception {
+        AccountsDataManager.setSaveDownloadQueue(saveDownloadQueueRadioButton.isSelected());
+        try {
+            AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYoutubeUrlDownloadQueueList());
+        } catch (Exception ex) {
+            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
