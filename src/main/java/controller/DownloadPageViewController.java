@@ -27,6 +27,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.shape.Rectangle;
+import model.Accounts;
+import model.AccountsDataManager;
 import model.ErrorDataObject;
 import model.SongDataObject;
 import model.YoutubeDownloader;
@@ -81,6 +83,8 @@ public class DownloadPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        YoutubeDownloader.setStopDownloading(false);
+        YoutubeDownloader.setStopAllDownloadingProcesses(false);
         updateErrorListViewWithJavafxThread(false);
         updateDownloadQueueListViewWithJavafxThread(false);
         downloadQueueImageView.setImage(new Image(getClass().getResourceAsStream("/images/MotisHarmonyTriangleBackground.png")));
@@ -99,11 +103,32 @@ public class DownloadPageViewController implements Initializable {
         downloadErrorList.getStylesheets().add("/css/customListView.css");
         videoInfoList.getStylesheets().add("/css/customScrollBar.css");
         videoInfoList.getStylesheets().add("/css/customListView.css");
+        if (Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue() && !Accounts.getLoggedInAccount().getSongsInQueueList().isEmpty()) {
+            YoutubeDownloader.getYoutubeUrlDownloadQueueList().addAll(Accounts.getLoggedInAccount().getSongsInQueueList());
+            updateDownloadQueueListViewWithJavafxThread(true);
+            new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.
+                    new Runnable() {
+                public void run() {
+                    try {
+                        YoutubeDownloader.downloadSongsFromDownloadQueue();
+                    } catch (IOException ex) {
+                        Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (EncoderException ex) {
+                        Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }).start();
+        }
 
         YoutubeDownloader.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<SongDataObject>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
                 updateDownloadQueueListViewWithJavafxThread(true);
+                try {
+                    AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYoutubeUrlDownloadQueueList());
+                } catch (Exception ex) {
+                    Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 System.out.println("listener ran");
             }
         });
@@ -114,6 +139,7 @@ public class DownloadPageViewController implements Initializable {
                 System.out.println("listener ran");
             }
         });
+
     }
 
     @FXML

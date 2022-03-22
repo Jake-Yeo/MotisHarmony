@@ -33,6 +33,7 @@ public class Accounts implements Serializable {//This class will store account u
     private static SceneChanger sceneSwitcher = new SceneChanger();
     private static Accounts loggedInAccount;
     private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
+    private ArrayList<SongDataObject> songsInQueueList = new ArrayList<>();
     private ArrayList<UrlDataObject> urlDataObjectList = new ArrayList<>();
     private String username;
     private String password;
@@ -49,6 +50,10 @@ public class Accounts implements Serializable {//This class will store account u
             Logger.getLogger(Accounts.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.key = aes.getSecretKey();
+    }
+
+    public ArrayList<SongDataObject> getSongsInQueueList() {
+        return songsInQueueList;
     }
 
     public void setUsername(String username) {

@@ -21,14 +21,17 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -46,6 +49,7 @@ public class YoutubeDownloader {
     private static boolean isChromeDriverActive = false;
     private static boolean removeFirstLink = true;
     private static boolean stopDownloading = false;
+    private static boolean stopAllDownloadingProcesses = false;
     private static boolean isPlaylistUrlGetterCurrentlyGettingUrls = false;
     private static final String YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER = "Age-restricted";
     private static final String YOUTUBE_AUDIO_SOURCE_AD_IDENTIFIER = "ctier";//Ad audio links are the only links that contain cteir in them
@@ -69,6 +73,14 @@ public class YoutubeDownloader {
 
     private static void quitChromeDriver() {
         driver.quit();
+    }
+
+    public static boolean getStopAllDownloadingProcesses() {
+        return stopAllDownloadingProcesses;
+    }
+
+    public static void setStopAllDownloadingProcesses(boolean tf) {
+        stopAllDownloadingProcesses = tf;
     }
 
     private static void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
@@ -285,17 +297,17 @@ public class YoutubeDownloader {
             } catch (Exception ex) {
                 Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
             }
-                  
+
         } else {
             errorList.add(youtubeSongData.getVideoUrl() + " could not be downloaded at this time, please try again later or find an alternative link");
             System.err.print("Failed to download this song");
         }
     }
 
-    private static void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
+    public static void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
         setIsChromeDriverActive(true); // this will make sure that the chrome driver isn't restarted multiple times in order to increase download speed.
         setupChromeDriver();
-        while (!youtubeUrlDownloadQueueList.isEmpty()) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
+        while (!youtubeUrlDownloadQueueList.isEmpty() && !stopAllDownloadingProcesses) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(true);
             ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrlDownloadQueueList.get(0).getVideoUrl());
             if (!errorData.didErrorOccur()) {//The youtube urls in the playlists are not checked, so we must check those here.
@@ -304,7 +316,9 @@ public class YoutubeDownloader {
                 errorList.add(errorData.getErrorMessage());
             }
             if (removeFirstLink) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
-                youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
+                if (youtubeUrlDownloadQueueList.size() != 0) {
+                    youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
+                }
             }
             removeFirstLink = true;
             //downloadPageViewController.updateDownloadQueueListViewWithJavafxThread(true);

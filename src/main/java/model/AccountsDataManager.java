@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
@@ -98,6 +99,15 @@ public class AccountsDataManager implements Serializable {//This class will be u
             accSo.setPrefVolume(MusicPlayerManager.getSliderVolume());
             Accounts.getLoggedInAccount().serializeAccount();
             System.out.println("Setting saved");
+        }
+    }
+
+    public static void updateSongsInQueueList(ObservableList<SongDataObject> songsToUpdateWith) throws Exception {
+        if (Accounts.getLoggedInAccount() != null) {
+            Accounts.getLoggedInAccount().getSongsInQueueList().clear();
+            Accounts.getLoggedInAccount().getSongsInQueueList().addAll(songsToUpdateWith);
+            System.out.println("Current download queue saved!");
+            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
@@ -189,15 +199,17 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void songDataObjectToAddToAccount(SongDataObject songDataObject) throws Exception {
-        if (Accounts.getLoggedInAccount().getListOfSongDataObjects().size() == 0) {
-            songDataObject.setOrderAdded(0);
-        } else {
-            songDataObject.setOrderAdded(Accounts.getLoggedInAccount().getListOfSongDataObjects().get(Accounts.getLoggedInAccount().getListOfSongDataObjects().size() - 1).getOrderAdded() + 1);
+        if (Accounts.getLoggedInAccount() != null) {
+            if (Accounts.getLoggedInAccount().getListOfSongDataObjects().size() == 0) {
+                songDataObject.setOrderAdded(0);
+            } else {
+                songDataObject.setOrderAdded(Accounts.getLoggedInAccount().getListOfSongDataObjects().get(Accounts.getLoggedInAccount().getListOfSongDataObjects().size() - 1).getOrderAdded() + 1);
+            }
+            Accounts.getLoggedInAccount().addSongDataObjectToAccount(songDataObject);
+            Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", songDataObject);
+            Accounts.getLoggedInAccount().serializeAccount();
+            saveThumbnail(songDataObject.getThumbnailUrl(), songDataObject.getPathToThumbnail());
         }
-        Accounts.getLoggedInAccount().addSongDataObjectToAccount(songDataObject);
-        Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", songDataObject);
-        Accounts.getLoggedInAccount().serializeAccount();
-        saveThumbnail(songDataObject.getThumbnailUrl(), songDataObject.getPathToThumbnail());
     }
 
     private static void saveThumbnail(String thumbnailUrl, String pathToDownloadTo) throws IOException {

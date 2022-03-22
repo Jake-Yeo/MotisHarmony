@@ -12,7 +12,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import model.Accounts;
 import model.AccountsDataManager;
+import model.YoutubeDownloader;
 import view.MainViewRunner;
 
 /**
@@ -21,7 +23,7 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class SettingsPageViewController implements Initializable {
-    
+
     @FXML
     private AnchorPane settingsViewMainAnchorPane;
     @FXML
@@ -34,12 +36,16 @@ public class SettingsPageViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
-    
+
     @FXML
     private void logout(ActionEvent event) throws Exception {
         AccountsDataManager adm = new AccountsDataManager();
         adm.setPathOfAccToAutoLogIn(null);
+        YoutubeDownloader.setStopDownloading(true);
+        YoutubeDownloader.setStopAllDownloadingProcesses(true);
+        Accounts.setLoggedInAccount(null);
+        YoutubeDownloader.getYoutubeUrlDownloadQueueList().clear();
         MainViewRunner.getSceneChanger().switchToLoginPageView();
     }
-    
+
 }
