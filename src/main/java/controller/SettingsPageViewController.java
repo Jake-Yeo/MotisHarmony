@@ -27,7 +27,7 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class SettingsPageViewController implements Initializable {
-    
+
     @FXML
     private AnchorPane settingsViewMainAnchorPane;
     @FXML
@@ -36,6 +36,8 @@ public class SettingsPageViewController implements Initializable {
     private RadioButton saveDownloadQueueRadioButton;
     @FXML
     private RadioButton saveSongPositionRadioButton;
+    @FXML
+    private RadioButton savePlayPreference;
 
     /**
      * Initializes the controller class.
@@ -45,8 +47,9 @@ public class SettingsPageViewController implements Initializable {
         // TODO
         saveDownloadQueueRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue());
         saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
+        savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
     }
-    
+
     @FXML
     private void logout(ActionEvent event) throws Exception {
         AccountsDataManager adm = new AccountsDataManager();
@@ -57,7 +60,7 @@ public class SettingsPageViewController implements Initializable {
         YoutubeDownloader.getYoutubeUrlDownloadQueueList().clear();
         MainViewRunner.getSceneChanger().switchToLoginPageView();
     }
-    
+
     @FXML
     private void updateSaveDownloadQueue(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveDownloadQueue(saveDownloadQueueRadioButton.isSelected());
@@ -67,7 +70,7 @@ public class SettingsPageViewController implements Initializable {
             Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void updateSaveSongPosition(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveSongPosition(saveSongPositionRadioButton.isSelected());
@@ -78,5 +81,16 @@ public class SettingsPageViewController implements Initializable {
             Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    @FXML
+    private void updateSavePlayPreference(ActionEvent event) throws Exception {
+        AccountsDataManager.setSavePlayPreference(savePlayPreference.isSelected());
+        try {
+            AccountsDataManager.setPlaySongInLoop(MusicPlayerManager.getPlaySongInLoop());
+            AccountsDataManager.setPlayType(MusicPlayerManager.getPlayType());
+        } catch (Exception ex) {
+            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

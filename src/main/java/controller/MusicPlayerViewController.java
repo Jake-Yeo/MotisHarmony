@@ -289,6 +289,20 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 });
             }
         });
+
+        if (Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference()) {
+
+            if (Accounts.getLoggedInAccount().getSettingsObject().getPlayType().equals("Random Play")) {
+                MusicPlayerManager.setPlayType("Random Play");
+                shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
+                shuffleButton.setTextFill(Paint.valueOf("#d07ccc"));
+            } else if (Accounts.getLoggedInAccount().getSettingsObject().getPlayType().equals("Ordered Play")) {
+                MusicPlayerManager.setPlayType("Ordered Play");
+                shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
+                shuffleButton.setTextFill(Paint.valueOf("#f04444"));
+            }
+            MusicPlayerManager.setPlaySongInLoop(Accounts.getLoggedInAccount().getSettingsObject().getPlaySongInLoop());
+        }
     }
 
     @FXML
@@ -304,6 +318,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
             shuffleButton.setTextFill(Paint.valueOf("#f04444"));
         }
+        if (Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference()) {
+            try {
+                AccountsDataManager.setPlayType(MusicPlayerManager.getPlayType());
+            } catch (Exception ex) {
+                Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
     }
 
     @FXML
@@ -313,6 +335,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             MusicPlayerManager.setPlaySongInLoop(false);
         } else {
             MusicPlayerManager.setPlaySongInLoop(true);
+        }
+        if (Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference()) {
+            try {
+                AccountsDataManager.setPlaySongInLoop(MusicPlayerManager.getPlaySongInLoop());
+            } catch (Exception ex) {
+                Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }
 

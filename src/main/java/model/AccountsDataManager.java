@@ -129,6 +129,21 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
 
+    public static void setPlayType(String playType) throws Exception {
+        Accounts.getLoggedInAccount().getSettingsObject().setPlayType(playType);
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
+
+    public static void setPlaySongInLoop(boolean tf) throws Exception {
+        Accounts.getLoggedInAccount().getSettingsObject().setPlaySongInLoop(tf);
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
+    
+    public static void setSavePlayPreference(boolean tf) throws Exception {
+        Accounts.getLoggedInAccount().getSettingsObject().setSavePlayPreference(tf);
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
+
     public static void setLastPlaylistPlayed(String nameOfLastPlaylistPlayed) throws Exception {
         if (nameOfLastPlaylistPlayed != null) {
             Accounts.getLoggedInAccount().getSettingsObject().setLastPlaylistPlayed(nameOfLastPlaylistPlayed);

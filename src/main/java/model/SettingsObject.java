@@ -17,13 +17,40 @@ public class SettingsObject implements Serializable {
     private double prefVolume = 1;
     private String songListSortPreference = "A-Z";
     private String playlistListSortPreference = "A-Z";
+    private String playType = "Ordered Play";
+    private boolean playSongInLoop = false;
     private boolean saveDownloadQueue = true;
+    private boolean savePlayPreference = false;
     private boolean saveSongPosition = true;
     private String lastPlaylistPlayed = null;
     private SongDataObject lastSongPlayed = null;
 
     public SettingsObject() {
         System.out.println("playlistListSortPreference = " + playlistListSortPreference);
+    }
+
+    public boolean getSavePlayPreference() {
+        return this.savePlayPreference;
+    }
+
+    public void setSavePlayPreference(boolean savePlayPreference) {
+        this.savePlayPreference = savePlayPreference;
+    }
+
+    public String getPlayType() {
+        return this.playType;
+    }
+
+    public void setPlayType(String playType) {
+        this.playType = playType;
+    }
+
+    public boolean getPlaySongInLoop() {
+        return this.playSongInLoop;
+    }
+
+    public void setPlaySongInLoop(boolean tf) {
+        this.playSongInLoop = tf;
     }
 
     public double getPrefVolume() {
