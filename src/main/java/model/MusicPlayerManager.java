@@ -41,6 +41,15 @@ public class MusicPlayerManager {
     private static String currentPlaylistPlayling;
     private static double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
 
+    public static void setSongObjectBeingPlayed(SongDataObject sdo) throws Exception {
+        songObjectBeingPlayed = sdo;
+        AccountsDataManager.setLastSongPlayed(sdo);
+    }
+
+    public static SongDataObject getSongObjectBeingPlayed() {
+        return songObjectBeingPlayed;
+    }
+
     public static boolean getPlaySongInLoop() {
         return playSongInLoop;
     }
@@ -85,7 +94,7 @@ public class MusicPlayerManager {
         return sdoGotten;
     }
 
-    public static void playThisPlaylist(String playlistName) {
+    public static void playThisPlaylist(String playlistName) throws Exception {
         //This will set which songs from which playlist to play next after the song which is currently playing has finsihed
         if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistName)) {
             return;
@@ -96,8 +105,11 @@ public class MusicPlayerManager {
         MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
     }
 
-    public static void setCurrentPlaylistPlayling(String playlistName) {
-        currentPlaylistPlayling = playlistName;
+    public static void setCurrentPlaylistPlayling(String playlistName) throws Exception {
+        if (playlistName != null) {
+            currentPlaylistPlayling = playlistName;
+            AccountsDataManager.setLastPlaylistPlayed(playlistName);
+        }
     }
 
     public static String getCurrentPlaylistPlayling() {
@@ -128,6 +140,8 @@ public class MusicPlayerManager {
                         randomPlay();
                     } catch (IOException ex) {
                         Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
             } else if (playType.equals("Ordered Play")) {
@@ -135,6 +149,8 @@ public class MusicPlayerManager {
                     try {
                         orderedPlay();
                     } catch (IOException ex) {
+                        Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
                         Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
@@ -146,7 +162,7 @@ public class MusicPlayerManager {
         }
     }
 
-    public static void smartPlay() throws IOException {
+    public static void smartPlay() throws IOException, Exception {
         if (!musicPlayerInitalized) {
             if (playType.equals("Random Play")) {
                 randomPlay();
@@ -166,7 +182,7 @@ public class MusicPlayerManager {
     }
 
     public static void loopPlay() {
-        File file = new File(songObjectBeingPlayed.getPathToWavFile());
+        File file = new File(getSongObjectBeingPlayed().getPathToWavFile());
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         mediaPlayer = new MediaPlayer(media);
@@ -175,15 +191,15 @@ public class MusicPlayerManager {
         System.out.println("finished playling");
     }
 
-    public static void randomPlay() throws IOException {
+    public static void randomPlay() throws IOException, Exception {
         ObservableList<SongDataObject> songDataObjects = playlistSongsPlaying;
         //String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
         //System.out.println(Arrays.toString(musicPaths));
         Random randomNumGen = new Random();
         System.out.println(songDataObjects.size());
         int indexOfNextSongToPlay = randomNumGen.nextInt(songDataObjects.size());
-        songObjectBeingPlayed = songDataObjects.get(indexOfNextSongToPlay);
-        songHistory.add(songObjectBeingPlayed);
+        setSongObjectBeingPlayed(songDataObjects.get(indexOfNextSongToPlay));
+        songHistory.add(getSongObjectBeingPlayed());
         posInSongHistory = songHistory.size() - 1;
         File file = new File(songDataObjects.get(indexOfNextSongToPlay).getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
@@ -198,8 +214,12 @@ public class MusicPlayerManager {
     public static void setIndexForOrderedPlay(int index) {
         indexForOrderedPlay = index;
     }
+    
+    public static int getIndexForOrderedPlay() {
+        return indexForOrderedPlay;
+    }
 
-    public static void orderedPlay() throws IOException {
+    public static void orderedPlay() throws IOException, Exception {
         songHistory.clear();
         if (indexForOrderedPlay > playlistSongsPlaying.size() - 1) {
             indexForOrderedPlay = 0;
@@ -208,7 +228,7 @@ public class MusicPlayerManager {
             indexForOrderedPlay = playlistSongsPlaying.size() - 1;
         }
         ObservableList<SongDataObject> songDataObjects = playlistSongsPlaying;
-        songObjectBeingPlayed = songDataObjects.get(indexForOrderedPlay);
+        setSongObjectBeingPlayed(songDataObjects.get(indexForOrderedPlay));
         File file = new File(songDataObjects.get(indexForOrderedPlay).getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
@@ -220,8 +240,8 @@ public class MusicPlayerManager {
         //playMusic();
     }
 
-    public static void playSong(SongDataObject songToPlay) {
-        songObjectBeingPlayed = songToPlay;
+    public static void playSong(SongDataObject songToPlay) throws Exception {
+        setSongObjectBeingPlayed(songToPlay);
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
@@ -230,17 +250,12 @@ public class MusicPlayerManager {
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setOnEndOfMedia(() -> {
-            try {
-                randomPlay();
-            } catch (IOException ex) {
-                Logger.getLogger(MusicPlayerManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+        updatePlayTypeAtEndOfMedia();
+        setMusicPlayerInitialized(true);
         mediaPlayer.play();
     }
 
-    public static void nextOrPrevSong() throws IOException {
+    public static void nextOrPrevSong() throws IOException, Exception {
         mediaPlayer.stop();
         mediaPlayer.dispose();
         smartPlay();
@@ -410,10 +425,6 @@ public class MusicPlayerManager {
 
     public static double getVolume() {
         return sliderVolume;
-    }
-
-    public static SongDataObject getSongObjectBeingPlayed() {
-        return songObjectBeingPlayed;
     }
 
     public static boolean isSongPaused() {

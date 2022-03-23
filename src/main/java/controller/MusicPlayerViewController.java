@@ -167,9 +167,45 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         comboBox.setVisibleRowCount(16);
         comboBox.setMaxWidth(200);
         comboBox.getStylesheets().add("/css/comboBox.css");
-        MusicPlayerManager.setCurrentPlaylistPlayling("All Songs");
-        playlistList.getSelectionModel().select("All Songs");
-        MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
+        //This if statment will only set up the MusicPlayer for if the user wanted their song position saved if and only if the user enabled this option, and if both the last playlist and song played are not null
+        if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition() && Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed() != null && Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed() != null) {
+            if (!MusicPlayerManager.isMusicPlayerInitialized()) {
+                try {
+                    //Code below ensure that the user is playing the last playlist they played
+                    MusicPlayerManager.setCurrentPlaylistPlayling(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed());
+                    MusicPlayerManager.playThisPlaylist(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed());
+                    MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed()));
+                    MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
+                    MusicPlayerManager.sortCurrentSongList(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference(), MusicPlayerManager.getPlaylistSongsPlaying());
+                } catch (Exception ex) {
+                    Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            //Code below ensures that the song which will play when the play button is hit is the song which was last played by the user
+            try {
+                MusicPlayerManager.playSong(Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed());
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //Code below ensure that the user is playing the last playlist they played
+            playlistList.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed());
+            MusicPlayerManager.pauseSong();
+            playButton.setStyle("-fx-padding:  0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setText("▶");
+            init();
+            updateInfoDisplays();
+        } else {
+            //If the user does not want to save their song posititon, then the program will just set the playlist to default
+            try {
+                AccountsDataManager.setLastPlaylistPlayed("All Songs");
+                MusicPlayerManager.setCurrentPlaylistPlayling("All Songs");
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            playlistList.getSelectionModel().select("All Songs");
+        }
+        MusicPlayerManager.updateSongList(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed()));//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
 
         updateViewCurrentSongList();//Since we change the model but do not have a change listener we must manually change the view during initialization
         MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();//Since we change the model but do not have a change listener we must manually sync the model during initialization
@@ -188,6 +224,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         playButton.textOverrunProperty().set(OverrunStyle.CLIP);
+        //Here we add the options for the types of sort available to the user for the currentSongList
         sortChoiceBox.getItems().add("A-Z");
         sortChoiceBox.getItems().add("Z-A");
         sortChoiceBox.getItems().add("A-Z By Artist");
@@ -195,6 +232,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         sortChoiceBox.getItems().add("Oldest Added");
         sortChoiceBox.getItems().add("Newest Added");
         sortChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            //This will sort the currentSongList when the sort context menu value is changed
             try {
                 if (newValue != null) {
                     sortModelCurrentSongList(newValue);
@@ -209,8 +247,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
         System.out.println("SongList sort " + Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
+        //Here we automatically sort the currentSongList based on the users preference
         sortChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
 
+        //We add the types of sorts available to the user for the playlist
         sortPlaylistChoiceBox.getItems().add("A-Z");
         sortPlaylistChoiceBox.getItems().add("Z-A");
         sortPlaylistChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -232,10 +272,28 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         System.out.println("PlaylistList sort" + Accounts.getLoggedInAccount().getSettingsObject().getPlaylistListSortPreference());
         sortPlaylistChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getPlaylistListSortPreference());
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
+
+        //The listener below will update the currentSongList whenever a song is completed downloading. This will allow the music player to automatically add songs to its model which it can then play
+        YoutubeDownloader.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<SongDataObject>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            updateModelCurrentSongList();
+                        } catch (Exception ex) {
+                            Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @FXML
     private void shuffleButtonOnAction() {
+        //The code below immitates what spotify does when a shuffle button is pressed
         if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
             MusicPlayerManager.getSongHistory().clear();//Just in case
             MusicPlayerManager.setPlayType("Random Play");
@@ -250,6 +308,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @FXML
     private void loopButtonOnAction() {
+        //The code below immitates what spotify does when a loop button button is pressed
         if (MusicPlayerManager.getPlaySongInLoop()) {
             MusicPlayerManager.setPlaySongInLoop(false);
         } else {
@@ -350,12 +409,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @FXML
     private void createNewPlaylist(ActionEvent event) throws Exception {
+        //Code to create a new playlist
         AccountsDataManager.createPlaylist(playlistNameTextField.getText());
         updatePlaylistList();
         playlistNameTextField.clear();
     }
 
-    private void onFirstMusicPlayerPlay() throws IOException {
+    private void onFirstMusicPlayerPlay() throws IOException, Exception {
+        //This code below initalizes the MusicPlayer
         MusicPlayerManager.smartPlay();
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
@@ -366,7 +427,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     @FXML
-    private void playMusic(ActionEvent event) throws IOException {
+    private void playMusic(ActionEvent event) throws IOException, Exception {
+        //The code below immitates what spotify does when a playbutton is pushed
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
             onFirstMusicPlayerPlay();
         } else if (!MusicPlayerManager.isSongPaused()) {
@@ -390,7 +452,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     @FXML
-    private void previousSong() throws IOException {
+    private void previousSong() throws IOException, Exception {
+        //The code below immitates what spotify does when a previous song button is pressed
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
             //This line basically initializes the MusicPlayer so that it is not null and can be used
             onFirstMusicPlayerPlay();
@@ -427,17 +490,24 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     @FXML
-    private void nextSong(ActionEvent event) throws IOException {
+    private void nextSong(ActionEvent event) throws IOException, Exception {
+        //The code below immitates what spotify does when a next song button is pressed
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
             //This line basically initializes the MusicPlayer so that it is not null and can be used
             onFirstMusicPlayerPlay();
         }
+        goToNextSong();
+
+    }
+
+    private void goToNextSong() throws Exception {
         if (!MusicPlayerManager.getPlaySongInLoop()) {
             if (MusicPlayerManager.getPlayType().equals("Ordered Play")) {
                 //This will clear the songHistory(), remember it is only used to keep track of songs when shuffling
                 MusicPlayerManager.getSongHistory().clear();
                 //The code below will let the MusicPlayerManager know to play the next song
                 MusicPlayerManager.setIndexForOrderedPlay(MusicPlayerManager.getPlaylistSongsPlaying().indexOf(MusicPlayerManager.getSongObjectBeingPlayed()) + 1);
+
                 MusicPlayerManager.nextOrPrevSong();
                 //This code will set up the play button and audio info displays
                 setUpPlayButton();
@@ -464,10 +534,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             init();//initalize again because a new MediaPlayer is made
             updateInfoDisplays();
         }
-
     }
 
     private void updateInfoDisplays() {
+        //This code will update the UI with data of the current song playing
         songInfoViewList.getItems().clear();
         songInfoText.setText("Song name: " + MusicPlayerManager.getSongObjectBeingPlayed().getTitle() + "Song creator: " + MusicPlayerManager.getSongObjectBeingPlayed().getChannelName());
         songInfoViewList.getItems().add("Song name: " + MusicPlayerManager.getSongObjectBeingPlayed().getTitle());
@@ -477,6 +547,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     private String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
+        //This will get the current position of the song along with its total time EXx: 1:43/5:00
         boolean getTotalSecondsInHourFormat = false;
         String totalTime = getCurrentTimeString(totalSeconds, false);
         if (totalTime.length() > 5) {
@@ -523,6 +594,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                     updateInfoDisplays();
                 } catch (IOException ex) {
                     Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -562,7 +635,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     }
 
-    public void contextMenuPlaySongOption() {
+    public void contextMenuPlaySongOption() throws Exception {
         if (!MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
             MusicPlayerManager.getSongHistory().clear();
         }
@@ -603,10 +676,19 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         updateModelCurrentSongList();
     }
 
-    public void playPlaylistOption() throws IOException {
+    public void playPlaylistOption() throws IOException, Exception {
         if (MusicPlayerManager.isMusicPlayerInitialized()) {
+            MusicPlayerManager.setIndexForOrderedPlay(0);
             MusicPlayerManager.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+            MusicPlayerManager.nextOrPrevSong();
+            init();//initalize again because a new MediaPlayer is made
+            updateInfoDisplays();
+            MusicPlayerManager.setMusicPlayerInitialized(true);
+            MusicPlayerManager.setPaused(false);
+            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setText("⏸︎");
         } else {
+            MusicPlayerManager.setIndexForOrderedPlay(0);
             MusicPlayerManager.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
             onFirstMusicPlayerPlay();
         }
@@ -618,6 +700,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void editSongDataOption() throws IOException {
+        //This creates a dialog popup to allow the user to edit the data of a SongDataObject
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/SongDialogEditor.fxml"));
         DialogPane songDialogEditor = fxmlLoader.load();
@@ -640,6 +723,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void editPlaylistNameOption() throws IOException, Exception {
+        //This creates a dialog popup to allow the user to edit the name of a playlist
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/PlaylistDialogEditor.fxml"));
         DialogPane playlistDialogEditor = fxmlLoader.load();
@@ -654,6 +738,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             pdeController.updatePlaylistName(playlistSong);
+            //We update the playlistList so that the new name of the playlist shows up
             updatePlaylistList();
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             return;
@@ -676,7 +761,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
         MenuItem playSong = new MenuItem("Play Song");
-        playSong.setOnAction(e -> contextMenuPlaySongOption());
+        playSong.setOnAction(e -> {
+            try {
+                contextMenuPlaySongOption();
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         MenuItem addToPlaylist = new MenuItem("Add To Playlist");
         addToPlaylist.setOnAction(e -> contextMenuAddToPlaylistOption());
         MenuItem deleteFromPlaylist = new MenuItem("Delete From Playlist");
@@ -723,6 +814,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             try {
                 playPlaylistOption();
             } catch (IOException ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });

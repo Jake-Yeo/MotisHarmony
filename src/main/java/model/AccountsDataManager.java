@@ -116,6 +116,27 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
 
+    public static void setSaveSongPosition(boolean tf) throws Exception {
+        Accounts.getLoggedInAccount().getSettingsObject().setSaveSongPosition(tf);
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
+
+    public static void setLastSongPlayed(SongDataObject lastSdoPlayed) throws Exception {
+        if (lastSdoPlayed != null) {
+            Accounts.getLoggedInAccount().getSettingsObject().setLastSongPlayed(lastSdoPlayed);
+            System.out.println("Last song saved: " + lastSdoPlayed.getTitle());
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
+    }
+
+    public static void setLastPlaylistPlayed(String nameOfLastPlaylistPlayed) throws Exception {
+        if (nameOfLastPlaylistPlayed != null) {
+            Accounts.getLoggedInAccount().getSettingsObject().setLastPlaylistPlayed(nameOfLastPlaylistPlayed);
+            System.out.println("Last playlist played: " + nameOfLastPlaylistPlayed);
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
+    }
+
     public static void updateCurrentPlaylistListSortType(String sortType) throws Exception {
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();

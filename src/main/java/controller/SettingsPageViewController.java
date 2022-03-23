@@ -17,6 +17,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.layout.AnchorPane;
 import model.Accounts;
 import model.AccountsDataManager;
+import model.MusicPlayerManager;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
 
@@ -26,13 +27,15 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class SettingsPageViewController implements Initializable {
-
+    
     @FXML
     private AnchorPane settingsViewMainAnchorPane;
     @FXML
     private Button logoutButton;
     @FXML
     private RadioButton saveDownloadQueueRadioButton;
+    @FXML
+    private RadioButton saveSongPositionRadioButton;
 
     /**
      * Initializes the controller class.
@@ -41,8 +44,9 @@ public class SettingsPageViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         saveDownloadQueueRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue());
+        saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
     }
-
+    
     @FXML
     private void logout(ActionEvent event) throws Exception {
         AccountsDataManager adm = new AccountsDataManager();
@@ -53,7 +57,7 @@ public class SettingsPageViewController implements Initializable {
         YoutubeDownloader.getYoutubeUrlDownloadQueueList().clear();
         MainViewRunner.getSceneChanger().switchToLoginPageView();
     }
-
+    
     @FXML
     private void updateSaveDownloadQueue(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveDownloadQueue(saveDownloadQueueRadioButton.isSelected());
@@ -63,5 +67,16 @@ public class SettingsPageViewController implements Initializable {
             Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    @FXML
+    private void updateSaveSongPosition(ActionEvent event) throws Exception {
+        AccountsDataManager.setSaveSongPosition(saveSongPositionRadioButton.isSelected());
+        try {
+            AccountsDataManager.setLastPlaylistPlayed(MusicPlayerManager.getCurrentPlaylistPlayling());
+            AccountsDataManager.setLastSongPlayed(MusicPlayerManager.getSongObjectBeingPlayed());
+        } catch (Exception ex) {
+            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 }

@@ -19,5 +19,6 @@
       </AnchorPane>
       <Button fx:id="logoutButton" layoutX="71.0" layoutY="107.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
       <RadioButton fx:id="saveDownloadQueueRadioButton" layoutX="562.0" layoutY="472.0" mnemonicParsing="false" onAction="#updateSaveDownloadQueue" text="Save Download Queue" />
+      <RadioButton fx:id="saveSongPositionRadioButton" layoutX="562.0" layoutY="432.0" mnemonicParsing="false" onAction="#updateSaveSongPosition" text="Save Song Position" />
    </children>
 </AnchorPane>

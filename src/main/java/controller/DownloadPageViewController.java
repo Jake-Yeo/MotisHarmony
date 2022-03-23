@@ -124,10 +124,12 @@ public class DownloadPageViewController implements Initializable {
             @Override
             public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
                 updateDownloadQueueListViewWithJavafxThread(true);
-                try {
-                    AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYoutubeUrlDownloadQueueList());
-                } catch (Exception ex) {
-                    Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                if (Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue()) {
+                    try {
+                        AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYoutubeUrlDownloadQueueList());
+                    } catch (Exception ex) {
+                        Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 System.out.println("listener ran");
             }
