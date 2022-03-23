@@ -43,7 +43,9 @@ public class MusicPlayerManager {
 
     public static void setSongObjectBeingPlayed(SongDataObject sdo) throws Exception {
         songObjectBeingPlayed = sdo;
-        AccountsDataManager.setLastSongPlayed(sdo);
+        if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition()) {
+            AccountsDataManager.setLastSongPlayed(sdo);
+        }
     }
 
     public static SongDataObject getSongObjectBeingPlayed() {
@@ -108,7 +110,9 @@ public class MusicPlayerManager {
     public static void setCurrentPlaylistPlayling(String playlistName) throws Exception {
         if (playlistName != null) {
             currentPlaylistPlayling = playlistName;
-            AccountsDataManager.setLastPlaylistPlayed(playlistName);
+            if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition()) {
+                AccountsDataManager.setLastPlaylistPlayed(playlistName);
+            }
         }
     }
 
@@ -214,7 +218,7 @@ public class MusicPlayerManager {
     public static void setIndexForOrderedPlay(int index) {
         indexForOrderedPlay = index;
     }
-    
+
     public static int getIndexForOrderedPlay() {
         return indexForOrderedPlay;
     }
