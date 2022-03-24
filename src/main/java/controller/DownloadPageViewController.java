@@ -5,6 +5,7 @@
  */
 package controller;
 
+import java.awt.MouseInfo;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -20,10 +21,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.shape.Rectangle;
@@ -42,6 +47,7 @@ import ws.schild.jave.EncoderException;
  */
 public class DownloadPageViewController implements Initializable {
 
+    private ContextMenu downloadManagerContextMenu = new ContextMenu();
     private String youtubeUrlToGetInfoFrom = "";
     private Image thumbnailImage;
     private static boolean firstLinkFromDownloadQueueIsDownloading = false;
@@ -73,8 +79,27 @@ public class DownloadPageViewController implements Initializable {
     @FXML
     private AnchorPane thumbnailAnchorPane;
 
-    public DownloadPageViewController() {
+    private void retryDownloadOption() {
+        new Thread(
+                new Runnable() {
+            public void run() {
+                try {
+                    YoutubeDownloader.downloadSongsFromDownloadQueue();
+                } catch (IOException ex) {
+                    Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (EncoderException ex) {
+                    Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }).start();
+    }
 
+    public void initContextMenus() {
+        MenuItem sortPlaylist = new MenuItem("Retry Download");
+        sortPlaylist.setOnAction(e -> {
+            retryDownloadOption();
+        });
+        downloadManagerContextMenu.getItems().add(sortPlaylist);
     }
 
     /**
@@ -141,7 +166,7 @@ public class DownloadPageViewController implements Initializable {
                 System.out.println("listener ran");
             }
         });
-
+        initContextMenus();
     }
 
     @FXML
@@ -256,7 +281,11 @@ public class DownloadPageViewController implements Initializable {
                 @Override
                 public void run() {
                     downloadErrorList.getItems().clear();
-                    downloadErrorList.getItems().addAll(YoutubeDownloader.getErrorList());
+                    try {
+                        downloadErrorList.getItems().addAll(YoutubeDownloader.getErrorList());
+                    } catch (java.util.ConcurrentModificationException e) {
+                        System.out.println("Stop modifying the view so fast");
+                    }
                 }
             });
         } else {
@@ -317,51 +346,58 @@ public class DownloadPageViewController implements Initializable {
     }
 
     @FXML
-    private void displaySelectedVideoInfo() {
-        if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {//Dont run the code if the user does not select anything.
-            if (!youtubeUrlToGetInfoFrom.equals(listViewDownloadManager.getSelectionModel().getSelectedItem())) { //Dont run the code if the user is trying to load the same info for the same url
-                videoInfoList.getItems().clear();
-                int urlDataObjectIndexToGet = listViewDownloadManager.getSelectionModel().getSelectedIndex();//Must get the selected item url first for the if statement below to work
-                new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.
-                        new Runnable() {
-                    public void run() {
-                        SongDataObject youtubeData = YoutubeDownloader.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
-                        thumbnailImage = new Image(youtubeData.getThumbnailUrl());
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (videoInfoList.getItems().size() != 3) {
-                                    videoInfoList.getItems().add("Music Title: " + youtubeData.getTitle());
-                                    System.out.println(youtubeData.getTitle());
-                                    videoInfoList.getItems().add("Channel Name: " + youtubeData.getChannelName());
-                                    videoInfoList.getItems().add("Music Duration: " + youtubeData.getVideoDuration());
-                                    videoInfoList.getItems().add("Video Url: " + youtubeData.getVideoUrl());
+    private void displaySelectedVideoInfo(MouseEvent e) {
+
+        if (e.getButton() == MouseButton.SECONDARY) {
+            System.out.println("worked");
+            downloadManagerContextMenu.show(listViewDownloadManager, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+        } else {
+            downloadManagerContextMenu.hide();
+            if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {//Dont run the code if the user does not select anything.
+                if (!youtubeUrlToGetInfoFrom.equals(listViewDownloadManager.getSelectionModel().getSelectedItem())) { //Dont run the code if the user is trying to load the same info for the same url
+                    videoInfoList.getItems().clear();
+                    int urlDataObjectIndexToGet = listViewDownloadManager.getSelectionModel().getSelectedIndex();//Must get the selected item url first for the if statement below to work
+                    new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.
+                            new Runnable() {
+                        public void run() {
+                            SongDataObject youtubeData = YoutubeDownloader.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
+                            thumbnailImage = new Image(youtubeData.getThumbnailUrl());
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (videoInfoList.getItems().size() != 3) {
+                                        videoInfoList.getItems().add("Music Title: " + youtubeData.getTitle());
+                                        System.out.println(youtubeData.getTitle());
+                                        videoInfoList.getItems().add("Channel Name: " + youtubeData.getChannelName());
+                                        videoInfoList.getItems().add("Music Duration: " + youtubeData.getVideoDuration());
+                                        videoInfoList.getItems().add("Video Url: " + youtubeData.getVideoUrl());
+                                    }
+                                    double w = 0;
+                                    double h = 0;
+
+                                    double ratioX = thumbnailImageView.getFitWidth() / thumbnailImage.getWidth();
+                                    double ratioY = thumbnailImageView.getFitHeight() / thumbnailImage.getHeight();
+
+                                    double reducCoeff = 0;
+                                    if (ratioX >= ratioY) {
+                                        reducCoeff = ratioY;
+                                    } else {
+                                        reducCoeff = ratioX;
+                                    }
+
+                                    w = thumbnailImage.getWidth() * reducCoeff;
+                                    h = thumbnailImage.getHeight() * reducCoeff;
+
+                                    thumbnailImageView.setX((thumbnailImageView.getFitWidth() - w) / 2);
+                                    thumbnailImageView.setY((thumbnailImageView.getFitHeight() - h) / 2);
+
+                                    thumbnailImageView.setImage(thumbnailImage);
+                                    thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 33px 33px;");
                                 }
-                                double w = 0;
-                                double h = 0;
-
-                                double ratioX = thumbnailImageView.getFitWidth() / thumbnailImage.getWidth();
-                                double ratioY = thumbnailImageView.getFitHeight() / thumbnailImage.getHeight();
-
-                                double reducCoeff = 0;
-                                if (ratioX >= ratioY) {
-                                    reducCoeff = ratioY;
-                                } else {
-                                    reducCoeff = ratioX;
-                                }
-
-                                w = thumbnailImage.getWidth() * reducCoeff;
-                                h = thumbnailImage.getHeight() * reducCoeff;
-
-                                thumbnailImageView.setX((thumbnailImageView.getFitWidth() - w) / 2);
-                                thumbnailImageView.setY((thumbnailImageView.getFitHeight() - h) / 2);
-
-                                thumbnailImageView.setImage(thumbnailImage);
-                                thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 33px 33px;");
-                            }
-                        });
-                    }
-                }).start();
+                            });
+                        }
+                    }).start();
+                }
             }
         }
     }

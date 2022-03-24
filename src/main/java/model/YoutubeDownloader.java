@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +49,7 @@ public class YoutubeDownloader {
     private static WebDriver driver;
     private static boolean isChromeDriverActive = false;
     private static boolean removeFirstLink = true;
+    private static boolean wifiConnected = true;
     private static boolean stopDownloading = false;
     private static boolean stopAllDownloadingProcesses = false;
     private static boolean isPlaylistUrlGetterCurrentlyGettingUrls = false;
@@ -64,15 +66,39 @@ public class YoutubeDownloader {
     private static void setupChromeDriver() {
         //Set the Path of Executable Browser Driver
         //System.setProperty("webdriver.chrome.driver", "chromedriver.exe");//We probably don't need this anymore because we automatically get the webdriver below
-        WebDriverManager.chromedriver().setup();//This will automatically update the chrome webdriver to the proper version
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");//start the chrome browser headless, can be changed if you want
-        options.setCapability(ChromeOptions.CAPABILITY, options);
-        driver = new ChromeDriver(options);
+        try {
+            WebDriverManager.chromedriver().setup();//This will automatically update the chrome webdriver to the proper version
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");//start the chrome browser headless, can be changed if you want
+            options.setCapability(ChromeOptions.CAPABILITY, options);
+            driver = new ChromeDriver(options);
+            try {
+                final URL url = new URL("http://www.google.com");
+                final URLConnection conn = url.openConnection();
+                setWifiConnected(true);
+            } catch (Exception e) {
+                setWifiConnected(false);
+            }
+        } catch (Exception e) {
+            setWifiConnected(false);
+            errorList.add("You aren't connected to wifi!");
+        }
+    }
+
+    public static boolean getWifiConnected() {
+        return wifiConnected;
+    }
+
+    public static void setWifiConnected(boolean tf) {
+        wifiConnected = tf;
     }
 
     private static void quitChromeDriver() {
-        driver.quit();
+        try {
+            driver.quit();
+        } catch (Exception e) {
+            System.err.println("Driver not properly initialized");
+        }
     }
 
     public static boolean getStopAllDownloadingProcesses() {
@@ -165,55 +191,86 @@ public class YoutubeDownloader {
     private static String obtainYoutubeUrlAudioSource(String youtubeUrl) throws MalformedURLException, IOException {//Gets the audio source of a youtube video and returns it
         try {
             driver.get(youtubeUrl);
+            wifiConnected = true;
         } catch (Exception e) {
             quitChromeDriver();//Sometimes youtube may block your connection to their website if you request too much. That's what I think causes this error. So we reset the driver and try again
             setupChromeDriver();
-            driver.get(youtubeUrl);
+            try {
+                driver.get(youtubeUrl);
+                wifiConnected = true;
+            } catch (Exception c) {//If it happens again, it's probably because the user is not conencted to wifi
+                wifiConnected = false;
+            }
         }
-        String scriptToExecute = "var performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}; var network = performance.getEntries() || {}; return network;";
+        if (wifiConnected) {
+            String scriptToExecute = "var performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}; var network = performance.getEntries() || {}; return network;";
+            String netData;
+            try {
+                netData = ((JavascriptExecutor) driver).executeScript(scriptToExecute).toString();//Get network traffic data
+            } catch (Exception e) {
+                setWifiConnected(false);
+                return "No Wifi";
+            }
+            netData = getRidOfAdUrl(netData);//We get rid of adUrls here just incase since there have been cases where ad audio has been downloaded. I don't know if this fixes the problem or not.
+            String audioHtmlSource = "";
+            int repeats = 0;
+            while (!audioHtmlSource.contains("media")) {
+                while (!netData.contains(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)) { //Sometimes url is loaded but the audio source isn't present in the network traffic data, so reload the site and do it until we get the audio source.
+                    System.out.println("Error saved!");
+                    System.out.println(youtubeUrl + "This link didn't have mime=audio!");
+                    if (repeats > 5) {
+                        System.out.println("Error getting this this link " + youtubeUrl);
+                        netData = "error";
+                        break;
 
-        String netData = ((JavascriptExecutor) driver).executeScript(scriptToExecute).toString();//Get network traffic data
-        netData = getRidOfAdUrl(netData);//We get rid of adUrls here just incase since there have been cases where ad audio has been downloaded. I don't know if this fixes the problem or not.
-        String audioHtmlSource = "";
-        int repeats = 0;
-        while (!audioHtmlSource.contains("media")) {
-            while (!netData.contains(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)) { //Sometimes url is loaded but the audio source isn't present in the network traffic data, so reload the site and do it until we get the audio source.
-                System.out.println("Error saved!");
-                System.out.println(youtubeUrl + "This link didn't have mime=audio!");
-                if (repeats > 5) {
-                    System.out.println("Error getting this this link " + youtubeUrl);
-                    netData = "error";
-                    break;
-
+                    }
+                    try {
+                        driver.get(youtubeUrl);
+                        netData = ((JavascriptExecutor) driver).executeScript(scriptToExecute).toString();
+                    } catch (Exception e) {
+                        setWifiConnected(false);
+                        return "No Wifi";
+                    }
+                    netData = getRidOfAdUrl(netData);//We must get rid of the ad urls before checking again if netData contains the YOUTUBE_AUDIO_SOURCE_IDENTIFIER because sometimes only the ad link has YOUTUBE_AUDIO_SOURCE_IDENTIFIER in it.
+                    repeats++;
                 }
-                driver.get(youtubeUrl);
-                netData = ((JavascriptExecutor) driver).executeScript(scriptToExecute).toString();
-                netData = getRidOfAdUrl(netData);//We must get rid of the ad urls before checking again if netData contains the YOUTUBE_AUDIO_SOURCE_IDENTIFIER because sometimes only the ad link has YOUTUBE_AUDIO_SOURCE_IDENTIFIER in it.
-                repeats++;
+                if (netData.equals("error")) {
+                    break;
+                }
+                System.out.println("Netdata stuff: " + netData);
+                if (netData.contains(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER)) {
+                    //PrintWriter pw = new PrintWriter(new FileWriter("html.txt"));
+                    //pw.print(netData);
+                    //pw.close();
+                    System.out.println("Identifier at index " + netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER));//we should probably do what we did above in the while loop which gets rid of ad link!!!!!!
+                    netData = netData.substring(netData.lastIndexOf(YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER, netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)));//This will get rid of everything up to the start of the youtube audio source link
+                    netData = netData.substring(0, netData.indexOf(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER));//We must get rid of the range in order for the source audio url to actually load properly
+                    System.out.println("Pure weba url: " + netData);
+                    try {
+                        driver.get(netData);
+                        audioHtmlSource = driver.getPageSource();//Sometimes an audio link which is parsed may contain another url to the correct source audio url which is why we check the html of the url we obtain. Also, it seems impossible to read the data with htmlGetter, so we use the selenium method instead
+                        System.out.println("Audio html stuff " + audioHtmlSource);
+                        driver.get("data:,");//just prevents sound from playing from chrome driver by switching it to an easy to load website.
+                    } catch (Exception e) {
+                        setWifiConnected(false);
+                        return "No Wifi";
+                    }
+                } else {//This will reload the youtube url and attempt to get netData that had a source url which isn't text
+                    try {
+                        driver.get(youtubeUrl);
+                        netData = ((JavascriptExecutor) driver).executeScript(scriptToExecute).toString();
+                    } catch (Exception e) {
+                        setWifiConnected(false);
+                        return "No Wifi";
+                    }
+                    netData = getRidOfAdUrl(netData);//We must get rid of the ad urls before checking again if netData contains the YOUTUBE_AUDIO_SOURCE_IDENTIFIER because sometimes only the ad link has YOUTUBE_AUDIO_SOURCE_IDENTIFIER in it.
+                }
             }
-            if (netData.equals("error")) {
-                break;
-            }
-            System.out.println("Netdata stuff: " + netData);
-            if (netData.contains(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER)) {
-                //PrintWriter pw = new PrintWriter(new FileWriter("html.txt"));
-                //pw.print(netData);
-                //pw.close();
-                System.out.println("Identifier at index " + netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER));//we should probably do what we did above in the while loop which gets rid of ad link!!!!!!
-                netData = netData.substring(netData.lastIndexOf(YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER, netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)));//This will get rid of everything up to the start of the youtube audio source link
-                netData = netData.substring(0, netData.indexOf(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER));//We must get rid of the range in order for the source audio url to actually load properly
-                System.out.println("Pure weba url: " + netData);
-                driver.get(netData);
-                audioHtmlSource = driver.getPageSource();//Sometimes an audio link which is parsed may contain another url to the correct source audio url which is why we check the html of the url we obtain. Also, it seems impossible to read the data with htmlGetter, so we use the selenium method instead
-                System.out.println("Audio html stuff " + audioHtmlSource);
-                driver.get("data:,");//just prevents sound from playing from chrome driver by switching it to an easy to load website.
-            } else {//This will reload the youtube url and attempt to get netData that had a source url which isn't text
-                driver.get(youtubeUrl);
-                netData = ((JavascriptExecutor) driver).executeScript(scriptToExecute).toString();
-                netData = getRidOfAdUrl(netData);//We must get rid of the ad urls before checking again if netData contains the YOUTUBE_AUDIO_SOURCE_IDENTIFIER because sometimes only the ad link has YOUTUBE_AUDIO_SOURCE_IDENTIFIER in it.
-            }
+            return netData;
+        } else {
+            setWifiConnected(false);
+            return "No Wifi";
         }
-        return netData;
 
     }
 
@@ -262,7 +319,7 @@ public class YoutubeDownloader {
         URL downloadURL = null;
         boolean skipAudioConversion = false;
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeSongData.getVideoUrl());
-        if (!possibleYoutubeUrl.equals("error")) {
+        if (!possibleYoutubeUrl.equals("error") && !possibleYoutubeUrl.equals("No Wifi")) {
             //We add range=0-99999999999999999999 to the url below to bypass throttling which speeds up download times by nearly 95 times!
             possibleYoutubeUrl = possibleYoutubeUrl + "range=0-99999999999999999999";
             downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
@@ -295,19 +352,23 @@ public class YoutubeDownloader {
             try {
                 AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
             } catch (Exception ex) {
-                Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                errorList.add("Download could not be completed as wifi is disconnected");
+                setWifiConnected(false);
             }
 
-        } else {
+        } else if (possibleYoutubeUrl.equals("error")) {
             errorList.add(youtubeSongData.getVideoUrl() + " could not be downloaded at this time, please try again later or find an alternative link");
             System.err.print("Failed to download this song");
+        } else if (possibleYoutubeUrl.equals("No Wifi")) {
+            errorList.add(youtubeSongData.getVideoUrl() + " failed to download because you are not connected to wifi");
+            setWifiConnected(false);
         }
     }
 
     public static void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
         setIsChromeDriverActive(true); // this will make sure that the chrome driver isn't restarted multiple times in order to increase download speed.
         setupChromeDriver();
-        while (!youtubeUrlDownloadQueueList.isEmpty() && !stopAllDownloadingProcesses) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
+        while (!youtubeUrlDownloadQueueList.isEmpty() && !stopAllDownloadingProcesses && wifiConnected) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(true);
             ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrlDownloadQueueList.get(0).getVideoUrl());
             if (!errorData.didErrorOccur()) {//The youtube urls in the playlists are not checked, so we must check those here.
@@ -315,7 +376,7 @@ public class YoutubeDownloader {
             } else {
                 errorList.add(errorData.getErrorMessage());
             }
-            if (removeFirstLink) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
+            if (removeFirstLink && wifiConnected) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
                 if (youtubeUrlDownloadQueueList.size() != 0) {
                     youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
                 }
@@ -323,6 +384,9 @@ public class YoutubeDownloader {
             removeFirstLink = true;
             //downloadPageViewController.updateDownloadQueueListViewWithJavafxThread(true);
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(false);
+        }
+        if (!wifiConnected) {
+            errorList.add("You aren't connected to wifi!");
         }
         YoutubeDownloader.quitChromeDriver();//Finally, when all the youtube videos have been downloaded, exit the download queue
         YoutubeDownloader.setIsChromeDriverActive(false);

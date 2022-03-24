@@ -75,10 +75,15 @@ public class PathsManager {//This class will handle all the folder and txt creat
         AccountsDataManager adm = AccountsDataManager.deserializeAccMan();
         ArrayList<SongDataObject> sdoDataToDeleteFromFiles = adm.getDeletionQueue();
         for (int i = 0; i < sdoDataToDeleteFromFiles.size(); i++) {
-            System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToWavFile());
-            Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToWavFile()));
-            System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToThumbnail());
-            Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToThumbnail()));
+
+            try {
+                System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToWavFile());
+                Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToWavFile()));
+                System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToThumbnail());
+                Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToThumbnail()));
+            } catch (Exception e) {
+                System.err.println("File does not exist");
+            }
         }
         adm.getDeletionQueue().clear();
         adm.serializeAccMan();

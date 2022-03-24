@@ -79,7 +79,7 @@ public class YoutubeVideoPageParser {
         String html = "";
         URL ytLink = new URL(url);
         BufferedReader in = null;
-        in = new BufferedReader(new InputStreamReader(ytLink.openStream(), "UTF-8"));//Foreign characters will be displayed properly
+        in = new BufferedReader(new InputStreamReader(ytLink.openStream(), "UTF-8"));//Non english characters will be displayed properly
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
             html += inputLine;
@@ -103,6 +103,12 @@ public class YoutubeVideoPageParser {
         }
         try {
             html = getHtml(videoUrl);
+            YoutubeDownloader.setWifiConnected(true);
+        } catch (java.net.UnknownHostException e) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " could not be accessed because you are not connected to wifi";
+            YoutubeDownloader.setWifiConnected(false);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
         } catch (Exception e) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is likely not a link!";

@@ -189,6 +189,7 @@ public class MusicPlayerManager {
         File file = new File(getSongObjectBeingPlayed().getPathToWavFile());
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
+        stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
         mediaPlayer.play();
@@ -208,6 +209,7 @@ public class MusicPlayerManager {
         File file = new File(songDataObjects.get(indexOfNextSongToPlay).getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
+        stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
         mediaPlayer.play();
@@ -236,6 +238,7 @@ public class MusicPlayerManager {
         File file = new File(songDataObjects.get(indexForOrderedPlay).getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
+        stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
         indexForOrderedPlay++;
         updatePlayTypeAtEndOfMedia();
@@ -246,22 +249,25 @@ public class MusicPlayerManager {
 
     public static void playSong(SongDataObject songToPlay) throws Exception {
         setSongObjectBeingPlayed(songToPlay);
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.dispose();
-        }
         File file = new File(songToPlay.getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
+        stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
         setMusicPlayerInitialized(true);
         mediaPlayer.play();
     }
 
+    public static void stopDisposeMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        }
+    }
+
     public static void nextOrPrevSong() throws IOException, Exception {
-        mediaPlayer.stop();
-        mediaPlayer.dispose();
+        stopDisposeMediaPlayer();
         smartPlay();
     }
 

@@ -138,7 +138,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         Accounts.getLoggedInAccount().getSettingsObject().setPlaySongInLoop(tf);
         Accounts.getLoggedInAccount().serializeAccount();
     }
-    
+
     public static void setSavePlayPreference(boolean tf) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setSavePlayPreference(tf);
         Accounts.getLoggedInAccount().serializeAccount();
@@ -246,10 +246,15 @@ public class AccountsDataManager implements Serializable {//This class will be u
             } else {
                 songDataObject.setOrderAdded(Accounts.getLoggedInAccount().getListOfSongDataObjects().get(Accounts.getLoggedInAccount().getListOfSongDataObjects().size() - 1).getOrderAdded() + 1);
             }
-            Accounts.getLoggedInAccount().addSongDataObjectToAccount(songDataObject);
-            Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", songDataObject);
-            Accounts.getLoggedInAccount().serializeAccount();
-            saveThumbnail(songDataObject.getThumbnailUrl(), songDataObject.getPathToThumbnail());
+            try {
+                System.out.println("Saving SDO to account");
+                saveThumbnail(songDataObject.getThumbnailUrl(), songDataObject.getPathToThumbnail());
+                Accounts.getLoggedInAccount().addSongDataObjectToAccount(songDataObject);
+                Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", songDataObject);
+                Accounts.getLoggedInAccount().serializeAccount();
+            } catch (Exception e) {
+                System.out.println("Error downloading image");
+            }
         }
     }
 

@@ -54,7 +54,7 @@ public class MainViewRunner extends Application {
 
         screenController.addScreen("LoginPage", FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml")));
         sceneChanger = screenController;
-
+        setStage(stage);
         AccountsDataManager adm = new AccountsDataManager();
         System.out.println(adm.getAccPathToAutoLogIn());
         if (adm.getAccPathToAutoLogIn() != null) {
@@ -73,7 +73,6 @@ public class MainViewRunner extends Application {
 
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/MotisHarmonyIcon.png")));
         stage.setScene(scene);
-        setStage(stage);
         stage.show();
     }
 

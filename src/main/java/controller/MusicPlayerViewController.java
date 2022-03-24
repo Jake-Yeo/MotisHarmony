@@ -10,6 +10,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -168,7 +170,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         comboBox.setMaxWidth(200);
         comboBox.getStylesheets().add("/css/comboBox.css");
         //This if statment will only set up the MusicPlayer for if the user wanted their song position saved if and only if the user enabled this option, and if both the last playlist and song played are not null
-        if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition() && Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed() != null && Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed() != null) {
+        //This if statement will also check to make sure the user did not delete the song which is to be automatically played, if it was deleted then the Music player will not save the users song position
+        if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition() && Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed() != null && Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed() != null && Files.exists(Paths.get(Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed().getPathToWavFile()))) {
             if (!MusicPlayerManager.isMusicPlayerInitialized()) {
                 try {
                     //Code below ensure that the user is playing the last playlist they played
@@ -303,6 +306,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
             MusicPlayerManager.setPlaySongInLoop(Accounts.getLoggedInAccount().getSettingsObject().getPlaySongInLoop());
         }
+
+        MainViewRunner.getStage().setOnCloseRequest(windowEvent -> {
+            MusicPlayerManager.getMediaPlayer().stop();
+        });
     }
 
     @FXML
@@ -462,10 +469,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
             onFirstMusicPlayerPlay();
         } else if (!MusicPlayerManager.isSongPaused()) {
+            System.out.println("Paused Song");
             MusicPlayerManager.pauseSong();
             playButton.setStyle("-fx-padding:  0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("▶");
         } else {
+            System.out.println("Resumed Song");
             MusicPlayerManager.resumeSong();
             playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("⏸︎");
