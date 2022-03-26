@@ -55,6 +55,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -473,12 +474,19 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             MusicPlayerManager.pauseSong();
             playButton.setStyle("-fx-padding:  0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("▶");
+            System.out.println(MusicPlayerManager.getMediaPlayer().getStatus());
         } else {
             System.out.println("Resumed Song");
             MusicPlayerManager.resumeSong();
             playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("⏸︎");
+            System.out.println(MusicPlayerManager.getMediaPlayer().getStatus());
         }
+    }
+    
+    @FXML
+    private void keyPressed(KeyEvent event) {
+        System.out.println(event.toString());
     }
 
     public void setUpPlayButton() {
