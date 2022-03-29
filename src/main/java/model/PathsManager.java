@@ -75,7 +75,6 @@ public class PathsManager {//This class will handle all the folder and txt creat
         AccountsDataManager adm = AccountsDataManager.deserializeAccMan();
         ArrayList<SongDataObject> sdoDataToDeleteFromFiles = adm.getDeletionQueue();
         for (int i = 0; i < sdoDataToDeleteFromFiles.size(); i++) {
-
             try {
                 System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToWavFile());
                 Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToWavFile()));

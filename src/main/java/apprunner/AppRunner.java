@@ -7,8 +7,10 @@ package apprunner;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import model.AccountsDataManager;
 import model.PathsManager;
 import view.MainViewRunner;
@@ -22,10 +24,10 @@ import view.MainViewRunner;
 public class AppRunner {
 
     public static void main(String[] args) throws MalformedURLException, IOException, Exception {
-        
+
         //Set up the AccountsDataManager object below since we need to clear the deletion queue
-        AccountsDataManager adm = new AccountsDataManager();
         PathsManager.setUpFolders();
+        AccountsDataManager adm = new AccountsDataManager();
         PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
         PathsManager.deleteAllItemsInDownloadQueue();//This will delete all the files associated with the SongDataObjects in the deletion queue
         MainViewRunner.launchPanel(args);

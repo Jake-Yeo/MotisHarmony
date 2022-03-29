@@ -262,7 +262,6 @@ public class MusicPlayerManager {
     public static void stopDisposeMediaPlayer() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
-            mediaPlayer.dispose();
         }
     }
 
