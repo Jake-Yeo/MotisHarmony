@@ -152,7 +152,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         volumeSlider.setOnMouseReleased(e -> {
             try {
                 MusicPlayerManager.setSliderVolume(volumeSlider.getValue());
-                AccountsDataManager.updateVolumeSettings();
             } catch (Exception ex) {
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }

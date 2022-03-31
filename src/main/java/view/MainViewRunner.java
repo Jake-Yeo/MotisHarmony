@@ -9,6 +9,7 @@ package view;
  *
  * @author Jake Yeo
  */
+import apprunner.AppRunner;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -23,7 +24,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import model.Accounts;
 import model.AccountsDataManager;
-import model.Exit;
 import model.PathsManager;
 
 public class MainViewRunner extends Application {
@@ -78,10 +78,14 @@ public class MainViewRunner extends Application {
         stage.setScene(scene);
         stage.setOnCloseRequest(e -> {
             try {
-                Exit.properlyExitProgram();
+                AccountsDataManager.saveAllSettings();//Saves all account data so far into an .acc file
             } catch (Exception ex) {
                 Logger.getLogger(MainViewRunner.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("Exited!");
+            //Remove shutdownHook added at start so we don't serialize account twice making it longer to exit the program
+            Runtime.getRuntime().removeShutdownHook(AppRunner.getShutdownHook());
+            System.exit(0);
         });
         stage.show();
     }

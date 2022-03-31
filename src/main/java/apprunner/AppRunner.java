@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.AccountsDataManager;
 import model.PathsManager;
 import view.MainViewRunner;
@@ -23,14 +25,26 @@ import view.MainViewRunner;
  */
 public class AppRunner {
 
-    public static void main(String[] args) throws MalformedURLException, IOException, Exception {
+    private static Thread shutdownHook;
+    
+    public static Thread getShutdownHook() {
+        return shutdownHook;
+    }
 
-        //Set up the AccountsDataManager object below since we need to clear the deletion queue
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+    public static void main(String[] args) throws MalformedURLException, IOException, Exception {
+        //This ensures that when the user does not use the exit button to exit the program all settings are still saved
+        shutdownHook = new Thread() {
             public void run() {
-               System.out.println("exited!");
+                try {
+                    AccountsDataManager.saveAllSettings();
+                } catch (Exception ex) {
+                    Logger.getLogger(AppRunner.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("Exited!");
             }
-        });
+        };
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        //Set up the AccountsDataManager object below since we need to clear the deletion queue
         PathsManager.setUpFolders();
         AccountsDataManager adm = new AccountsDataManager();
         PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space

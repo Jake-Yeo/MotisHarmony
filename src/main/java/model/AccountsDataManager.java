@@ -93,6 +93,28 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
 
+    public static void saveAllSettings() throws Exception {
+        try {
+            AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYoutubeUrlDownloadQueueList());
+        } catch (Exception ex) {
+            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            AccountsDataManager.setLastPlaylistPlayed(MusicPlayerManager.getCurrentPlaylistPlayling());
+            AccountsDataManager.setLastSongPlayed(MusicPlayerManager.getSongObjectBeingPlayed());
+        } catch (Exception ex) {
+            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            AccountsDataManager.setPlaySongInLoop(MusicPlayerManager.getPlaySongInLoop());
+            AccountsDataManager.setPlayType(MusicPlayerManager.getPlayType());
+        } catch (Exception ex) {
+            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        AccountsDataManager.updateVolumeSettings();
+        Accounts.getLoggedInAccount().serializeAccount();
+    }
+
     public static void updateVolumeSettings() throws Exception {
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
@@ -258,7 +280,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         accManToReturn = (AccountsDataManager) in.readObject();
         in.close();
         fileIn.close();
-        System.out.println("Serialized current account");
+        System.out.println("deserialized Acc Man");
         return accManToReturn;
     }
 }

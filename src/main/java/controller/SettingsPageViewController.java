@@ -64,33 +64,16 @@ public class SettingsPageViewController implements Initializable {
     @FXML
     private void updateSaveDownloadQueue(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveDownloadQueue(saveDownloadQueueRadioButton.isSelected());
-        try {
-            AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYoutubeUrlDownloadQueueList());
-        } catch (Exception ex) {
-            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @FXML
     private void updateSaveSongPosition(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveSongPosition(saveSongPositionRadioButton.isSelected());
-        try {
-            AccountsDataManager.setLastPlaylistPlayed(MusicPlayerManager.getCurrentPlaylistPlayling());
-            AccountsDataManager.setLastSongPlayed(MusicPlayerManager.getSongObjectBeingPlayed());
-        } catch (Exception ex) {
-            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @FXML
     private void updateSavePlayPreference(ActionEvent event) throws Exception {
         AccountsDataManager.setSavePlayPreference(savePlayPreference.isSelected());
-        try {
-            AccountsDataManager.setPlaySongInLoop(MusicPlayerManager.getPlaySongInLoop());
-            AccountsDataManager.setPlayType(MusicPlayerManager.getPlayType());
-        } catch (Exception ex) {
-            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
 }

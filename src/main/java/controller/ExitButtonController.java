@@ -17,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import model.Accounts;
 import model.AccountsDataManager;
-import model.Exit;
 import model.MusicPlayerManager;
 import model.SettingsObject;
 import view.MainViewRunner;
@@ -64,7 +63,9 @@ public class ExitButtonController implements Initializable {//if you want to cha
 
     @FXML
     private void exitAppMainButton(ActionEvent event) throws Exception {
-        Exit.properlyExitProgram();
+        AccountsDataManager.saveAllSettings();//Saves all account data so far into an .acc file
+        System.out.println("Exited!");
+        System.exit(0);
     }
 
     @FXML
