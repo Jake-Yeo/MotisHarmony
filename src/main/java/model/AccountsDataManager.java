@@ -97,14 +97,12 @@ public class AccountsDataManager implements Serializable {//This class will be u
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
             accSo.setPrefVolume(MusicPlayerManager.getSliderVolume());
-            Accounts.getLoggedInAccount().serializeAccount();
             System.out.println("Setting saved");
         }
     }
 
     public static void setSaveDownloadQueue(boolean tf) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setSaveDownloadQueue(tf);
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void updateSongsInQueueList(ObservableList<SongDataObject> songsToUpdateWith) throws Exception {
@@ -112,43 +110,36 @@ public class AccountsDataManager implements Serializable {//This class will be u
             Accounts.getLoggedInAccount().getSongsInQueueList().clear();
             Accounts.getLoggedInAccount().getSongsInQueueList().addAll(songsToUpdateWith);
             System.out.println("Current download queue saved!");
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
     public static void setSaveSongPosition(boolean tf) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setSaveSongPosition(tf);
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void setLastSongPlayed(SongDataObject lastSdoPlayed) throws Exception {
         if (lastSdoPlayed != null) {
             Accounts.getLoggedInAccount().getSettingsObject().setLastSongPlayed(lastSdoPlayed);
             System.out.println("Last song saved: " + lastSdoPlayed.getTitle());
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
     public static void setPlayType(String playType) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setPlayType(playType);
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void setPlaySongInLoop(boolean tf) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setPlaySongInLoop(tf);
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void setSavePlayPreference(boolean tf) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setSavePlayPreference(tf);
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void setLastPlaylistPlayed(String nameOfLastPlaylistPlayed) throws Exception {
         if (nameOfLastPlaylistPlayed != null) {
             Accounts.getLoggedInAccount().getSettingsObject().setLastPlaylistPlayed(nameOfLastPlaylistPlayed);
             System.out.println("Last playlist played: " + nameOfLastPlaylistPlayed);
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
@@ -156,7 +147,6 @@ public class AccountsDataManager implements Serializable {//This class will be u
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
             accSo.setPlaylistListSortPreference(sortType);
-            Accounts.getLoggedInAccount().serializeAccount();
             System.out.println("Setting saved");
         }
     }
@@ -165,7 +155,6 @@ public class AccountsDataManager implements Serializable {//This class will be u
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
             accSo.setSongListSortPreference(sortType);
-            Accounts.getLoggedInAccount().serializeAccount();
             System.out.println("Setting saved");
         }
     }
@@ -174,7 +163,6 @@ public class AccountsDataManager implements Serializable {//This class will be u
         //If statement makes sure that the user does not accidentally delete a playlist by creating two playlists with the same name
         if (!playlistName.equals("All Songs") && !Arrays.asList(Accounts.getLoggedInAccount().getPlaylistDataObject().getArrayOfPlaylistNames()).contains(playlistName)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(playlistName);
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
@@ -190,14 +178,12 @@ public class AccountsDataManager implements Serializable {//This class will be u
         AccountsDataManager adm = deserializeAccMan();
         adm.deletionQueue.addAll(Arrays.asList(sdoToRemove));
         adm.serializeAccMan();
-        Accounts.getLoggedInAccount().serializeAccount();
     }
 
     public static void addSongToPlaylist(String playlistName, SongDataObject sdo) throws Exception {
         //If the song is already present in the playlist then remove it
         if (!playlistName.equals("All Songs") && !Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName).contains(sdo)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
@@ -213,7 +199,6 @@ public class AccountsDataManager implements Serializable {//This class will be u
         listOfSongs.removeAll(songsToRemoveFromList);
         if (!playlistName.equals("All Songs")) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
@@ -221,21 +206,18 @@ public class AccountsDataManager implements Serializable {//This class will be u
         //All Songs is a unique playlist which musn't be editied
         if (!playlistName.equals("All Songs")) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
     public static void renamePlaylist(String playlistToRename, String newPlaylistName) throws Exception {
         if (!playlistToRename.equals("All Songs") && !playlistToRename.equals(newPlaylistName)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().renamePlaylist(playlistToRename, newPlaylistName);
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {
         if (!playlistName.equals("All Songs")) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().removeSongFromPlaylist(playlistName, sdoArray);
-            Accounts.getLoggedInAccount().serializeAccount();
         }
     }
 
@@ -251,7 +233,6 @@ public class AccountsDataManager implements Serializable {//This class will be u
                 saveThumbnail(songDataObject.getThumbnailUrl(), songDataObject.getPathToThumbnail());
                 Accounts.getLoggedInAccount().addSongDataObjectToAccount(songDataObject);
                 Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", songDataObject);
-                Accounts.getLoggedInAccount().serializeAccount();
             } catch (Exception e) {
                 System.out.println("Error downloading image");
             }
@@ -277,6 +258,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         accManToReturn = (AccountsDataManager) in.readObject();
         in.close();
         fileIn.close();
+        System.out.println("Serialized current account");
         return accManToReturn;
     }
 }

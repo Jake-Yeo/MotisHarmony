@@ -26,6 +26,11 @@ public class AppRunner {
     public static void main(String[] args) throws MalformedURLException, IOException, Exception {
 
         //Set up the AccountsDataManager object below since we need to clear the deletion queue
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+               System.out.println("exited!");
+            }
+        });
         PathsManager.setUpFolders();
         AccountsDataManager adm = new AccountsDataManager();
         PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space

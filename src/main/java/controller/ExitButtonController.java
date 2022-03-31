@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import model.Accounts;
 import model.AccountsDataManager;
+import model.Exit;
 import model.MusicPlayerManager;
 import model.SettingsObject;
 import view.MainViewRunner;
@@ -62,8 +63,8 @@ public class ExitButtonController implements Initializable {//if you want to cha
     }
 
     @FXML
-    private void exitAppMainButton(ActionEvent event) {
-        System.exit(0);
+    private void exitAppMainButton(ActionEvent event) throws Exception {
+        Exit.properlyExitProgram();
     }
 
     @FXML

@@ -71,6 +71,7 @@ public class YoutubeDownloader {
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless");//start the chrome browser headless, can be changed if you want
             options.setCapability(ChromeOptions.CAPABILITY, options);
+            options.addArguments("--mute-audio");
             driver = new ChromeDriver(options);
             try {
                 final URL url = new URL("http://www.google.com");

@@ -11,6 +11,8 @@ package view;
  */
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import model.Accounts;
 import model.AccountsDataManager;
+import model.Exit;
 import model.PathsManager;
 
 public class MainViewRunner extends Application {
@@ -73,6 +76,13 @@ public class MainViewRunner extends Application {
 
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/MotisHarmonyIcon.png")));
         stage.setScene(scene);
+        stage.setOnCloseRequest(e -> {
+            try {
+                Exit.properlyExitProgram();
+            } catch (Exception ex) {
+                Logger.getLogger(MainViewRunner.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         stage.show();
     }
 
