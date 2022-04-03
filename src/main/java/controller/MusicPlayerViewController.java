@@ -482,7 +482,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             System.out.println(MusicPlayerManager.getMediaPlayer().getStatus());
         }
     }
-    
+
     @FXML
     private void keyPressed(KeyEvent event) {
         System.out.println(event.toString());
@@ -668,7 +668,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             public void run() {
                 MusicPlayerManager.setVolume(volumeSlider.getValue());//Sets the volume
                 MusicPlayerManager.setSliderVolume(volumeSlider.getValue());
-                seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
+                if (!seekSlider.maxProperty().isBound()) {
+                    seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
+                }
             }
         });
 
