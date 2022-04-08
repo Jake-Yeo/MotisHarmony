@@ -26,6 +26,9 @@ import javafx.scene.image.Image;
 public class YoutubeVideoPageParser {
 //broken name conventions please fix later!
 
+    private static final String YOUTUBE_AUDIO_MAX_BYTE_RANGE_END_IDENTIFIER = "&";
+    private static final String YOUTUBE_AUDIO_MAX_BYTE_RANGE_START_IDENTIFIER = "clen=";//This will get the byte range of the youtube video so we can download the video in segments allowing us to bypass throttling
+
     private final static String YT_TITLE_START_IDENTIFIER = "og:title\" content=\"";
     private final static String YT_TITLE_END_IDENTIFIER = "\"";
     private final static String YT_PLAYLIST_LENGTH_START_IDENTIFIER = "\"totalVideos\":";
@@ -108,6 +111,10 @@ public class YoutubeVideoPageParser {
             didErrorOccur = true;
             errorMessage = videoUrl + " could not be accessed because you are not connected to wifi";
             YoutubeDownloader.setWifiConnected(false);
+            return new ErrorDataObject(didErrorOccur, errorMessage);
+        } catch (java.io.IOException e) {
+            didErrorOccur = true;
+            errorMessage = videoUrl + " cannot be downloaded at this time as you are IP blocked by youtube! Wait out the ban or change your ip.";
             return new ErrorDataObject(didErrorOccur, errorMessage);
         } catch (Exception e) {
             didErrorOccur = true;
@@ -299,4 +306,9 @@ public class YoutubeVideoPageParser {
         passedHtml = passedHtml.substring(0, passedHtml.indexOf(endIdentifier));
         return passedHtml;
     }
+
+    public static int extractMaxByteRange(String url) {
+        return Integer.parseInt(infoParserTool(url, YOUTUBE_AUDIO_MAX_BYTE_RANGE_START_IDENTIFIER, YOUTUBE_AUDIO_MAX_BYTE_RANGE_END_IDENTIFIER));
+    }
+
 }

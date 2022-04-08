@@ -53,6 +53,7 @@ public class YoutubeDownloader {
     private static boolean stopDownloading = false;
     private static boolean stopAllDownloadingProcesses = false;
     private static boolean isPlaylistUrlGetterCurrentlyGettingUrls = false;
+    private static int BYTE_AMT_FOR_3_MIN_VID = 3402697;//We should download videos in three minute segments
     private static final String YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER = "Age-restricted";
     private static final String YOUTUBE_AUDIO_SOURCE_AD_IDENTIFIER = "ctier";//Ad audio links are the only links that contain cteir in them
     private static final String YOUTUBE_AD_AUDIO_SOURCE_START_IDENTIFIER = "https:";
@@ -322,26 +323,40 @@ public class YoutubeDownloader {
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeSongData.getVideoUrl());
         if (!possibleYoutubeUrl.equals("error") && !possibleYoutubeUrl.equals("No Wifi")) {
             //We add range=0-99999999999999999999 to the url below to bypass throttling which speeds up download times by nearly 95 times!
-            possibleYoutubeUrl = possibleYoutubeUrl + "range=0-99999999999999999999";
-            downloadURL = new URL(possibleYoutubeUrl);//Out of range happens when mime=audio cannot be found
+            System.out.println(YoutubeVideoPageParser.extractMaxByteRange(possibleYoutubeUrl));
+            int maxByteRange = YoutubeVideoPageParser.extractMaxByteRange(possibleYoutubeUrl);
+
             int count = 0;
             long timeStart = System.currentTimeMillis();
             try {
-                BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());
                 FileOutputStream fos = new FileOutputStream(youtubeSongData.getPathToWebaFile());
-                int i = 0;
-                System.out.println("Stop downloading is " + stopDownloading);
-                final byte[] data = new byte[256000];
-                while ((count = bis.read(data)) != -1) {
-                    if (stopDownloading) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
-                        removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
-                        skipAudioConversion = true;//This will prevent the program from attempting to convert a corrupted weba file to a wav file
-                        stopDownloading = false;//This will allow the next song to be downloaded
+                //Here in this for loop we download songs in three minute segments. This will bypass download throttling. Though there is no difference when downloading 3-8 minute songs, it decreases download times for 2 hr songs from approximately 1hr donwload time to 70 seconds.
+                for (int bytesToStart = 0; bytesToStart < maxByteRange; bytesToStart += BYTE_AMT_FOR_3_MIN_VID + 1) {//+1 since we have to change the range parameter from (0, 1000) to (1001, 2001) not (1000, 2000) which would cause an error
+                    System.out.println("for loop ran");
+                    String urlToDownload = possibleYoutubeUrl + "range=" + bytesToStart + "-" + (bytesToStart + BYTE_AMT_FOR_3_MIN_VID);
+                    downloadURL = new URL(urlToDownload);//Out of range happens when mime=audio cannot be found
+                    System.out.println(urlToDownload);
+
+                    BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());
+                    int i = 0;
+                    System.out.println("Stop downloading is " + stopDownloading);
+                    byte[] data = new byte[256000];
+                    while ((count = bis.read(data)) != -1) {
+                        if (stopDownloading) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
+                            removeFirstLink = false;//This will prevent the program from attempting to delete a url which has already been removed by the user. This must be first in the if loop, if not the boolean will not be changed quickly enough to stop the program from trying to delete a url it's not supposed to
+                            skipAudioConversion = true;//This will prevent the program from attempting to convert a corrupted weba file to a wav file
+                            stopDownloading = false;//This will allow the next song to be downloaded
+                            return;
+                        }
+                        i += count;
+                        fos.write(data, 0, count);
+                    }
+                    //this if statement will break out of the for loop if the user wants to stop downloading the current song
+                    if (skipAudioConversion) {
                         return;
                     }
-                    i += count;
-                    fos.write(data, 0, count);
                 }
+
             } catch (IOException ex) {
                 System.err.print("error downloading song");
             }
