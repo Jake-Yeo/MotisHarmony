@@ -364,27 +364,14 @@ public class YoutubeDownloader {
             if (skipAudioConversion) {//Skips the audio conversion
                 return;
             }
-            //We no longer create a new thread everytime we run the AudioConverter below, this will give time for the chrome driver to "breath" and will prevent massive lag.
-            if (!AudioConverter.getConversionQueueHasStarted()) {
-                new Thread(
-                        new Runnable() {
-                    public void run() {
-                        try {
-                            AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
-                        } catch (Exception ex) {
-                            errorList.add("Download could not be completed as wifi is disconnected");
-                            setWifiConnected(false);
-                        }
-                    }
-                }).start();
-            } else {
+            //We no longer create a new thread everytime we run the AudioConverter below, this will give time for the chrome driver to "breath" and will prevent massive lag.  
                 try {
                     AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
                 } catch (Exception ex) {
                     errorList.add("Download could not be completed as wifi is disconnected");
                     setWifiConnected(false);
                 }
-            }
+            
 
         } else if (possibleYoutubeUrl.equals("error")) {
             errorList.add(youtubeSongData.getVideoUrl() + " could not be downloaded at this time, please try again later or find an alternative link");
