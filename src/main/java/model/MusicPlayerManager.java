@@ -268,11 +268,11 @@ public class MusicPlayerManager {
         setMusicPlayerInitialized(true);
         mediaPlayer.play();
     }
-    
+
     public static boolean getBrokenBluetoothMusicPlayerSeeked() {
         return brokenBluetoothMusicPlayerSeeked;
     }
-    
+
     public static void setBrokenBluetoothMusicPlayerSeeked(boolean tf) {
         brokenBluetoothMusicPlayerSeeked = tf;
     }
@@ -286,6 +286,14 @@ public class MusicPlayerManager {
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
         setMusicPlayerInitialized(true);
+        mediaPlayer.setOnPlaying(() -> {
+            mediaPlayer.seek(backupCurrentDuration);
+            //Sometimes setting the seek right after creating the mediaPlayer may not work, so we must try and try again untill it works
+            if (mediaPlayer.getCurrentTime().toMillis() >= backupCurrentDuration.toMillis()) {
+                mediaPlayer.setOnPlaying(null);
+                System.out.println("Seek successful");
+            }
+        });
         mediaPlayer.play();
     }
 

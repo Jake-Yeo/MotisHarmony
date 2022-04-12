@@ -34,7 +34,7 @@
             <Slider fx:id="seekSlider" layoutX="23.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="9.0" prefWidth="276.0" style="-fx-orientation: horizontal;" />
             <AnchorPane layoutX="74.0" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="174.0">
                <children>
-                  <Button fx:id="playButton" layoutX="65.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#playMusic" prefHeight="41.0" prefWidth="41.0" style="-fx-padding: 0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;" text="▶" textFill="#f04444">
+                  <Button fx:id="playButton" layoutX="65.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#playMusic" prefHeight="41.0" prefWidth="41.0" style="-fx-padding: -1 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;" text="▶" textFill="#f04444">
                      <font>
                         <Font name="Quicksand Light" size="28.0" />
                      </font>

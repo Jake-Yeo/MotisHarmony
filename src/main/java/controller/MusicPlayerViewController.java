@@ -689,11 +689,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         MusicPlayerManager.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {//This will automatically update the seekSlider to match the current position of the song
             public void invalidated(Observable ov) {
-                //This will seek to the correct position of the song since seeking right away doesen't work for some reason. This is for the bluetooth mediaplayer crashing bug
-                if (!MusicPlayerManager.getBrokenBluetoothMusicPlayerSeeked()) {
-                    MusicPlayerManager.getMediaPlayer().seek(MusicPlayerManager.getBackUpCurrentDuration());
-                    MusicPlayerManager.setBrokenBluetoothMusicPlayerSeeked(true);
-                }
                 seekSlider.setValue(MusicPlayerManager.getCurrentTimeInSeconds());
                 timeText.setText(getCurrentTimeStringFormatted((int) Math.floor(MusicPlayerManager.getCurrentTimeInSeconds()), (int) Math.floor(MusicPlayerManager.getTotalDurationInSeconds())));
                 //Here we keep a backup of the current duration of the song just incase the mediaPlayer crashes, which it does everytime you disconnect a bluetooth headset for some reason
