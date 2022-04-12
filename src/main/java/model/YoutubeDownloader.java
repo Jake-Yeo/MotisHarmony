@@ -142,9 +142,14 @@ public class YoutubeDownloader {
         return errorList;
     }
 
-    private static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) throws IOException {
+    private static void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
-        ArrayList<SongDataObject> youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
+        ArrayList<SongDataObject> youtubePlaylistUrls = null;
+        try {
+            youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
+        } catch (IOException e) {
+            errorList.add("You're currently IP banned from youtube and cannot download songs at this time");
+        }
         if (youtubePlaylistUrls == null) {
             errorList.add("Sorry we cannot download the url you entered at this time.");
             return;
@@ -365,13 +370,12 @@ public class YoutubeDownloader {
                 return;
             }
             //We no longer create a new thread everytime we run the AudioConverter below, this will give time for the chrome driver to "breath" and will prevent massive lag.  
-                try {
-                    AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
-                } catch (Exception ex) {
-                    errorList.add("Download could not be completed as wifi is disconnected");
-                    setWifiConnected(false);
-                }
-            
+            try {
+                AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+            } catch (Exception ex) {
+                errorList.add("Download could not be completed as wifi is disconnected");
+                setWifiConnected(false);
+            }
 
         } else if (possibleYoutubeUrl.equals("error")) {
             errorList.add(youtubeSongData.getVideoUrl() + " could not be downloaded at this time, please try again later or find an alternative link");

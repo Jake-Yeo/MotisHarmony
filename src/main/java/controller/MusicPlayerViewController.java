@@ -646,6 +646,18 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         });
 
+        MusicPlayerManager.getMediaPlayer().setOnError(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
+            public void run() {
+                try {
+                    MusicPlayerManager.resetPlayerOnError();
+                } catch (Exception ex) {
+                    Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                init();
+                updateInfoDisplays();
+            }
+        });
+
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(
@@ -661,6 +673,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             MusicPlayerManager.seekTo(Duration.seconds(seekSlider.getValue()));//Set where to resume the song
+            //Here we keep a backup of the current duration of the song just incase the mediaPlayer crashes, which it does everytime you disconnect a bluetooth headset for some reason
+            MusicPlayerManager.setBackUpCurrentDuration(MusicPlayerManager.getMediaPlayer().getCurrentTime());
             MusicPlayerManager.resumeSong();//Resume the song once the user releases their mous key
         });
 
@@ -668,17 +682,23 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             public void run() {
                 MusicPlayerManager.setVolume(volumeSlider.getValue());//Sets the volume
                 MusicPlayerManager.setSliderVolume(volumeSlider.getValue());
-
                 seekSlider.setMax(MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds());
                 //seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> MusicPlayerManager.getMediaPlayer().getTotalDuration().toSeconds(), MusicPlayerManager.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
-
             }
         });
 
         MusicPlayerManager.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {//This will automatically update the seekSlider to match the current position of the song
             public void invalidated(Observable ov) {
+                //This will seek to the correct position of the song since seeking right away doesen't work for some reason. This is for the bluetooth mediaplayer crashing bug
+                if (!MusicPlayerManager.getBrokenBluetoothMusicPlayerSeeked()) {
+                    MusicPlayerManager.getMediaPlayer().seek(MusicPlayerManager.getBackUpCurrentDuration());
+                    MusicPlayerManager.setBrokenBluetoothMusicPlayerSeeked(true);
+                }
                 seekSlider.setValue(MusicPlayerManager.getCurrentTimeInSeconds());
                 timeText.setText(getCurrentTimeStringFormatted((int) Math.floor(MusicPlayerManager.getCurrentTimeInSeconds()), (int) Math.floor(MusicPlayerManager.getTotalDurationInSeconds())));
+                //Here we keep a backup of the current duration of the song just incase the mediaPlayer crashes, which it does everytime you disconnect a bluetooth headset for some reason
+                MusicPlayerManager.setBackUpCurrentDuration(MusicPlayerManager.getMediaPlayer().getCurrentTime());
+                System.out.println(MusicPlayerManager.getMediaPlayer().getCurrentTime().toSeconds());
             }
         });
 

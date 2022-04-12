@@ -77,7 +77,7 @@ public class YoutubeVideoPageParser {
     private static final String YOUTUBE_PLAYLIST_VIDEO_ID_START_IDENTIFIER = "{\"videoId\":\"";
     private static final String YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER = "\",\"";
 
-    public static String getHtml(String url) throws IOException {//To prevent an ip ban from websites, don't overuse this method.
+    public static String getHtml(String url) throws IOException  {//To prevent an ip ban from websites, don't overuse this method.
         System.out.println("html getter called");
         String html = "";
         URL ytLink = new URL(url);

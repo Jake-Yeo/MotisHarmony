@@ -28,8 +28,10 @@ public class MusicPlayerManager {
 
     private static boolean paused = false;
     private static int indexForOrderedPlay = 0;
+    private static Duration backupCurrentDuration = null;
     private static boolean musicPlayerInitalized = false;
     private static boolean playSongInLoop = false;
+    private static boolean brokenBluetoothMusicPlayerSeeked = true;
     private static int volume;
     private static String playType = "Ordered Play";
     private static SongDataObject songObjectBeingPlayed;
@@ -46,6 +48,14 @@ public class MusicPlayerManager {
         if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition()) {
             AccountsDataManager.setLastSongPlayed(sdo);
         }
+    }
+
+    public static void setBackUpCurrentDuration(Duration currentDuration) {
+        backupCurrentDuration = currentDuration;
+    }
+
+    public static Duration getBackUpCurrentDuration() {
+        return backupCurrentDuration;
     }
 
     public static SongDataObject getSongObjectBeingPlayed() {
@@ -251,6 +261,26 @@ public class MusicPlayerManager {
         setSongObjectBeingPlayed(songToPlay);
         File file = new File(songToPlay.getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
+        Media media = new Media(file.toURI().toASCIIString());
+        stopDisposeMediaPlayer();
+        mediaPlayer = new MediaPlayer(media);
+        updatePlayTypeAtEndOfMedia();
+        setMusicPlayerInitialized(true);
+        mediaPlayer.play();
+    }
+    
+    public static boolean getBrokenBluetoothMusicPlayerSeeked() {
+        return brokenBluetoothMusicPlayerSeeked;
+    }
+    
+    public static void setBrokenBluetoothMusicPlayerSeeked(boolean tf) {
+        brokenBluetoothMusicPlayerSeeked = tf;
+    }
+
+    //The mediaplayer freezes when disconnecting any bluetooth device so we fix that here.
+    public static void resetPlayerOnError() {
+        brokenBluetoothMusicPlayerSeeked = false;
+        File file = new File(songObjectBeingPlayed.getPathToWavFile());
         Media media = new Media(file.toURI().toASCIIString());
         stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
