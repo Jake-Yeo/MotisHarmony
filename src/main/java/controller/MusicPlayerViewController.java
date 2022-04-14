@@ -194,7 +194,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             //Code below ensure that the user is playing the last playlist they played
             playlistList.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed());
             MusicPlayerManager.pauseSong();
-            playButton.setStyle("-fx-padding:  0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setStyle("-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("▶");
             init();
             updateInfoDisplays();
@@ -459,7 +459,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         updateInfoDisplays();
         MusicPlayerManager.setMusicPlayerInitialized(true);
         MusicPlayerManager.setPaused(false);
-        playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
         playButton.setText("⏸︎");
     }
 
@@ -471,13 +471,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         } else if (!MusicPlayerManager.isSongPaused()) {
             System.out.println("Paused Song");
             MusicPlayerManager.pauseSong();
-            playButton.setStyle("-fx-padding:  0 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setStyle("-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("▶");
             System.out.println(MusicPlayerManager.getMediaPlayer().getStatus());
         } else {
             System.out.println("Resumed Song");
             MusicPlayerManager.resumeSong();
-            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("⏸︎");
             System.out.println(MusicPlayerManager.getMediaPlayer().getStatus());
         }
@@ -490,7 +490,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     public void setUpPlayButton() {
         seekSlider.setValue(0);
-        playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
         playButton.setText("⏸︎");
         MusicPlayerManager.setPaused(false);
         init();//initalize again because a new MediaPlayer is made
@@ -712,7 +712,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (!MusicPlayerManager.isMusicPlayerInitialized()) {
             MusicPlayerManager.setMusicPlayerInitialized(true);
         }
-        playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
         playButton.setText("⏸︎");
         init();//initalize again because a new MediaPlayer is made
         updateInfoDisplays();
@@ -749,7 +749,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             updateInfoDisplays();
             MusicPlayerManager.setMusicPlayerInitialized(true);
             MusicPlayerManager.setPaused(false);
-            playButton.setStyle("-fx-padding: -2 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("⏸︎");
         } else {
             MusicPlayerManager.setIndexForOrderedPlay(0);
