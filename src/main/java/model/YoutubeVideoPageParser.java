@@ -106,11 +106,11 @@ public class YoutubeVideoPageParser {
         }
         try {
             html = getHtml(videoUrl);
-            YoutubeDownloader.setWifiConnected(true);
+            YoutubeDownloader.getYtdCurrentlyUsing().setWifiConnected(true);
         } catch (java.net.UnknownHostException e) {
             didErrorOccur = true;
             errorMessage = videoUrl + " could not be accessed because you are not connected to wifi";
-            YoutubeDownloader.setWifiConnected(false);
+            YoutubeDownloader.getYtdCurrentlyUsing().setWifiConnected(false);
             return new ErrorDataObject(didErrorOccur, errorMessage);
         } catch (java.io.IOException e) {
             didErrorOccur = true;
@@ -276,7 +276,7 @@ public class YoutubeVideoPageParser {
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
                 System.out.println(videoID);
-                if (!youtubeIdsCurrentlyInSongDataList.contains(videoUrl) && !SongDataObject.toString(YoutubeDownloader.getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the SongDataObject to the SongDataList. This ensure that urls are not inputted into the downloadQueue multiple times
+                if (!youtubeIdsCurrentlyInSongDataList.contains(videoUrl) && !SongDataObject.toString(YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the SongDataObject to the SongDataList. This ensure that urls are not inputted into the downloadQueue multiple times
                     songDataList.add(new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
                     youtubeIdsCurrentlyInSongDataList += videoID + " ";
                 }

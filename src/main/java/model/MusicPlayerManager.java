@@ -28,78 +28,87 @@ import javafx.util.Duration;
  */
 public class MusicPlayerManager {
 
-    private static boolean paused = false;
-    private static int indexForOrderedPlay = 0;
-    private static Duration backupCurrentDuration = null;
-    private static boolean musicPlayerInitalized = false;
-    private static boolean playSongInLoop = false;
-    private static int volume;
-    private static String playType = "Ordered Play";
-    private static SongDataObject songObjectBeingPlayed;
-    private static MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
-    private static ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
-    private static ObservableList<SongDataObject> playlistSongsPlaying = FXCollections.observableArrayList();
-    private static ArrayList<SongDataObject> songHistory = new ArrayList<>();
-    private static int posInSongHistory = 0;
-    private static String currentPlaylistPlayling;
-    private static double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
+    private static MusicPlayerManager mpmCurrentlyUsing;
+    private boolean paused = false;
+    private int indexForOrderedPlay = 0;
+    private Duration backupCurrentDuration = null;
+    private boolean musicPlayerInitalized = false;
+    private boolean playSongInLoop = false;
+    private int volume;
+    private String playType = "Ordered Play";
+    private SongDataObject songObjectBeingPlayed;
+    private MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
+    private ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
+    private ObservableList<SongDataObject> playlistSongsPlaying = FXCollections.observableArrayList();
+    private ArrayList<SongDataObject> songHistory = new ArrayList<>();
+    private int posInSongHistory = 0;
+    private String currentPlaylistPlayling;
+    private double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
 
-    public static void setSongObjectBeingPlayed(SongDataObject sdo) throws Exception {
+    public static void setMpmCurrentlyUsing(MusicPlayerManager mpm) {
+        mpmCurrentlyUsing = mpm;
+    }
+    
+    public static MusicPlayerManager getMpmCurrentlyUsing() {
+        return mpmCurrentlyUsing;
+    }
+    
+    public void setSongObjectBeingPlayed(SongDataObject sdo) throws Exception {
         songObjectBeingPlayed = sdo;
         if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition()) {
             AccountsDataManager.setLastSongPlayed(sdo);
         }
     }
 
-    public static void setBackUpCurrentDuration(Duration currentDuration) {
+    public void setBackUpCurrentDuration(Duration currentDuration) {
         backupCurrentDuration = currentDuration;
     }
 
-    public static Duration getBackUpCurrentDuration() {
+    public Duration getBackUpCurrentDuration() {
         return backupCurrentDuration;
     }
 
-    public static SongDataObject getSongObjectBeingPlayed() {
+    public SongDataObject getSongObjectBeingPlayed() {
         return songObjectBeingPlayed;
     }
 
-    public static boolean getPlaySongInLoop() {
+    public boolean getPlaySongInLoop() {
         return playSongInLoop;
     }
 
-    public static void setPlaySongInLoop(boolean tf) {
+    public void setPlaySongInLoop(boolean tf) {
         playSongInLoop = tf;
     }
 
-    public static double getSliderVolume() {
+    public double getSliderVolume() {
         return sliderVolume;
     }
 
-    public static void setSliderVolume(double volume) {
+    public void setSliderVolume(double volume) {
         sliderVolume = volume;
     }
 
-    public static ArrayList<SongDataObject> getSongHistory() {
+    public ArrayList<SongDataObject> getSongHistory() {
         return songHistory;
     }
 
-    public static String[] getArrayOfSongInfoInCurrentSongList() {
+    public String[] getArrayOfSongInfoInCurrentSongList() {
         String[] arrayOfSongNames = new String[getCurrentSongList().size()];
         for (int i = 0; i < arrayOfSongNames.length; i++) {
-            arrayOfSongNames[i] = MusicPlayerManager.getCurrentSongList().get(i).getTitle() + "\nBy: " + MusicPlayerManager.getCurrentSongList().get(i).getChannelName();
+            arrayOfSongNames[i] = getCurrentSongList().get(i).getTitle() + "\nBy: " + getCurrentSongList().get(i).getChannelName();
         }
         return arrayOfSongNames;
     }
 
-    public static int getPosInSongHistory() {
+    public int getPosInSongHistory() {
         return posInSongHistory;
     }
 
-    public static void setPosInSongHistory(int value) {
+    public void setPosInSongHistory(int value) {
         posInSongHistory = value;
     }
 
-    public static SongDataObject[] getArrayOfSdoFromCurrentSongListViaIndicies(ObservableList<Integer> indicies) {
+    public SongDataObject[] getArrayOfSdoFromCurrentSongListViaIndicies(ObservableList<Integer> indicies) {
         SongDataObject[] sdoGotten = new SongDataObject[indicies.size()];
         for (int i = 0; i < sdoGotten.length; i++) {
             sdoGotten[i] = currentSongList.get(indicies.get(i));
@@ -107,18 +116,18 @@ public class MusicPlayerManager {
         return sdoGotten;
     }
 
-    public static void playThisPlaylist(String playlistName) throws Exception {
+    public void playThisPlaylist(String playlistName) throws Exception {
         //This will set which songs from which playlist to play next after the song which is currently playing has finsihed
-        if (MusicPlayerManager.getCurrentPlaylistPlayling().equals(playlistName)) {
+        if (getCurrentPlaylistPlayling().equals(playlistName)) {
             return;
         }
-        MusicPlayerManager.getSongHistory().clear();
-        MusicPlayerManager.setCurrentPlaylistPlayling(playlistName);
-        MusicPlayerManager.setIndexForOrderedPlay(0);
-        MusicPlayerManager.syncPlaylistSongsPlaylingWithCurentSongsList();
+        getSongHistory().clear();
+        setCurrentPlaylistPlayling(playlistName);
+        setIndexForOrderedPlay(0);
+        syncPlaylistSongsPlaylingWithCurentSongsList();
     }
 
-    public static void setCurrentPlaylistPlayling(String playlistName) throws Exception {
+    public void setCurrentPlaylistPlayling(String playlistName) throws Exception {
         if (playlistName != null) {
             currentPlaylistPlayling = playlistName;
             if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition()) {
@@ -127,26 +136,26 @@ public class MusicPlayerManager {
         }
     }
 
-    public static String getCurrentPlaylistPlayling() {
+    public String getCurrentPlaylistPlayling() {
         return currentPlaylistPlayling;
     }
 
-    public static void syncPlaylistSongsPlaylingWithCurentSongsList() {
+    public void syncPlaylistSongsPlaylingWithCurentSongsList() {
         playlistSongsPlaying.clear();
         for (int i = 0; i < currentSongList.size(); i++) {
             playlistSongsPlaying.add(currentSongList.get(i));
         }
     }
 
-    public static String getPlayType() {
+    public String getPlayType() {
         return playType;
     }
 
-    public static void setPlayType(String type) {
+    public void setPlayType(String type) {
         playType = type;
     }
 
-    public static void updatePlayTypeAtEndOfMedia() {
+    public void updatePlayTypeAtEndOfMedia() {
         System.out.println(playSongInLoop);
         if (!playSongInLoop) {
             if (playType.equals("Random Play")) {
@@ -177,7 +186,7 @@ public class MusicPlayerManager {
         }
     }
 
-    public static void smartPlay() throws IOException, Exception {
+    public void smartPlay() throws IOException, Exception {
         if (!musicPlayerInitalized) {
             if (playType.equals("Random Play")) {
                 randomPlay();
@@ -196,7 +205,7 @@ public class MusicPlayerManager {
 
     }
 
-    public static void loopPlay() {
+    public void loopPlay() {
         File file = new File(getSongObjectBeingPlayed().getPathToWavFile());
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
@@ -207,7 +216,7 @@ public class MusicPlayerManager {
         System.out.println("finished playling");
     }
 
-    public static void randomPlay() throws IOException, Exception {
+    public void randomPlay() throws IOException, Exception {
         ObservableList<SongDataObject> songDataObjects = playlistSongsPlaying;
         //String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
         //System.out.println(Arrays.toString(musicPaths));
@@ -228,15 +237,15 @@ public class MusicPlayerManager {
         //playMusic();
     }
 
-    public static void setIndexForOrderedPlay(int index) {
+    public void setIndexForOrderedPlay(int index) {
         indexForOrderedPlay = index;
     }
 
-    public static int getIndexForOrderedPlay() {
+    public int getIndexForOrderedPlay() {
         return indexForOrderedPlay;
     }
 
-    public static void orderedPlay() throws IOException, Exception {
+    public void orderedPlay() throws IOException, Exception {
         songHistory.clear();
         if (indexForOrderedPlay > playlistSongsPlaying.size() - 1) {
             indexForOrderedPlay = 0;
@@ -258,7 +267,7 @@ public class MusicPlayerManager {
         //playMusic();
     }
 
-    public static void playSong(SongDataObject songToPlay) throws Exception {
+    public void playSong(SongDataObject songToPlay) throws Exception {
         setSongObjectBeingPlayed(songToPlay);
         File file = new File(songToPlay.getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
@@ -270,19 +279,19 @@ public class MusicPlayerManager {
         mediaPlayer.play();
     }
 
-    public static InvalidationListener backupDurationTracker = new InvalidationListener() {
+    public InvalidationListener backupDurationTracker = new InvalidationListener() {
         public void invalidated(Observable ov) {
             //Here we just print the current time of the song
             backupCurrentDuration = mediaPlayer.getCurrentTime();
         }
     };
 
-    public static InvalidationListener getBackupDurationIlTracker() {
+    public InvalidationListener getBackupDurationIlTracker() {
         return backupDurationTracker;
     }
 
     //The mediaplayer freezes when disconnecting any bluetooth device so we fix that here.
-    public static void resetPlayerOnError() {
+    public void resetPlayerOnError() {
         File file = new File(songObjectBeingPlayed.getPathToWavFile());
         Media media = new Media(file.toURI().toASCIIString());
         stopDisposeMediaPlayer();
@@ -305,45 +314,45 @@ public class MusicPlayerManager {
         mediaPlayer.currentTimeProperty().addListener(backupDurationTracker);//This will help us print the current time of the song
     }
 
-    public static void stopDisposeMediaPlayer() {
+    public void stopDisposeMediaPlayer() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
     }
 
-    public static void nextOrPrevSong() throws IOException, Exception {
+    public void nextOrPrevSong() throws IOException, Exception {
         stopDisposeMediaPlayer();
         smartPlay();
     }
 
-    public static void pauseSong() {
+    public void pauseSong() {
         mediaPlayer.pause();
         paused = true;
     }
 
-    public static void resumeSong() {
+    public void resumeSong() {
         mediaPlayer.play();
         paused = false;
     }
 
-    public static void setPaused(boolean tf) {
+    public void setPaused(boolean tf) {
         paused = tf;
     }
 
-    public static ObservableList<SongDataObject> getCurrentSongList() {
+    public ObservableList<SongDataObject> getCurrentSongList() {
         return currentSongList;
     }
 
-    public static ObservableList<SongDataObject> getPlaylistSongsPlaying() {
+    public ObservableList<SongDataObject> getPlaylistSongsPlaying() {
         return playlistSongsPlaying;
     }
 
-    public static void updateSongList(ArrayList<SongDataObject> sdota) {
-        MusicPlayerManager.getCurrentSongList().clear();
-        MusicPlayerManager.getCurrentSongList().addAll(sdota);
+    public void updateSongList(ArrayList<SongDataObject> sdota) {
+        getCurrentSongList().clear();
+        getCurrentSongList().addAll(sdota);
     }
 
-    public static void sortCurrentSongList(String sortType, ObservableList<SongDataObject> listToSort) {
+    public void sortCurrentSongList(String sortType, ObservableList<SongDataObject> listToSort) {
         if (sortType.equals("A-Z")) {
             FXCollections.sort(listToSort, new Comparator() {
                 @Override
@@ -474,39 +483,39 @@ public class MusicPlayerManager {
         }
     }
 
-    public static MediaPlayer getMediaPlayer() {
+    public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
 
-    public static double getVolume() {
+    public double getVolume() {
         return sliderVolume;
     }
 
-    public static boolean isSongPaused() {
+    public boolean isSongPaused() {
         return paused;
     }
 
-    public static boolean isMusicPlayerInitialized() {
+    public boolean isMusicPlayerInitialized() {
         return musicPlayerInitalized;
     }
 
-    public static void setMusicPlayerInitialized(boolean tf) {
+    public void setMusicPlayerInitialized(boolean tf) {
         musicPlayerInitalized = tf;
     }
 
-    public static void setVolume(double volume) {
+    public void setVolume(double volume) {
         mediaPlayer.setVolume(volume);
     }
 
-    public static void seekTo(Duration duration) {
+    public void seekTo(Duration duration) {
         mediaPlayer.seek(duration);
     }
 
-    public static double getTotalDurationInSeconds() {
+    public double getTotalDurationInSeconds() {
         return mediaPlayer.getTotalDuration().toSeconds();
     }
 
-    public static double getCurrentTimeInSeconds() {
+    public double getCurrentTimeInSeconds() {
         return mediaPlayer.getCurrentTime().toSeconds();
     }
 }

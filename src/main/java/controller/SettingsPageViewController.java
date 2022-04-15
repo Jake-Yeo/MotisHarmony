@@ -27,7 +27,7 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class SettingsPageViewController implements Initializable {
-    
+
     @FXML
     private AnchorPane settingsViewMainAnchorPane;
     @FXML
@@ -52,36 +52,37 @@ public class SettingsPageViewController implements Initializable {
         savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
         stayLoggedInRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn());
     }
-    
+
     @FXML
     private void logout(ActionEvent event) throws Exception {
+        AccountsDataManager.saveAllSettings();
         AccountsDataManager adm = new AccountsDataManager();
         adm.setPathOfAccToAutoLogIn(null);
-        YoutubeDownloader.setStopDownloading(true);
-        YoutubeDownloader.setStopAllDownloadingProcesses(true);
+        YoutubeDownloader.getYtdCurrentlyUsing().setStopDownloading(true);
+        YoutubeDownloader.getYtdCurrentlyUsing().setStopAllDownloadingProcesses(true);
         Accounts.setLoggedInAccount(null);
-        YoutubeDownloader.getYoutubeUrlDownloadQueueList().clear();
+        YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().clear();
         MainViewRunner.getSceneChanger().switchToLoginPageView();
     }
-    
+
     @FXML
     private void updateSaveDownloadQueue(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveDownloadQueue(saveDownloadQueueRadioButton.isSelected());
     }
-    
+
     @FXML
     private void updateSaveSongPosition(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveSongPosition(saveSongPositionRadioButton.isSelected());
     }
-    
+
     @FXML
     private void updateSavePlayPreference(ActionEvent event) throws Exception {
         AccountsDataManager.setSavePlayPreference(savePlayPreference.isSelected());
     }
-    
+
     @FXML
     private void updateStayLoggedIn(ActionEvent event) throws Exception {
         AccountsDataManager.setStayLoggedIn(stayLoggedInRadioButton.isSelected());
     }
-    
+
 }

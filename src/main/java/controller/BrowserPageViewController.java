@@ -72,7 +72,7 @@ public class BrowserPageViewController implements Initializable {
         new Thread(
                 new Runnable() {
             public void run() {
-                YoutubeDownloader.addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
+                YoutubeDownloader.getYtdCurrentlyUsing().addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
             }
         }).start();
     }
@@ -101,7 +101,7 @@ public class BrowserPageViewController implements Initializable {
         new Thread(
                 new Runnable() {
             public void run() {
-                YoutubeDownloader.addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
+                YoutubeDownloader.getYtdCurrentlyUsing().addYoutubeLinkToDownloadQueueAndStartDownload(browserWebView.getEngine().getLocation());
             }
         }).start();
     }

@@ -94,37 +94,39 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void saveAllSettings() throws Exception {
-        try {
-            AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYoutubeUrlDownloadQueueList());
-        } catch (Exception ex) {
-            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            AccountsDataManager.setLastPlaylistPlayed(MusicPlayerManager.getCurrentPlaylistPlayling());
-            AccountsDataManager.setLastSongPlayed(MusicPlayerManager.getSongObjectBeingPlayed());
-        } catch (Exception ex) {
-            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            AccountsDataManager.setPlaySongInLoop(MusicPlayerManager.getPlaySongInLoop());
-            AccountsDataManager.setPlayType(MusicPlayerManager.getPlayType());
-        } catch (Exception ex) {
-            Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        AccountsDataManager adm = deserializeAccMan();
-        if (!Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn()) {
-            adm.pathToAccToAutoLogIn = null;
-        }
-        adm.serializeAccMan();
+        if (Accounts.getLoggedInAccount() != null) {
+            try {
+                AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList());
+            } catch (Exception ex) {
+                Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                AccountsDataManager.setLastPlaylistPlayed(MusicPlayerManager.getMpmCurrentlyUsing().getCurrentPlaylistPlayling());
+                AccountsDataManager.setLastSongPlayed(MusicPlayerManager.getMpmCurrentlyUsing().getSongObjectBeingPlayed());
+            } catch (Exception ex) {
+                Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                AccountsDataManager.setPlaySongInLoop(MusicPlayerManager.getMpmCurrentlyUsing().getPlaySongInLoop());
+                AccountsDataManager.setPlayType(MusicPlayerManager.getMpmCurrentlyUsing().getPlayType());
+            } catch (Exception ex) {
+                Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            AccountsDataManager adm = deserializeAccMan();
+            if (Accounts.getLoggedInAccount() != null && !Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn()) {
+                adm.pathToAccToAutoLogIn = null;
+            }
+            adm.serializeAccMan();
 
-        AccountsDataManager.updateVolumeSettings();
-        Accounts.getLoggedInAccount().serializeAccount();
+            AccountsDataManager.updateVolumeSettings();
+            Accounts.getLoggedInAccount().serializeAccount();
+        }
     }
 
     public static void updateVolumeSettings() throws Exception {
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
-            accSo.setPrefVolume(MusicPlayerManager.getSliderVolume());
+            accSo.setPrefVolume(MusicPlayerManager.getMpmCurrentlyUsing().getSliderVolume());
             System.out.println("Setting saved");
         }
     }
@@ -161,7 +163,9 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void setPlaySongInLoop(boolean tf) throws Exception {
-        Accounts.getLoggedInAccount().getSettingsObject().setPlaySongInLoop(tf);
+        if (Accounts.getLoggedInAccount() != null) {
+            Accounts.getLoggedInAccount().getSettingsObject().setPlaySongInLoop(tf);
+        }
     }
 
     public static void setSavePlayPreference(boolean tf) throws Exception {
@@ -169,7 +173,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void setLastPlaylistPlayed(String nameOfLastPlaylistPlayed) throws Exception {
-        if (nameOfLastPlaylistPlayed != null) {
+        if (Accounts.getLoggedInAccount() != null && nameOfLastPlaylistPlayed != null) {
             Accounts.getLoggedInAccount().getSettingsObject().setLastPlaylistPlayed(nameOfLastPlaylistPlayed);
             System.out.println("Last playlist played: " + nameOfLastPlaylistPlayed);
         }

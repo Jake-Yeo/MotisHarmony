@@ -47,6 +47,7 @@ import ws.schild.jave.EncoderException;
  */
 public class DownloadPageViewController implements Initializable {
 
+    private YoutubeDownloader ytd;
     private ContextMenu downloadManagerContextMenu = new ContextMenu();
     private String youtubeUrlToGetInfoFrom = "";
     private Image thumbnailImage;
@@ -84,7 +85,7 @@ public class DownloadPageViewController implements Initializable {
                 new Runnable() {
             public void run() {
                 try {
-                    YoutubeDownloader.downloadSongsFromDownloadQueue();
+                    ytd.downloadSongsFromDownloadQueue();
                 } catch (IOException ex) {
                     Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (EncoderException ex) {
@@ -108,8 +109,11 @@ public class DownloadPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        YoutubeDownloader.setStopDownloading(false);
-        YoutubeDownloader.setStopAllDownloadingProcesses(false);
+        ytd = new YoutubeDownloader();
+        YoutubeDownloader.setYtdCurrentlyUsing(ytd);
+        
+        ytd.setStopDownloading(false);
+        ytd.setStopAllDownloadingProcesses(false);
         updateErrorListViewWithJavafxThread(false);
         updateDownloadQueueListViewWithJavafxThread(false);
         downloadQueueImageView.setImage(new Image(getClass().getResourceAsStream("/images/MotisHarmonyTriangleBackground.png")));
@@ -129,13 +133,13 @@ public class DownloadPageViewController implements Initializable {
         videoInfoList.getStylesheets().add("/css/customScrollBar.css");
         videoInfoList.getStylesheets().add("/css/customListView.css");
         if (Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue() && !Accounts.getLoggedInAccount().getSongsInQueueList().isEmpty() && Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue()) {
-            YoutubeDownloader.getYoutubeUrlDownloadQueueList().addAll(Accounts.getLoggedInAccount().getSongsInQueueList());
+            ytd.getYoutubeUrlDownloadQueueList().addAll(Accounts.getLoggedInAccount().getSongsInQueueList());
             updateDownloadQueueListViewWithJavafxThread(true);
             new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.
                     new Runnable() {
                 public void run() {
                     try {
-                        YoutubeDownloader.downloadSongsFromDownloadQueue();
+                        ytd.downloadSongsFromDownloadQueue();
                     } catch (IOException ex) {
                         Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (EncoderException ex) {
@@ -145,13 +149,13 @@ public class DownloadPageViewController implements Initializable {
             }).start();
         }
 
-        YoutubeDownloader.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<SongDataObject>() {
+        ytd.getYoutubeUrlDownloadQueueList().addListener(new ListChangeListener<SongDataObject>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends SongDataObject> arg0) {
                 updateDownloadQueueListViewWithJavafxThread(true);
-                if (Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue()) {
+                if (Accounts.getLoggedInAccount() != null && Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue()) {
                     try {
-                        AccountsDataManager.updateSongsInQueueList(YoutubeDownloader.getYoutubeUrlDownloadQueueList());
+                        AccountsDataManager.updateSongsInQueueList(ytd.getYoutubeUrlDownloadQueueList());
                     } catch (Exception ex) {
                         Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -159,7 +163,7 @@ public class DownloadPageViewController implements Initializable {
                 System.out.println("listener ran");
             }
         });
-        YoutubeDownloader.getErrorList().addListener(new ListChangeListener<String>() {
+        ytd.getErrorList().addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends String> arg0) {
                 updateErrorListViewWithJavafxThread(true);
@@ -264,7 +268,7 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     private void clearDownloadErrorList(ActionEvent event) throws IOException {
-        YoutubeDownloader.getErrorList().clear();
+        ytd.getErrorList().clear();
     }
 
     public static void setFirstLinkFromDownloadQueueIsDownloading(boolean tf) {
@@ -282,7 +286,7 @@ public class DownloadPageViewController implements Initializable {
                 public void run() {
                     downloadErrorList.getItems().clear();
                     try {
-                        downloadErrorList.getItems().addAll(YoutubeDownloader.getErrorList());
+                        downloadErrorList.getItems().addAll(ytd.getErrorList());
                     } catch (java.util.ConcurrentModificationException e) {
                         System.out.println("Stop modifying the view so fast");
                     }
@@ -290,12 +294,12 @@ public class DownloadPageViewController implements Initializable {
             });
         } else {
             downloadErrorList.getItems().clear();
-            downloadErrorList.getItems().addAll(YoutubeDownloader.getErrorList());
+            downloadErrorList.getItems().addAll(ytd.getErrorList());
         }
     }
 
     public void addErrorToErrorList(String error) {
-        YoutubeDownloader.getErrorList().add(0, error);
+        ytd.getErrorList().add(0, error);
     }
 
     /**
@@ -307,7 +311,7 @@ public class DownloadPageViewController implements Initializable {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    ObservableList<SongDataObject> listOfUrlDataObjects = YoutubeDownloader.getYoutubeUrlDownloadQueueList();
+                    ObservableList<SongDataObject> listOfUrlDataObjects = ytd.getYoutubeUrlDownloadQueueList();
                     String[] listOfTitlesToShow = new String[listOfUrlDataObjects.size()];
                     for (int i = 0; i < listOfTitlesToShow.length; i++) {
                         listOfTitlesToShow[i] = listOfUrlDataObjects.get(i).getTitle();
@@ -317,7 +321,7 @@ public class DownloadPageViewController implements Initializable {
                 }
             });
         } else {
-            ObservableList<SongDataObject> listOfUrlDataObjects = YoutubeDownloader.getYoutubeUrlDownloadQueueList();
+            ObservableList<SongDataObject> listOfUrlDataObjects = ytd.getYoutubeUrlDownloadQueueList();
             String[] listOfTitlesToShow = new String[listOfUrlDataObjects.size()];
             for (int i = 0; i < listOfTitlesToShow.length; i++) {
                 listOfTitlesToShow[i] = listOfUrlDataObjects.get(i).getTitle();
@@ -329,16 +333,16 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     private void clearQueueManager(ActionEvent event) throws IOException {
-        YoutubeDownloader.setStopDownloading(true);
-        YoutubeDownloader.getYoutubeUrlDownloadQueueList().clear();
+        ytd.setStopDownloading(true);
+        ytd.getYoutubeUrlDownloadQueueList().clear();
         updateDownloadQueueListViewWithJavafxThread(false);
     }
 
     @FXML
     private void deleteSelectedLinkFromQueueManager(ActionEvent event) throws IOException {
         if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {
-            YoutubeDownloader.setStopDownloading(true);
-            YoutubeDownloader.getYoutubeUrlDownloadQueueList().remove(listViewDownloadManager.getSelectionModel().getSelectedIndex());
+            ytd.setStopDownloading(true);
+            ytd.getYoutubeUrlDownloadQueueList().remove(listViewDownloadManager.getSelectionModel().getSelectedIndex());
             updateDownloadQueueListViewWithJavafxThread(false);
         } else {
             addErrorToErrorList("Error! Select something before you delete!");
@@ -360,7 +364,7 @@ public class DownloadPageViewController implements Initializable {
                     new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.
                             new Runnable() {
                         public void run() {
-                            SongDataObject youtubeData = YoutubeDownloader.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
+                            SongDataObject youtubeData = ytd.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
                             thumbnailImage = new Image(youtubeData.getThumbnailUrl());
                             Platform.runLater(new Runnable() {
                                 @Override
@@ -409,7 +413,7 @@ public class DownloadPageViewController implements Initializable {
         new Thread(
                 new Runnable() {
             public void run() {
-                YoutubeDownloader.addYoutubeLinkToDownloadQueueAndStartDownload(youtubeLinkTextFieldContent);
+                ytd.addYoutubeLinkToDownloadQueueAndStartDownload(youtubeLinkTextFieldContent);
             }
         }).start();
     }
