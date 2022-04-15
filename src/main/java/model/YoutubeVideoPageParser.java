@@ -98,7 +98,7 @@ public class YoutubeVideoPageParser {
         if (!(videoUrl.contains("watch?v=") || videoUrl.contains("?list=") || videoUrl.contains("&list=") || videoUrl.contains("youtu.be"))) {
             didErrorOccur = true;
             errorMessage = "The url you input must be the link of a youtube playlist or video!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         if (videoUrl.contains(YT_PLAYLIST_LIST_IDENTIFIER)) {
             videoUrl = convertToWholePlaylistView(videoUrl);
@@ -111,50 +111,50 @@ public class YoutubeVideoPageParser {
             didErrorOccur = true;
             errorMessage = videoUrl + " could not be accessed because you are not connected to wifi";
             YoutubeDownloader.getYtdCurrentlyUsing().setWifiConnected(false);
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         } catch (java.io.IOException e) {
             didErrorOccur = true;
             errorMessage = videoUrl + " cannot be downloaded at this time as you are IP blocked by youtube! Wait out the ban or change your ip.";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         } catch (Exception e) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is likely not a link!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         if (html.contains(YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is age restricted and cannot be downloaded!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         if (html.contains(YOUTUBE_VIDEO_UNAVAILABLE_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is unavailable to the public!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         if (html.contains(YOUTUBE_VIDEO_PRIVATE_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is private and cannot be downloaded!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         if (html.contains(YOUTUBE_LIVESTREAM_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is a livestream and cannot be downloaded!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         if (html.contains(RADIO_PLAYLIST_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is a radio player and cannot be downloaded!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         if (html.contains(YOUTUBE_PLAYLIST_DOES_NOT_EXIST_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is a playlist that is either private or does not exist!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         if (html.contains(YOUTUBE_VIDEO_HARM_RESTRICTED_IDENTIFIER)) {
             didErrorOccur = true;
             errorMessage = videoUrl + " is age restricted and cannot be downloaded!";
-            return new ErrorDataObject(didErrorOccur, errorMessage);
+            return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         }
         didErrorOccur = false;
         errorMessage = null;

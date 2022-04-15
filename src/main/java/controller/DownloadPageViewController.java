@@ -111,7 +111,7 @@ public class DownloadPageViewController implements Initializable {
         // TODO
         ytd = new YoutubeDownloader();
         YoutubeDownloader.setYtdCurrentlyUsing(ytd);
-        
+
         ytd.setStopDownloading(false);
         ytd.setStopAllDownloadingProcesses(false);
         updateErrorListViewWithJavafxThread(false);
@@ -163,12 +163,13 @@ public class DownloadPageViewController implements Initializable {
                 System.out.println("listener ran");
             }
         });
-        ytd.getErrorList().addListener(new ListChangeListener<String>() {
+        ytd.getErrorList().addListener(new ListChangeListener<ErrorDataObject>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends String> arg0) {
+            public void onChanged(ListChangeListener.Change<? extends ErrorDataObject> change) {
                 updateErrorListViewWithJavafxThread(true);
                 System.out.println("listener ran");
             }
+
         });
         initContextMenus();
     }
@@ -286,7 +287,7 @@ public class DownloadPageViewController implements Initializable {
                 public void run() {
                     downloadErrorList.getItems().clear();
                     try {
-                        downloadErrorList.getItems().addAll(ytd.getErrorList());
+                        downloadErrorList.getItems().addAll(ErrorDataObject.getListOfErrorMessages(ytd.getErrorList()));
                     } catch (java.util.ConcurrentModificationException e) {
                         System.out.println("Stop modifying the view so fast");
                     }
@@ -294,11 +295,11 @@ public class DownloadPageViewController implements Initializable {
             });
         } else {
             downloadErrorList.getItems().clear();
-            downloadErrorList.getItems().addAll(ytd.getErrorList());
+            downloadErrorList.getItems().addAll(ErrorDataObject.getListOfErrorMessages(ytd.getErrorList()));
         }
     }
 
-    public void addErrorToErrorList(String error) {
+    public void addErrorToErrorList(ErrorDataObject error) {
         ytd.getErrorList().add(0, error);
     }
 
@@ -345,7 +346,7 @@ public class DownloadPageViewController implements Initializable {
             ytd.getYoutubeUrlDownloadQueueList().remove(listViewDownloadManager.getSelectionModel().getSelectedIndex());
             updateDownloadQueueListViewWithJavafxThread(false);
         } else {
-            addErrorToErrorList("Error! Select something before you delete!");
+            addErrorToErrorList(new ErrorDataObject(true, "Error! Select something before you delete!"));
         }
     }
 

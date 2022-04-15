@@ -63,7 +63,7 @@ public class YoutubeDownloader {
     private final String YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER = "https:";
     private final String YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER = "range";
     private ObservableList<SongDataObject> youtubeUrlDownloadQueueList = FXCollections.observableArrayList();
-    private ObservableList<String> errorList = FXCollections.observableArrayList();
+    private ObservableList<ErrorDataObject> errorList = FXCollections.observableArrayList();
 
     public static YoutubeDownloader getYtdCurrentlyUsing() {
         return ytdCurrentlyUsing;
@@ -92,7 +92,7 @@ public class YoutubeDownloader {
             }
         } catch (Exception e) {
             setWifiConnected(false);
-            errorList.add("You aren't connected to wifi!");
+            errorList.add(new ErrorDataObject(true, "You aren't connected to wifi!"));
         }
     }
 
@@ -128,10 +128,10 @@ public class YoutubeDownloader {
             if (!SongDataObject.toString(getYoutubeUrlDownloadQueueList()).contains(sdoToAddToDownloadQueue.getVideoUrl()) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(sdoToAddToDownloadQueue.getVideoUrl())) {
                 youtubeUrlDownloadQueueList.add(sdoToAddToDownloadQueue);//adds the youtube url to the download queue
             } else {
-                errorList.add(youtubeUrl + " has already been added to the download queue, or has already been downloaded");
+                errorList.add(new ErrorDataObject(true, youtubeUrl + " has already been added to the download queue, or has already been downloaded", youtubeUrl));
             }
         } else {
-            errorList.add(youtubeUrl + " has already been added to the download queue, or has already been downloaded");
+            errorList.add(new ErrorDataObject(true, youtubeUrl + " has already been added to the download queue, or has already been downloaded", youtubeUrl));
         }
     }
 
@@ -147,7 +147,7 @@ public class YoutubeDownloader {
         return youtubeUrlDownloadQueueList;
     }
 
-    public ObservableList<String> getErrorList() {
+    public ObservableList<ErrorDataObject> getErrorList() {
         return errorList;
     }
 
@@ -157,10 +157,10 @@ public class YoutubeDownloader {
         try {
             youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
         } catch (IOException e) {
-            errorList.add("You're currently IP banned from youtube and cannot download songs at this time");
+            errorList.add(new ErrorDataObject(true, "You're currently IP banned from youtube and cannot download songs at this time"));
         }
         if (youtubePlaylistUrls == null) {
-            errorList.add("Sorry we cannot download the url you entered at this time.");
+            errorList.add(new ErrorDataObject(true, "Sorry we cannot download the url you entered at this time."));
             return;
         }
         ArrayList<SongDataObject> sdosToRemoveFromYoutubePlaylistUrls = new ArrayList<>();
@@ -233,12 +233,17 @@ public class YoutubeDownloader {
             while (!audioHtmlSource.contains("media")) {
                 while (!netData.contains(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)) { //Sometimes url is loaded but the audio source isn't present in the network traffic data, so reload the site and do it until we get the audio source.
                     System.out.println("Error saved!");
-                    System.out.println(youtubeUrl + "This link didn't have mime=audio!");
+                    System.out.println(youtubeUrl + " This link didn't have mime=audio!");
                     if (repeats > 5) {
                         System.out.println("Error getting this this link " + youtubeUrl);
                         netData = "error";
                         break;
-
+                        //If statement below will stop the program from trying to get the audio source if it's unable to find it when the user clears the download queue
+                    } else if (getStopAllDownloadingProcesses() || stopDownloading) {
+                        System.out.println("clearCalled");
+                        netData = "clearCalled";
+                        stopDownloading = false;
+                        break;
                     }
                     try {
                         driver.get(youtubeUrl);
@@ -251,6 +256,9 @@ public class YoutubeDownloader {
                     repeats++;
                 }
                 if (netData.equals("error")) {
+                    break;
+                }
+                if (netData.equals("clearCalled")) {
                     break;
                 }
                 System.out.println("Netdata stuff: " + netData);
@@ -311,7 +319,7 @@ public class YoutubeDownloader {
                     }
                 }
             } else {
-                errorList.add(errorData.getErrorMessage());
+                errorList.add(errorData);
             }
         } catch (IOException ex) {
             Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -323,7 +331,7 @@ public class YoutubeDownloader {
         if (!SongDataObject.toString(getYoutubeUrlDownloadQueueList()).contains(youtubeUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubeUrl)) {//Stops you from inputting the same url into the downloadQueue
             addYoutubeUrlsToDownloadQueue(youtubeUrl);
         } else {
-            errorList.add(youtubeUrl + " has already been added to the download queue, or has already been downloaded");
+            errorList.add(new ErrorDataObject(true, youtubeUrl + " has already been added to the download queue, or has already been downloaded", youtubeUrl));
         }
     }
 
@@ -335,7 +343,7 @@ public class YoutubeDownloader {
         URL downloadURL = null;
         boolean skipAudioConversion = false;
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeSongData.getVideoUrl());
-        if (!possibleYoutubeUrl.equals("error") && !possibleYoutubeUrl.equals("No Wifi")) {
+        if (!possibleYoutubeUrl.equals("error") && !possibleYoutubeUrl.equals("No Wifi") && !possibleYoutubeUrl.equals("clearCalled")) {
             //We add range=0-99999999999999999999 to the url below to bypass throttling which speeds up download times by nearly 95 times!
             System.out.println(YoutubeVideoPageParser.extractMaxByteRange(possibleYoutubeUrl));
             int maxByteRange = YoutubeVideoPageParser.extractMaxByteRange(possibleYoutubeUrl);
@@ -382,15 +390,15 @@ public class YoutubeDownloader {
             try {
                 AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
             } catch (Exception ex) {
-                errorList.add("Download could not be completed as wifi is disconnected");
+                errorList.add(new ErrorDataObject(true, "Download could not be completed as wifi is disconnected"));
                 setWifiConnected(false);
             }
 
         } else if (possibleYoutubeUrl.equals("error")) {
-            errorList.add(youtubeSongData.getVideoUrl() + " could not be downloaded at this time, please try again later or find an alternative link");
+            errorList.add(new ErrorDataObject(true, youtubeSongData.getVideoUrl() + " could not be downloaded at this time, please try again later or find an alternative link", youtubeSongData.getVideoUrl()));
             System.err.print("Failed to download this song");
         } else if (possibleYoutubeUrl.equals("No Wifi")) {
-            errorList.add(youtubeSongData.getVideoUrl() + " failed to download because you are not connected to wifi");
+            errorList.add(new ErrorDataObject(true, youtubeSongData.getVideoUrl() + " failed to download because you are not connected to wifi", youtubeSongData.getVideoUrl()));
             setWifiConnected(false);
         }
     }
@@ -404,7 +412,7 @@ public class YoutubeDownloader {
             if (!errorData.didErrorOccur() && !youtubeUrlDownloadQueueList.isEmpty()) {//The youtube urls in the playlists are not checked, so we must check those here.
                 downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
             } else {
-                errorList.add(errorData.getErrorMessage());
+                errorList.add(errorData);
             }
             if (removeFirstLink && wifiConnected) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
                 if (youtubeUrlDownloadQueueList.size() != 0) {
@@ -416,7 +424,7 @@ public class YoutubeDownloader {
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(false);
         }
         if (!wifiConnected) {
-            errorList.add("You aren't connected to wifi!");
+            errorList.add(new ErrorDataObject(true, "You aren't connected to wifi!"));
         }
         quitChromeDriver();//Finally, when all the youtube videos have been downloaded, exit the download queue
         setIsChromeDriverActive(false);
