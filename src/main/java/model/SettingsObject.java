@@ -19,6 +19,7 @@ public class SettingsObject implements Serializable {
     private String playlistListSortPreference = "A-Z";
     private String playType = "Ordered Play";
     private boolean playSongInLoop = false;
+    private boolean stayLoggedIn = true;
     private boolean saveDownloadQueue = true;
     private boolean savePlayPreference = false;
     private boolean saveSongPosition = true;
@@ -27,6 +28,14 @@ public class SettingsObject implements Serializable {
 
     public SettingsObject() {
         System.out.println("playlistListSortPreference = " + playlistListSortPreference);
+    }
+    
+    public void setStayLoggedIn(boolean tf) {
+        this.stayLoggedIn = tf;
+    }
+    
+    public boolean getStayLoggedIn() {
+        return stayLoggedIn;
     }
 
     public boolean getSavePlayPreference() {

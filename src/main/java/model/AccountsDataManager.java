@@ -111,6 +111,12 @@ public class AccountsDataManager implements Serializable {//This class will be u
         } catch (Exception ex) {
             Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
         }
+        AccountsDataManager adm = deserializeAccMan();
+        if (!Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn()) {
+            adm.pathToAccToAutoLogIn = null;
+        }
+        adm.serializeAccMan();
+
         AccountsDataManager.updateVolumeSettings();
         Accounts.getLoggedInAccount().serializeAccount();
     }
@@ -125,6 +131,10 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     public static void setSaveDownloadQueue(boolean tf) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setSaveDownloadQueue(tf);
+    }
+
+    public static void setStayLoggedIn(boolean tf) throws Exception {
+        Accounts.getLoggedInAccount().getSettingsObject().setStayLoggedIn(tf);
     }
 
     public static void updateSongsInQueueList(ObservableList<SongDataObject> songsToUpdateWith) throws Exception {

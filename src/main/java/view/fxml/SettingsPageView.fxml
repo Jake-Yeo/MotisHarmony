@@ -21,5 +21,6 @@
       <RadioButton fx:id="saveDownloadQueueRadioButton" layoutX="562.0" layoutY="472.0" mnemonicParsing="false" onAction="#updateSaveDownloadQueue" text="Save Download Queue" />
       <RadioButton fx:id="saveSongPositionRadioButton" layoutX="562.0" layoutY="432.0" mnemonicParsing="false" onAction="#updateSaveSongPosition" text="Save Song Position" />
       <RadioButton fx:id="savePlayPreference" layoutX="562.0" layoutY="404.0" mnemonicParsing="false" onAction="#updateSavePlayPreference" text="Save Play Preference" />
+      <RadioButton fx:id="stayLoggedInRadioButton" layoutX="562.0" layoutY="371.0" mnemonicParsing="false" onAction="#updateStayLoggedIn" text="Stay Logged In" />
    </children>
 </AnchorPane>

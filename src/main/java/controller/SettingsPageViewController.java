@@ -27,7 +27,7 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class SettingsPageViewController implements Initializable {
-
+    
     @FXML
     private AnchorPane settingsViewMainAnchorPane;
     @FXML
@@ -38,6 +38,8 @@ public class SettingsPageViewController implements Initializable {
     private RadioButton saveSongPositionRadioButton;
     @FXML
     private RadioButton savePlayPreference;
+    @FXML
+    private RadioButton stayLoggedInRadioButton;
 
     /**
      * Initializes the controller class.
@@ -48,8 +50,9 @@ public class SettingsPageViewController implements Initializable {
         saveDownloadQueueRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue());
         saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
         savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
+        stayLoggedInRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn());
     }
-
+    
     @FXML
     private void logout(ActionEvent event) throws Exception {
         AccountsDataManager adm = new AccountsDataManager();
@@ -60,20 +63,25 @@ public class SettingsPageViewController implements Initializable {
         YoutubeDownloader.getYoutubeUrlDownloadQueueList().clear();
         MainViewRunner.getSceneChanger().switchToLoginPageView();
     }
-
+    
     @FXML
     private void updateSaveDownloadQueue(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveDownloadQueue(saveDownloadQueueRadioButton.isSelected());
     }
-
+    
     @FXML
     private void updateSaveSongPosition(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveSongPosition(saveSongPositionRadioButton.isSelected());
     }
-
+    
     @FXML
     private void updateSavePlayPreference(ActionEvent event) throws Exception {
         AccountsDataManager.setSavePlayPreference(savePlayPreference.isSelected());
     }
-
+    
+    @FXML
+    private void updateStayLoggedIn(ActionEvent event) throws Exception {
+        AccountsDataManager.setStayLoggedIn(stayLoggedInRadioButton.isSelected());
+    }
+    
 }
