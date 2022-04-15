@@ -299,6 +299,9 @@ public class MusicPlayerManager {
         mediaPlayer.setOnError(() -> {
             resetPlayerOnError();
         });
+        mediaPlayer.setOnHalted(() -> {
+            resetPlayerOnError();
+        });
         mediaPlayer.currentTimeProperty().addListener(backupDurationTracker);//This will help us print the current time of the song
     }
 

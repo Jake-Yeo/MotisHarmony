@@ -648,14 +648,16 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         MusicPlayerManager.getMediaPlayer().setOnError(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
-                try {
-                    MusicPlayerManager.resetPlayerOnError();
-                } catch (Exception ex) {
-                    Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                MusicPlayerManager.resetPlayerOnError();
                 init();
                 updateInfoDisplays();
             }
+        });
+
+        MusicPlayerManager.getMediaPlayer().setOnHalted(() -> {
+            MusicPlayerManager.resetPlayerOnError();
+            init();
+            updateInfoDisplays();
         });
 
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
