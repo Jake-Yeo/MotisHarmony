@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -56,12 +57,17 @@ public class SettingsPageViewController implements Initializable {
     @FXML
     private void logout(ActionEvent event) throws Exception {
         AccountsDataManager.saveAllSettings();
+        MusicPlayerManager.getMpmCurrentlyUsing().stopDisposeMediaPlayer();
         AccountsDataManager adm = new AccountsDataManager();
         adm.setPathOfAccToAutoLogIn(null);
         YoutubeDownloader.getYtdCurrentlyUsing().setStopDownloading(true);
         YoutubeDownloader.getYtdCurrentlyUsing().setStopAllDownloadingProcesses(true);
         Accounts.setLoggedInAccount(null);
+        //Makes the sliding bar menu animate correctly
+        MainViewRunner.setSlideBarRanOnce(false);
         YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().clear();
+        //initialize login page before switching
+        MainViewRunner.getSceneChanger().addScreen("LoginPage", FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml")));
         MainViewRunner.getSceneChanger().switchToLoginPageView();
     }
 

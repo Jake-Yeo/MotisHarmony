@@ -192,6 +192,7 @@ public class LoginPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        errorText.setText("");
         loginSignupMainAnchorPane.setBackground(Background.EMPTY);//This will make the main anchor pane of the login page transparent for aethetics
         loginPageImageView.setImage(new Image(getClass().getResourceAsStream("/images/loginPage.png")));
         Rectangle clip = new Rectangle(

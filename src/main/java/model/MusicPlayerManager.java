@@ -44,7 +44,7 @@ public class MusicPlayerManager {
     private int posInSongHistory = 0;
     private String currentPlaylistPlayling;
     private double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
-
+    
     public static void setMpmCurrentlyUsing(MusicPlayerManager mpm) {
         mpmCurrentlyUsing = mpm;
     }
