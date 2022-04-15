@@ -673,6 +673,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             MusicPlayerManager.seekTo(Duration.seconds(seekSlider.getValue()));//Set where to resume the song
+            System.out.println(seekSlider.getValue() + " seek slider");
             //Here we keep a backup of the current duration of the song just incase the mediaPlayer crashes, which it does everytime you disconnect a bluetooth headset for some reason
             MusicPlayerManager.setBackUpCurrentDuration(MusicPlayerManager.getMediaPlayer().getCurrentTime());
             MusicPlayerManager.resumeSong();//Resume the song once the user releases their mous key
@@ -691,11 +692,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             public void invalidated(Observable ov) {
                 seekSlider.setValue(MusicPlayerManager.getCurrentTimeInSeconds());
                 timeText.setText(getCurrentTimeStringFormatted((int) Math.floor(MusicPlayerManager.getCurrentTimeInSeconds()), (int) Math.floor(MusicPlayerManager.getTotalDurationInSeconds())));
-                //Here we keep a backup of the current duration of the song just incase the mediaPlayer crashes, which it does everytime you disconnect a bluetooth headset for some reason
-                MusicPlayerManager.setBackUpCurrentDuration(MusicPlayerManager.getMediaPlayer().getCurrentTime());
-                System.out.println(MusicPlayerManager.getMediaPlayer().getCurrentTime().toSeconds());
             }
         });
+
+        //Here we keep a backup of the current duration of the song just incase the mediaPlayer crashes, which it does everytime you disconnect a bluetooth headset for some reason
+        MusicPlayerManager.getMediaPlayer().currentTimeProperty().addListener(MusicPlayerManager.getBackupDurationIlTracker());
 
     }
 

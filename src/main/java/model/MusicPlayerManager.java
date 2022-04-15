@@ -15,6 +15,8 @@ import javafx.scene.media.Media;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.media.MediaPlayer;
@@ -31,7 +33,6 @@ public class MusicPlayerManager {
     private static Duration backupCurrentDuration = null;
     private static boolean musicPlayerInitalized = false;
     private static boolean playSongInLoop = false;
-    private static boolean brokenBluetoothMusicPlayerSeeked = true;
     private static int volume;
     private static String playType = "Ordered Play";
     private static SongDataObject songObjectBeingPlayed;
@@ -269,32 +270,36 @@ public class MusicPlayerManager {
         mediaPlayer.play();
     }
 
-    public static boolean getBrokenBluetoothMusicPlayerSeeked() {
-        return brokenBluetoothMusicPlayerSeeked;
-    }
+    public static InvalidationListener backupDurationTracker = new InvalidationListener() {
+        public void invalidated(Observable ov) {
+            //Here we just print the current time of the song
+            backupCurrentDuration = mediaPlayer.getCurrentTime();
+        }
+    };
 
-    public static void setBrokenBluetoothMusicPlayerSeeked(boolean tf) {
-        brokenBluetoothMusicPlayerSeeked = tf;
+    public static InvalidationListener getBackupDurationIlTracker() {
+        return backupDurationTracker;
     }
 
     //The mediaplayer freezes when disconnecting any bluetooth device so we fix that here.
     public static void resetPlayerOnError() {
-        brokenBluetoothMusicPlayerSeeked = false;
         File file = new File(songObjectBeingPlayed.getPathToWavFile());
         Media media = new Media(file.toURI().toASCIIString());
         stopDisposeMediaPlayer();
+        mediaPlayer.stop();
+        mediaPlayer.currentTimeProperty().removeListener(backupDurationTracker);
         mediaPlayer = new MediaPlayer(media);
-        updatePlayTypeAtEndOfMedia();
-        setMusicPlayerInitialized(true);
-        mediaPlayer.setOnPlaying(() -> {
-            mediaPlayer.seek(backupCurrentDuration);
-            //Sometimes setting the seek right after creating the mediaPlayer may not work, so we must try and try again untill it works
-            if (mediaPlayer.getCurrentTime().toMillis() >= backupCurrentDuration.toMillis()) {
-                mediaPlayer.setOnPlaying(null);
-                System.out.println("Seek successful");
-            }
-        });
         mediaPlayer.play();
+        mediaPlayer.pause();
+        mediaPlayer.setOnPlaying(() -> {
+            //The seek is inaccurate for large mp3 files, there is no fix
+            mediaPlayer.seek(backupCurrentDuration);
+            mediaPlayer.setOnPlaying(null);
+        });
+        mediaPlayer.setOnError(() -> {
+            resetPlayerOnError();
+        });
+        mediaPlayer.currentTimeProperty().addListener(backupDurationTracker);//This will help us print the current time of the song
     }
 
     public static void stopDisposeMediaPlayer() {
