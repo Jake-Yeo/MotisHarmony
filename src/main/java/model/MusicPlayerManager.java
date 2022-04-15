@@ -48,11 +48,11 @@ public class MusicPlayerManager {
     public static void setMpmCurrentlyUsing(MusicPlayerManager mpm) {
         mpmCurrentlyUsing = mpm;
     }
-    
+
     public static MusicPlayerManager getMpmCurrentlyUsing() {
         return mpmCurrentlyUsing;
     }
-    
+
     public void setSongObjectBeingPlayed(SongDataObject sdo) throws Exception {
         songObjectBeingPlayed = sdo;
         if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition()) {
@@ -185,24 +185,29 @@ public class MusicPlayerManager {
             });
         }
     }
+    
+    public boolean isThisPlaylistEmpty(String playlistName) {
+        return Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName).isEmpty();
+    }
 
     public void smartPlay() throws IOException, Exception {
-        if (!musicPlayerInitalized) {
-            if (playType.equals("Random Play")) {
-                randomPlay();
-            } else if (playType.equals("Ordered Play")) {
-                orderedPlay();
-            }
-        } else if (playSongInLoop) {
-            loopPlay();
-        } else {
-            if (playType.equals("Random Play")) {
-                randomPlay();
-            } else if (playType.equals("Ordered Play")) {
-                orderedPlay();
+        if (isThisPlaylistEmpty(getCurrentPlaylistPlayling())) {
+            if (!musicPlayerInitalized) {
+                if (playType.equals("Random Play")) {
+                    randomPlay();
+                } else if (playType.equals("Ordered Play")) {
+                    orderedPlay();
+                }
+            } else if (playSongInLoop) {
+                loopPlay();
+            } else {
+                if (playType.equals("Random Play")) {
+                    randomPlay();
+                } else if (playType.equals("Ordered Play")) {
+                    orderedPlay();
+                }
             }
         }
-
     }
 
     public void loopPlay() {

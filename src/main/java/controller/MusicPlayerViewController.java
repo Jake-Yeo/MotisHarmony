@@ -468,21 +468,23 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @FXML
     private void playMusic(ActionEvent event) throws IOException, Exception {
-        //The code below immitates what spotify does when a playbutton is pushed
-        if (!mpm.isMusicPlayerInitialized()) {
-            onFirstMusicPlayerPlay();
-        } else if (!mpm.isSongPaused()) {
-            System.out.println("Paused Song");
-            mpm.pauseSong();
-            playButton.setStyle("-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-            playButton.setText("▶");
-            System.out.println(mpm.getMediaPlayer().getStatus());
-        } else {
-            System.out.println("Resumed Song");
-            mpm.resumeSong();
-            playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-            playButton.setText("⏸︎");
-            System.out.println(mpm.getMediaPlayer().getStatus());
+        if (!mpm.isThisPlaylistEmpty(mpm.getCurrentPlaylistPlayling())) {
+            //The code below immitates what spotify does when a playbutton is pushed
+            if (!mpm.isMusicPlayerInitialized()) {
+                onFirstMusicPlayerPlay();
+            } else if (!mpm.isSongPaused()) {
+                System.out.println("Paused Song");
+                mpm.pauseSong();
+                playButton.setStyle("-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+                playButton.setText("▶");
+                System.out.println(mpm.getMediaPlayer().getStatus());
+            } else {
+                System.out.println("Resumed Song");
+                mpm.resumeSong();
+                playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+                playButton.setText("⏸︎");
+                System.out.println(mpm.getMediaPlayer().getStatus());
+            }
         }
     }
 
@@ -502,50 +504,54 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @FXML
     private void previousSong() throws IOException, Exception {
-        //The code below immitates what spotify does when a previous song button is pressed
-        if (!mpm.isMusicPlayerInitialized()) {
-            //This line basically initializes the MusicPlayer so that it is not null and can be used
-            onFirstMusicPlayerPlay();
-        }
-        if (!mpm.getPlaySongInLoop()) {
-            if (mpm.getPlayType().equals("Ordered Play")) {
-                //This will clear the songHistory(), remember it is only used to keep track of songs when shuffling
-                mpm.getSongHistory().clear();
-                //The code below will let the MusicPlayerManager know to play the next song
-                mpm.setIndexForOrderedPlay(mpm.getPlaylistSongsPlaying().indexOf(mpm.getSongObjectBeingPlayed()) - 1);
-                mpm.nextOrPrevSong();
-                //This code will set up the play button and audio info displays
-                setUpPlayButton();
-            } else if (mpm.getPlayType().equals("Random Play")) {
-                //We get the index of the next song to keep track of which song to play next in the song history
-                int indexOfPrevSong = mpm.getPosInSongHistory() - 1;
-                //If there is no song left to play in the song history then do nothing because we are getting the previous song, there is no previous song left
-                if (indexOfPrevSong < 0) {
-                    return;
-                } else {
-                    //If there is a previous song to play then we play it
-                    mpm.playSong(mpm.getSongHistory().get(indexOfPrevSong));
-                    //We keep track of the position we are on in the songHistory
-                    mpm.setPosInSongHistory(mpm.getPosInSongHistory() - 1);
-                    setUpPlayButton();
-                }
+        if (!mpm.isThisPlaylistEmpty(mpm.getCurrentPlaylistPlayling())) {
+            //The code below immitates what spotify does when a previous song button is pressed
+            if (!mpm.isMusicPlayerInitialized()) {
+                //This line basically initializes the MusicPlayer so that it is not null and can be used
+                onFirstMusicPlayerPlay();
             }
-        } else {
-            //Since the looping code in in the manager, we just need to run code from the manager and update the UI
-            mpm.nextOrPrevSong();
-            init();//initalize again because a new MediaPlayer is made
-            updateInfoDisplays();
+            if (!mpm.getPlaySongInLoop()) {
+                if (mpm.getPlayType().equals("Ordered Play")) {
+                    //This will clear the songHistory(), remember it is only used to keep track of songs when shuffling
+                    mpm.getSongHistory().clear();
+                    //The code below will let the MusicPlayerManager know to play the next song
+                    mpm.setIndexForOrderedPlay(mpm.getPlaylistSongsPlaying().indexOf(mpm.getSongObjectBeingPlayed()) - 1);
+                    mpm.nextOrPrevSong();
+                    //This code will set up the play button and audio info displays
+                    setUpPlayButton();
+                } else if (mpm.getPlayType().equals("Random Play")) {
+                    //We get the index of the next song to keep track of which song to play next in the song history
+                    int indexOfPrevSong = mpm.getPosInSongHistory() - 1;
+                    //If there is no song left to play in the song history then do nothing because we are getting the previous song, there is no previous song left
+                    if (indexOfPrevSong < 0) {
+                        return;
+                    } else {
+                        //If there is a previous song to play then we play it
+                        mpm.playSong(mpm.getSongHistory().get(indexOfPrevSong));
+                        //We keep track of the position we are on in the songHistory
+                        mpm.setPosInSongHistory(mpm.getPosInSongHistory() - 1);
+                        setUpPlayButton();
+                    }
+                }
+            } else {
+                //Since the looping code in in the manager, we just need to run code from the manager and update the UI
+                mpm.nextOrPrevSong();
+                init();//initalize again because a new MediaPlayer is made
+                updateInfoDisplays();
+            }
         }
     }
 
     @FXML
     private void nextSong(ActionEvent event) throws IOException, Exception {
-        //The code below immitates what spotify does when a next song button is pressed
-        if (!mpm.isMusicPlayerInitialized()) {
-            //This line basically initializes the MusicPlayer so that it is not null and can be used
-            onFirstMusicPlayerPlay();
+        if (!mpm.isThisPlaylistEmpty(mpm.getCurrentPlaylistPlayling())) {
+            //The code below immitates what spotify does when a next song button is pressed
+            if (!mpm.isMusicPlayerInitialized()) {
+                //This line basically initializes the MusicPlayer so that it is not null and can be used
+                onFirstMusicPlayerPlay();
+            }
+            goToNextSong();
         }
-        goToNextSong();
 
     }
 
@@ -747,20 +753,22 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void playPlaylistOption() throws IOException, Exception {
-        if (mpm.isMusicPlayerInitialized()) {
-            mpm.setIndexForOrderedPlay(0);
-            mpm.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
-            mpm.nextOrPrevSong();
-            init();//initalize again because a new MediaPlayer is made
-            updateInfoDisplays();
-            mpm.setMusicPlayerInitialized(true);
-            mpm.setPaused(false);
-            playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-            playButton.setText("⏸︎");
-        } else {
-            mpm.setIndexForOrderedPlay(0);
-            mpm.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
-            onFirstMusicPlayerPlay();
+        if (!mpm.isThisPlaylistEmpty(playlistList.getSelectionModel().getSelectedItem())) {
+            if (mpm.isMusicPlayerInitialized()) {
+                mpm.setIndexForOrderedPlay(0);
+                mpm.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+                mpm.nextOrPrevSong();
+                init();//initalize again because a new MediaPlayer is made
+                updateInfoDisplays();
+                mpm.setMusicPlayerInitialized(true);
+                mpm.setPaused(false);
+                playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+                playButton.setText("⏸︎");
+            } else {
+                mpm.setIndexForOrderedPlay(0);
+                mpm.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+                onFirstMusicPlayerPlay();
+            }
         }
     }
 
