@@ -211,6 +211,8 @@ public class AccountsDataManager implements Serializable {//This class will be u
             }
             Accounts.getLoggedInAccount().removeSongFromAccount(sdoToRemove[j]);
         }
+        MusicPlayerManager.getMpmCurrentlyUsing().getCurrentSongList().removeAll(sdoToRemove);
+        
         AccountsDataManager adm = deserializeAccMan();
         adm.deletionQueue.addAll(Arrays.asList(sdoToRemove));
         adm.serializeAccMan();

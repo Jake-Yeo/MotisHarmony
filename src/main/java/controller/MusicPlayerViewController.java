@@ -748,7 +748,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void deleteSongFromPlaylistOption() throws Exception {
-        AccountsDataManager.removeSongFromPlaylist(playlistList.getSelectionModel().getSelectedItem(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
+        if (playlistList.getSelectionModel().getSelectedItem() != null) {
+            AccountsDataManager.removeSongFromPlaylist(playlistList.getSelectionModel().getSelectedItem(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
+        } else {
+            //This else statement should only run when the user does not click on any playlists during startup
+            AccountsDataManager.removeSongFromPlaylist(mpm.getCurrentPlaylistPlayling(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
+
+        }
+        playlistList.getSelectionModel().select(mpm.getCurrentPlaylistPlayling());
         updateModelCurrentSongList();
     }
 
@@ -955,6 +962,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     private void updateViewCurrentSongList() {
         //we clear the list and then put the new list of song names in
+        System.out.println("updating current song list");
         songList.getItems().clear();
         songList.getItems().addAll(mpm.getArrayOfSongInfoInCurrentSongList());
     }
