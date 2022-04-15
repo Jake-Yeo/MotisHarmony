@@ -191,7 +191,7 @@ public class MusicPlayerManager {
     }
 
     public void smartPlay() throws IOException, Exception {
-        if (isThisPlaylistEmpty(getCurrentPlaylistPlayling())) {
+        if (!isThisPlaylistEmpty(getCurrentPlaylistPlayling())) {
             if (!musicPlayerInitalized) {
                 if (playType.equals("Random Play")) {
                     randomPlay();

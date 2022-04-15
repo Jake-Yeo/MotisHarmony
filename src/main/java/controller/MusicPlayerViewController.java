@@ -754,6 +754,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     public void playPlaylistOption() throws IOException, Exception {
         if (!mpm.isThisPlaylistEmpty(playlistList.getSelectionModel().getSelectedItem())) {
+            System.out.println("playling playlist");
             if (mpm.isMusicPlayerInitialized()) {
                 mpm.setIndexForOrderedPlay(0);
                 mpm.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
