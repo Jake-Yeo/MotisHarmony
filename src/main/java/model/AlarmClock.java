@@ -4,9 +4,17 @@
  */
 package model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 /**
  *
@@ -19,7 +27,7 @@ public class AlarmClock {
     private int hour;
     private int minute;
     private String amOrPm;
-    private long timeToGoOff;
+    private Calendar timeToGoOff;
 
     public AlarmClock(int hour, int min, String amOrPm) {
         this.hour = hour;
@@ -35,15 +43,51 @@ public class AlarmClock {
         alarmCurrentlyUsing = ac;
     }
 
-    public void checkAlarm() {
-        Calendar cal = Calendar.getInstance();
-        System.out.println("current date: " + cal.getTime());
-        cal.add(Calendar.MINUTE, 7);
-        System.out.println("7 days later: " + cal.getTime());
-        
-        SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd-yyyy HH:mm");
-        Date now = new Date();
-        String strDate = sdfDate.format(now);
+    public void setTimeForAlarmToGoOff() {
+        DateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy-HH-mm");
+        Calendar currentDate = Calendar.getInstance();
+        String[] stringMonthDayYearHourMinute = dateFormatter.format(currentDate.getTime()).split("-");
+        int[] monthDayYearHourMinute = new int[stringMonthDayYearHourMinute.length];
+        for (int i = 0; i < monthDayYearHourMinute.length; i++) {
+            monthDayYearHourMinute[i] = Integer.parseInt(stringMonthDayYearHourMinute[i]);
+        }
+        Calendar futureAlarmDate = Calendar.getInstance();
+        //Subtract one from the months because January starts from index 0
+        if (amOrPm.equals("PM")) {
+            futureAlarmDate.set(monthDayYearHourMinute[2], monthDayYearHourMinute[0] - 1, monthDayYearHourMinute[1], hour + 12, minute, 0);
+        } else {
+            futureAlarmDate.set(monthDayYearHourMinute[2], monthDayYearHourMinute[0] - 1, monthDayYearHourMinute[1], hour, minute, 0);
+        }
+        if (futureAlarmDate.getTimeInMillis() < currentDate.getTimeInMillis()) {
+            futureAlarmDate.set(monthDayYearHourMinute[2], monthDayYearHourMinute[0] - 1, monthDayYearHourMinute[1] + 1);
+        }
+        timeToGoOff = futureAlarmDate;
+        System.out.println(Arrays.toString(monthDayYearHourMinute));
+        System.out.println(dateFormatter.format(currentDate.getTime()));
+        System.out.println(dateFormatter.format(futureAlarmDate.getTime()));
+    }
+
+    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
+            e -> {
+                if (timeToGoOff.compareTo(Calendar.getInstance()) <= 0) {
+                    stopAlarmCheck();
+                    try {
+                        MusicPlayerManager.getMpmCurrentlyUsing().smartPlay();
+                    } catch (Exception i) {
+                        i.printStackTrace();
+                    }
+                    System.out.println("Alarm");
+                }
+            }
+    ));
+
+    public void stopAlarmCheck() {
+        timeline.stop();
+    }
+
+    public void startAlarmCheck() throws ParseException {
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     public int getHour() {

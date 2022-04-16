@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -859,7 +860,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
-    public void showAlarmClockDialog() throws IOException {
+    public void showAlarmClockDialog() throws IOException, ParseException {
         //This creates a dialog popup to allow the user to edit the data of a SongDataObject
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/AlarmClockDialogEditor.fxml"));
@@ -873,6 +874,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             AccountsDataManager.saveAlarmClockSettings();
+            AlarmClock.getAlarmCurrentlyUsing().setTimeForAlarmToGoOff();
+            AlarmClock.getAlarmCurrentlyUsing().startAlarmCheck();
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             SettingsObject setObj = Accounts.getLoggedInAccount().getSettingsObject();
             AlarmClock.getAlarmCurrentlyUsing().setAmOrPm(setObj.getAlarmClockAmOrPm());
