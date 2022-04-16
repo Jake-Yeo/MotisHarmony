@@ -196,6 +196,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
             //Code below ensure that the user is playing the last playlist they played
             playlistList.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed());
+            mpm.setPlaylistCurrentlyViewing(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed());
             mpm.pauseSong();
             playButton.setStyle("-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("▶");
@@ -210,6 +211,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
             playlistList.getSelectionModel().select("All Songs");
+            mpm.setPlaylistCurrentlyViewing("All Songs");
         }
         mpm.updateSongList(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed()));//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
 
@@ -736,9 +738,18 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void contextMenuDeletePlaylistOption() throws Exception {
-        AccountsDataManager.deletePlaylist(playlistList.getSelectionModel().getSelectedItem());
+        String selectedItem = playlistList.getSelectionModel().getSelectedItem();
+
+        AccountsDataManager.deletePlaylist(selectedItem);
+        if (selectedItem.equals(mpm.getPlaylistCurrentlyViewing())) {
+            mpm.setPlaylistCurrentlyViewing("All Songs");
+            playlistList.getSelectionModel().select("All Songs");
+            updateModelCurrentSongList();
+        }
         updatePlaylistList();
         mpm.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());
+        playlistList.getSelectionModel().select(mpm.getPlaylistCurrentlyViewing());
+        updateModelCurrentSongList();
     }
 
     public void updatePlaylistToAddToChoiceBox() {
@@ -755,7 +766,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             AccountsDataManager.removeSongFromPlaylist(mpm.getCurrentPlaylistPlayling(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
 
         }
-        playlistList.getSelectionModel().select(mpm.getCurrentPlaylistPlayling());
         updateModelCurrentSongList();
     }
 
@@ -922,10 +932,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     public void showPlaylistListContextMenu(MouseEvent e) throws Exception {
         if (e.getButton() == MouseButton.SECONDARY) {
             System.out.println("worked");
-            updateModelCurrentSongList();
+            //updateModelCurrentSongList();
             playlistListContextMenu.show(playlistList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
         } else {
             playlistListContextMenu.hide();
+            mpm.setPlaylistCurrentlyViewing(playlistList.getSelectionModel().getSelectedItem());
             updateModelCurrentSongList();
         }
     }

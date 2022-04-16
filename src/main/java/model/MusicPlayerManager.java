@@ -36,6 +36,7 @@ public class MusicPlayerManager {
     private boolean playSongInLoop = false;
     private int volume;
     private String playType = "Ordered Play";
+    private String playlistCurrentlyViewing;
     private SongDataObject songObjectBeingPlayed;
     private MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
     private ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
@@ -44,13 +45,21 @@ public class MusicPlayerManager {
     private int posInSongHistory = 0;
     private String currentPlaylistPlayling;
     private double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
-    
+
     public static void setMpmCurrentlyUsing(MusicPlayerManager mpm) {
         mpmCurrentlyUsing = mpm;
     }
 
     public static MusicPlayerManager getMpmCurrentlyUsing() {
         return mpmCurrentlyUsing;
+    }
+
+    public void setPlaylistCurrentlyViewing(String playlistName) {
+        playlistCurrentlyViewing = playlistName;
+    }
+
+    public String getPlaylistCurrentlyViewing() {
+        return playlistCurrentlyViewing;
     }
 
     public void setSongObjectBeingPlayed(SongDataObject sdo) throws Exception {
@@ -185,7 +194,7 @@ public class MusicPlayerManager {
             });
         }
     }
-    
+
     public boolean isThisPlaylistEmpty(String playlistName) {
         return Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName).isEmpty();
     }
