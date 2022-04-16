@@ -59,7 +59,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="alarmClockButton" layoutX="209.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 0 -1; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="⏰" textFill="#f04444">
+                  <Button fx:id="alarmClockButton" layoutX="209.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showAlarmClockDialog" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 0 -1; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="⏰" textFill="#f04444">
                      <font>
                         <Font size="15.0" />
                      </font>

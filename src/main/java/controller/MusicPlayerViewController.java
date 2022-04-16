@@ -72,6 +72,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.Accounts;
 import model.AccountsDataManager;
+import model.AlarmClock;
 import model.MusicPlayerManager;
 import model.PlaylistMap;
 import model.SettingsObject;
@@ -855,6 +856,28 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             updatePlaylistList();
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             return;
+        }
+    }
+
+    public void showAlarmClockDialog() throws IOException {
+        //This creates a dialog popup to allow the user to edit the data of a SongDataObject
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/AlarmClockDialogEditor.fxml"));
+        DialogPane songDialogEditor = fxmlLoader.load();
+        AlarmClockDialogEditorController acdeController = fxmlLoader.getController();
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setDialogPane(songDialogEditor);
+        dialog.setTitle("hi");
+        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
+        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
+        Optional<ButtonType> buttonClicked = dialog.showAndWait();
+        if (buttonClicked.get() == ButtonType.APPLY) {
+            AccountsDataManager.saveAlarmClockSettings();
+        } else if (buttonClicked.get() == ButtonType.CANCEL) {
+            SettingsObject setObj = Accounts.getLoggedInAccount().getSettingsObject();
+            AlarmClock.getAlarmCurrentlyUsing().setAmOrPm(setObj.getAlarmClockAmOrPm());
+            AlarmClock.getAlarmCurrentlyUsing().setHour(setObj.getAlarmClockHour());
+            AlarmClock.getAlarmCurrentlyUsing().setMinute(setObj.getAlarmClockMinute());
         }
     }
 

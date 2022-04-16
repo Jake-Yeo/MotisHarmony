@@ -212,7 +212,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
             Accounts.getLoggedInAccount().removeSongFromAccount(sdoToRemove[j]);
         }
         MusicPlayerManager.getMpmCurrentlyUsing().getCurrentSongList().removeAll(sdoToRemove);
-        
+
         AccountsDataManager adm = deserializeAccMan();
         adm.deletionQueue.addAll(Arrays.asList(sdoToRemove));
         adm.serializeAccMan();
@@ -251,6 +251,12 @@ public class AccountsDataManager implements Serializable {//This class will be u
         if (!playlistToRename.equals("All Songs") && !playlistToRename.equals(newPlaylistName)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().renamePlaylist(playlistToRename, newPlaylistName);
         }
+    }
+
+    public static void saveAlarmClockSettings() {
+        Accounts.getLoggedInAccount().getSettingsObject().setAlarmClockHour(AlarmClock.getAlarmCurrentlyUsing().getHour());
+        Accounts.getLoggedInAccount().getSettingsObject().setAlarmClockMinute(AlarmClock.getAlarmCurrentlyUsing().getMinute());
+        Accounts.getLoggedInAccount().getSettingsObject().setAlarmClockAmOrPm(AlarmClock.getAlarmCurrentlyUsing().getAmOrPm());
     }
 
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {

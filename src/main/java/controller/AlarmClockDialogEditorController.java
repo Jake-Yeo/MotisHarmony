@@ -6,7 +6,14 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.text.Text;
+import model.Accounts;
+import model.AlarmClock;
 
 /**
  * FXML Controller class
@@ -15,12 +22,90 @@ import javafx.fxml.Initializable;
  */
 public class AlarmClockDialogEditorController implements Initializable {
 
+    private AlarmClock alarmClock;
+    @FXML
+    private ComboBox<Integer> hourComboBox;
+    @FXML
+    private ComboBox<Integer> minuteComboBox;
+    @FXML
+    private ChoiceBox<String> amOrPmChoiceBox;
+    @FXML
+    private RadioButton enableAlarmRadioButton;
+    @FXML
+    private Text alarmClockRingTimeText;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+        alarmClock = new AlarmClock(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockHour(), Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockMinute(), Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockAmOrPm());
+        AlarmClock.setAlarmCurrentlyUsing(alarmClock);
+        hourComboBox.setVisible(false);
+        hourComboBox.setMaxWidth(74);
+        hourComboBox.setVisibleRowCount(3);
+        minuteComboBox.setVisible(false);
+        minuteComboBox.setMaxWidth(74);
+        minuteComboBox.setVisibleRowCount(3);
+        amOrPmChoiceBox.setVisible(false);
+        amOrPmChoiceBox.setMaxWidth(74);
+        for (int i = 1; i <= 12; i++) {
+            hourComboBox.getItems().add(i);
+        }
+        for (int i = 0; i <= 59; i++) {
+            minuteComboBox.getItems().add(i);
+        }
+        amOrPmChoiceBox.setOnAction(e -> onAmOrPmChoiceBoxPressed());
+        amOrPmChoiceBox.getItems().addAll("AM", "PM");
+        String alarmClockMinuteString = Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockMinute() + "";
+        if (alarmClockMinuteString.length() == 1) {
+            alarmClockMinuteString = "0" + alarmClockMinuteString;
+        }
+        System.out.println(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockAmOrPm());
+        alarmClockRingTimeText.setText(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockHour() + ":" + alarmClockMinuteString + " " + Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockAmOrPm());
+
+    }
+
+    private void updateAlarmTimeText() {
+        String alarmClockMinuteString = alarmClock.getMinute() + "";
+        if (alarmClockMinuteString.length() == 1) {
+            alarmClockMinuteString = "0" + alarmClockMinuteString;
+        }
+        alarmClockRingTimeText.setText(alarmClock.getHour() + ":" + alarmClockMinuteString + " " + alarmClock.getAmOrPm());
+    }
+
+    @FXML
+    private void onHourComboBoxPressed() {
+        alarmClock.setHour(hourComboBox.getValue());
+        updateAlarmTimeText();
+    }
+
+    @FXML
+    private void onMinuteComboBoxPressed() {
+        alarmClock.setMinute(minuteComboBox.getValue());
+        updateAlarmTimeText();
+    }
+
+    @FXML
+    private void onAmOrPmChoiceBoxPressed() {
+        alarmClock.setAmOrPm(amOrPmChoiceBox.getValue());
+        updateAlarmTimeText();
+    }
+
+    @FXML
+    private void showHourComboBox() {
+        hourComboBox.show();
+    }
+
+    @FXML
+    private void showMinuteComboBox() {
+        minuteComboBox.show();
+    }
+
+    @FXML
+    private void showAmOrPmChoiceFBox() {
+        amOrPmChoiceBox.show();
+    }
+
 }

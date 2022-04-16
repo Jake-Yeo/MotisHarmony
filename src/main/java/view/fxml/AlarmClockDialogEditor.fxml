@@ -7,18 +7,25 @@
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<DialogPane prefHeight="122.0" prefWidth="230.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SongDialogEditorController">
+<DialogPane prefHeight="122.0" prefWidth="230.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AlarmClockDialogEditorController">
    <content>
       <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="102.0" prefWidth="268.0">
          <children>
-            <ChoiceBox fx:id="hourChoiceBox" layoutX="14.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="74.0" />
-            <ChoiceBox fx:id="minuteChoiceBox" layoutX="99.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="74.0" />
-            <ComboBox fx:id="amOrPmComboBox" layoutX="184.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="74.0" />
-            <Button layoutX="14.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Set Hour" />
-            <Button layoutX="99.0" layoutY="39.0" mnemonicParsing="false" text="Set Minute" />
-            <Button layoutX="184.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Am Or Pm" />
             <RadioButton fx:id="enableAlarmRadioButton" layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="enableAlarm" />
+            <ComboBox fx:id="minuteComboBox" layoutX="99.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onMinuteComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
+            <ComboBox fx:id="hourComboBox" layoutX="14.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onHourComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
+            <ChoiceBox fx:id="amOrPmChoiceBox" layoutX="184.0" layoutY="40.0" onDragDetected="#onAmOrPmChoiceBoxPressed" prefWidth="74.0" />
+            <Button fx:id="showHourChoiceBox" layoutX="14.0" layoutY="39.0" mnemonicParsing="false" onAction="#showHourComboBox" prefHeight="25.0" prefWidth="74.0" text="Set Hour" />
+            <Button fx:id="showMinuteChoiceBox" layoutX="99.0" layoutY="40.0" mnemonicParsing="false" onAction="#showMinuteComboBox" text="Set Minute" />
+            <Button fx:id="showAmOrPmComboFBox" layoutX="184.0" layoutY="40.0" mnemonicParsing="false" onAction="#showAmOrPmChoiceFBox" prefHeight="25.0" prefWidth="74.0" text="Am Or Pm" />
+            <Text fx:id="alarmClockRingTimeText" layoutX="14.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00 AM" wrappingWidth="148.13671875">
+               <font>
+                  <Font name="Quicksand SemiBold" size="33.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
    </content>
