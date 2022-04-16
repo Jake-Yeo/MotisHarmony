@@ -27,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -157,7 +158,8 @@ public class DownloadPageViewController implements Initializable {
         copyTitleName.setOnAction(e -> copyTitleNameOption());
         MenuItem copyArtistName = new MenuItem("Copy Artist Name");
         copyArtistName.setOnAction(e -> copyArtistNameOption());
-        downloadManagerContextMenu.getItems().addAll(retryDownload, copyYoutubeUrl, copyTitleName, copyArtistName);
+        SeparatorMenuItem seperator = new SeparatorMenuItem();
+        downloadManagerContextMenu.getItems().addAll(copyYoutubeUrl, copyTitleName, copyArtistName, seperator, retryDownload);
 
         MenuItem copyProblemUrl = new MenuItem("Copy Problem Url");
         copyProblemUrl.setOnAction(e -> copyProblemUrlOption());

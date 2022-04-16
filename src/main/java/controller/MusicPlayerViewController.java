@@ -54,6 +54,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -179,14 +180,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         comboBox.setVisibleRowCount(16);
         comboBox.setMaxWidth(200);
         comboBox.getStylesheets().add("/css/comboBox.css");
-                        //Here we add the options for the types of sort available to the user for the currentSongList
+        //Here we add the options for the types of sort available to the user for the currentSongList
         sortChoiceBox.getItems().add("A-Z");
         sortChoiceBox.getItems().add("Z-A");
         sortChoiceBox.getItems().add("A-Z By Artist");
         sortChoiceBox.getItems().add("Z-A By Artist");
         sortChoiceBox.getItems().add("Oldest Added");
         sortChoiceBox.getItems().add("Newest Added");
-                        //Here we automatically sort the currentSongList based on the users preference
+        //Here we automatically sort the currentSongList based on the users preference
         sortChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
         mpm.setSongSortType(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
         sortChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -933,7 +934,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         copyTitleName.setOnAction(e -> copyTitleNameOption());
         MenuItem copyArtistName = new MenuItem("Copy Artist Name");
         copyArtistName.setOnAction(e -> copyArtistNameOption());
-        songListContextMenu.getItems().addAll(playSong, addToPlaylist, sortSongList, editSongData, copyYoutubeUrl, copyTitleName, copyArtistName, deleteFromPlaylist, deleteSong);
+        SeparatorMenuItem seperator0 = new SeparatorMenuItem();
+        SeparatorMenuItem seperator1 = new SeparatorMenuItem();
+        SeparatorMenuItem seperator2 = new SeparatorMenuItem();
+        songListContextMenu.getItems().addAll(playSong, seperator0, addToPlaylist, sortSongList, editSongData, seperator1, copyYoutubeUrl, copyTitleName, copyArtistName, seperator2, deleteFromPlaylist, deleteSong);
         MenuItem sortPlaylist = new MenuItem("Sort Playlist");
         sortPlaylist.setOnAction(e -> sortPlaylistChoiceBox.show());
         MenuItem editPlaylistName = new MenuItem("Edit Playlist Name");
