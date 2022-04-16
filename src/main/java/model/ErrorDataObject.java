@@ -17,18 +17,18 @@ public class ErrorDataObject {
 
     private String errorMessage;
     private boolean didErrorOccur;
-    private String urlThatCausedError;
+    private String problemUrl;
 
     public ErrorDataObject(boolean didErrorOccur, String errorMessage) {
         this.didErrorOccur = didErrorOccur;
         this.errorMessage = errorMessage;
-        this.urlThatCausedError = "";
+        this.problemUrl = "";
     }
 
-    public ErrorDataObject(boolean didErrorOccur, String errorMessage, String urlThatCausedError) {
+    public ErrorDataObject(boolean didErrorOccur, String errorMessage, String problemUrl) {
         this.didErrorOccur = didErrorOccur;
         this.errorMessage = errorMessage;
-        this.urlThatCausedError = urlThatCausedError;
+        this.problemUrl = problemUrl;
     }
 
     public String getErrorMessage() {
@@ -37,6 +37,10 @@ public class ErrorDataObject {
 
     public boolean didErrorOccur() {
         return this.didErrorOccur;
+    }
+    
+    public String getProblemUrl() {
+        return this.problemUrl;
     }
 
     public static ObservableList<String> getListOfErrorMessages(ObservableList<ErrorDataObject> edoList) {

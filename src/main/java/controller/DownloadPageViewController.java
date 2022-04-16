@@ -6,6 +6,9 @@
 package controller;
 
 import java.awt.MouseInfo;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -48,6 +51,9 @@ import ws.schild.jave.EncoderException;
 public class DownloadPageViewController implements Initializable {
 
     private YoutubeDownloader ytd;
+    //we will keep track of the sdo which has been selected so that no bugs occur when we request info from the model which constantly changes
+    private SongDataObject sdoSelected;
+    private ContextMenu errorListContextMenu = new ContextMenu();
     private ContextMenu downloadManagerContextMenu = new ContextMenu();
     private String youtubeUrlToGetInfoFrom = "";
     private Image thumbnailImage;
@@ -95,12 +101,69 @@ public class DownloadPageViewController implements Initializable {
         }).start();
     }
 
+    private void copyErrorMessageOption() {
+        String stringToCopy = downloadErrorList.getSelectionModel().getSelectedItem();
+        if (!stringToCopy.isBlank()) {
+            StringSelection stringSelection = new StringSelection(stringToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
+    private void copyProblemUrlOption() {
+        String stringToCopy = ytd.getErrorList().get(downloadErrorList.getSelectionModel().getSelectedIndex()).getProblemUrl();
+        if (!stringToCopy.isBlank()) {
+            StringSelection stringSelection = new StringSelection(stringToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
+    private void copyUrlOption() {
+        String stringToCopy = sdoSelected.getVideoUrl();
+        if (!stringToCopy.isBlank()) {
+            StringSelection stringSelection = new StringSelection(stringToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
+    private void copyArtistNameOption() {
+        String stringToCopy = sdoSelected.getChannelName();
+        if (!stringToCopy.isBlank()) {
+            StringSelection stringSelection = new StringSelection(stringToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
+    private void copyTitleNameOption() {
+        String stringToCopy = sdoSelected.getTitle();
+        if (!stringToCopy.isBlank()) {
+            StringSelection stringSelection = new StringSelection(stringToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
     public void initContextMenus() {
-        MenuItem sortPlaylist = new MenuItem("Retry Download");
-        sortPlaylist.setOnAction(e -> {
+        MenuItem retryDownload = new MenuItem("Retry Download");
+        retryDownload.setOnAction(e -> {
             retryDownloadOption();
         });
-        downloadManagerContextMenu.getItems().add(sortPlaylist);
+        MenuItem copyYoutubeUrl = new MenuItem("Copy Youtube Url");
+        copyYoutubeUrl.setOnAction(e -> copyUrlOption());
+        MenuItem copyTitleName = new MenuItem("Copy Title Name");
+        copyTitleName.setOnAction(e -> copyTitleNameOption());
+        MenuItem copyArtistName = new MenuItem("Copy Artist Name");
+        copyArtistName.setOnAction(e -> copyArtistNameOption());
+        downloadManagerContextMenu.getItems().addAll(retryDownload, copyYoutubeUrl, copyTitleName, copyArtistName);
+
+        MenuItem copyProblemUrl = new MenuItem("Copy Problem Url");
+        copyProblemUrl.setOnAction(e -> copyProblemUrlOption());
+        MenuItem copyErrorMessage = new MenuItem("Copy Error Message");
+        copyErrorMessage.setOnAction(e -> copyErrorMessageOption());
+        errorListContextMenu.getItems().addAll(copyProblemUrl, copyErrorMessage);
     }
 
     /**
@@ -351,57 +414,70 @@ public class DownloadPageViewController implements Initializable {
     }
 
     @FXML
+    private void showErrorListContextMenu(MouseEvent e) {
+        if (downloadErrorList.getSelectionModel().getSelectedIndex() != -1) {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                errorListContextMenu.show(downloadErrorList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+            } else {
+                errorListContextMenu.hide();
+            }
+        }
+    }
+
+    @FXML
     private void displaySelectedVideoInfo(MouseEvent e) {
+        if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {
+            sdoSelected = ytd.getYoutubeUrlDownloadQueueList().get(listViewDownloadManager.getSelectionModel().getSelectedIndex());
+            if (e.getButton() == MouseButton.SECONDARY) {
+                System.out.println("worked");
+                downloadManagerContextMenu.show(listViewDownloadManager, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+            } else {
+                downloadManagerContextMenu.hide();
+                if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {//Dont run the code if the user does not select anything.
+                    if (!youtubeUrlToGetInfoFrom.equals(listViewDownloadManager.getSelectionModel().getSelectedItem())) { //Dont run the code if the user is trying to load the same info for the same url
+                        videoInfoList.getItems().clear();
+                        int urlDataObjectIndexToGet = listViewDownloadManager.getSelectionModel().getSelectedIndex();//Must get the selected item url first for the if statement below to work
+                        new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.
+                                new Runnable() {
+                            public void run() {
+                                SongDataObject youtubeData = ytd.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
+                                thumbnailImage = new Image(youtubeData.getThumbnailUrl());
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (videoInfoList.getItems().size() != 3) {
+                                            videoInfoList.getItems().add("Music Title: " + youtubeData.getTitle());
+                                            System.out.println(youtubeData.getTitle());
+                                            videoInfoList.getItems().add("Channel Name: " + youtubeData.getChannelName());
+                                            videoInfoList.getItems().add("Music Duration: " + youtubeData.getVideoDuration());
+                                            videoInfoList.getItems().add("Video Url: " + youtubeData.getVideoUrl());
+                                        }
+                                        double w = 0;
+                                        double h = 0;
 
-        if (e.getButton() == MouseButton.SECONDARY) {
-            System.out.println("worked");
-            downloadManagerContextMenu.show(listViewDownloadManager, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
-        } else {
-            downloadManagerContextMenu.hide();
-            if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {//Dont run the code if the user does not select anything.
-                if (!youtubeUrlToGetInfoFrom.equals(listViewDownloadManager.getSelectionModel().getSelectedItem())) { //Dont run the code if the user is trying to load the same info for the same url
-                    videoInfoList.getItems().clear();
-                    int urlDataObjectIndexToGet = listViewDownloadManager.getSelectionModel().getSelectedIndex();//Must get the selected item url first for the if statement below to work
-                    new Thread(//using thread so that this does not freeze gui, do not modify any Javafx components in this thread, all edits must be done on the Javafx.
-                            new Runnable() {
-                        public void run() {
-                            SongDataObject youtubeData = ytd.getYoutubeUrlDownloadQueueList().get(urlDataObjectIndexToGet);
-                            thumbnailImage = new Image(youtubeData.getThumbnailUrl());
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (videoInfoList.getItems().size() != 3) {
-                                        videoInfoList.getItems().add("Music Title: " + youtubeData.getTitle());
-                                        System.out.println(youtubeData.getTitle());
-                                        videoInfoList.getItems().add("Channel Name: " + youtubeData.getChannelName());
-                                        videoInfoList.getItems().add("Music Duration: " + youtubeData.getVideoDuration());
-                                        videoInfoList.getItems().add("Video Url: " + youtubeData.getVideoUrl());
+                                        double ratioX = thumbnailImageView.getFitWidth() / thumbnailImage.getWidth();
+                                        double ratioY = thumbnailImageView.getFitHeight() / thumbnailImage.getHeight();
+
+                                        double reducCoeff = 0;
+                                        if (ratioX >= ratioY) {
+                                            reducCoeff = ratioY;
+                                        } else {
+                                            reducCoeff = ratioX;
+                                        }
+
+                                        w = thumbnailImage.getWidth() * reducCoeff;
+                                        h = thumbnailImage.getHeight() * reducCoeff;
+
+                                        thumbnailImageView.setX((thumbnailImageView.getFitWidth() - w) / 2);
+                                        thumbnailImageView.setY((thumbnailImageView.getFitHeight() - h) / 2);
+
+                                        thumbnailImageView.setImage(thumbnailImage);
+                                        thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 33px 33px;");
                                     }
-                                    double w = 0;
-                                    double h = 0;
-
-                                    double ratioX = thumbnailImageView.getFitWidth() / thumbnailImage.getWidth();
-                                    double ratioY = thumbnailImageView.getFitHeight() / thumbnailImage.getHeight();
-
-                                    double reducCoeff = 0;
-                                    if (ratioX >= ratioY) {
-                                        reducCoeff = ratioY;
-                                    } else {
-                                        reducCoeff = ratioX;
-                                    }
-
-                                    w = thumbnailImage.getWidth() * reducCoeff;
-                                    h = thumbnailImage.getHeight() * reducCoeff;
-
-                                    thumbnailImageView.setX((thumbnailImageView.getFitWidth() - w) / 2);
-                                    thumbnailImageView.setY((thumbnailImageView.getFitHeight() - h) / 2);
-
-                                    thumbnailImageView.setImage(thumbnailImage);
-                                    thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: #4c154a; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-background-radius: 0 0 33px 33px;");
-                                }
-                            });
-                        }
-                    }).start();
+                                });
+                            }
+                        }).start();
+                    }
                 }
             }
         }

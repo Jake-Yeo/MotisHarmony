@@ -5,6 +5,9 @@
 package controller;
 
 import java.awt.MouseInfo;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -845,6 +848,33 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         sortPlaylistChoiceBox.show();
     }
 
+    private void copyUrlOption() {
+        String stringToCopy = mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()).getVideoUrl();
+        if (!stringToCopy.isBlank()) {
+            StringSelection stringSelection = new StringSelection(stringToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
+    private void copyArtistNameOption() {
+        String stringToCopy = mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()).getChannelName();
+        if (!stringToCopy.isBlank()) {
+            StringSelection stringSelection = new StringSelection(stringToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
+    private void copyTitleNameOption() {
+        String stringToCopy = mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()).getTitle();
+        if (!stringToCopy.isBlank()) {
+            StringSelection stringSelection = new StringSelection(stringToCopy);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+    }
+
     public void setUpContextMenus() {
         MenuItem sortSongList = new MenuItem("Sort Song List");
         sortSongList.setOnAction(e -> sortChoiceBox.show());
@@ -884,7 +914,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        songListContextMenu.getItems().addAll(sortSongList, editSongData, playSong, addToPlaylist, deleteFromPlaylist, deleteSong);
+        MenuItem copyYoutubeUrl = new MenuItem("Copy Youtube Url");
+        copyYoutubeUrl.setOnAction(e -> copyUrlOption());
+        MenuItem copyTitleName = new MenuItem("Copy Title Name");
+        copyTitleName.setOnAction(e -> copyTitleNameOption());
+        MenuItem copyArtistName = new MenuItem("Copy Artist Name");
+        copyArtistName.setOnAction(e -> copyArtistNameOption());
+        songListContextMenu.getItems().addAll(playSong, addToPlaylist, sortSongList, editSongData, copyYoutubeUrl, copyTitleName, copyArtistName, deleteFromPlaylist, deleteSong);
         MenuItem sortPlaylist = new MenuItem("Sort Playlist");
         sortPlaylist.setOnAction(e -> sortPlaylistChoiceBox.show());
         MenuItem editPlaylistName = new MenuItem("Edit Playlist Name");
@@ -920,24 +956,28 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @FXML
     public void showSongListContextMenu(MouseEvent e) {
-        if (e.getButton() == MouseButton.SECONDARY) {
-            System.out.println("worked");
-            songListContextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
-        } else {
-            songListContextMenu.hide();
+        if (songList.getSelectionModel().getSelectedIndex() != -1 || !songList.getSelectionModel().getSelectedIndices().isEmpty()) {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                System.out.println("worked");
+                songListContextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+            } else {
+                songListContextMenu.hide();
+            }
         }
     }
 
     @FXML
     public void showPlaylistListContextMenu(MouseEvent e) throws Exception {
-        if (e.getButton() == MouseButton.SECONDARY) {
-            System.out.println("worked");
-            //updateModelCurrentSongList();
-            playlistListContextMenu.show(playlistList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
-        } else {
-            playlistListContextMenu.hide();
-            mpm.setPlaylistCurrentlyViewing(playlistList.getSelectionModel().getSelectedItem());
-            updateModelCurrentSongList();
+        if (playlistList.getSelectionModel().getSelectedIndex() != -1) {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                System.out.println("worked");
+                //updateModelCurrentSongList();
+                playlistListContextMenu.show(playlistList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+            } else {
+                playlistListContextMenu.hide();
+                mpm.setPlaylistCurrentlyViewing(playlistList.getSelectionModel().getSelectedItem());
+                updateModelCurrentSongList();
+            }
         }
     }
 
