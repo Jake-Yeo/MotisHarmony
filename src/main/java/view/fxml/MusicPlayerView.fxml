@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerViewController">
+<AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerViewController">
    <children>
       <ChoiceBox fx:id="sortPlaylistChoiceBox" layoutX="45.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" />
       <AnchorPane layoutX="831.0" layoutY="25.0" prefHeight="30.0" prefWidth="30.0">
@@ -72,5 +72,6 @@
       <TextField fx:id="playlistNameTextField" layoutX="123.0" layoutY="55.0" prefHeight="25.0" prefWidth="121.0" promptText="Enter Playlist Name" />
       <ComboBox fx:id="comboBox" layoutX="631.0" layoutY="59.0" onAction="#onComboBoxClicked" prefHeight="25.0" prefWidth="200.0" />
       <ChoiceBox fx:id="sortChoiceBox" layoutX="631.0" layoutY="59.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="searchTextField" layoutX="631.0" layoutY="59.0" onKeyTyped="#searchTextFieldWhenTyped" prefHeight="25.0" prefWidth="200.0" promptText="Enter Search Query And Hit Enter" />
    </children>
 </AnchorPane>

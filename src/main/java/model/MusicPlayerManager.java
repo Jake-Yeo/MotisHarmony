@@ -57,6 +57,19 @@ public class MusicPlayerManager {
     public void setPlaylistCurrentlyViewing(String playlistName) {
         playlistCurrentlyViewing = playlistName;
     }
+    
+    public void updateCurrentSongListWithSearchQuery(String searchQuery) {
+        searchQuery = searchQuery.trim().toLowerCase();
+        ObservableList<SongDataObject> currentSongListToUpdateTo = FXCollections.observableArrayList();
+        ArrayList<SongDataObject> listToSearchThrough = Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(getPlaylistCurrentlyViewing());
+        for (SongDataObject sdo : listToSearchThrough) {
+            if (sdo.getTitle().toLowerCase().contains(searchQuery) || sdo.getChannelName().toLowerCase().contains(searchQuery) || sdo.getVideoID().contains(searchQuery)) {
+                currentSongListToUpdateTo.add(sdo);
+            }
+        }
+        currentSongList.clear();
+        currentSongList.addAll(currentSongListToUpdateTo);
+    }
 
     public String getPlaylistCurrentlyViewing() {
         return playlistCurrentlyViewing;

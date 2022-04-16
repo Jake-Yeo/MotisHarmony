@@ -58,6 +58,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -131,11 +132,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private ChoiceBox<String> sortChoiceBox;
     @FXML
     private ChoiceBox<String> sortPlaylistChoiceBox;
+    @FXML
+    private TextField searchTextField;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         mpm = new MusicPlayerManager();
+        searchTextField.setText("");
         MusicPlayerManager.setMpmCurrentlyUsing(mpm);
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(downloadPageMainAnchor.widthProperty());
@@ -321,6 +325,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     @FXML
+    private void searchTextFieldWhenTyped(KeyEvent e) {
+        //13 is the keycode for enter i think
+        if ((int) e.getCharacter().charAt(0) == 13) {
+            System.out.println("Searching!!");
+            mpm.updateCurrentSongListWithSearchQuery(searchTextField.getText());
+        }
+    }
+
+    @FXML
     private void shuffleButtonOnAction() {
         //The code below immitates what spotify does when a shuffle button is pressed
         if (mpm.getPlayType().equals("Ordered Play")) {
@@ -491,11 +504,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 System.out.println(mpm.getMediaPlayer().getStatus());
             }
         }
-    }
-
-    @FXML
-    private void keyPressed(KeyEvent event) {
-        System.out.println(event.toString());
     }
 
     public void setUpPlayButton() {
