@@ -28,6 +28,19 @@ public class AlarmClock {
     private int minute;
     private String amOrPm;
     private Calendar timeToGoOff;
+    private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
+            e -> {
+                if (timeToGoOff.compareTo(Calendar.getInstance()) <= 0) {
+                    stopAlarmCheck();
+                    try {
+                        MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().play();
+                    } catch (Exception i) {
+                        i.printStackTrace();
+                    }
+                    System.out.println("Alarm");
+                }
+            }
+    ));
 
     public AlarmClock(int hour, int min, String amOrPm) {
         this.hour = hour;
@@ -66,20 +79,6 @@ public class AlarmClock {
         System.out.println(dateFormatter.format(currentDate.getTime()));
         System.out.println(dateFormatter.format(futureAlarmDate.getTime()));
     }
-
-    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
-            e -> {
-                if (timeToGoOff.compareTo(Calendar.getInstance()) <= 0) {
-                    stopAlarmCheck();
-                    try {
-                        MusicPlayerManager.getMpmCurrentlyUsing().smartPlay();
-                    } catch (Exception i) {
-                        i.printStackTrace();
-                    }
-                    System.out.println("Alarm");
-                }
-            }
-    ));
 
     public void stopAlarmCheck() {
         timeline.stop();

@@ -328,6 +328,21 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         MainViewRunner.getStage().setOnCloseRequest(windowEvent -> {
             mpm.getMediaPlayer().stop();
         });
+        //We play intialize and update the info displays below so that if the user decides to delete the current song which is to be saved, then the Alarm clock will not run into any errors as the program will automatically pick a song.
+        try {
+            mpm.smartPlay();
+        } catch (Exception ex) {
+            Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        init();
+        updateInfoDisplays();
+        mpm.pauseSong();
+        //This block of code below will automatically sort the songList on startup.
+        try {
+            sortModelCurrentSongList(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
+        } catch (Exception ex) {
+            Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -672,6 +687,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                     Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        });
+
+        mpm.getMediaPlayer().setOnPlaying(() -> {
+            mpm.setPaused(false);
+            playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setText("⏸︎");
+            init();
+            updateInfoDisplays();
+            System.out.println("Setting the pause button to play");
         });
 
         mpm.getMediaPlayer().setOnError(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
