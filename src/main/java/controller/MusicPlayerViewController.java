@@ -179,6 +179,31 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         comboBox.setVisibleRowCount(16);
         comboBox.setMaxWidth(200);
         comboBox.getStylesheets().add("/css/comboBox.css");
+                        //Here we add the options for the types of sort available to the user for the currentSongList
+        sortChoiceBox.getItems().add("A-Z");
+        sortChoiceBox.getItems().add("Z-A");
+        sortChoiceBox.getItems().add("A-Z By Artist");
+        sortChoiceBox.getItems().add("Z-A By Artist");
+        sortChoiceBox.getItems().add("Oldest Added");
+        sortChoiceBox.getItems().add("Newest Added");
+                        //Here we automatically sort the currentSongList based on the users preference
+        sortChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
+        mpm.setSongSortType(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
+        sortChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            //This will sort the currentSongList when the sort context menu value is changed
+            try {
+                if (newValue != null) {
+                    sortModelCurrentSongList(newValue);
+                    try {
+                        AccountsDataManager.updateCurrentSongListSortType(newValue);
+                    } catch (Exception ex) {
+                        Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         //This if statment will only set up the MusicPlayer for if the user wanted their song position saved if and only if the user enabled this option, and if both the last playlist and song played are not null
         //This if statement will also check to make sure the user did not delete the song which is to be automatically played, if it was deleted then the Music player will not save the users song position
         if (Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition() && Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed() != null && Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed() != null && Files.exists(Paths.get(Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed().getPathToWavFile()))) {
@@ -239,28 +264,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         playButton.textOverrunProperty().set(OverrunStyle.CLIP);
-        //Here we add the options for the types of sort available to the user for the currentSongList
-        sortChoiceBox.getItems().add("A-Z");
-        sortChoiceBox.getItems().add("Z-A");
-        sortChoiceBox.getItems().add("A-Z By Artist");
-        sortChoiceBox.getItems().add("Z-A By Artist");
-        sortChoiceBox.getItems().add("Oldest Added");
-        sortChoiceBox.getItems().add("Newest Added");
-        sortChoiceBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            //This will sort the currentSongList when the sort context menu value is changed
-            try {
-                if (newValue != null) {
-                    sortModelCurrentSongList(newValue);
-                    try {
-                        AccountsDataManager.updateCurrentSongListSortType(newValue);
-                    } catch (Exception ex) {
-                        Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
         System.out.println("SongList sort " + Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
         //Here we automatically sort the currentSongList based on the users preference
         sortChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
@@ -692,7 +695,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         });
 
         seekSlider.setOnMousePressed((MouseEvent mouseEvent) -> {//This handles the seeking of the song
-            mpm.pauseSong();//Pause the song so there is no weird audio
+            mpm.getMediaPlayer().pause();//Pause the song so there is no weird audio. However do not change the boolean isPaused value so we can choose wether or not to resume the song or not after we finish seeking
         });
 
         seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
@@ -700,7 +703,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             System.out.println(seekSlider.getValue() + " seek slider");
             //Here we keep a backup of the current duration of the song just incase the mediaPlayer crashes, which it does everytime you disconnect a bluetooth headset for some reason
             mpm.setBackUpCurrentDuration(mpm.getMediaPlayer().getCurrentTime());
-            mpm.resumeSong();//Resume the song once the user releases their mous key
+            if (!mpm.isSongPaused()) {
+                mpm.resumeSong();//Resume the song once the user releases their mouse key and if they want it to resume
+            }
         });
 
         mpm.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.

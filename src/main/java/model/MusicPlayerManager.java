@@ -36,6 +36,7 @@ public class MusicPlayerManager {
     private boolean playSongInLoop = false;
     private int volume;
     private String playType = "Ordered Play";
+    private String songSortType;
     private String playlistCurrentlyViewing;
     private SongDataObject songObjectBeingPlayed;
     private MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
@@ -54,10 +55,14 @@ public class MusicPlayerManager {
         return mpmCurrentlyUsing;
     }
 
+    public void setSongSortType(String sortType) {
+        songSortType = sortType;
+    }
+    
     public void setPlaylistCurrentlyViewing(String playlistName) {
         playlistCurrentlyViewing = playlistName;
     }
-    
+
     public void updateCurrentSongListWithSearchQuery(String searchQuery) {
         searchQuery = searchQuery.trim().toLowerCase();
         ObservableList<SongDataObject> currentSongListToUpdateTo = FXCollections.observableArrayList();
@@ -146,7 +151,7 @@ public class MusicPlayerManager {
         getSongHistory().clear();
         setCurrentPlaylistPlayling(playlistName);
         setIndexForOrderedPlay(0);
-        syncPlaylistSongsPlaylingWithCurentSongsList();
+        syncPlaylistSongsPlaylingWithSelectedPlaylist(playlistName);
     }
 
     public void setCurrentPlaylistPlayling(String playlistName) throws Exception {
@@ -162,11 +167,21 @@ public class MusicPlayerManager {
         return currentPlaylistPlayling;
     }
 
+    public void syncPlaylistSongsPlaylingWithSelectedPlaylist(String playlistName) {
+        playlistSongsPlaying.clear();
+        ObservableList<SongDataObject> songsToAddToPlaylistSongPlaying = FXCollections.observableArrayList();
+        songsToAddToPlaylistSongPlaying.addAll(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName));
+        sortCurrentSongList(songSortType, songsToAddToPlaylistSongPlaying);
+        playlistSongsPlaying.addAll(songsToAddToPlaylistSongPlaying);
+    }
+
     public void syncPlaylistSongsPlaylingWithCurentSongsList() {
         playlistSongsPlaying.clear();
-        for (int i = 0; i < currentSongList.size(); i++) {
-            playlistSongsPlaying.add(currentSongList.get(i));
-        }
+        ObservableList<SongDataObject> songsToAddToPlaylistSongPlaying = FXCollections.observableArrayList();
+        songsToAddToPlaylistSongPlaying.addAll(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(currentPlaylistPlayling));
+        sortCurrentSongList(songSortType, songsToAddToPlaylistSongPlaying);
+        playlistSongsPlaying.addAll(songsToAddToPlaylistSongPlaying);
+
     }
 
     public String getPlayType() {
@@ -380,6 +395,7 @@ public class MusicPlayerManager {
     }
 
     public void sortCurrentSongList(String sortType, ObservableList<SongDataObject> listToSort) {
+        songSortType = sortType;
         if (sortType.equals("A-Z")) {
             FXCollections.sort(listToSort, new Comparator() {
                 @Override

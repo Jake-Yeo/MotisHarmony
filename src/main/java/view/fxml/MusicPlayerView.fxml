@@ -32,37 +32,46 @@
       <AnchorPane layoutX="296.0" layoutY="452.0" prefHeight="111.0" prefWidth="322.0" style="-fx-background-color: linear-gradient(to bottom, #ee4540, #c12c4e, #8e224e, #5b1d43, #2d142c); -fx-background-radius: 50px;">
          <children>
             <Slider fx:id="seekSlider" layoutX="23.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="9.0" prefWidth="276.0" style="-fx-orientation: horizontal;" />
-            <AnchorPane layoutX="74.0" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="174.0">
+            <AnchorPane layoutX="42.0" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="239.0">
                <children>
-                  <Button fx:id="playButton" layoutX="65.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#playMusic" prefHeight="41.0" prefWidth="41.0" style="-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;" text="▶" textFill="#f04444">
+                  <Button fx:id="playButton" layoutX="99.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#playMusic" prefHeight="41.0" prefWidth="41.0" style="-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;" text="▶" textFill="#f04444">
                      <font>
                         <Font name="Quicksand Light" size="28.0" />
                      </font>
                   </Button>
-                  <Button fx:id="nextButton" layoutX="109.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nextSong" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 2 5; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="⏭ " textFill="#f04444">
+                  <Button fx:id="nextButton" layoutX="143.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nextSong" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 2 5; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="⏭ " textFill="#f04444">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="previousButton" layoutX="32.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#previousSong" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 2 1; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="⏮" textFill="#f04444">
+                  <Button fx:id="previousButton" layoutX="66.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#previousSong" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 2 1; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="⏮" textFill="#f04444">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="shuffleButton" layoutX="142.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#shuffleButtonOnAction" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="🔀" textFill="#f04444">
+                  <Button fx:id="shuffleButton" layoutX="176.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#shuffleButtonOnAction" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="🔀" textFill="#f04444">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="loopButton" layoutX="-1.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loopButtonOnAction" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="🔁" textFill="#f04444">
+                  <Button fx:id="loopButton" layoutX="33.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loopButtonOnAction" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="🔁" textFill="#f04444">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="alarmClockButton" layoutX="209.0" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 0 -1; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="⏰" textFill="#f04444">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="sleepTimerButton" layoutY="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;" text="⏲" textFill="#f04444">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
                </children>
             </AnchorPane>
-            <Text fx:id="currentTimeText" fill="#f04444" layoutX="34.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="time" wrappingWidth="30.0" />
-            <Text fx:id="totalTimeText" fill="#f04444" layoutX="269.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="time" wrappingWidth="30.0" />
+            <Text fx:id="currentTimeText" fill="#f04444" layoutX="27.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="time" wrappingWidth="30.0" />
             <Text fx:id="songInfoText" fill="#5c1c48" layoutX="34.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Song name, Creator name" wrappingWidth="231.0" />
          </children>
       </AnchorPane>
