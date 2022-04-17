@@ -328,21 +328,25 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         MainViewRunner.getStage().setOnCloseRequest(windowEvent -> {
             mpm.getMediaPlayer().stop();
         });
-        //We play intialize and update the info displays below so that if the user decides to delete the current song which is to be saved, then the Alarm clock will not run into any errors as the program will automatically pick a song.
-        try {
-            mpm.smartPlay();
-        } catch (Exception ex) {
-            Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+        //Only execute this loop if there is not song object which has been saved
+        if (mpm.getSongObjectBeingPlayed() == null) {
+            //We play intialize and update the info displays below so that if the user decides to delete the current song which is to be saved, then the Alarm clock will not run into any errors as the program will automatically pick a song.
+            try {
+                mpm.smartPlay();
+            } catch (Exception ex) {
+                Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            init();
+            updateInfoDisplays();
+            mpm.pauseSong();
         }
-        init();
-        updateInfoDisplays();
-        mpm.pauseSong();
-        //This block of code below will automatically sort the songList on startup.
+//This block of code below will automatically sort the songList on startup.
         try {
             sortModelCurrentSongList(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
         } catch (Exception ex) {
             Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     @FXML
