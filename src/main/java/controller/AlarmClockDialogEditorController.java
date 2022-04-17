@@ -5,6 +5,7 @@
 package controller;
 
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -40,7 +41,9 @@ public class AlarmClockDialogEditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        alarmClock = new AlarmClock(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockHour(), Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockMinute(), Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockAmOrPm());
+        AlarmClock accAlarmClock = Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock();
+        alarmClock = new AlarmClock(accAlarmClock.getHour(), accAlarmClock.getMinute(), accAlarmClock.getAmOrPm());
+        alarmClock.setEnableAlarm(accAlarmClock.getEnableAlarm());
         AlarmClock.setAlarmCurrentlyUsing(alarmClock);
         hourComboBox.setVisible(false);
         hourComboBox.setMaxWidth(74);
@@ -58,12 +61,13 @@ public class AlarmClockDialogEditorController implements Initializable {
         }
         amOrPmChoiceBox.setOnAction(e -> onAmOrPmChoiceBoxPressed());
         amOrPmChoiceBox.getItems().addAll("AM", "PM");
-        String alarmClockMinuteString = Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockMinute() + "";
+        String alarmClockMinuteString = alarmClock.getMinute() + "";
         if (alarmClockMinuteString.length() == 1) {
             alarmClockMinuteString = "0" + alarmClockMinuteString;
         }
-        System.out.println(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockAmOrPm());
-        alarmClockRingTimeText.setText(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockHour() + ":" + alarmClockMinuteString + " " + Accounts.getLoggedInAccount().getSettingsObject().getAlarmClockAmOrPm());
+        enableAlarmRadioButton.setSelected(alarmClock.getEnableAlarm());
+        System.out.println(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().getAmOrPm());
+        alarmClockRingTimeText.setText(alarmClock.getHour() + ":" + alarmClockMinuteString + " " + alarmClock.getAmOrPm());
 
     }
 
@@ -73,6 +77,11 @@ public class AlarmClockDialogEditorController implements Initializable {
             alarmClockMinuteString = "0" + alarmClockMinuteString;
         }
         alarmClockRingTimeText.setText(alarmClock.getHour() + ":" + alarmClockMinuteString + " " + alarmClock.getAmOrPm());
+    }
+
+    @FXML
+    private void onEnableAlarmRadioButtonPressed() throws ParseException {
+        AlarmClock.getAlarmCurrentlyUsing().setEnableAlarm(enableAlarmRadioButton.isSelected());
     }
 
     @FXML

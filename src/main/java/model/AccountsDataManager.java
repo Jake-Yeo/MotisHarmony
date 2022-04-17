@@ -254,9 +254,10 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void saveAlarmClockSettings() {
-        Accounts.getLoggedInAccount().getSettingsObject().setAlarmClockHour(AlarmClock.getAlarmCurrentlyUsing().getHour());
-        Accounts.getLoggedInAccount().getSettingsObject().setAlarmClockMinute(AlarmClock.getAlarmCurrentlyUsing().getMinute());
-        Accounts.getLoggedInAccount().getSettingsObject().setAlarmClockAmOrPm(AlarmClock.getAlarmCurrentlyUsing().getAmOrPm());
+        Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().setHour(AlarmClock.getAlarmCurrentlyUsing().getHour());
+        Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().setMinute(AlarmClock.getAlarmCurrentlyUsing().getMinute());
+        Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().setAmOrPm(AlarmClock.getAlarmCurrentlyUsing().getAmOrPm());
+        Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().setEnableAlarm(AlarmClock.getAlarmCurrentlyUsing().getEnableAlarm());
     }
 
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {

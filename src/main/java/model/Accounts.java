@@ -165,6 +165,7 @@ public class Accounts implements Serializable {//This class will store account u
                 loggedInAccount.playlistDataObject.createPlaylist("All Songs");
                 loggedInAccount.serializeAccount();//If the username contains "/" or "\\" the serialization will fail, so we put it in a try catch loop.
             } catch (Exception e) {
+             e.printStackTrace();
                 return new ErrorDataObject(true, "Username is not available");
             }
             accDataMan.addAccNameToList(username);//This will add the username to the list so that accounts with the same usernames cannot be created.

@@ -4,34 +4,42 @@
  */
 package model;
 
+import java.io.Serializable;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.fxml.Initializable;
 import javafx.util.Duration;
 
 /**
  *
  * @author Jake Yeo
  */
-public class AlarmClock {
+public class AlarmClock implements Serializable {
 
+    private static final long serialVersionUID = 4655882630581250278L;
     private static AlarmClock alarmCurrentlyUsing;
-
     private int hour;
     private int minute;
     private String amOrPm;
+    private boolean enableAlarm = false;
     private Calendar timeToGoOff;
-    private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
+    static private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
             e -> {
-                if (timeToGoOff.compareTo(Calendar.getInstance()) <= 0) {
-                    stopAlarmCheck();
+                System.out.println("checking");
+                if (alarmCurrentlyUsing.timeToGoOff.compareTo(Calendar.getInstance()) <= 0) {
+                    alarmCurrentlyUsing.stopAlarmCheck();
                     try {
                         MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().play();
                     } catch (Exception i) {
@@ -56,7 +64,15 @@ public class AlarmClock {
         alarmCurrentlyUsing = ac;
     }
 
-    public void setTimeForAlarmToGoOff() {
+    public boolean getEnableAlarm() {
+        return enableAlarm;
+    }
+
+    public void setEnableAlarm(boolean tf) {
+        enableAlarm = tf;
+    }
+
+    private void setTimeForAlarmToGoOff() {
         DateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy-HH-mm");
         Calendar currentDate = Calendar.getInstance();
         String[] stringMonthDayYearHourMinute = dateFormatter.format(currentDate.getTime()).split("-");
@@ -85,6 +101,7 @@ public class AlarmClock {
     }
 
     public void startAlarmCheck() throws ParseException {
+        setTimeForAlarmToGoOff();
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }

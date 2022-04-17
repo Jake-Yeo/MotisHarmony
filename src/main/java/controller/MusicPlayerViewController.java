@@ -329,7 +329,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             mpm.getMediaPlayer().stop();
         });
         //Only execute this loop if there is not song object which has been saved
-        if (mpm.getSongObjectBeingPlayed() == null) {
+        if (mpm.getSongObjectBeingPlayed() == null && !Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
             //We play intialize and update the info displays below so that if the user decides to delete the current song which is to be saved, then the Alarm clock will not run into any errors as the program will automatically pick a song.
             try {
                 mpm.smartPlay();
@@ -345,6 +345,16 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             sortModelCurrentSongList(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
         } catch (Exception ex) {
             Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        AlarmClock accAlarmClock = Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock();
+        AlarmClock.setAlarmCurrentlyUsing(new AlarmClock(accAlarmClock.getHour(), accAlarmClock.getMinute(), accAlarmClock.getAmOrPm()));
+        if (Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().getEnableAlarm()) {
+            try {
+                AlarmClock.getAlarmCurrentlyUsing().startAlarmCheck();
+            } catch (ParseException ex) {
+                Logger.getLogger(AlarmClock.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
@@ -890,6 +900,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     public void showAlarmClockDialog() throws IOException, ParseException {
         //This creates a dialog popup to allow the user to edit the data of a SongDataObject
+        if (AlarmClock.getAlarmCurrentlyUsing() != null) {
+            AlarmClock.getAlarmCurrentlyUsing().stopAlarmCheck();
+        }
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/AlarmClockDialogEditor.fxml"));
         DialogPane songDialogEditor = fxmlLoader.load();
@@ -902,13 +915,21 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             AccountsDataManager.saveAlarmClockSettings();
-            AlarmClock.getAlarmCurrentlyUsing().setTimeForAlarmToGoOff();
-            AlarmClock.getAlarmCurrentlyUsing().startAlarmCheck();
+            if (AlarmClock.getAlarmCurrentlyUsing().getEnableAlarm()) {
+                AlarmClock.getAlarmCurrentlyUsing().startAlarmCheck();
+            } else {
+                AlarmClock.getAlarmCurrentlyUsing().stopAlarmCheck();
+            }
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             SettingsObject setObj = Accounts.getLoggedInAccount().getSettingsObject();
-            AlarmClock.getAlarmCurrentlyUsing().setAmOrPm(setObj.getAlarmClockAmOrPm());
-            AlarmClock.getAlarmCurrentlyUsing().setHour(setObj.getAlarmClockHour());
-            AlarmClock.getAlarmCurrentlyUsing().setMinute(setObj.getAlarmClockMinute());
+            AlarmClock.getAlarmCurrentlyUsing().setAmOrPm(setObj.getAlarmClock().getAmOrPm());
+            AlarmClock.getAlarmCurrentlyUsing().setHour(setObj.getAlarmClock().getHour());
+            AlarmClock.getAlarmCurrentlyUsing().setMinute(setObj.getAlarmClock().getMinute());
+            if (AlarmClock.getAlarmCurrentlyUsing().getEnableAlarm()) {
+                AlarmClock.getAlarmCurrentlyUsing().startAlarmCheck();
+            } else {
+                AlarmClock.getAlarmCurrentlyUsing().stopAlarmCheck();
+            }
         }
     }
 

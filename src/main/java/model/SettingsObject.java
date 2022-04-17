@@ -25,40 +25,18 @@ public class SettingsObject implements Serializable {
     private boolean saveSongPosition = true;
     private String lastPlaylistPlayed = null;
     private SongDataObject lastSongPlayed = null;
-    private int alarmClockHour = 8;
-    private int alarmClockMinute = 0;
-    private String alarmClockAmOrPm = "AM";
+    private AlarmClock alarmClock = new AlarmClock(8, 0, "AM");
 
     public SettingsObject() {
         System.out.println("playlistListSortPreference = " + playlistListSortPreference);
     }
-    
-    public void setAlarmClockAmOrPm(String ap) {
-        this.alarmClockAmOrPm = ap;
-    }
-
-    public String getAlarmClockAmOrPm() {
-        return alarmClockAmOrPm;
-    }
-
-    public void setAlarmClockHour(int h) {
-        alarmClockHour = h;
-    }
-
-    public int getAlarmClockHour() {
-        return alarmClockHour;
-    }
-
-    public void setAlarmClockMinute(int m) {
-        alarmClockMinute = m;
-    }
-
-    public int getAlarmClockMinute() {
-        return alarmClockMinute;
-    }
 
     public void setStayLoggedIn(boolean tf) {
         this.stayLoggedIn = tf;
+    }
+    
+    public AlarmClock getAlarmClock() {
+        return alarmClock;
     }
 
     public boolean getStayLoggedIn() {
