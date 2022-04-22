@@ -503,9 +503,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @FXML
     private void createNewPlaylist(ActionEvent event) throws Exception {
         //Code to create a new playlist
-        AccountsDataManager.createPlaylist(playlistNameTextField.getText());
-        updatePlaylistList();
-        playlistNameTextField.clear();
+        if (!playlistNameTextField.getText().trim().isBlank()) {
+            AccountsDataManager.createPlaylist(playlistNameTextField.getText().trim());
+            updatePlaylistList();
+            playlistNameTextField.clear();
+        }
     }
 
     private void onFirstMusicPlayerPlay() throws IOException, Exception {

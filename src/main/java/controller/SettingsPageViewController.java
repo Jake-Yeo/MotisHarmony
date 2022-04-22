@@ -18,6 +18,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.layout.AnchorPane;
 import model.Accounts;
 import model.AccountsDataManager;
+import model.AlarmClock;
 import model.MusicPlayerManager;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
@@ -63,6 +64,8 @@ public class SettingsPageViewController implements Initializable {
         YoutubeDownloader.getYtdCurrentlyUsing().setStopDownloading(true);
         YoutubeDownloader.getYtdCurrentlyUsing().setStopAllDownloadingProcesses(true);
         Accounts.setLoggedInAccount(null);
+        //Stop the alarm clock from checking the time
+        AlarmClock.getAlarmCurrentlyUsing().stopAlarmCheck();
         //Makes the sliding bar menu animate correctly
         MainViewRunner.setSlideBarRanOnce(false);
         YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().clear();
