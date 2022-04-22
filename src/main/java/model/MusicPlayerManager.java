@@ -39,7 +39,7 @@ public class MusicPlayerManager {
     private String songSortType;
     private String playlistCurrentlyViewing;
     private SongDataObject songObjectBeingPlayed;
-    private MediaPlayer mediaPlayer; //This NEEDS TO BE STATIC or else the mediaPlayer will hang during the middle of a long song because of the java garbage collection https://stackoverflow.com/questions/47835433/why-does-javafx-media-player-crash
+    private MediaPlayer mediaPlayer;
     private ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
     private ObservableList<SongDataObject> playlistSongsPlaying = FXCollections.observableArrayList();
     private ArrayList<SongDataObject> songHistory = new ArrayList<>();
@@ -58,7 +58,7 @@ public class MusicPlayerManager {
     public void setSongSortType(String sortType) {
         songSortType = sortType;
     }
-    
+
     public void setPlaylistCurrentlyViewing(String playlistName) {
         playlistCurrentlyViewing = playlistName;
     }

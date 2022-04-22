@@ -261,7 +261,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                     //If the view of the same playlist which is currently playing is changed, then those changes will be synced with the model so the user knows which song will play next when using ordered play
                     mpm.syncPlaylistSongsPlaylingWithCurentSongsList();
                 }
-                System.out.println("listener ran");
+                System.out.println("view listener ran");
             }
         });
 
@@ -1074,6 +1074,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     private void updatePlaylistList() throws Exception {
+        //Since all selections are wiped when updating, we must set what the selected item is once we finish updating.
+        String itemSelected = playlistList.getSelectionModel().getSelectedItem();
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         playlistList.getItems().clear();
         playlistList.getItems().addAll(map.getArrayOfPlaylistNames());
@@ -1083,12 +1085,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         //Make sure that All Songs is always at the very top of the list
         playlistList.getItems().remove("All Songs");
         playlistList.getItems().add(0, "All Songs");
+        playlistList.getSelectionModel().select(itemSelected);
     }
 
     private void updateModelCurrentSongList() throws Exception {
         if (Accounts.getLoggedInAccount() != null) {
             PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
-
             int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();
             if (selectedIndex != -1) {
                 String keyValue = playlistList.getItems().get(selectedIndex);
