@@ -39,7 +39,7 @@ public class SongDataObject implements Serializable {
         //We concatanate the current time in milliseconds so that it's impossible for file names to ever be the same
         this.safeTitleName = videoTitle.replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "(" + videoID + ")" + System.currentTimeMillis(); //Gets rid all special characters that may mess up file path
         this.pathToWebaFile = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + this.safeTitleName + ".weba";
-        this.pathToWavFile = PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + this.safeTitleName + ".mp3";
+        this.pathToWavFile = PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + this.safeTitleName + ".m4a";
         this.pathToThumbnail = Paths.get(PathsManager.getLoggedInUserThumbnailsPath().toString(), (this.safeTitleName + ".png")).toString();
     }
 

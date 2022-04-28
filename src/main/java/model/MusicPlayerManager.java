@@ -340,13 +340,6 @@ public class MusicPlayerManager {
         mediaPlayer.stop();
         mediaPlayer.currentTimeProperty().removeListener(backupDurationTracker);
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
-        mediaPlayer.pause();
-        mediaPlayer.setOnPlaying(() -> {
-            //The seek is inaccurate for large mp3 files, there is no fix
-            mediaPlayer.seek(backupCurrentDuration);
-            mediaPlayer.setOnPlaying(null);
-        });
         mediaPlayer.setOnError(() -> {
             resetPlayerOnError();
         });
@@ -354,6 +347,7 @@ public class MusicPlayerManager {
             resetPlayerOnError();
         });
         mediaPlayer.currentTimeProperty().addListener(backupDurationTracker);//This will help us print the current time of the song
+        mediaPlayer.setStartTime(backupCurrentDuration);
     }
 
     public void stopDisposeMediaPlayer() {

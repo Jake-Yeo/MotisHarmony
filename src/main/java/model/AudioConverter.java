@@ -23,7 +23,6 @@ public class AudioConverter {
     private static ArrayList<SongDataObject> conversionQueueList = new ArrayList<>();
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
-    private static final String NEW_AUDIO_TYPE = "mp3";
     private static final String OLD_AUDIO_TYPE = ".weba";
     
     public static boolean getConversionQueueHasStarted() {
@@ -37,13 +36,12 @@ public class AudioConverter {
         File target = new File(songDataObject.getPathToWavFile());
         //Audio Attributes                                       
         AudioAttributes audio = new AudioAttributes();
-        audio.setCodec("libmp3lame");
+        audio.setCodec("aac");
         audio.setBitRate(128000);
         audio.setChannels(2);
         audio.setSamplingRate(44100);
         //Encoding attributes                                       
         EncodingAttributes attrs = new EncodingAttributes();
-        attrs.setOutputFormat(NEW_AUDIO_TYPE);
         attrs.setAudioAttributes(audio);
         //Encode                                                    
         Encoder encoder = new Encoder();

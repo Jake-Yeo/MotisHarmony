@@ -719,6 +719,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 mpm.resetPlayerOnError();
                 init();
                 updateInfoDisplays();
+                mpm.getMediaPlayer().setOnPlaying(() -> {
+                    mpm.getMediaPlayer().setStartTime(Duration.ZERO);
+                    mpm.getMediaPlayer().setOnPlaying(null);
+                });
+                mpm.getMediaPlayer().play();
             }
         });
 
@@ -726,6 +731,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             mpm.resetPlayerOnError();
             init();
             updateInfoDisplays();
+            mpm.getMediaPlayer().setOnPlaying(() -> {
+                mpm.getMediaPlayer().setStartTime(Duration.ZERO);
+                mpm.getMediaPlayer().setOnPlaying(null);
+            });
+            mpm.getMediaPlayer().play();
         });
 
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
