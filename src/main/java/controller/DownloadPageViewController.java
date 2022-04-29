@@ -492,7 +492,7 @@ public class DownloadPageViewController implements Initializable {
         new Thread(
                 new Runnable() {
             public void run() {
-                ytd.addYoutubeLinkToDownloadQueueAndStartDownload(youtubeLinkTextFieldContent);
+                YoutubeDownloader.getYtdCurrentlyUsing().addYoutubeLinkToDownloadQueueAndStartDownload(youtubeLinkTextFieldContent);
             }
         }).start();
     }

@@ -121,9 +121,10 @@ public class YoutubeDownloader {
     }
 
     private void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
-        youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
+        YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
+        youtubeUrl = yvpp.getRegularYoutubeUrl(youtubeUrl);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
         if (!SongDataObject.toString(getYoutubeUrlDownloadQueueList()).contains(youtubeUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubeUrl)) {//Makes sure that a youtube url is not added to the download queue list multiple times
-            SongDataObject sdoToAddToDownloadQueue = YoutubeVideoPageParser.getYoutubeVideoData(youtubeUrl);
+            SongDataObject sdoToAddToDownloadQueue = yvpp.getYoutubeVideoData(youtubeUrl);
             //We check here again because the user has the ability to add two links which lead to the same video, we must get the video data and check again
             if (!SongDataObject.toString(getYoutubeUrlDownloadQueueList()).contains(sdoToAddToDownloadQueue.getVideoUrl()) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(sdoToAddToDownloadQueue.getVideoUrl())) {
                 youtubeUrlDownloadQueueList.add(sdoToAddToDownloadQueue);//adds the youtube url to the download queue
@@ -155,7 +156,8 @@ public class YoutubeDownloader {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
         ArrayList<SongDataObject> youtubePlaylistUrls = null;
         try {
-            youtubePlaylistUrls = YoutubeVideoPageParser.getPlaylistYoutubeUrls(youtubePlaylistLink);
+            YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
+            youtubePlaylistUrls = yvpp.getPlaylistYoutubeUrls(youtubePlaylistLink);
         } catch (IOException e) {
             errorList.add(new ErrorDataObject(true, "You're currently IP banned from youtube and cannot download songs at this time"));
         }
@@ -299,7 +301,8 @@ public class YoutubeDownloader {
     }
 
     private void addYoutubeLinkToDownloadQueue(String youtubeUrl) throws IOException {
-        if (YoutubeVideoPageParser.isLinkAPlaylist(youtubeUrl)) {
+        YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
+        if (yvpp.isLinkAPlaylist(youtubeUrl)) {
             addSongsFromPlaylistToDownloadQueue(youtubeUrl);
         } else {
             addYoutubeVideoUrlToDownloadQueue(youtubeUrl);
@@ -308,9 +311,11 @@ public class YoutubeDownloader {
 
     public void addYoutubeLinkToDownloadQueueAndStartDownload(String youtubeUrl) {
         try {
-            ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrl);
+            YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
+            ErrorDataObject errorData = yvpp.isUrlValid(youtubeUrl);
             if (!errorData.didErrorOccur()) {
                 addYoutubeLinkToDownloadQueue(youtubeUrl);
+                System.out.println(!isAppDownloadingFromDownloadQueue());
                 if (!isAppDownloadingFromDownloadQueue()) {
                     try {
                         downloadSongsFromDownloadQueue();
@@ -327,7 +332,8 @@ public class YoutubeDownloader {
     }
 
     private void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
-        youtubeUrl = YoutubeVideoPageParser.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in may be of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
+        YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
+        youtubeUrl = yvpp.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in may be of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
         if (!SongDataObject.toString(getYoutubeUrlDownloadQueueList()).contains(youtubeUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(youtubeUrl)) {//Stops you from inputting the same url into the downloadQueue
             addYoutubeUrlsToDownloadQueue(youtubeUrl);
         } else {
@@ -345,8 +351,9 @@ public class YoutubeDownloader {
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeSongData.getVideoUrl());
         if (!possibleYoutubeUrl.equals("error") && !possibleYoutubeUrl.equals("No Wifi") && !possibleYoutubeUrl.equals("clearCalled")) {
             //We add range=0-99999999999999999999 to the url below to bypass throttling which speeds up download times by nearly 95 times!
-            System.out.println(YoutubeVideoPageParser.extractMaxByteRange(possibleYoutubeUrl));
-            int maxByteRange = YoutubeVideoPageParser.extractMaxByteRange(possibleYoutubeUrl);
+            YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
+            System.out.println(yvpp.extractMaxByteRange(possibleYoutubeUrl));
+            int maxByteRange = yvpp.extractMaxByteRange(possibleYoutubeUrl);
 
             int count = 0;
             long timeStart = System.currentTimeMillis();
@@ -408,7 +415,8 @@ public class YoutubeDownloader {
         setupChromeDriver();
         while (!youtubeUrlDownloadQueueList.isEmpty() && !stopAllDownloadingProcesses && wifiConnected) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(true);
-            ErrorDataObject errorData = YoutubeVideoPageParser.isUrlValid(youtubeUrlDownloadQueueList.get(0).getVideoUrl());
+            YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
+            ErrorDataObject errorData = yvpp.isUrlValid(youtubeUrlDownloadQueueList.get(0).getVideoUrl());
             if (!errorData.didErrorOccur() && !youtubeUrlDownloadQueueList.isEmpty()) {//The youtube urls in the playlists are not checked, so we must check those here.
                 downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
             } else {

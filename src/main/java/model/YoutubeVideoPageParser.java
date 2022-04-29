@@ -77,7 +77,11 @@ public class YoutubeVideoPageParser {
     private static final String YOUTUBE_PLAYLIST_VIDEO_ID_START_IDENTIFIER = "{\"videoId\":\"";
     private static final String YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER = "\",\"";
 
-    public static String getHtml(String url) throws IOException  {//To prevent an ip ban from websites, don't overuse this method.
+    public YoutubeVideoPageParser() {
+
+    }
+
+    public String getHtml(String url) throws IOException {//To prevent an ip ban from websites, don't overuse this method.
         System.out.println("html getter called");
         String html = "";
         URL ytLink = new URL(url);
@@ -91,7 +95,7 @@ public class YoutubeVideoPageParser {
         return html;
     }
 
-    public static ErrorDataObject isUrlValid(String videoUrl) throws IOException {
+    public ErrorDataObject isUrlValid(String videoUrl) throws IOException {
         boolean didErrorOccur = false;
         String html = "";
         String errorMessage = "";
@@ -162,11 +166,11 @@ public class YoutubeVideoPageParser {
         return new ErrorDataObject(didErrorOccur, errorMessage);
     }
 
-    public static boolean isLinkAPlaylist(String link) {//make this more specific, radio and playlist links are indistinguishable, make sure to look at the html code too!//Should be able to be replaced with doesYoutubePlaylistExist
+    public boolean isLinkAPlaylist(String link) {//make this more specific, radio and playlist links are indistinguishable, make sure to look at the html code too!//Should be able to be replaced with doesYoutubePlaylistExist
         return link.contains(YT_PLAYLIST_LIST_IDENTIFIER);
     }
 
-    private static String getYoutubePlaylistListId(String youtubeUrl) {
+    private String getYoutubePlaylistListId(String youtubeUrl) {
         String playlistId = infoParserToolTrimToStart(youtubeUrl, YT_WHOLE_PLAYLIST_LIST_ID_START_IDENTIFIER);
         if (playlistId.contains(YT_PLAYLIST_LIST_ID_END_IDENTIFIER)) {
             playlistId = infoParserToolRemoveEnd(playlistId, YT_PLAYLIST_LIST_ID_END_IDENTIFIER);
@@ -174,16 +178,16 @@ public class YoutubeVideoPageParser {
         return playlistId;
     }
 
-    public static String convertToWholePlaylistView(String potentialRadioPlaylist) {
+    public String convertToWholePlaylistView(String potentialRadioPlaylist) {
         return YT_DOWNLOADABLE_PLAYLIST_WHOLE_VIEW_URL_STARTER + getYoutubePlaylistListId(potentialRadioPlaylist);
     }
 
-    public static String getDownloadablePlaylistUrl(String youtubePlaylistUrl) throws IOException {//A playlist link comes in many forms. This method will transform any form of the playlist link into a specific form that we can use to obtain the youtube urls within that playlist
+    public String getDownloadablePlaylistUrl(String youtubePlaylistUrl) throws IOException {//A playlist link comes in many forms. This method will transform any form of the playlist link into a specific form that we can use to obtain the youtube urls within that playlist
         String downloadablePlaylistLink = YT_DOWNLOADABLE_PLAYLIST_STARTER + YT_DOWNLOADABLE_PLAYLIST_LIST_PARAM_STARTER + getYoutubePlaylistListId(youtubePlaylistUrl);
         return downloadablePlaylistLink;
     }
 
-    public static String getYoutubeVideoID(String youtubeUrl) {
+    public String getYoutubeVideoID(String youtubeUrl) {
         String youtubeId = youtubeUrl;
         if (youtubeUrl.contains(YT_PLAYLIST_AND_VIDEO_URL_START)) {
             youtubeId = infoParserToolTrimToStart(youtubeId, YT_VIDEO_LINK_ID_START_IDENTIFIER);
@@ -200,7 +204,7 @@ public class YoutubeVideoPageParser {
         return youtubeId;
     }
 
-    public static String getRegularYoutubeUrl(String youtubeUrl) {//This will change a youtube url containing a time stamp, or a url that looks like this "https://youtu.be/fMriamkSXTk?t=3233" into this https://www.youtube.com/watch?v=fMriamkSXTk
+    public String getRegularYoutubeUrl(String youtubeUrl) {//This will change a youtube url containing a time stamp, or a url that looks like this "https://youtu.be/fMriamkSXTk?t=3233" into this https://www.youtube.com/watch?v=fMriamkSXTk
         return YT_VIDEO_URL_STARTER + getYoutubeVideoID(youtubeUrl);
     }
 
@@ -208,7 +212,7 @@ public class YoutubeVideoPageParser {
         return YT_VIDEO_URL_STARTER + id;
     }
 
-    public static SongDataObject getYoutubeVideoData(String youtubeUrl) throws IOException {
+    public SongDataObject getYoutubeVideoData(String youtubeUrl) throws IOException {
         String html = getHtml(youtubeUrl);
         String thumbnailUrl = infoParserTool(html, YOUTUBE_VIDEO_THUMBNAIL_URL_START_IDENTIFIER, YOUTUBE_VIDEO_THUMBNAIL_URL_END_IDENTIFIER);
         String channelName = infoParserTool(html, YOUTUBE_VIDEO_CHANNEL_NAME_START_IDENTIFIER, YOUTUBE_VIDEO_CHANNEL_NAME_END_IDENTIFIER);
@@ -242,7 +246,7 @@ public class YoutubeVideoPageParser {
         return youtubeVideoData;
     }
 
-    public static ArrayList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
+    public ArrayList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
         youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
         String html = getHtml(youtubePlaylistUrl);
         String youtubeIdsCurrentlyInSongDataList = "";
@@ -291,23 +295,23 @@ public class YoutubeVideoPageParser {
         return songDataList;
     }
 
-    private static String infoParserTool(String passedHtml, String startIdentifier, String endIdentifier) {
+    private String infoParserTool(String passedHtml, String startIdentifier, String endIdentifier) {
         passedHtml = passedHtml.substring(passedHtml.indexOf(startIdentifier) + startIdentifier.length());
         passedHtml = passedHtml.substring(0, passedHtml.indexOf(endIdentifier));
         return passedHtml;
     }
 
-    private static String infoParserToolTrimToStart(String passedHtml, String startIdentifier) {//trims off everything starting from index 0 including the startIdentifier
+    private String infoParserToolTrimToStart(String passedHtml, String startIdentifier) {//trims off everything starting from index 0 including the startIdentifier
         passedHtml = passedHtml.substring(passedHtml.indexOf(startIdentifier) + startIdentifier.length());
         return passedHtml;
     }
 
-    private static String infoParserToolRemoveEnd(String passedHtml, String endIdentifier) {//Trims off everything including the endIdentifier starting from the index of the endIdentifier
+    private String infoParserToolRemoveEnd(String passedHtml, String endIdentifier) {//Trims off everything including the endIdentifier starting from the index of the endIdentifier
         passedHtml = passedHtml.substring(0, passedHtml.indexOf(endIdentifier));
         return passedHtml;
     }
 
-    public static int extractMaxByteRange(String url) {
+    public int extractMaxByteRange(String url) {
         return Integer.parseInt(infoParserTool(url, YOUTUBE_AUDIO_MAX_BYTE_RANGE_START_IDENTIFIER, YOUTUBE_AUDIO_MAX_BYTE_RANGE_END_IDENTIFIER));
     }
 

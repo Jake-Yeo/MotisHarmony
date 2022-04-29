@@ -361,11 +361,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     @FXML
     private void searchTextFieldWhenTyped(KeyEvent e) {
-        //13 is the keycode for enter i think
-        if ((int) e.getCharacter().charAt(0) == 13) {
-            System.out.println("Searching!!");
-            mpm.updateCurrentSongListWithSearchQuery(searchTextField.getText());
-        }
+        //Search everytime the text input is changed
+        System.out.println("Searching!!");
+        mpm.updateCurrentSongListWithSearchQuery(searchTextField.getText());
     }
 
     @FXML
