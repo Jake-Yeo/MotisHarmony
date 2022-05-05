@@ -249,7 +249,7 @@ public class YoutubeVideoPageParser {
     public ArrayList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
         youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
         String html = getHtml(youtubePlaylistUrl);
-        String youtubeIdsCurrentlyInSongDataList = "";
+        ArrayList<String> youtubeIdsCurrentlyInSongDataList = new ArrayList<>();
         ArrayList<SongDataObject> songDataList = new ArrayList<>();//This will return a list of songDataObjects containing data about the video duration, title, channel name etc.
         //html = infoParserToolTrimToStart(html, YT_PLAYLIST_START_IDENTIFIER);//This will find the start of the playlist information in the html thus getting rid of any urls that may interfere with this method
         int playlistLength = 0;
@@ -280,9 +280,9 @@ public class YoutubeVideoPageParser {
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
                 System.out.println(videoID);
-                if (!youtubeIdsCurrentlyInSongDataList.contains(videoUrl) && !SongDataObject.toString(YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList()).contains(videoUrl) && !Accounts.getLoggedInAccount().getListOfSongUrls().contains(videoUrl)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the SongDataObject to the SongDataList. This ensure that urls are not inputted into the downloadQueue multiple times
+                if (!youtubeIdsCurrentlyInSongDataList.contains(videoID) && !YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueListVideoIds().contains(videoID) && !Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(videoID)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the SongDataObject to the SongDataList. This ensure that urls are not inputted into the downloadQueue multiple times
                     songDataList.add(new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
-                    youtubeIdsCurrentlyInSongDataList += videoID + " ";
+                    youtubeIdsCurrentlyInSongDataList.add(videoID);
                 }
                 lastVideoUrlGotten = videoUrl;
             }

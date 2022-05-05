@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
@@ -89,12 +90,11 @@ public class Accounts implements Serializable {//This class will store account u
         return listOfSongsToReturn;
     }
 
-    public ArrayList<String> getListOfSongUrls() {
+    public ArrayList<String> getListOfSongVideoIds() {
         ArrayList<String> listOfSongsToReturn = new ArrayList<>();
-        for (int i = 0; i < songDataObjectList.size(); i++) {
-            listOfSongsToReturn.add(songDataObjectList.get(i).getVideoUrl());
+        for (SongDataObject sdo : songDataObjectList) {
+            listOfSongsToReturn.add(sdo.getVideoID());
         }
-        System.out.println("This ran " + listOfSongsToReturn.size());
         return listOfSongsToReturn;
     }
 
@@ -165,7 +165,7 @@ public class Accounts implements Serializable {//This class will store account u
                 loggedInAccount.playlistDataObject.createPlaylist("All Songs");
                 loggedInAccount.serializeAccount();//If the username contains "/" or "\\" the serialization will fail, so we put it in a try catch loop.
             } catch (Exception e) {
-             e.printStackTrace();
+                e.printStackTrace();
                 return new ErrorDataObject(true, "Username is not available");
             }
             accDataMan.addAccNameToList(username);//This will add the username to the list so that accounts with the same usernames cannot be created.
