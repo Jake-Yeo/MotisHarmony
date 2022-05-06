@@ -50,6 +50,10 @@ public class AlarmClock implements Serializable {
             }
     ));
 
+    public AlarmClock() {
+
+    }
+
     public AlarmClock(int hour, int min, String amOrPm) {
         this.hour = hour;
         this.minute = min;
@@ -62,6 +66,14 @@ public class AlarmClock implements Serializable {
 
     public static void setAlarmCurrentlyUsing(AlarmClock ac) {
         alarmCurrentlyUsing = ac;
+    }
+    
+    public Timeline getTimeline() {
+        return timeline;
+    }
+    
+    public Calendar getTimeToGoOff() {
+        return timeToGoOff;
     }
 
     public boolean getEnableAlarm() {
@@ -97,13 +109,13 @@ public class AlarmClock implements Serializable {
     }
 
     public void stopAlarmCheck() {
-        timeline.stop();
+        getTimeline().stop();
     }
 
     public void startAlarmCheck() throws ParseException {
         setTimeForAlarmToGoOff();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        getTimeline().setCycleCount(Timeline.INDEFINITE);
+        getTimeline().play();
     }
 
     public int getHour() {
