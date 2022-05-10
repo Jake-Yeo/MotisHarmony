@@ -5,10 +5,6 @@
 package model;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -22,10 +18,13 @@ public class SleepAlarm extends AlarmClock implements Serializable {
 
     private static final long serialVersionUID = 4655882630581250278L;
     private static SleepAlarm sleepAlarmCurrentlyUsing;
+    private int hoursTillSleep;
+    private int minutesTillSleep;
+    private Calendar timeToStopSong;
     static private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
             e -> {
                 System.out.println("checking");
-                if (Calendar.getInstance().compareTo(sleepAlarmCurrentlyUsing.getTimeToGoOff()) > 0) {
+                if (Calendar.getInstance().compareTo(sleepAlarmCurrentlyUsing.timeToStopSong) > 0) {
                     sleepAlarmCurrentlyUsing.stopAlarmCheck();
                     try {
                         MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().stop();
@@ -36,17 +35,18 @@ public class SleepAlarm extends AlarmClock implements Serializable {
                 }
             }
     ));
-    private int hoursTillSleep;
-    private int minutesTillSleep;
 
-    public SleepAlarm(int hoursTillSleep, int minutesTillSleep) {
+    public SleepAlarm(int hoursTillSleep, int minsTillSleep ) {
         this.hoursTillSleep = hoursTillSleep;
-        this.minutesTillSleep = minutesTillSleep;
+        this.minutesTillSleep = minsTillSleep;
     }
 
-    public void setTimeForSleepAlarmToGoOff() {
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.get(Calendar.HOUR_OF_DAY);
+    public void setTimeForSleepAlarmToGoOff(int hoursTillSleep, int minsTillSleep) {
+        this.hoursTillSleep = hoursTillSleep;
+        this.minutesTillSleep = minsTillSleep;
+        timeToStopSong = Calendar.getInstance();
+        timeToStopSong.add(Calendar.HOUR_OF_DAY,  this.hoursTillSleep);
+        timeToStopSong.add(Calendar.MINUTE, this.minutesTillSleep);
 //setHour();
     }
 

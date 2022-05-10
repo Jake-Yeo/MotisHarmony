@@ -39,12 +39,16 @@ public class AlarmClock implements Serializable {
             e -> {
                 System.out.println("checking");
                 if (alarmCurrentlyUsing.timeToGoOff.compareTo(Calendar.getInstance()) <= 0) {
-                    alarmCurrentlyUsing.stopAlarmCheck();
+                    //alarmCurrentlyUsing.stopAlarmCheck();
                     try {
-                        MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().play();
+                        if (!Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
+                            MusicPlayerManager.getMpmCurrentlyUsing().smartPlay();
+                        }
                     } catch (Exception i) {
                         i.printStackTrace();
                     }
+                    //This will ensure that the alarm continues to check the time even after it goes off, because the user may end up pausing the song
+                    alarmCurrentlyUsing.setTimeForAlarmToGoOff();
                     System.out.println("Alarm");
                 }
             }
@@ -67,11 +71,11 @@ public class AlarmClock implements Serializable {
     public static void setAlarmCurrentlyUsing(AlarmClock ac) {
         alarmCurrentlyUsing = ac;
     }
-    
+
     public Timeline getTimeline() {
         return timeline;
     }
-    
+
     public Calendar getTimeToGoOff() {
         return timeToGoOff;
     }

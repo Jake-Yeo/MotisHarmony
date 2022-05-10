@@ -77,6 +77,7 @@ import model.AlarmClock;
 import model.MusicPlayerManager;
 import model.PlaylistMap;
 import model.SettingsObject;
+import model.SleepAlarm;
 import model.SongDataObject;
 import model.YoutubeDownloader;
 import model.YoutubeVideoPageParser;
@@ -347,8 +348,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        AlarmClock accAlarmClock = Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock();
-        AlarmClock.setAlarmCurrentlyUsing(new AlarmClock(accAlarmClock.getHour(), accAlarmClock.getMinute(), accAlarmClock.getAmOrPm()));
+        SleepAlarm.setAlarmCurrentlyUsing(Accounts.getLoggedInAccount().getSettingsObject().getSleepAlarm());
+        //Should probably just make AlarmClock equal to the accAlarmClock;
+        //AlarmClock.setAlarmCurrentlyUsing(new AlarmClock(accAlarmClock.getHour(), accAlarmClock.getMinute(), accAlarmClock.getAmOrPm()));
+        AlarmClock.setAlarmCurrentlyUsing(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock());
         if (Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().getEnableAlarm()) {
             try {
                 AlarmClock.getAlarmCurrentlyUsing().startAlarmCheck();
@@ -906,6 +909,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             return;
         }
+    }
+    
+    public void showSleepAlarmDialog() {
+        
     }
 
     public void showAlarmClockDialog() throws IOException, ParseException {

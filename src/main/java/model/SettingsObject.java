@@ -26,6 +26,7 @@ public class SettingsObject implements Serializable {
     private String lastPlaylistPlayed = null;
     private SongDataObject lastSongPlayed = null;
     private AlarmClock alarmClock = new AlarmClock(8, 0, "AM");
+    private SleepAlarm sleepAlarm = new SleepAlarm(1, 30);
 
     public SettingsObject() {
         System.out.println("playlistListSortPreference = " + playlistListSortPreference);
@@ -35,6 +36,10 @@ public class SettingsObject implements Serializable {
         this.stayLoggedIn = tf;
     }
     
+    public SleepAlarm getSleepAlarm() {
+        return sleepAlarm;
+    }
+
     public AlarmClock getAlarmClock() {
         return alarmClock;
     }
