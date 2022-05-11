@@ -33,16 +33,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
@@ -51,7 +45,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.SelectionMode;
@@ -60,13 +53,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.AudioSpectrumListener;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -80,7 +70,6 @@ import model.SettingsObject;
 import model.SleepAlarm;
 import model.SongDataObject;
 import model.YoutubeDownloader;
-import model.YoutubeVideoPageParser;
 import view.MainViewRunner;
 
 /**
@@ -910,9 +899,18 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             return;
         }
     }
-    
-    public void showSleepAlarmDialog() {
-        
+
+    public void showSleepAlarmDialog() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/SleepAlarmDialogEditor.fxml"));
+        DialogPane songDialogEditor = fxmlLoader.load();
+        SleepAlarmDialogEditorController sadeController = fxmlLoader.getController();
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setDialogPane(songDialogEditor);
+        dialog.setTitle("hi");
+        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
+        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
+        Optional<ButtonType> buttonClicked = dialog.showAndWait();
     }
 
     public void showAlarmClockDialog() throws IOException, ParseException {
