@@ -13,13 +13,13 @@
    <content>
       <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="102.0" prefWidth="268.0">
          <children>
-            <ComboBox fx:id="minuteComboBox" layoutX="99.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="74.0" />
-            <ComboBox fx:id="hourComboBox" layoutX="14.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="74.0" />
-            <Button fx:id="showHourChoiceBox" layoutX="14.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Set Hour" />
-            <Button fx:id="showMinuteChoiceBox" layoutX="99.0" layoutY="40.0" mnemonicParsing="false" text="Set Minute" />
-            <Text fx:id="sleepAlarmStopTimeText" layoutX="14.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1hr 30min" wrappingWidth="148.13671875">
+            <ComboBox fx:id="minuteComboBox" layoutX="99.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onMinuteComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
+            <ComboBox fx:id="hourComboBox" layoutX="14.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onHourComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
+            <Button fx:id="showHourChoiceBox" layoutX="14.0" layoutY="39.0" mnemonicParsing="false" onAction="#showHourComboBox" prefHeight="25.0" prefWidth="74.0" text="Set Hour" />
+            <Button fx:id="showMinuteChoiceBox" layoutX="99.0" layoutY="40.0" mnemonicParsing="false" onAction="#showMinuteComboBox" text="Set Minute" />
+            <Text fx:id="sleepAlarmStopTimeText" layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1hr 30min" wrappingWidth="253.13671875">
                <font>
-                  <Font name="Quicksand SemiBold" size="33.0" />
+                  <Font size="33.0" />
                </font>
             </Text>
             <ToggleButton layoutX="14.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Start Timer" />

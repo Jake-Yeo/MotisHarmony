@@ -15,7 +15,7 @@ import javafx.util.Duration;
  * @author 1100007967
  */
 public class SleepAlarm extends AlarmClock implements Serializable {
-
+    
     private static final long serialVersionUID = 4655882630581250278L;
     private static SleepAlarm sleepAlarmCurrentlyUsing;
     private int hoursTillSleep;
@@ -26,6 +26,7 @@ public class SleepAlarm extends AlarmClock implements Serializable {
                 System.out.println("checking");
                 if (Calendar.getInstance().compareTo(sleepAlarmCurrentlyUsing.timeToStopSong) > 0) {
                     sleepAlarmCurrentlyUsing.stopAlarmCheck();
+                    sleepAlarmCurrentlyUsing.setEnableAlarm(false);
                     try {
                         MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().stop();
                     } catch (Exception i) {
@@ -35,24 +36,44 @@ public class SleepAlarm extends AlarmClock implements Serializable {
                 }
             }
     ));
-
-    public SleepAlarm(int hoursTillSleep, int minsTillSleep ) {
+    
+    public SleepAlarm(int hoursTillSleep, int minsTillSleep) {
         this.hoursTillSleep = hoursTillSleep;
         this.minutesTillSleep = minsTillSleep;
     }
-
+    
     public void setTimeForSleepAlarmToGoOff(int hoursTillSleep, int minsTillSleep) {
         this.hoursTillSleep = hoursTillSleep;
         this.minutesTillSleep = minsTillSleep;
         timeToStopSong = Calendar.getInstance();
-        timeToStopSong.add(Calendar.HOUR_OF_DAY,  this.hoursTillSleep);
+        timeToStopSong.add(Calendar.HOUR_OF_DAY, this.hoursTillSleep);
         timeToStopSong.add(Calendar.MINUTE, this.minutesTillSleep);
 //setHour();
     }
-
+    
+    @Override
+    public void setHour(int h) {
+        hoursTillSleep = h;
+    }
+    
+    @Override
+    public void setMinute(int m) {
+        minutesTillSleep = m;
+    }
+    
+    @Override
+    public int getMinute() {
+        return minutesTillSleep;
+    }
+    
+    @Override
+    public int getHour() {
+        return hoursTillSleep;
+    }
+    
     @Override
     public Timeline getTimeline() {
-        return timeline;
+        return this.timeline;
     }
-
+    
 }

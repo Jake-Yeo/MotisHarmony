@@ -254,10 +254,18 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void saveAlarmClockSettings() {
-        Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().setHour(AlarmClock.getAlarmCurrentlyUsing().getHour());
-        Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().setMinute(AlarmClock.getAlarmCurrentlyUsing().getMinute());
-        Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().setAmOrPm(AlarmClock.getAlarmCurrentlyUsing().getAmOrPm());
-        Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().setEnableAlarm(AlarmClock.getAlarmCurrentlyUsing().getEnableAlarm());
+        AlarmClock ac = Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock();
+        ac.setHour(AlarmClock.getAlarmCurrentlyUsing().getHour());
+        ac.setMinute(AlarmClock.getAlarmCurrentlyUsing().getMinute());
+        ac.setAmOrPm(AlarmClock.getAlarmCurrentlyUsing().getAmOrPm());
+        ac.setEnableAlarm(AlarmClock.getAlarmCurrentlyUsing().getEnableAlarm());
+    }
+
+    public static void saveSleepAlarmSettings() {
+        SleepAlarm sa = Accounts.getLoggedInAccount().getSettingsObject().getSleepAlarm();
+        sa.setHour(SleepAlarm.getAlarmCurrentlyUsing().getHour());
+        sa.setMinute(SleepAlarm.getAlarmCurrentlyUsing().getMinute());
+        sa.setEnableAlarm(SleepAlarm.getAlarmCurrentlyUsing().getEnableAlarm());
     }
 
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {

@@ -900,7 +900,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
-    public void showSleepAlarmDialog() throws IOException {
+    public void showSleepAlarmDialog() throws IOException, ParseException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/SleepAlarmDialogEditor.fxml"));
         DialogPane songDialogEditor = fxmlLoader.load();
@@ -911,6 +911,24 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
         dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
+
+        if (buttonClicked.get() == ButtonType.APPLY) {
+            AccountsDataManager.saveSleepAlarmSettings();
+            if (SleepAlarm.getAlarmCurrentlyUsing().getEnableAlarm()) {
+                SleepAlarm.getAlarmCurrentlyUsing().startAlarmCheck();
+            } else {
+                SleepAlarm.getAlarmCurrentlyUsing().stopAlarmCheck();
+            }
+        } else if (buttonClicked.get() == ButtonType.CANCEL) {
+            SettingsObject setObj = Accounts.getLoggedInAccount().getSettingsObject();
+            SleepAlarm.getAlarmCurrentlyUsing().setHour(setObj.getAlarmClock().getHour());
+            SleepAlarm.getAlarmCurrentlyUsing().setMinute(setObj.getAlarmClock().getMinute());
+            if (SleepAlarm.getAlarmCurrentlyUsing().getEnableAlarm()) {
+                SleepAlarm.getAlarmCurrentlyUsing().startAlarmCheck();
+            } else {
+                SleepAlarm.getAlarmCurrentlyUsing().stopAlarmCheck();
+            }
+        }
     }
 
     public void showAlarmClockDialog() throws IOException, ParseException {
