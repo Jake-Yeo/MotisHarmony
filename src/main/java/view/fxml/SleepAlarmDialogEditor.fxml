@@ -17,12 +17,12 @@
             <ComboBox fx:id="hourComboBox" layoutX="14.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onHourComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
             <Button fx:id="showHourChoiceBox" layoutX="14.0" layoutY="39.0" mnemonicParsing="false" onAction="#showHourComboBox" prefHeight="25.0" prefWidth="74.0" text="Set Hour" />
             <Button fx:id="showMinuteChoiceBox" layoutX="99.0" layoutY="40.0" mnemonicParsing="false" onAction="#showMinuteComboBox" text="Set Minute" />
-            <Text fx:id="sleepAlarmStopTimeText" layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1hr 30min" wrappingWidth="253.13671875">
+            <Text fx:id="sleepTimerStopTimeText" layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1hr 30min" wrappingWidth="253.13671875">
                <font>
                   <Font size="33.0" />
                </font>
             </Text>
-            <ToggleButton layoutX="14.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Start Timer" />
+            <ToggleButton fx:id="toggleTimerButton" layoutX="14.0" layoutY="2.0" mnemonicParsing="false" onAction="#onToggleButtonPressed" prefHeight="25.0" prefWidth="113.0" text="Start Timer" />
          </children>
       </AnchorPane>
    </content>

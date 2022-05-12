@@ -5,6 +5,7 @@
 package model;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Calendar;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,19 +15,20 @@ import javafx.util.Duration;
  *
  * @author 1100007967
  */
-public class SleepAlarm extends AlarmClock implements Serializable {
-    
+public class SleepTimer implements Serializable {
+
     private static final long serialVersionUID = 4655882630581250278L;
-    private static SleepAlarm sleepAlarmCurrentlyUsing;
+    private static SleepTimer sleepTimerCurrentlyUsing;
     private int hoursTillSleep;
     private int minutesTillSleep;
+    private boolean enableTimer = false;
     private Calendar timeToStopSong;
     static private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
             e -> {
                 System.out.println("checking");
-                if (Calendar.getInstance().compareTo(sleepAlarmCurrentlyUsing.timeToStopSong) > 0) {
-                    sleepAlarmCurrentlyUsing.stopAlarmCheck();
-                    sleepAlarmCurrentlyUsing.setEnableAlarm(false);
+                if (Calendar.getInstance().compareTo(sleepTimerCurrentlyUsing.timeToStopSong) > 0) {
+                    sleepTimerCurrentlyUsing.stopTimerCheck();
+                    sleepTimerCurrentlyUsing.setEnableTimer(false);
                     try {
                         MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().stop();
                     } catch (Exception i) {
@@ -36,44 +38,63 @@ public class SleepAlarm extends AlarmClock implements Serializable {
                 }
             }
     ));
-    
-    public SleepAlarm(int hoursTillSleep, int minsTillSleep) {
+
+    public SleepTimer(int hoursTillSleep, int minsTillSleep) {
         this.hoursTillSleep = hoursTillSleep;
         this.minutesTillSleep = minsTillSleep;
     }
-    
-    public void setTimeForSleepAlarmToGoOff(int hoursTillSleep, int minsTillSleep) {
-        this.hoursTillSleep = hoursTillSleep;
-        this.minutesTillSleep = minsTillSleep;
+
+    public boolean getEnableTimer() {
+        return enableTimer;
+    }
+
+    public void setEnableTimer(boolean tf) {
+        enableTimer = tf;
+    }
+
+    public void setTimeForTimerToGoOff() {
         timeToStopSong = Calendar.getInstance();
         timeToStopSong.add(Calendar.HOUR_OF_DAY, this.hoursTillSleep);
         timeToStopSong.add(Calendar.MINUTE, this.minutesTillSleep);
 //setHour();
     }
-    
-    @Override
+
+    public static void setTimerCurrentlyUsing(SleepTimer st) {
+        sleepTimerCurrentlyUsing = st;
+    }
+
+    public static SleepTimer getTimerCurrentlyUsing() {
+        return sleepTimerCurrentlyUsing;
+    }
+
     public void setHour(int h) {
         hoursTillSleep = h;
     }
-    
-    @Override
+
+    public void stopTimerCheck() {
+        getTimeline().stop();
+    }
+
+    public void startTimerCheck() throws ParseException {
+        setTimeForTimerToGoOff();
+        getTimeline().setCycleCount(Timeline.INDEFINITE);
+        getTimeline().play();
+    }
+
     public void setMinute(int m) {
         minutesTillSleep = m;
     }
-    
-    @Override
+
     public int getMinute() {
         return minutesTillSleep;
     }
-    
-    @Override
+
     public int getHour() {
         return hoursTillSleep;
     }
-    
-    @Override
+
     public Timeline getTimeline() {
         return this.timeline;
     }
-    
+
 }

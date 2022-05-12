@@ -87,8 +87,8 @@ public class AlarmClock implements Serializable {
     public void setEnableAlarm(boolean tf) {
         enableAlarm = tf;
     }
-
-    private void setTimeForAlarmToGoOff() {
+    
+    public void setTimeForAlarmToGoOff() {
         DateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy-HH-mm");
         Calendar currentDate = Calendar.getInstance();
         String[] stringMonthDayYearHourMinute = dateFormatter.format(currentDate.getTime()).split("-");

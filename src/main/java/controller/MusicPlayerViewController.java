@@ -67,7 +67,7 @@ import model.AlarmClock;
 import model.MusicPlayerManager;
 import model.PlaylistMap;
 import model.SettingsObject;
-import model.SleepAlarm;
+import model.SleepTimer;
 import model.SongDataObject;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
@@ -337,7 +337,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        SleepAlarm.setAlarmCurrentlyUsing(Accounts.getLoggedInAccount().getSettingsObject().getSleepAlarm());
+        //This block of code will set up the Sleepalarm
+        SleepTimer.setTimerCurrentlyUsing(Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer());
         //Should probably just make AlarmClock equal to the accAlarmClock;
         //AlarmClock.setAlarmCurrentlyUsing(new AlarmClock(accAlarmClock.getHour(), accAlarmClock.getMinute(), accAlarmClock.getAmOrPm()));
         AlarmClock.setAlarmCurrentlyUsing(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock());
@@ -901,6 +902,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void showSleepAlarmDialog() throws IOException, ParseException {
+        if (SleepTimer.getTimerCurrentlyUsing() != null) {
+            SleepTimer.getTimerCurrentlyUsing().stopTimerCheck();
+        }
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/SleepAlarmDialogEditor.fxml"));
         DialogPane songDialogEditor = fxmlLoader.load();
@@ -913,21 +917,19 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
 
         if (buttonClicked.get() == ButtonType.APPLY) {
-            AccountsDataManager.saveSleepAlarmSettings();
-            if (SleepAlarm.getAlarmCurrentlyUsing().getEnableAlarm()) {
-                SleepAlarm.getAlarmCurrentlyUsing().startAlarmCheck();
+            AccountsDataManager.saveSleepTimerSettings();
+            if (SleepTimer.getTimerCurrentlyUsing().getEnableTimer()) {
+                SleepTimer.getTimerCurrentlyUsing().startTimerCheck();
+                System.out.println("Starting chek ");
             } else {
-                SleepAlarm.getAlarmCurrentlyUsing().stopAlarmCheck();
+                SleepTimer.getTimerCurrentlyUsing().stopTimerCheck();
+                System.out.println("Stopping chek ");
             }
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
-            SettingsObject setObj = Accounts.getLoggedInAccount().getSettingsObject();
-            SleepAlarm.getAlarmCurrentlyUsing().setHour(setObj.getAlarmClock().getHour());
-            SleepAlarm.getAlarmCurrentlyUsing().setMinute(setObj.getAlarmClock().getMinute());
-            if (SleepAlarm.getAlarmCurrentlyUsing().getEnableAlarm()) {
-                SleepAlarm.getAlarmCurrentlyUsing().startAlarmCheck();
-            } else {
-                SleepAlarm.getAlarmCurrentlyUsing().stopAlarmCheck();
-            }
+            SleepTimer setttingSleepalarm = Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer();
+            SleepTimer.getTimerCurrentlyUsing().setHour(setttingSleepalarm.getHour());
+            SleepTimer.getTimerCurrentlyUsing().setMinute(setttingSleepalarm.getMinute());
+            SleepTimer.getTimerCurrentlyUsing().setEnableTimer(setttingSleepalarm.getEnableTimer());
         }
     }
 

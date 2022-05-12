@@ -261,11 +261,11 @@ public class AccountsDataManager implements Serializable {//This class will be u
         ac.setEnableAlarm(AlarmClock.getAlarmCurrentlyUsing().getEnableAlarm());
     }
 
-    public static void saveSleepAlarmSettings() {
-        SleepAlarm sa = Accounts.getLoggedInAccount().getSettingsObject().getSleepAlarm();
-        sa.setHour(SleepAlarm.getAlarmCurrentlyUsing().getHour());
-        sa.setMinute(SleepAlarm.getAlarmCurrentlyUsing().getMinute());
-        sa.setEnableAlarm(SleepAlarm.getAlarmCurrentlyUsing().getEnableAlarm());
+    public static void saveSleepTimerSettings() {
+        SleepTimer st = Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer();
+        st.setHour(SleepTimer.getTimerCurrentlyUsing().getHour());
+        st.setMinute(SleepTimer.getTimerCurrentlyUsing().getMinute());
+        st.setEnableTimer(SleepTimer.getTimerCurrentlyUsing().getEnableTimer());
     }
 
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {

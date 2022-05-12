@@ -9,13 +9,15 @@ import java.text.ParseException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.text.Text;
 import model.Accounts;
 import model.AlarmClock;
-import model.SleepAlarm;
+import model.SleepTimer;
 
 /**
  * FXML Controller class
@@ -27,68 +29,88 @@ public class SleepAlarmDialogEditorController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    private SleepAlarm sleepAlarm;
+    private SleepTimer sleepTimer;
     @FXML
     private ComboBox<Integer> hourComboBox;
     @FXML
     private ComboBox<Integer> minuteComboBox;
-    @FXML
     private RadioButton enableAlarmRadioButton;
     @FXML
-    private Text sleepAlarmStopTimeText;
+    private Text sleepTimerStopTimeText;
+    @FXML
+    private Button showHourChoiceBox;
+    @FXML
+    private Button showMinuteChoiceBox;
+    @FXML
+    private ToggleButton toggleTimerButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        SleepAlarm accSleepAlarm = Accounts.getLoggedInAccount().getSettingsObject().getSleepAlarm();
-        sleepAlarm = new SleepAlarm(accSleepAlarm.getHour(), accSleepAlarm.getMinute());
-        sleepAlarm.setEnableAlarm(accSleepAlarm.getEnableAlarm());
-        AlarmClock.setAlarmCurrentlyUsing(sleepAlarm);
+        SleepTimer accSleepTimer = Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer();
+        sleepTimer = new SleepTimer(accSleepTimer.getHour(), accSleepTimer.getMinute());
+        sleepTimer.setEnableTimer(accSleepTimer.getEnableTimer());
+        SleepTimer.setTimerCurrentlyUsing(sleepTimer);
         hourComboBox.setVisible(false);
         hourComboBox.setMaxWidth(74);
         hourComboBox.setVisibleRowCount(3);
         minuteComboBox.setVisible(false);
         minuteComboBox.setMaxWidth(74);
         minuteComboBox.setVisibleRowCount(3);
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 0; i <= 12; i++) {
             hourComboBox.getItems().add(i);
         }
         for (int i = 0; i <= 59; i++) {
             minuteComboBox.getItems().add(i);
+        }
+        toggleTimerButton.setSelected(sleepTimer.getEnableTimer());
+        if (sleepTimer.getEnableTimer()) {
+            toggleTimerButton.setText("Stop Timer");
+        } else {
+            toggleTimerButton.setText("Start Timer");
         }
         updateAlarmTimeText();
 
     }
 
     private void updateAlarmTimeText() {
-        String minuteString = sleepAlarm.getMinute() + "";
+        String minuteString = sleepTimer.getMinute() + "";
         String hour = " hr";
         String min = " min";
-        if (sleepAlarm.getMinute() / 10 == 0) {
-            minuteString = 0 + "" + sleepAlarm.getMinute();
+        if (sleepTimer.getMinute() / 10 == 0) {
+            minuteString = 0 + "" + sleepTimer.getMinute();
         }
-        if (sleepAlarm.getMinute() != 1) {
+        if (sleepTimer.getMinute() != 1) {
             min += "s";
         }
-        if (sleepAlarm.getHour() != 1) {
+        if (sleepTimer.getHour() != 1) {
             hour += "s";
         }
-        sleepAlarmStopTimeText.setText(sleepAlarm.getHour() + hour + " " + minuteString + min);
+        sleepTimerStopTimeText.setText(sleepTimer.getHour() + hour + " " + minuteString + min);
     }
 
-    @FXML
     private void onEnableAlarmRadioButtonPressed() throws ParseException {
         AlarmClock.getAlarmCurrentlyUsing().setEnableAlarm(enableAlarmRadioButton.isSelected());
     }
 
     @FXML
+    private void onToggleButtonPressed() {
+        sleepTimer.setEnableTimer(!sleepTimer.getEnableTimer());
+        if (sleepTimer.getEnableTimer()) {
+            toggleTimerButton.setText("Stop Timer");
+        } else {
+            toggleTimerButton.setText("Start Timer");
+        }
+    }
+
+    @FXML
     private void onHourComboBoxPressed() {
-        sleepAlarm.setHour(hourComboBox.getValue());
+        sleepTimer.setHour(hourComboBox.getValue());
         updateAlarmTimeText();
     }
 
     @FXML
     private void onMinuteComboBoxPressed() {
-        sleepAlarm.setMinute(minuteComboBox.getValue());
+        sleepTimer.setMinute(minuteComboBox.getValue());
         updateAlarmTimeText();
     }
 
