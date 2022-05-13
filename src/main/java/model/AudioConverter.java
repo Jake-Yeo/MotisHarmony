@@ -25,7 +25,7 @@ public class AudioConverter {
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
     private static final String OLD_AUDIO_TYPE = ".weba";
-    
+
     public static boolean getConversionQueueHasStarted() {
         return coversionQueueHasStarted;
     }
@@ -48,7 +48,7 @@ public class AudioConverter {
         Encoder encoder = new Encoder();
         encoder.encode(new MultimediaObject(source), target, attrs);
         source.delete();
-        conversionQueueList.remove();
+        YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().remove(conversionQueueList.remove());
         conversionIsDone = true;
         AccountsDataManager.songDataObjectToAddToAccount(songDataObject);//This will save the path of the wav file to the account data so that it can be accessed
         System.out.println("done converting");
