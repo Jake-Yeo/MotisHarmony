@@ -62,7 +62,7 @@ public class SleepAlarmDialogEditorController implements Initializable {
         for (int i = 0; i <= 59; i++) {
             minuteComboBox.getItems().add(i);
         }
-        toggleTimerButton.setSelected(sleepTimer.getEnableTimer());
+        toggleTimerButton.setSelected(SleepTimer.getTimerCurrentlyUsing().getEnableTimer());
         if (sleepTimer.getEnableTimer()) {
             toggleTimerButton.setText("Stop Timer");
         } else {

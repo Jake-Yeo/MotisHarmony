@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Accounts;
 import model.AccountsDataManager;
 import model.PathsManager;
 import view.MainViewRunner;
@@ -36,6 +37,8 @@ public class AppRunner {
         shutdownHook = new Thread() {
             public void run() {
                 try {
+                    //We disable the timer when the user exits because there is no point in having a timer that automatically starts on launch
+                    Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer().setEnableTimer(false);
                     AccountsDataManager.saveAllSettings();
                 } catch (Exception ex) {
                     Logger.getLogger(AppRunner.class.getName()).log(Level.SEVERE, null, ex);

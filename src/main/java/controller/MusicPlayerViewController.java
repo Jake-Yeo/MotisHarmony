@@ -705,6 +705,19 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             System.out.println("Setting the pause button to play");
         });
 
+        mpm.getMediaPlayer().setOnPaused(() -> {
+            //The if statement ensures that the mediaPlayer is not paused when seeking. We pause when we seek if not weird audio is generated
+            if (!mpm.getIsSeeking()) {
+                mpm.setPaused(true);
+                playButton.setStyle("-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+                playButton.setText("▶");
+                //probably don't need the init() method below
+                init();
+                updateInfoDisplays();
+                System.out.println("Setting the pause button to paused");
+            }
+        });
+
         mpm.getMediaPlayer().setOnError(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
                 mpm.resetPlayerOnError();
@@ -739,6 +752,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         });
 
         seekSlider.setOnMousePressed((MouseEvent mouseEvent) -> {//This handles the seeking of the song
+            mpm.setIsSeeking(true);
             mpm.getMediaPlayer().pause();//Pause the song so there is no weird audio. However do not change the boolean isPaused value so we can choose wether or not to resume the song or not after we finish seeking
         });
 
@@ -750,6 +764,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             if (!mpm.isSongPaused()) {
                 mpm.resumeSong();//Resume the song once the user releases their mouse key and if they want it to resume
             }
+            mpm.setIsSeeking(false);
         });
 
         mpm.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.

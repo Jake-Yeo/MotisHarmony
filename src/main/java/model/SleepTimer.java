@@ -28,9 +28,10 @@ public class SleepTimer implements Serializable {
                 System.out.println("checking");
                 if (Calendar.getInstance().compareTo(sleepTimerCurrentlyUsing.timeToStopSong) > 0) {
                     sleepTimerCurrentlyUsing.stopTimerCheck();
-                    sleepTimerCurrentlyUsing.setEnableTimer(false);
+                    //We must set wether or not the timer is enabled with the account settings so that the settings are saved no matter what!
+                    Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer().setEnableTimer(false);
                     try {
-                        MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().stop();
+                        MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().pause();
                     } catch (Exception i) {
                         i.printStackTrace();
                     }

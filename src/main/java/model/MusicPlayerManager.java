@@ -34,6 +34,7 @@ public class MusicPlayerManager {
     private Duration backupCurrentDuration = null;
     private boolean musicPlayerInitalized = false;
     private boolean playSongInLoop = false;
+    private boolean isSeeking = false;
     private int volume;
     private String playType = "Ordered Play";
     private String songSortType;
@@ -53,6 +54,14 @@ public class MusicPlayerManager {
 
     public static MusicPlayerManager getMpmCurrentlyUsing() {
         return mpmCurrentlyUsing;
+    }
+    
+    public void setIsSeeking(boolean seeking) {
+        isSeeking = seeking;
+    }
+    
+    public boolean getIsSeeking() {
+        return isSeeking;
     }
 
     public void setSongSortType(String sortType) {
