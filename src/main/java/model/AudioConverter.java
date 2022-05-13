@@ -21,7 +21,7 @@ import ws.schild.jave.encode.EncodingAttributes;
  */
 public class AudioConverter {
 
-    private static Queue<SongDataObject> conversionQueueList = new LinkedList<>();
+    private static ObservableQueue<SongDataObject> conversionQueueList = new ObservableQueue(new LinkedList<>());
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
     private static final String OLD_AUDIO_TYPE = ".weba";
