@@ -47,6 +47,7 @@ import ws.schild.jave.EncoderException;
 public class YoutubeDownloader {
 
     private static YoutubeDownloader ytdCurrentlyUsing;
+    private AudioConverter ac = new AudioConverter();
     private WebDriver driver;
     private boolean isChromeDriverActive = false;
     private boolean removeFirstLink = true;
@@ -405,7 +406,7 @@ public class YoutubeDownloader {
             }
             //We no longer create a new thread everytime we run the AudioConverter below, this will give time for the chrome driver to "breath" and will prevent massive lag.  
             try {
-                AudioConverter.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+                ac.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
             } catch (Exception ex) {
                 errorList.add(new ErrorDataObject(true, "Download could not be completed as wifi is disconnected"));
                 setWifiConnected(false);

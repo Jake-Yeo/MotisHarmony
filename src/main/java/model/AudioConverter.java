@@ -8,6 +8,8 @@ package model;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.EncoderException;
 import ws.schild.jave.MultimediaObject;
@@ -20,7 +22,7 @@ import ws.schild.jave.encode.EncodingAttributes;
  */
 public class AudioConverter {
 
-    private static ArrayList<SongDataObject> conversionQueueList = new ArrayList<>();
+    private static Queue<SongDataObject> conversionQueueList = new LinkedList<>();
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
     private static final String OLD_AUDIO_TYPE = ".weba";
@@ -29,12 +31,12 @@ public class AudioConverter {
         return coversionQueueHasStarted;
     }
 
-    private static void convertWebaToWav(SongDataObject songDataObject) throws EncoderException, IOException, Exception {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
+    private void convertWebaToWav(SongDataObject songDataObject) throws EncoderException, IOException, Exception {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
         long timeStart = System.currentTimeMillis();
         conversionIsDone = false;
         File source = new File(songDataObject.getPathToWebaFile());
         File target = new File(songDataObject.getPathToWavFile());
-        //Audio Attributes                                       
+        //Audio Attributes     
         AudioAttributes audio = new AudioAttributes();
         audio.setCodec("aac");
         audio.setBitRate(128000);
@@ -47,25 +49,25 @@ public class AudioConverter {
         Encoder encoder = new Encoder();
         encoder.encode(new MultimediaObject(source), target, attrs);
         source.delete();
-        conversionQueueList.remove(0);
+        conversionQueueList.remove();
         conversionIsDone = true;
         AccountsDataManager.songDataObjectToAddToAccount(songDataObject);//This will save the path of the wav file to the account data so that it can be accessed
         System.out.println("done converting");
         System.out.println("Time taken to convert: " + (System.currentTimeMillis() - timeStart) / 1000 + " Seconds");
     }
 
-    public static void addToConversionQueue(SongDataObject songDataObject) throws EncoderException, IOException, Exception {
+    public void addToConversionQueue(SongDataObject songDataObject) throws EncoderException, IOException, Exception {
         conversionQueueList.add(songDataObject);
         if (!coversionQueueHasStarted) {
             startConversionQueue();
         }
     }
 
-    private static void startConversionQueue() throws EncoderException, IOException, Exception {
+    private void startConversionQueue() throws EncoderException, IOException, Exception {
         coversionQueueHasStarted = true;
         while (!conversionQueueList.isEmpty()) {
             if (conversionIsDone) {
-                convertWebaToWav(conversionQueueList.get(0));
+                convertWebaToWav(conversionQueueList.peek());
             }
             coversionQueueHasStarted = false;
         }

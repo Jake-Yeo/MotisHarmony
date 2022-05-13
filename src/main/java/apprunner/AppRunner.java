@@ -27,7 +27,7 @@ import view.MainViewRunner;
 public class AppRunner {
 
     private static Thread shutdownHook;
-    
+
     public static Thread getShutdownHook() {
         return shutdownHook;
     }
@@ -50,7 +50,6 @@ public class AppRunner {
         //Set up the AccountsDataManager object below since we need to clear the deletion queue
         PathsManager.setUpFolders();
         AccountsDataManager adm = new AccountsDataManager();
-        PathsManager.clearDownloadedWebaDirectory();//This will delete all the weba files inside the downloadedWeba directory so that weba files don't start to collect and take up space
         PathsManager.deleteAllItemsInDownloadQueue();//This will delete all the files associated with the SongDataObjects in the deletion queue
         MainViewRunner.launchPanel(args);
 //playlist 511 index https://www.youtube.com/watch?v=RgKAFK5djSk&list=PLeCdlPO-XhWFzEVynMsmosfdRsIZXhZi0&index=1 // playlist with 5000 videos
