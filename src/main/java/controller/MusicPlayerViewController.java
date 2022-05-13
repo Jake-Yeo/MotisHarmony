@@ -16,11 +16,11 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -471,7 +471,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                     mpm.setIndexForOrderedPlay(mpm.getPlaylistSongsPlaying().indexOf(mpm.getSongObjectBeingPlayed()) + 1);
                 }
             } else {
-                ArrayList<SongDataObject> sdoToAddToPlaylist = new ArrayList<>(songList.getSelectionModel().getSelectedIndices().size());
+                LinkedList<SongDataObject> sdoToAddToPlaylist = new LinkedList<>();
                 for (int i = 0; i < songList.getSelectionModel().getSelectedIndices().size(); i++) {
                     sdoToAddToPlaylist.add(mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndices().get(i)));
                 }
@@ -1145,7 +1145,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             if (selectedIndex != -1) {
                 String keyValue = playlistList.getItems().get(selectedIndex);
                 System.out.println(keyValue);
-                ArrayList<SongDataObject> songDataObjectsToAdd = map.getMapOfPlaylists().get(keyValue);
+                LinkedList<SongDataObject> songDataObjectsToAdd = map.getMapOfPlaylists().get(keyValue);
                 mpm.updateSongList(songDataObjectsToAdd);//Updates the currentSongList. SongListView automatically updates
                 if (sortChoiceBox.getValue() != null) {
                     //automatically sort the ModelSongList

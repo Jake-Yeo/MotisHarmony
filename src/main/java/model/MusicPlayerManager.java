@@ -8,9 +8,9 @@ package model;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
 import javafx.scene.media.Media;
 import java.util.Random;
 import java.util.logging.Level;
@@ -43,7 +43,7 @@ public class MusicPlayerManager {
     private MediaPlayer mediaPlayer;
     private ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
     private ObservableList<SongDataObject> playlistSongsPlaying = FXCollections.observableArrayList();
-    private ArrayList<SongDataObject> songHistory = new ArrayList<>();
+    private LinkedList<SongDataObject> songHistory = new LinkedList<>();
     private int posInSongHistory = 0;
     private String currentPlaylistPlayling;
     private double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
@@ -75,7 +75,7 @@ public class MusicPlayerManager {
     public void updateCurrentSongListWithSearchQuery(String searchQuery) {
         searchQuery = searchQuery.trim().toLowerCase();
         ObservableList<SongDataObject> currentSongListToUpdateTo = FXCollections.observableArrayList();
-        ArrayList<SongDataObject> listToSearchThrough = Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(getPlaylistCurrentlyViewing());
+        LinkedList<SongDataObject> listToSearchThrough = Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(getPlaylistCurrentlyViewing());
         for (SongDataObject sdo : listToSearchThrough) {
             if (sdo.getTitle().toLowerCase().contains(searchQuery) || sdo.getChannelName().toLowerCase().contains(searchQuery) || sdo.getVideoID().contains(searchQuery)) {
                 currentSongListToUpdateTo.add(sdo);
@@ -124,7 +124,7 @@ public class MusicPlayerManager {
         sliderVolume = volume;
     }
 
-    public ArrayList<SongDataObject> getSongHistory() {
+    public LinkedList<SongDataObject> getSongHistory() {
         return songHistory;
     }
 
@@ -392,7 +392,7 @@ public class MusicPlayerManager {
         return playlistSongsPlaying;
     }
 
-    public void updateSongList(ArrayList<SongDataObject> sdota) {
+    public void updateSongList(LinkedList<SongDataObject> sdota) {
         getCurrentSongList().clear();
         getCurrentSongList().addAll(sdota);
     }

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -66,7 +66,7 @@ public class PathsManager {//This class will handle all the folder and txt creat
 
     public static void deleteAllItemsInDownloadQueue() throws Exception {
         AccountsDataManager adm = AccountsDataManager.deserializeAccMan();
-        ArrayList<SongDataObject> sdoDataToDeleteFromFiles = adm.getDeletionQueue();
+        LinkedList<SongDataObject> sdoDataToDeleteFromFiles = adm.getDeletionQueue();
         for (int i = 0; i < sdoDataToDeleteFromFiles.size(); i++) {
             try {
                 System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToWavFile());

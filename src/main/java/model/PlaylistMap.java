@@ -11,10 +11,10 @@ package model;
  */
 import java.io.Serializable;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -24,13 +24,13 @@ public class PlaylistMap implements Serializable {
 
     private static final long serialVersionUID = 4655882630581250278L;
 
-    private HashMap<String, ArrayList<SongDataObject>> playlistMap = new HashMap<>();//Using a HashMap we can easily give playlists names
+    private HashMap<String, LinkedList<SongDataObject>> playlistMap = new HashMap<>();//Using a HashMap we can easily give playlists names
 
     public void createPlaylist(String name) throws Exception {
-        this.playlistMap.put(name, new ArrayList<SongDataObject>());
+        this.playlistMap.put(name, new LinkedList<SongDataObject>());
     }
 
-    public void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
+    public void addSongToPlaylist(String playlistName, LinkedList<SongDataObject> listOfSongs) throws Exception {
         this.playlistMap.get(playlistName).addAll(listOfSongs);
     }
 
@@ -56,7 +56,7 @@ public class PlaylistMap implements Serializable {
         return this.playlistMap.keySet().toArray(new String[this.playlistMap.keySet().size()]);
     }
 
-    public HashMap<String, ArrayList<SongDataObject>> getMapOfPlaylists() {
+    public HashMap<String, LinkedList<SongDataObject>> getMapOfPlaylists() {
         return this.playlistMap;
     }
 }

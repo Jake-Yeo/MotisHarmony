@@ -15,7 +15,6 @@ import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,9 +32,9 @@ public class Accounts implements Serializable {//This class will store account u
     private static final long serialVersionUID = 4655882630581250278L;
     private static SceneChanger sceneSwitcher = new SceneChanger();
     private static Accounts loggedInAccount;
-    private ArrayList<SongDataObject> songDataObjectList = new ArrayList<>();
-    private ArrayList<SongDataObject> songsInQueueList = new ArrayList<>();
-    private ArrayList<UrlDataObject> urlDataObjectList = new ArrayList<>();
+    private LinkedList<SongDataObject> songDataObjectList = new LinkedList<>();
+    private LinkedList<SongDataObject> songsInQueueList = new LinkedList<>();
+    private LinkedList<UrlDataObject> urlDataObjectList = new LinkedList<>();
     private String username;
     private String password;
     private SecretKey key;
@@ -53,7 +52,7 @@ public class Accounts implements Serializable {//This class will store account u
         this.key = aes.getSecretKey();
     }
 
-    public ArrayList<SongDataObject> getSongsInQueueList() {
+    public LinkedList<SongDataObject> getSongsInQueueList() {
         return songsInQueueList;
     }
 
@@ -81,8 +80,8 @@ public class Accounts implements Serializable {//This class will store account u
         return this.key;
     }
 
-    public ArrayList<String> getListOfSongPaths() {
-        ArrayList<String> listOfSongsToReturn = new ArrayList<>();
+    public LinkedList<String> getListOfSongPaths() {
+        LinkedList<String> listOfSongsToReturn = new LinkedList<>();
         for (int i = 0; i < songDataObjectList.size(); i++) {
             listOfSongsToReturn.add(songDataObjectList.get(i).getPathToWavFile());
         }
@@ -90,19 +89,19 @@ public class Accounts implements Serializable {//This class will store account u
         return listOfSongsToReturn;
     }
 
-    public ArrayList<String> getListOfSongVideoIds() {
-        ArrayList<String> listOfSongsToReturn = new ArrayList<>();
+    public LinkedList<String> getListOfSongVideoIds() {
+        LinkedList<String> listOfSongsToReturn = new LinkedList<>();
         for (SongDataObject sdo : songDataObjectList) {
             listOfSongsToReturn.add(sdo.getVideoID());
         }
         return listOfSongsToReturn;
     }
 
-    public ArrayList<SongDataObject> getListOfSongDataObjects() {
+    public LinkedList<SongDataObject> getListOfSongDataObjects() {
         return this.songDataObjectList;
     }
 
-    public ArrayList<UrlDataObject> getListOfUrlDataObjects() {
+    public LinkedList<UrlDataObject> getListOfUrlDataObjects() {
         return this.urlDataObjectList;
     }
 

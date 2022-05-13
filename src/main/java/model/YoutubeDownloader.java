@@ -20,8 +20,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -150,8 +150,8 @@ public class YoutubeDownloader {
         return youtubeUrlDownloadQueueList;
     }
 
-    public ArrayList<String> getYoutubeUrlDownloadQueueListVideoIds() {
-        ArrayList<String> idList = new ArrayList<>();
+    public LinkedList<String> getYoutubeUrlDownloadQueueListVideoIds() {
+        LinkedList<String> idList = new LinkedList<>();
         for (SongDataObject sdo : youtubeUrlDownloadQueueList) {
             idList.add(sdo.getVideoID());
         }
@@ -164,7 +164,7 @@ public class YoutubeDownloader {
 
     private void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) {
         isPlaylistUrlGetterCurrentlyGettingUrls = true;
-        ArrayList<SongDataObject> youtubePlaylistUrls = null;
+        LinkedList<SongDataObject> youtubePlaylistUrls = null;
         try {
             YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
             youtubePlaylistUrls = yvpp.getPlaylistYoutubeUrls(youtubePlaylistLink);
@@ -175,11 +175,11 @@ public class YoutubeDownloader {
             errorList.add(new ErrorDataObject(true, "Sorry we cannot download the url you entered at this time."));
             return;
         }
-        ArrayList<SongDataObject> sdosToRemoveFromYoutubePlaylistUrls = new ArrayList<>();
-        ArrayList<SongDataObject> youtubePlaylistUrlsNoDupe = new ArrayList<>();
+        LinkedList<SongDataObject> sdosToRemoveFromYoutubePlaylistUrls = new LinkedList<>();
+        LinkedList<SongDataObject> youtubePlaylistUrlsNoDupe = new LinkedList<>();
         //There is a youtube bug where two of the same videos are added to one playlist, this will completely break the program, we prevent this by removing duplicate videos which were in the youtube playlist
-        ArrayList<String> sdoIdArray = SongDataObject.getYoutubeIdList(youtubePlaylistUrls);
-        ArrayList<String> sdoCompareToArray = new ArrayList<>(sdoIdArray.size());
+        LinkedList<String> sdoIdArray = SongDataObject.getYoutubeIdList(youtubePlaylistUrls);
+        LinkedList<String> sdoCompareToArray = new LinkedList<>();
         for (int i = 0; i < youtubePlaylistUrls.size(); i++) {
             if (!sdoCompareToArray.contains(sdoIdArray.get(i))) {
                 youtubePlaylistUrlsNoDupe.add(youtubePlaylistUrls.get(i));

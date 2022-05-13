@@ -6,7 +6,7 @@ package model;
 
 import java.io.Serializable;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import javafx.collections.ObservableList;
 
 /**
@@ -104,8 +104,8 @@ public class SongDataObject implements Serializable {
         return ("[" + getTitle() + ", " + getVideoDuration() + ", " + getChannelName() + ", " + getThumbnailUrl() + ", " + getVideoUrl() + ", " + getVideoID() + ", " + getPathToWebaFile() + ", " + getPathToWavFile() + ", " + getSafeTitleName() + ", " + getPathToThumbnail());
     }
 
-    public static ArrayList<String> getYoutubeIdList(ArrayList<SongDataObject> sdoList) {
-        ArrayList<String> sdoIdArray = new ArrayList<String>(sdoList.size());
+    public static LinkedList<String> getYoutubeIdList(LinkedList<SongDataObject> sdoList) {
+        LinkedList<String> sdoIdArray = new LinkedList<String>();
         for (int i = 0; i < sdoList.size(); i++) {
             sdoIdArray.add(sdoList.get(i).getVideoID());
         }

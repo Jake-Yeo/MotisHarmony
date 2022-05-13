@@ -16,10 +16,10 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,10 +35,10 @@ import javax.imageio.ImageIO;
 public class AccountsDataManager implements Serializable {//This class will be used to manage all data changes made to a logged in account. If they change, add, remove a song or playlist, all of that will happen in this class    
 
     private static final long serialVersionUID = 4655882630581250278L;
-    private ArrayList<String> listOfAccountNames;
+    private LinkedList<String> listOfAccountNames;
     private String pathToAccToAutoLogIn;
     //We need the deletion queue below because the .dispose() method on the mediaPlayer has some asynchronous-ness to it so we simply delete the files when we start up the app.
-    private ArrayList<SongDataObject> deletionQueue;
+    private LinkedList<SongDataObject> deletionQueue;
 
     public AccountsDataManager() {
         try {
@@ -47,8 +47,8 @@ public class AccountsDataManager implements Serializable {//This class will be u
             this.deletionQueue = adm.deletionQueue;
             this.pathToAccToAutoLogIn = adm.getAccPathToAutoLogIn();
         } catch (Exception e) {
-            this.listOfAccountNames = new ArrayList<>();
-            this.deletionQueue = new ArrayList<>();
+            this.listOfAccountNames = new LinkedList<>();
+            this.deletionQueue = new LinkedList<>();
             try {
                 serializeAccMan();
             } catch (Exception ex) {
@@ -71,7 +71,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         return this.pathToAccToAutoLogIn;
     }
 
-    public ArrayList<SongDataObject> getDeletionQueue() {
+    public LinkedList<SongDataObject> getDeletionQueue() {
         return this.deletionQueue;
     }
 
@@ -225,9 +225,9 @@ public class AccountsDataManager implements Serializable {//This class will be u
         }
     }
 
-    public static void addSongToPlaylist(String playlistName, ArrayList<SongDataObject> listOfSongs) throws Exception {
-        ArrayList<SongDataObject> songsInPlaylist = Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName);
-        ArrayList<SongDataObject> songsToRemoveFromList = new ArrayList<>();
+    public static void addSongToPlaylist(String playlistName, LinkedList<SongDataObject> listOfSongs) throws Exception {
+        LinkedList<SongDataObject> songsInPlaylist = Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName);
+        LinkedList<SongDataObject> songsToRemoveFromList = new LinkedList<>();
         //This for loop will remove all the songs in the listOfSongs which are already present in the playlist
         for (int i = 0; i < listOfSongs.size(); i++) {
             if (songsInPlaylist.contains(listOfSongs.get(i))) {

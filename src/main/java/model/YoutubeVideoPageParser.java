@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.image.Image;
@@ -246,11 +246,11 @@ public class YoutubeVideoPageParser {
         return youtubeVideoData;
     }
 
-    public ArrayList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
+    public LinkedList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
         youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
         String html = getHtml(youtubePlaylistUrl);
-        ArrayList<String> youtubeIdsCurrentlyInSongDataList = new ArrayList<>();
-        ArrayList<SongDataObject> songDataList = new ArrayList<>();//This will return a list of songDataObjects containing data about the video duration, title, channel name etc.
+        LinkedList<String> youtubeIdsCurrentlyInSongDataList = new LinkedList<>();
+        LinkedList<SongDataObject> songDataList = new LinkedList<>();//This will return a list of songDataObjects containing data about the video duration, title, channel name etc.
         //html = infoParserToolTrimToStart(html, YT_PLAYLIST_START_IDENTIFIER);//This will find the start of the playlist information in the html thus getting rid of any urls that may interfere with this method
         int playlistLength = 0;
         try {//This is just incase the url tester fails to catch a really weird url which somehow manages to pass through. For example there's some weird youtube radio playlists that can load in whole views, so we need another way to identify them.
