@@ -25,6 +25,7 @@ public class AudioConverter {
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
     private static final String OLD_AUDIO_TYPE = ".weba";
+    ConvertProgressListener listener = new ConvertProgressListener();
 
     public static boolean getConversionQueueHasStarted() {
         return coversionQueueHasStarted;
@@ -46,7 +47,7 @@ public class AudioConverter {
         attrs.setAudioAttributes(audio);
         //Encode                                                    
         Encoder encoder = new Encoder();
-        encoder.encode(new MultimediaObject(source), target, attrs);
+        encoder.encode(new MultimediaObject(source), target, attrs, listener);
         source.delete();
         YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().remove(conversionQueueList.remove());
         conversionIsDone = true;

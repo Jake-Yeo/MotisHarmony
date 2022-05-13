@@ -89,5 +89,20 @@
             <ImageView fx:id="thumbnailImageView" fitHeight="127.0" fitWidth="295.0" layoutX="35.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
+      <Text fx:id="downloadPercentageText" fill="#4c154a" layoutX="487.0" layoutY="550.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Download Pecent" wrappingWidth="186.76002502441406">
+         <font>
+            <Font name="Quicksand SemiBold" size="11.0" />
+         </font>
+      </Text>
+      <Text fx:id="conversionPercentageText" fill="#4c154a" layoutX="487.0" layoutY="564.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Conversion Percent" wrappingWidth="186.76002502441406">
+         <font>
+            <Font name="Quicksand SemiBold" size="11.0" />
+         </font>
+      </Text>
+      <Text fx:id="songNameDownloadingText" fill="#4c154a" layoutX="487.0" layoutY="536.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Song Downloading" wrappingWidth="400.0">
+         <font>
+            <Font name="Quicksand SemiBold" size="11.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

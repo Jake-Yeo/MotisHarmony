@@ -16,6 +16,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -27,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -36,6 +39,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import model.Accounts;
 import model.AccountsDataManager;
 import model.ErrorDataObject;
@@ -86,6 +90,12 @@ public class DownloadPageViewController implements Initializable {
     private ImageView thumbnailImageView;
     @FXML
     private AnchorPane thumbnailAnchorPane;
+    @FXML
+    private Text downloadPercentageText;
+    @FXML
+    private Text conversionPercentageText;
+    @FXML
+    private Text songNameDownloadingText;
 
     private void retryDownloadOption() {
         new Thread(
@@ -228,6 +238,48 @@ public class DownloadPageViewController implements Initializable {
                 System.out.println("listener ran");
             }
         });
+        ytd.getSongNameDownloading().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String oldString, String newString) {
+                                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                         String ns = newString;
+                        if (newString.length() > 36) {
+                            ns = ns.substring(0, 36) + "...";
+                        }
+                        songNameDownloadingText.setText("Song Downloading: " + ns);
+                    }
+                });
+            }
+        });
+        
+        //This will automatically update the text for the download percentage
+        ytd.getDownloadPercentage().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldNum, Number newNum) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        downloadPercentageText.setText("Download Percentage: " + Math.round(newNum.doubleValue() * 100) + "%");
+                    }
+                });
+            }
+        });
+
+        //This will automatically update the text for the conversion percentage
+        ytd.getConversionPercentage().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldNum, Number newNum) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        conversionPercentageText.setText("Conversion Percentage: " + Math.round(newNum.doubleValue() * 100) + "%");
+                    }
+                });
+            }
+        });
+
         ytd.getErrorList().addListener(new ListChangeListener<ErrorDataObject>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends ErrorDataObject> change) {

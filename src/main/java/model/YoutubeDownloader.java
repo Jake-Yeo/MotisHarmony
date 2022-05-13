@@ -26,6 +26,9 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -54,6 +57,9 @@ public class YoutubeDownloader {
     private boolean wifiConnected = true;
     private boolean stopDownloading = false;
     private boolean stopAllDownloadingProcesses = false;
+    private SimpleDoubleProperty downloadPercentage = new SimpleDoubleProperty();
+    private SimpleDoubleProperty conversionPercentage = new SimpleDoubleProperty();
+    private SimpleStringProperty songNameDownloading = new SimpleStringProperty();
     private boolean isPlaylistUrlGetterCurrentlyGettingUrls = false;
     private int BYTE_AMT_FOR_3_MIN_VID = 3402697;//We should download videos in three minute segments
     private final String YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER = "Age-restricted";
@@ -95,6 +101,18 @@ public class YoutubeDownloader {
             setWifiConnected(false);
             errorList.add(new ErrorDataObject(true, "You aren't connected to wifi!"));
         }
+    }
+
+    public SimpleDoubleProperty getDownloadPercentage() {
+        return downloadPercentage;
+    }
+
+    public SimpleDoubleProperty getConversionPercentage() {
+        return conversionPercentage;
+    }
+    
+    public SimpleStringProperty getSongNameDownloading() {
+        return songNameDownloading;
     }
 
     public boolean getWifiConnected() {
@@ -370,6 +388,12 @@ public class YoutubeDownloader {
             long bytesDownloaded = 0;
             long timeStart = System.currentTimeMillis();
             try {
+                //Will set the name of the song being downloaded so it can be displayed in the gui
+                songNameDownloading.set(youtubeSongData.getTitle());
+                //Reset the percentages for every new song you download
+                downloadPercentage.set(0);
+                //Reset the percentages for every new song you download
+                conversionPercentage.set(0);
                 FileOutputStream fos = new FileOutputStream(youtubeSongData.getPathToWebaFile());
                 //Here in this for loop we download songs in three minute segments. This will bypass download throttling. Though there is no difference when downloading 3-8 minute songs, it decreases download times for 2 hr songs from approximately 1hr donwload time to 70 seconds.
                 for (int bytesToStart = 0; bytesToStart < maxByteRange; bytesToStart += BYTE_AMT_FOR_3_MIN_VID + 1) {//+1 since we have to change the range parameter from (0, 1000) to (1001, 2001) not (1000, 2000) which would cause an error
@@ -392,7 +416,9 @@ public class YoutubeDownloader {
                         i += count;
                         fos.write(data, 0, count);
                         bytesDownloaded += count;
-                        System.out.println("Download " + (double) bytesDownloaded / maxByteRange * 100 + "% complete");
+                        //This will change the download percentage, since it is observable the gui will automatically update when the value is updated
+                        downloadPercentage.set(((double) bytesDownloaded / maxByteRange));
+                        // System.out.println("Download " + (double) bytesDownloaded / maxByteRange * 100 + "% complete");
                     }
                     //this if statement will break out of the for loop if the user wants to stop downloading the current song
                     if (skipAudioConversion) {
