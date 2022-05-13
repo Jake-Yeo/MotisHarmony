@@ -112,11 +112,11 @@ public class SongDataObject implements Serializable {
         return sdoIdArray;
     }
 
-    public static String toString(ObservableList<SongDataObject> songDataObjectArray) {
-        String stringToReturn = "";
-        for (int i = 0; i < songDataObjectArray.size(); i++) {
-            stringToReturn += songDataObjectArray.get(i).toString();
+    public static LinkedList<String> toIDStringList(ObservableList<SongDataObject> songDataObjectArray) {
+        LinkedList<String> llsr = new LinkedList<>();
+        for (SongDataObject sdo: songDataObjectArray) {
+            llsr.add(sdo.getVideoID());
         }
-        return stringToReturn;
+        return llsr;
     }
 }

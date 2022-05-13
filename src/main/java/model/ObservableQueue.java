@@ -15,7 +15,8 @@ import java.util.Queue;
  */
 public class ObservableQueue<E> extends AbstractQueue<E> {
 
-    interface Listener<E> {
+    public interface Listener<E> {
+
         void onElementAdded(E element);
     }
 
@@ -31,7 +32,6 @@ public class ObservableQueue<E> extends AbstractQueue<E> {
         return this;
     }
 
-
     @Override
     public boolean offer(E e) {
         // here, we put an element in the backing queue, 
@@ -45,9 +45,24 @@ public class ObservableQueue<E> extends AbstractQueue<E> {
     }
 
     // following methods just delegate to backing instance
-    @Override public E poll() { return delegate.poll(); }
-    @Override public E peek() { return delegate.peek(); }
-    @Override public int size() { return delegate.size(); }
-    @Override public Iterator<E> iterator() { return delegate.iterator(); }
+    @Override
+    public E poll() {
+        return delegate.poll();
+    }
+
+    @Override
+    public E peek() {
+        return delegate.peek();
+    }
+
+    @Override
+    public int size() {
+        return delegate.size();
+    }
+    
+    @Override
+    public Iterator<E> iterator() {
+        return delegate.iterator();
+    }
 
 }

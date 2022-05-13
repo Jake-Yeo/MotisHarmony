@@ -128,7 +128,7 @@ public class YoutubeDownloader {
         if (!getYoutubeUrlDownloadQueueListVideoIds().contains(youtubeId) && !Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(youtubeId)) {//Makes sure that a youtube url is not added to the download queue list multiple times
             SongDataObject sdoToAddToDownloadQueue = yvpp.getYoutubeVideoData(youtubeUrl);
             //We check here again because the user has the ability to add two links which lead to the same video, we must get the video data and check again
-            if (!SongDataObject.toString(getYoutubeUrlDownloadQueueList()).contains(sdoToAddToDownloadQueue.getVideoUrl()) && !Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(sdoToAddToDownloadQueue.getVideoUrl())) {
+            if (!SongDataObject.toIDStringList(getYoutubeUrlDownloadQueueList()).contains(sdoToAddToDownloadQueue.getVideoID()) && !Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(sdoToAddToDownloadQueue.getVideoID())) {
                 youtubeUrlDownloadQueueList.add(sdoToAddToDownloadQueue);//adds the youtube url to the download queue
             } else {
                 errorList.add(new ErrorDataObject(true, youtubeUrl + " has already been added to the download queue, or has already been downloaded", youtubeUrl));
@@ -367,6 +367,7 @@ public class YoutubeDownloader {
             int maxByteRange = yvpp.extractMaxByteRange(possibleYoutubeUrl);
 
             int count = 0;
+            long bytesDownloaded = 0;
             long timeStart = System.currentTimeMillis();
             try {
                 FileOutputStream fos = new FileOutputStream(youtubeSongData.getPathToWebaFile());
@@ -390,6 +391,8 @@ public class YoutubeDownloader {
                         }
                         i += count;
                         fos.write(data, 0, count);
+                        bytesDownloaded += count;
+                        System.out.println("Download " + (double) bytesDownloaded / maxByteRange * 100 + "% complete");
                     }
                     //this if statement will break out of the for loop if the user wants to stop downloading the current song
                     if (skipAudioConversion) {
