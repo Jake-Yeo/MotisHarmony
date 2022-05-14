@@ -19,6 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.Initializable;
 import javafx.util.Duration;
 
@@ -42,7 +44,11 @@ public class AlarmClock implements Serializable {
                     //alarmCurrentlyUsing.stopAlarmCheck();
                     try {
                         if (!Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
-                            MusicPlayerManager.getMpmCurrentlyUsing().smartPlay();
+                            if (MusicPlayerManager.getMpmCurrentlyUsing().getSongObjectBeingPlayed() == null) {
+                                MusicPlayerManager.getMpmCurrentlyUsing().smartPlay();
+                            } else {
+                                MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().play();
+                            }
                         }
                     } catch (Exception i) {
                         i.printStackTrace();
@@ -87,7 +93,7 @@ public class AlarmClock implements Serializable {
     public void setEnableAlarm(boolean tf) {
         enableAlarm = tf;
     }
-    
+
     public void setTimeForAlarmToGoOff() {
         DateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy-HH-mm");
         Calendar currentDate = Calendar.getInstance();

@@ -37,6 +37,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
@@ -963,7 +965,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
         dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
-        if (buttonClicked.get() == ButtonType.APPLY) {
+        if (buttonClicked.get() == ButtonType.APPLY && !Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
             AccountsDataManager.saveAlarmClockSettings();
             if (AlarmClock.getAlarmCurrentlyUsing().getEnableAlarm()) {
                 AlarmClock.getAlarmCurrentlyUsing().startAlarmCheck();
@@ -980,6 +982,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             } else {
                 AlarmClock.getAlarmCurrentlyUsing().stopAlarmCheck();
             }
+        } else {
+            Alert a = new Alert(AlertType.ERROR);
+            a.setContentText("You need to have downloaded at least one song before using this feature! Changes not saved");
+            a.show();
         }
     }
 

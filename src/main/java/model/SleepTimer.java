@@ -30,10 +30,12 @@ public class SleepTimer implements Serializable {
                     sleepTimerCurrentlyUsing.stopTimerCheck();
                     //We must set wether or not the timer is enabled with the account settings so that the settings are saved no matter what!
                     Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer().setEnableTimer(false);
-                    try {
-                        MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().pause();
-                    } catch (Exception i) {
-                        i.printStackTrace();
+                    if (MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer() != null) {
+                        try {
+                            MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().pause();
+                        } catch (Exception i) {
+                            i.printStackTrace();
+                        }
                     }
                     System.out.println("Sleeping");
                 }
