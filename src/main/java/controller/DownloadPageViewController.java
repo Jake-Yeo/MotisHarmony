@@ -241,10 +241,10 @@ public class DownloadPageViewController implements Initializable {
         ytd.getSongNameDownloading().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> ov, String oldString, String newString) {
-                                Platform.runLater(new Runnable() {
+                Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                         String ns = newString;
+                        String ns = newString;
                         if (newString.length() > 36) {
                             ns = ns.substring(0, 36) + "...";
                         }
@@ -253,7 +253,7 @@ public class DownloadPageViewController implements Initializable {
                 });
             }
         });
-        
+
         //This will automatically update the text for the download percentage
         ytd.getDownloadPercentage().addListener(new ChangeListener<Number>() {
             @Override
@@ -434,8 +434,11 @@ public class DownloadPageViewController implements Initializable {
                     for (int i = 0; i < listOfTitlesToShow.length; i++) {
                         listOfTitlesToShow[i] = listOfUrlDataObjects.get(i).getTitle();
                     }
+                    //The
+                    String selectedString = listViewDownloadManager.getSelectionModel().getSelectedItem();
                     listViewDownloadManager.getItems().clear();
                     listViewDownloadManager.getItems().addAll(listOfTitlesToShow);
+                    listViewDownloadManager.getSelectionModel().select(selectedString);
                 }
             });
         } else {
@@ -444,8 +447,10 @@ public class DownloadPageViewController implements Initializable {
             for (int i = 0; i < listOfTitlesToShow.length; i++) {
                 listOfTitlesToShow[i] = listOfUrlDataObjects.get(i).getTitle();
             }
+            String selectedString = listViewDownloadManager.getSelectionModel().getSelectedItem();
             listViewDownloadManager.getItems().clear();
             listViewDownloadManager.getItems().addAll(listOfTitlesToShow);
+            listViewDownloadManager.getSelectionModel().select(selectedString);
         }
     }
 
