@@ -38,8 +38,10 @@ public class AppRunner {
             public void run() {
                 try {
                     //We disable the timer when the user exits because there is no point in having a timer that automatically starts on launch
-                    Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer().setEnableTimer(false);
-                    AccountsDataManager.saveAllSettings();
+                    if (Accounts.getLoggedInAccount() != null) {
+                        Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer().setEnableTimer(false);
+                        AccountsDataManager.saveAllSettings();
+                    }
                 } catch (Exception ex) {
                     Logger.getLogger(AppRunner.class.getName()).log(Level.SEVERE, null, ex);
                 }

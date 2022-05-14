@@ -156,6 +156,9 @@ public class Accounts implements Serializable {//This class will store account u
         if (username.contains("\\") || username.contains("/")) {//Makes sure the user does not use / or \ in their username
             return new ErrorDataObject(true, "\"\\\" and \"/\" are not allowed in the username");
         }
+        if (username.matches(".*\\s.*")) {//Makes sure the user has no spaces in their name
+            return new ErrorDataObject(true, "Username cannot contain spaces");
+        }
         if (!accDataMan.accListContainWantedName(username)) {//Makes sure that the user cannot use someone elses username to signup.
             loggedInAccount = new Accounts(username, password);//Sets the logged in account
             try {
@@ -165,6 +168,7 @@ public class Accounts implements Serializable {//This class will store account u
                 loggedInAccount.serializeAccount();//If the username contains "/" or "\\" the serialization will fail, so we put it in a try catch loop.
             } catch (Exception e) {
                 e.printStackTrace();
+                Accounts.setLoggedInAccount(null);
                 return new ErrorDataObject(true, "Username is not available");
             }
             accDataMan.addAccNameToList(username);//This will add the username to the list so that accounts with the same usernames cannot be created.

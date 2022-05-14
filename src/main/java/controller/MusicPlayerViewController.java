@@ -33,6 +33,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -1173,8 +1174,17 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private void updateViewCurrentSongList() {
         //we clear the list and then put the new list of song names in
         System.out.println("updating current song list");
-        songList.getItems().clear();
-        songList.getItems().addAll(mpm.getArrayOfSongInfoInCurrentSongList());
+        ObservableList<String> stringsToAdd = FXCollections.observableArrayList();
+        //We don't use clear if not the users selections will disappear
+        for (String s : mpm.getArrayOfSongInfoInCurrentSongList()) {
+            stringsToAdd.add(s);
+        }
+
+        for (String s : songList.getItems()) {
+            stringsToAdd.remove(s);
+        }
+
+        songList.getItems().addAll(stringsToAdd);
     }
 
     @Override
