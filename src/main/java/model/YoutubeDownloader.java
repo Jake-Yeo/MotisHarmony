@@ -462,6 +462,11 @@ public class YoutubeDownloader {
             } else {
                 errorList.add(errorData);
             }
+             if (removeFirstLink && wifiConnected) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
+                if (youtubeUrlDownloadQueueList.size() != 0) {
+                    youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
+                }
+            }
             removeFirstLink = true;
             //downloadPageViewController.updateDownloadQueueListViewWithJavafxThread(true);
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(false);

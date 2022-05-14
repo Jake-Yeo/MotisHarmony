@@ -49,7 +49,8 @@ public class AudioConverter {
         Encoder encoder = new Encoder();
         encoder.encode(new MultimediaObject(source), target, attrs, listener);
         source.delete();
-        YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().remove(conversionQueueList.remove());
+        conversionQueueList.remove();
+       // YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().remove(conversionQueueList.remove()); //For some reason this line of code does not trigger the listChangeListener????
         conversionIsDone = true;
         AccountsDataManager.songDataObjectToAddToAccount(songDataObject);//This will save the path of the wav file to the account data so that it can be accessed
         System.out.println("done converting");
