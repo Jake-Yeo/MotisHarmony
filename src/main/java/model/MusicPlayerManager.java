@@ -17,6 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.media.MediaPlayer;
@@ -42,6 +44,8 @@ public class MusicPlayerManager {
     private SongDataObject songObjectBeingPlayed;
     private MediaPlayer mediaPlayer;
     private ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
+    //The variable below is really just being used to update the GUI when the alarm goes off
+    private SimpleBooleanProperty uiUpdater = new SimpleBooleanProperty(true);
     private ObservableList<SongDataObject> playlistSongsPlaying = FXCollections.observableArrayList();
     private LinkedList<SongDataObject> songHistory = new LinkedList<>();
     private int posInSongHistory = 0;
@@ -55,11 +59,15 @@ public class MusicPlayerManager {
     public static MusicPlayerManager getMpmCurrentlyUsing() {
         return mpmCurrentlyUsing;
     }
-    
+
+    public SimpleBooleanProperty getUiUpdater() {
+        return uiUpdater;
+    }
+
     public void setIsSeeking(boolean seeking) {
         isSeeking = seeking;
     }
-    
+
     public boolean getIsSeeking() {
         return isSeeking;
     }
@@ -283,6 +291,8 @@ public class MusicPlayerManager {
         stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
+        //Updates the GUI when the MediaPlayer is Null
+        uiUpdater.set(!uiUpdater.get());
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();
@@ -313,6 +323,8 @@ public class MusicPlayerManager {
         mediaPlayer = new MediaPlayer(media);
         indexForOrderedPlay++;
         updatePlayTypeAtEndOfMedia();
+        //Updates the GUI when the MediaPlayer is Null
+        uiUpdater.set(!uiUpdater.get());
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();

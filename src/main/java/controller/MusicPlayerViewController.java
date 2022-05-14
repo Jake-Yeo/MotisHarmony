@@ -351,6 +351,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(AlarmClock.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        mpm.getUiUpdater().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+                init();
+                updateInfoDisplays();
+                mpm.pauseSong();
+                mpm.resumeSong();
+            }
+        });
 
     }
 
