@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -878,8 +879,17 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void deleteSongFromAccountOption() throws IOException, Exception {
-        AccountsDataManager.deleteSong(mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
+        SongDataObject[] sdosToDelete = mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices());
+        AccountsDataManager.deleteSong(sdosToDelete);
         updateModelCurrentSongList();
+        if (mpm.getSongObjectBeingPlayed() != null) {
+            for (SongDataObject sdo : sdosToDelete) {
+                if (sdo.getVideoID().equals(mpm.getSongObjectBeingPlayed().getVideoID())) {
+                    mpm.smartPlay();
+                    break;
+                }
+            }
+        }
     }
 
     public void editSongDataOption() throws IOException {
@@ -1156,6 +1166,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     private void updateModelCurrentSongList() throws Exception {
         if (Accounts.getLoggedInAccount() != null) {
+             //We must keep track of the selected items which we can do below
+            ObservableList<String> listOfItems = FXCollections.observableArrayList();
+            for (String s : songList.getSelectionModel().getSelectedItems()) {
+                listOfItems.add(s);
+            }
             PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
             int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();
             if (selectedIndex != -1) {
@@ -1166,6 +1181,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 if (sortChoiceBox.getValue() != null) {
                     //automatically sort the ModelSongList
                     sortModelCurrentSongList(sortChoiceBox.getValue());
+                    //We update the view again because the one which automatically updates the view is unable to save the selected items. So we do that here manually below
+                    updateViewCurrentSongList(listOfItems);
                 }
             }
         }
@@ -1174,17 +1191,25 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private void updateViewCurrentSongList() {
         //we clear the list and then put the new list of song names in
         System.out.println("updating current song list");
-        ObservableList<String> stringsToAdd = FXCollections.observableArrayList();
-        //We don't use clear if not the users selections will disappear
-        for (String s : mpm.getArrayOfSongInfoInCurrentSongList()) {
-            stringsToAdd.add(s);
+        ObservableList<String> listOfItems = FXCollections.observableArrayList();
+        for (String s : songList.getSelectionModel().getSelectedItems()) {
+            listOfItems.add(s);
         }
-
-        for (String s : songList.getItems()) {
-            stringsToAdd.remove(s);
+        songList.getItems().clear();
+        songList.getItems().addAll(mpm.getArrayOfSongInfoInCurrentSongList());
+        for (String s : listOfItems) {
+            songList.getSelectionModel().select(s);
         }
-
-        songList.getItems().addAll(stringsToAdd);
+    }
+    
+        private void updateViewCurrentSongList(ObservableList<String> listOfItems ) {
+        //we clear the list and then put the new list of song names in
+        System.out.println("updating current song list");
+        songList.getItems().clear();
+        songList.getItems().addAll(mpm.getArrayOfSongInfoInCurrentSongList());
+        for (String s : listOfItems) {
+            songList.getSelectionModel().select(s);
+        }
     }
 
     @Override
