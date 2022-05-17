@@ -463,10 +463,23 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     private void deleteSelectedLinkFromQueueManager(ActionEvent event) throws IOException {
-        if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {
-            ytd.setStopDownloading(true);
-            ytd.getYoutubeUrlDownloadQueueList().remove(listViewDownloadManager.getSelectionModel().getSelectedIndex());
-            updateDownloadQueueListViewWithJavafxThread(false);
+        int selectedIndex = listViewDownloadManager.getSelectionModel().getSelectedIndex();
+        if (selectedIndex != -1) {
+            //We must abort the encoding if the audio selected is currently being encoded
+            if (YoutubeDownloader.getYtdCurrentlyUsing().isConvertingAudio() && selectedIndex == 0) {
+                ytd.setRemoveFirstLink(false);
+                ytd.getAudioEncoderUsing().abortEncoding();
+                ytd.getYoutubeUrlDownloadQueueList().remove(selectedIndex);
+                updateDownloadQueueListViewWithJavafxThread(false);
+            } else {
+                //If the audio was not being encoded, we check to see if it is downloading. If it is we stop the download.
+                if (selectedIndex == 0) {
+                    ytd.setRemoveFirstLink(false);
+                    ytd.setStopDownloading(true);
+                }
+                ytd.getYoutubeUrlDownloadQueueList().remove(listViewDownloadManager.getSelectionModel().getSelectedIndex());
+                updateDownloadQueueListViewWithJavafxThread(false);
+            }
         } else {
             addErrorToErrorList(new ErrorDataObject(true, "Error! Select something before you delete!"));
         }

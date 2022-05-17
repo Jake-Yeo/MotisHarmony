@@ -25,6 +25,8 @@ public class AudioConverter {
     private static boolean conversionIsDone = true;
     private static boolean coversionQueueHasStarted = false;
     private static final String OLD_AUDIO_TYPE = ".weba";
+    public Encoder encoder = new Encoder();
+    private boolean isAborted = false;
     ConvertProgressListener listener = new ConvertProgressListener();
 
     public static boolean getConversionQueueHasStarted() {
@@ -32,6 +34,7 @@ public class AudioConverter {
     }
 
     private void convertWebaToWav(SongDataObject songDataObject) throws EncoderException, IOException, Exception {//We convert because javafx can only hand wav and mp3 files. We convert to mp3 because javafx produces an error when I try to run the wav file that jave creates  
+        isAborted = false;
         long timeStart = System.currentTimeMillis();
         conversionIsDone = false;
         File source = new File(songDataObject.getPathToWebaFile());
@@ -45,14 +48,21 @@ public class AudioConverter {
         //Encoding attributes                                       
         EncodingAttributes attrs = new EncodingAttributes();
         attrs.setAudioAttributes(audio);
-        //Encode                                                    
-        Encoder encoder = new Encoder();
-        encoder.encode(new MultimediaObject(source), target, attrs, listener);
-        source.delete();
+        //Encode    
+        encoder = new Encoder();
+        try {
+            encoder.encode(new MultimediaObject(source), target, attrs, listener);
+            source.delete();
+        } catch (Exception e) {
+            System.err.print("Aborted encoding");
+        }
         conversionQueueList.remove();
-       // YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().remove(conversionQueueList.remove()); //For some reason this line of code does not trigger the listChangeListener????
+        // YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().remove(conversionQueueList.remove()); //For some reason this line of code does not trigger the listChangeListener????
         conversionIsDone = true;
-        AccountsDataManager.songDataObjectToAddToAccount(songDataObject);//This will save the path of the wav file to the account data so that it can be accessed
+        //Since the encoding was aborted we must not add that song to the account or else errors will occur
+        if (!isAborted) {
+            AccountsDataManager.songDataObjectToAddToAccount(songDataObject);//This will save the path of the wav file to the account data so that it can be accessed
+        }// We should add an else statement here to delete the aborted encoding
         System.out.println("done converting");
         System.out.println("Time taken to convert: " + (System.currentTimeMillis() - timeStart) / 1000 + " Seconds");
     }
@@ -62,6 +72,11 @@ public class AudioConverter {
         if (!coversionQueueHasStarted) {
             startConversionQueue();
         }
+    }
+
+    public void abortEncoding() {
+        isAborted = true;
+        encoder.abortEncoding();
     }
 
     private void startConversionQueue() throws EncoderException, IOException, Exception {

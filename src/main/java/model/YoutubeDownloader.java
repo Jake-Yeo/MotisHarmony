@@ -55,6 +55,7 @@ public class YoutubeDownloader {
     private boolean isChromeDriverActive = false;
     private boolean removeFirstLink = true;
     private boolean wifiConnected = true;
+    private boolean isConvertingAudio = false;
     private boolean stopDownloading = false;
     private boolean stopAllDownloadingProcesses = false;
     private SimpleDoubleProperty downloadPercentage = new SimpleDoubleProperty();
@@ -103,6 +104,22 @@ public class YoutubeDownloader {
         }
     }
 
+    public AudioConverter getAudioEncoderUsing() {
+        return ac;
+    }
+    
+    public boolean isConvertingAudio() {
+        return isConvertingAudio;
+    }
+
+    public void setIsConvertingAudio(boolean tf) {
+        isConvertingAudio = tf;
+    }
+    
+    public void setRemoveFirstLink(boolean tf) {
+        removeFirstLink = tf;
+    }
+
     public SimpleDoubleProperty getDownloadPercentage() {
         return downloadPercentage;
     }
@@ -110,7 +127,7 @@ public class YoutubeDownloader {
     public SimpleDoubleProperty getConversionPercentage() {
         return conversionPercentage;
     }
-    
+
     public SimpleStringProperty getSongNameDownloading() {
         return songNameDownloading;
     }
@@ -435,8 +452,11 @@ public class YoutubeDownloader {
             }
             //We no longer create a new thread everytime we run the AudioConverter below, this will give time for the chrome driver to "breath" and will prevent massive lag.  
             try {
+                setIsConvertingAudio(true);
                 ac.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+                setIsConvertingAudio(false);
             } catch (Exception ex) {
+                ex.printStackTrace();
                 errorList.add(new ErrorDataObject(true, "Download could not be completed as wifi is disconnected"));
                 setWifiConnected(false);
             }
@@ -462,7 +482,7 @@ public class YoutubeDownloader {
             } else {
                 errorList.add(errorData);
             }
-             if (removeFirstLink && wifiConnected) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
+            if (removeFirstLink && wifiConnected) {//This will prevent the program from attempting to delete a url which has already been removed by the user.
                 if (youtubeUrlDownloadQueueList.size() != 0) {
                     youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
                 }
