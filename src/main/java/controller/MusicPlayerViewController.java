@@ -828,7 +828,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     }
 
-    public void contextMenuPlaySongOption() throws Exception {
+    public void playSelectedSongOption() throws Exception {
+        //This if statement will clear the songHistory if you play a song from a different playlist than the one you are currently playing
         if (!mpm.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
             mpm.getSongHistory().clear();
         }
@@ -1081,7 +1082,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         MenuItem playSong = new MenuItem("Play Song");
         playSong.setOnAction(e -> {
             try {
-                contextMenuPlaySongOption();
+                playSelectedSongOption();
             } catch (Exception ex) {
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1150,11 +1151,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     @FXML
-    public void showSongListContextMenu(MouseEvent e) {
+    public void showSongListContextMenu(MouseEvent e) throws Exception {
         if (songList.getSelectionModel().getSelectedIndex() != -1 || !songList.getSelectionModel().getSelectedIndices().isEmpty()) {
             if (e.getButton() == MouseButton.SECONDARY) {
                 System.out.println("worked");
                 songListContextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+            } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2){
+                playSelectedSongOption();
             } else {
                 songListContextMenu.hide();
             }
