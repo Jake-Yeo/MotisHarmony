@@ -5,7 +5,10 @@
  */
 package controller;
 
+import java.awt.MouseInfo;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,12 +16,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.AnchorPane;
 import model.Accounts;
 import model.AccountsDataManager;
 import model.AlarmClock;
+import model.Encryption;
 import model.MusicPlayerManager;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
@@ -42,6 +50,8 @@ public class SettingsPageViewController implements Initializable {
     private RadioButton savePlayPreference;
     @FXML
     private RadioButton stayLoggedInRadioButton;
+    @FXML
+    private Button deleteAccountButton;
 
     /**
      * Initializes the controller class.
@@ -92,6 +102,48 @@ public class SettingsPageViewController implements Initializable {
     @FXML
     private void updateStayLoggedIn(ActionEvent event) throws Exception {
         AccountsDataManager.setStayLoggedIn(stayLoggedInRadioButton.isSelected());
+    }
+
+    @FXML
+    private void showDeletionAccountDialogBox(ActionEvent event) throws IOException, Exception {
+        //This creates a dialog popup to allow the user to delete their account
+        Encryption encryption = new Encryption(Accounts.getLoggedInAccount().getKey());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/AccountDeletionDialog.fxml"));
+        DialogPane accountDeletionDialog = fxmlLoader.load();
+        AccountDeletionDialogController addcController = fxmlLoader.getController();
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setDialogPane(accountDeletionDialog);
+        dialog.setTitle("hi");
+        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
+        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
+        Optional<ButtonType> buttonClicked = dialog.showAndWait();
+        if (buttonClicked.get() == ButtonType.CANCEL) {
+
+        } else if (buttonClicked.get() == ButtonType.FINISH) {
+            if (encryption.sha256Hash(encryption.encrypt(addcController.getPasswordText())).equals(Accounts.getLoggedInAccount().getPassword())) {
+                AccountsDataManager.deleteCurrentAccount();
+                MusicPlayerManager.getMpmCurrentlyUsing().stopDisposeMediaPlayer();
+                AccountsDataManager adm = new AccountsDataManager();
+                adm.setPathOfAccToAutoLogIn(null);
+                YoutubeDownloader.getYtdCurrentlyUsing().setStopDownloading(true);
+                YoutubeDownloader.getYtdCurrentlyUsing().setStopAllDownloadingProcesses(true);
+                Accounts.setLoggedInAccount(null);
+                //Stop the alarm clock from checking the time
+                AlarmClock.getAlarmCurrentlyUsing().stopAlarmCheck();
+                //Makes the sliding bar menu animate correctly
+                MainViewRunner.setSlideBarRanOnce(false);
+                YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueList().clear();
+                //initialize login page before switching
+                MainViewRunner.getSceneChanger().addScreen("LoginPage", FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml")));
+                MainViewRunner.getSceneChanger().switchToLoginPageView();
+            } else {
+                addcController.clearPasswordField();
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("The password you entered is wrong!");
+                a.show();
+            }
+        }
     }
 
 }

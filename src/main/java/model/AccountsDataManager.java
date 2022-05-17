@@ -80,7 +80,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         serializeAccMan();
     }
 
-    public void removeAccNameToList(String accName) throws Exception {
+    public void removeAccNameFromList(String accName) throws Exception {
         this.listOfAccountNames.remove(accName);
         serializeAccMan();
     }
@@ -91,6 +91,17 @@ public class AccountsDataManager implements Serializable {//This class will be u
         } else {
             return false;
         }
+    }
+
+    public static void deleteCurrentAccount() throws Exception {
+        SongDataObject[] sdosToDelete = new SongDataObject[Accounts.getLoggedInAccount().getListOfSongDataObjects().size()];
+        for (int i = 0; i < sdosToDelete.length; i++) {
+            sdosToDelete[i] = Accounts.getLoggedInAccount().getListOfSongDataObjects().get(i);
+        }
+        AccountsDataManager.deleteSong(sdosToDelete);
+        AccountsDataManager adm = deserializeAccMan();
+        adm.pathToAccToAutoLogIn = null;
+        adm.removeAccNameFromList(Accounts.getLoggedInAccount().getUsername());
     }
 
     public static void saveAllSettings() throws Exception {
