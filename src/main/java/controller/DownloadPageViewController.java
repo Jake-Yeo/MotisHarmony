@@ -456,8 +456,12 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     private void clearQueueManager(ActionEvent event) throws IOException {
-        ytd.setStopDownloading(true);
         ytd.getYoutubeUrlDownloadQueueList().clear();
+        ytd.setStopDownloading(true);
+        ytd.setRemoveFirstLink(false);
+        if (YoutubeDownloader.getYtdCurrentlyUsing().isConvertingAudio()) {
+            ytd.getAudioEncoderUsing().abortEncoding();
+        }
         updateDownloadQueueListViewWithJavafxThread(false);
     }
 

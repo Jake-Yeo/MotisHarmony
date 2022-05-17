@@ -487,6 +487,8 @@ public class YoutubeDownloader {
                     youtubeUrlDownloadQueueList.remove(0);//Removes the youtube url from the list which was downloaded.
                 }
             }
+            //when the user clears the queue, we must set stopDownloading to false or else the first link added after clearing the queue will be removed
+            stopDownloading = false;
             removeFirstLink = true;
             //downloadPageViewController.updateDownloadQueueListViewWithJavafxThread(true);
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(false);
