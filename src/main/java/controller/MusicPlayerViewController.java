@@ -155,7 +155,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songList.getStylesheets().add("/css/customListView.css");
         songInfoViewList.getStylesheets().add("/css/customScrollBar.css");
         songInfoViewList.getStylesheets().add("/css/customListView.css");
-        
+
         if (mpm.getSongObjectBeingPlayed() != null) {
             updateInfoDisplays();
         }
@@ -307,7 +307,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                     @Override
                     public void run() {
                         try {
-                            updateModelCurrentSongList();
+                            if (searchTextField.getText().isEmpty()) {
+                                updateModelCurrentSongList();
+                            }
                         } catch (Exception ex) {
                             Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -1170,6 +1172,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 playlistListContextMenu.hide();
                 mpm.setPlaylistCurrentlyViewing(playlistList.getSelectionModel().getSelectedItem());
                 updateModelCurrentSongList();
+                searchTextField.clear();
             }
         }
     }
