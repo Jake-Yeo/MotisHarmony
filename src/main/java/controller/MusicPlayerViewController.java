@@ -48,6 +48,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.OverrunStyle;
@@ -88,7 +89,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @FXML
     private AnchorPane downloadPageMainAnchor;
     @FXML
-    private Text songInfoText;
+    private Label songInfoLabel;
+    @FXML
+    private Label artistNameLabel;
     @FXML
     private AnchorPane anchorPaneHoldingSlidingMenu;
     @FXML
@@ -145,6 +148,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         clip.setArcHeight(50);
         downloadPageMainAnchor.setClip(clip);
 
+        //Set up what I want my list views to look like
+        playlistList.getStylesheets().add("/css/customScrollBar.css");
+        playlistList.getStylesheets().add("/css/customListView.css");
+        songList.getStylesheets().add("/css/customScrollBar.css");
+        songList.getStylesheets().add("/css/customListView.css");
+        songInfoViewList.getStylesheets().add("/css/customScrollBar.css");
+        songInfoViewList.getStylesheets().add("/css/customListView.css");
+        
         if (mpm.getSongObjectBeingPlayed() != null) {
             updateInfoDisplays();
         }
@@ -316,6 +327,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
                 shuffleButton.setTextFill(Paint.valueOf("#f04444"));
             }
+
+            if (Accounts.getLoggedInAccount().getSettingsObject().getPlaySongInLoop()) {
+                loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
+                loopButton.setTextFill(Paint.valueOf("#d07ccc"));
+            } else {
+                loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
+                loopButton.setTextFill(Paint.valueOf("#f04444"));
+            }
             mpm.setPlaySongInLoop(Accounts.getLoggedInAccount().getSettingsObject().getPlaySongInLoop());
         }
 
@@ -400,8 +419,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         //The code below immitates what spotify does when a loop button button is pressed
         if (mpm.getPlaySongInLoop()) {
             mpm.setPlaySongInLoop(false);
+            loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
+            loopButton.setTextFill(Paint.valueOf("#f04444"));
+
         } else {
             mpm.setPlaySongInLoop(true);
+            loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
+            loopButton.setTextFill(Paint.valueOf("#d07ccc"));
         }
         if (Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference()) {
             try {
@@ -648,7 +672,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private void updateInfoDisplays() {
         //This code will update the UI with data of the current song playing
         songInfoViewList.getItems().clear();
-        songInfoText.setText("Song name: " + mpm.getSongObjectBeingPlayed().getTitle() + "Song creator: " + mpm.getSongObjectBeingPlayed().getChannelName());
+        songInfoLabel.setText("Title: " + mpm.getSongObjectBeingPlayed().getTitle());
+        artistNameLabel.setText("Artist: " + mpm.getSongObjectBeingPlayed().getChannelName());
         songInfoViewList.getItems().add("Song name: " + mpm.getSongObjectBeingPlayed().getTitle());
         songInfoViewList.getItems().add("Song creator: " + mpm.getSongObjectBeingPlayed().getChannelName());
         songInfoViewList.getItems().add("Song duration: " + mpm.getSongObjectBeingPlayed().getVideoDuration());
@@ -1166,7 +1191,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     private void updateModelCurrentSongList() throws Exception {
         if (Accounts.getLoggedInAccount() != null) {
-             //We must keep track of the selected items which we can do below
+            //We must keep track of the selected items which we can do below
             ObservableList<String> listOfItems = FXCollections.observableArrayList();
             for (String s : songList.getSelectionModel().getSelectedItems()) {
                 listOfItems.add(s);
@@ -1201,8 +1226,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             songList.getSelectionModel().select(s);
         }
     }
-    
-        private void updateViewCurrentSongList(ObservableList<String> listOfItems ) {
+
+    private void updateViewCurrentSongList(ObservableList<String> listOfItems) {
         //we clear the list and then put the new list of song names in
         System.out.println("updating current song list");
         songList.getItems().clear();

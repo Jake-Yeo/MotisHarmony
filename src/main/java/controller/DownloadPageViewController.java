@@ -27,6 +27,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
@@ -95,7 +96,7 @@ public class DownloadPageViewController implements Initializable {
     @FXML
     private Text conversionPercentageText;
     @FXML
-    private Text songNameDownloadingText;
+    private Label songNameDownloadingLabel;
 
     private void retryDownloadOption() {
         new Thread(
@@ -244,11 +245,7 @@ public class DownloadPageViewController implements Initializable {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        String ns = newString;
-                        if (newString.length() > 36) {
-                            ns = ns.substring(0, 36) + "...";
-                        }
-                        songNameDownloadingText.setText("Song Downloading: " + ns);
+                        songNameDownloadingLabel.setText("Downloading: " + newString);
                     }
                 });
             }
