@@ -62,7 +62,11 @@ public class AudioConverter {
         //Since the encoding was aborted we must not add that song to the account or else errors will occur
         if (!isAborted) {
             AccountsDataManager.songDataObjectToAddToAccount(songDataObject);//This will save the path of the wav file to the account data so that it can be accessed
-        }// We should add an else statement here to delete the aborted encoding
+        } else {
+         // Deletes the file to the unfinished encoding if the encoding is aborted
+            SongDataObject[] sdoToDelete = {songDataObject};
+            AccountsDataManager.deleteSong(sdoToDelete);
+        }
         System.out.println("done converting");
         System.out.println("Time taken to convert: " + (System.currentTimeMillis() - timeStart) / 1000 + " Seconds");
     }
