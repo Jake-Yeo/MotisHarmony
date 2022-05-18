@@ -229,7 +229,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
             //Code below ensures that the song which will play when the play button is hit is the song which was last played by the user
             try {
-                mpm.playSong(Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed());
+                //Though this isn't played by selection, if we put false then this song wouldn't be added to the songHistory which is required
+                mpm.playSong(Accounts.getLoggedInAccount().getSettingsObject().getLastSongPlayed(), false);
             } catch (Exception ex) {
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -607,7 +608,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                         return;
                     } else {
                         //If there is a previous song to play then we play it
-                        mpm.playSong(mpm.getSongHistory().get(indexOfPrevSong));
+                        mpm.playSong(mpm.getSongHistory().get(indexOfPrevSong), false);
                         //We keep track of the position we are on in the songHistory
                         mpm.setPosInSongHistory(mpm.getPosInSongHistory() - 1);
                         setUpPlayButton();
@@ -657,7 +658,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                     return;
                 } else {
                     //If there is a next song to play in our songHistory then we use the indexOfNextSong to find the next song to play
-                    mpm.playSong(mpm.getSongHistory().get(indexOfNextSong));
+                    mpm.playSong(mpm.getSongHistory().get(indexOfNextSong), false);
                     //We increment the position in the songHistory to keep track of wether or not we have to get a random song or not
                     mpm.setPosInSongHistory(mpm.getPosInSongHistory() + 1);
                     setUpPlayButton();
@@ -829,23 +830,23 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void playSelectedSongOption() throws Exception {
-        //This if statement will clear the songHistory if you play a song from a different playlist than the one you are currently playing
-        if (!mpm.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
-            mpm.getSongHistory().clear();
-        }
-        mpm.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
-        mpm.syncPlaylistSongsPlaylingWithCurentSongsList();
-        //Code above will set which songs from which playlist to play next after the song which is currently playing has finsihed
-        mpm.playSong(mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
-        mpm.setIndexForOrderedPlay(songList.getSelectionModel().getSelectedIndex() + 1);
-        mpm.setPaused(false);
-        if (!mpm.isMusicPlayerInitialized()) {
-            mpm.setMusicPlayerInitialized(true);
-        }
-        playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-        playButton.setText("⏸︎");
-        init();//initalize again because a new MediaPlayer is made
-        updateInfoDisplays();
+            //This if statement will clear the songHistory if you play a song from a different playlist than the one you are currently playing
+            if (!mpm.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
+                mpm.getSongHistory().clear();
+            }
+            mpm.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
+            mpm.syncPlaylistSongsPlaylingWithCurentSongsList();
+            //Code above will set which songs from which playlist to play next after the song which is currently playing has finsihed
+            mpm.playSong(mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()), true);
+            mpm.setIndexForOrderedPlay(songList.getSelectionModel().getSelectedIndex() + 1);
+            mpm.setPaused(false);
+            if (!mpm.isMusicPlayerInitialized()) {
+                mpm.setMusicPlayerInitialized(true);
+            }
+            playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+            playButton.setText("⏸︎");
+            init();//initalize again because a new MediaPlayer is made
+            updateInfoDisplays();
     }
 
     public void contextMenuAddToPlaylistOption() {
@@ -1156,7 +1157,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             if (e.getButton() == MouseButton.SECONDARY) {
                 System.out.println("worked");
                 songListContextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
-            } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2){
+            } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
                 playSelectedSongOption();
             } else {
                 songListContextMenu.hide();

@@ -330,8 +330,27 @@ public class MusicPlayerManager {
         //playMusic();
     }
 
-    public void playSong(SongDataObject songToPlay) throws Exception {
+    //the bySelection boolean will indicate if the user used the double click or context menu to play the song
+    public void playSong(SongDataObject songToPlay, boolean bySelection) throws Exception {
         setSongObjectBeingPlayed(songToPlay);
+        if (bySelection) {
+            //This if statement will make sure that the end of the linked list is not removed if you play songs by selection multiple times
+            if (posInSongHistory != songHistory.size() - 1) {
+                //Here we must remove the end of the linked list from the users position in the songHistory to the size of the linked list
+                System.out.println("Size of song history is: " + songHistory.size() + " Position in song history is: " + posInSongHistory);
+                int sizeOfSongHistoryBeforeChanged = songHistory.size();
+                for (int i = songHistory.size() - 1; i > sizeOfSongHistoryBeforeChanged - posInSongHistory; i--) {
+                    songHistory.remove(i);
+                }
+                songHistory.add(songToPlay);
+                posInSongHistory = songHistory.size() - 1;
+            } else {
+                //If the user played a song by selection multiple times then there is no reason to remove the end of the songHistory, we can just append the song they requested to play to the end of the songHistory
+                songHistory.add(songToPlay);
+                posInSongHistory = songHistory.size() - 1;
+            }
+        }
+        //If we don't play the song via selection, we don't have to add that song to the songHistory since it's already been added
         File file = new File(songToPlay.getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
