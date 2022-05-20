@@ -339,8 +339,8 @@ public class MusicPlayerManager {
                 //Here we must remove the end of the linked list from the users position in the songHistory to the size of the linked list
                 System.out.println("Size of song history is: " + songHistory.size() + " Position in song history is: " + posInSongHistory);
                 int sizeOfSongHistoryBeforeChanged = songHistory.size();
-                for (int i = songHistory.size() - 1; i > sizeOfSongHistoryBeforeChanged - posInSongHistory; i--) {
-                    songHistory.remove(i);
+                for (int i = 0; i < sizeOfSongHistoryBeforeChanged - posInSongHistory - 1; i++) {
+                    songHistory.remove(songHistory.size() - 1);
                 }
                 songHistory.add(songToPlay);
                 posInSongHistory = songHistory.size() - 1;

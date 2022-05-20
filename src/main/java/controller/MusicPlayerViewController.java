@@ -830,23 +830,23 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void playSelectedSongOption() throws Exception {
-            //This if statement will clear the songHistory if you play a song from a different playlist than the one you are currently playing
-            if (!mpm.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
-                mpm.getSongHistory().clear();
-            }
-            mpm.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
-            mpm.syncPlaylistSongsPlaylingWithCurentSongsList();
-            //Code above will set which songs from which playlist to play next after the song which is currently playing has finsihed
-            mpm.playSong(mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()), true);
-            mpm.setIndexForOrderedPlay(songList.getSelectionModel().getSelectedIndex() + 1);
-            mpm.setPaused(false);
-            if (!mpm.isMusicPlayerInitialized()) {
-                mpm.setMusicPlayerInitialized(true);
-            }
-            playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
-            playButton.setText("⏸︎");
-            init();//initalize again because a new MediaPlayer is made
-            updateInfoDisplays();
+        //This if statement will clear the songHistory if you play a song from a different playlist than the one you are currently playing
+        if (!mpm.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
+            mpm.getSongHistory().clear();
+        }
+        mpm.setCurrentPlaylistPlayling(playlistList.getSelectionModel().getSelectedItem());
+        mpm.syncPlaylistSongsPlaylingWithCurentSongsList();
+        //Code above will set which songs from which playlist to play next after the song which is currently playing has finsihed
+        mpm.playSong(mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()), true);
+        mpm.setIndexForOrderedPlay(songList.getSelectionModel().getSelectedIndex() + 1);
+        mpm.setPaused(false);
+        if (!mpm.isMusicPlayerInitialized()) {
+            mpm.setMusicPlayerInitialized(true);
+        }
+        playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
+        playButton.setText("⏸︎");
+        init();//initalize again because a new MediaPlayer is made
+        updateInfoDisplays();
     }
 
     public void contextMenuAddToPlaylistOption() {

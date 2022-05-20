@@ -42,9 +42,7 @@ public class AudioConverter {
         //Audio Attributes     
         AudioAttributes audio = new AudioAttributes();
         audio.setCodec("aac");
-        audio.setBitRate(128000);
-        audio.setChannels(2);
-        audio.setSamplingRate(44100);
+    
         //Encoding attributes                                       
         EncodingAttributes attrs = new EncodingAttributes();
         attrs.setAudioAttributes(audio);
