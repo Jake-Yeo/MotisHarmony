@@ -77,8 +77,14 @@ public class YoutubeVideoPageParser {
     private static final String YOUTUBE_PLAYLIST_VIDEO_ID_START_IDENTIFIER = "{\"videoId\":\"";
     private static final String YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER = "\",\"";
 
+    private boolean isGettingPlaylist = false;
+
     public YoutubeVideoPageParser() {
 
+    }
+
+    public boolean isGettingPlaylist() {
+        return isGettingPlaylist;
     }
 
     public String getHtml(String url) throws IOException {//To prevent an ip ban from websites, don't overuse this method.
@@ -247,6 +253,8 @@ public class YoutubeVideoPageParser {
     }
 
     public LinkedList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
+
+        isGettingPlaylist = true;
         youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
         String html = getHtml(youtubePlaylistUrl);
         LinkedList<String> youtubeIdsCurrentlyInSongDataList = new LinkedList<>();
@@ -256,6 +264,7 @@ public class YoutubeVideoPageParser {
         try {//This is just incase the url tester fails to catch a really weird url which somehow manages to pass through. For example there's some weird youtube radio playlists that can load in whole views, so we need another way to identify them.
             playlistLength = Integer.parseInt(infoParserTool(html, YT_PLAYLIST_LENGTH_START_IDENTIFIER, YT_PLAYLIST_LENGTH_END_IDENTIFIER));//Since there is an unidentifiable amount of urls below the start of the playlist information section, we must get the length of the playlist so we can loop through only a certain amount of playlists. Error could occur if you are not at the actual playlist, you must be videwing a video from the playlist!
         } catch (Exception e) {
+            isGettingPlaylist = false;
             return null;
         }
         String urlListStringToSplit = "";//This will store urls taken from the playlist into the url so that we can compare urls and see if that url is already in the string
@@ -292,6 +301,7 @@ public class YoutubeVideoPageParser {
             System.out.println(lastVideoUrlGotten + " video to make playlist with");
             html = getHtml(YT_PLAYLIST_AND_VIDEO_URL_START + getYoutubeVideoID(lastVideoUrlGotten) + YT_DOWNLOADABLE_PLAYLIST_LIST_ID_START_IDENTIFIER + getYoutubePlaylistListId(youtubePlaylistUrl)); //This will load up the new videos in the playlist
         }
+        isGettingPlaylist = false;
         return songDataList;
     }
 

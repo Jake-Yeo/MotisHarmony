@@ -72,6 +72,7 @@ public class YoutubeDownloader {
     private final String YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER = "range";
     private ObservableList<SongDataObject> youtubeUrlDownloadQueueList = FXCollections.observableArrayList();
     private ObservableList<ErrorDataObject> errorList = FXCollections.observableArrayList();
+    private YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
 
     public static YoutubeDownloader getYtdCurrentlyUsing() {
         return ytdCurrentlyUsing;
@@ -107,7 +108,7 @@ public class YoutubeDownloader {
     public AudioConverter getAudioEncoderUsing() {
         return ac;
     }
-    
+
     public boolean isConvertingAudio() {
         return isConvertingAudio;
     }
@@ -115,7 +116,7 @@ public class YoutubeDownloader {
     public void setIsConvertingAudio(boolean tf) {
         isConvertingAudio = tf;
     }
-    
+
     public void setRemoveFirstLink(boolean tf) {
         removeFirstLink = tf;
     }
@@ -157,7 +158,6 @@ public class YoutubeDownloader {
     }
 
     private void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
-        YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
         youtubeUrl = yvpp.getRegularYoutubeUrl(youtubeUrl);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
         String youtubeId = yvpp.getYoutubeVideoID(youtubeUrl);//Its easier to compare videos with ids rather than with urls
         if (!getYoutubeUrlDownloadQueueListVideoIds().contains(youtubeId) && !Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(youtubeId)) {//Makes sure that a youtube url is not added to the download queue list multiple times
@@ -198,41 +198,45 @@ public class YoutubeDownloader {
     }
 
     private void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) {
-        isPlaylistUrlGetterCurrentlyGettingUrls = true;
-        LinkedList<SongDataObject> youtubePlaylistUrls = null;
-        try {
-            YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
-            youtubePlaylistUrls = yvpp.getPlaylistYoutubeUrls(youtubePlaylistLink);
-        } catch (IOException e) {
-            errorList.add(new ErrorDataObject(true, "You're currently IP banned from youtube and cannot download songs at this time"));
-        }
-        if (youtubePlaylistUrls == null) {
-            errorList.add(new ErrorDataObject(true, "Sorry we cannot download the url you entered at this time."));
+        if (yvpp.isGettingPlaylist() == false) {
+            isPlaylistUrlGetterCurrentlyGettingUrls = true;
+            LinkedList<SongDataObject> youtubePlaylistUrls = null;
+            try {
+                youtubePlaylistUrls = yvpp.getPlaylistYoutubeUrls(youtubePlaylistLink);
+            } catch (IOException e) {
+                errorList.add(new ErrorDataObject(true, "You're currently IP banned from youtube and cannot download songs at this time"));
+            }
+            if (youtubePlaylistUrls == null) {
+                errorList.add(new ErrorDataObject(true, "Sorry we cannot download the url you entered at this time."));
+                return;
+            }
+            LinkedList<SongDataObject> sdosToRemoveFromYoutubePlaylistUrls = new LinkedList<>();
+            LinkedList<SongDataObject> youtubePlaylistUrlsNoDupe = new LinkedList<>();
+            //There is a youtube bug where two of the same videos are added to one playlist, this will completely break the program, we prevent this by removing duplicate videos which were in the youtube playlist
+            LinkedList<String> sdoIdArray = SongDataObject.getYoutubeIdList(youtubePlaylistUrls);
+            LinkedList<String> sdoCompareToArray = new LinkedList<>();
+            for (int i = 0; i < youtubePlaylistUrls.size(); i++) {
+                if (!sdoCompareToArray.contains(sdoIdArray.get(i))) {
+                    youtubePlaylistUrlsNoDupe.add(youtubePlaylistUrls.get(i));
+                    sdoCompareToArray.add(youtubePlaylistUrls.get(i).getVideoID());
+                }
+            }
+
+            //This for loop will get a list of songs which have already been downloaded, or are already in the download manager
+            for (int i = 0; i < youtubePlaylistUrlsNoDupe.size(); i++) {
+                if (getYoutubeUrlDownloadQueueListVideoIds().contains(youtubePlaylistUrlsNoDupe.get(i).getVideoID()) || Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(youtubePlaylistUrls.get(i).getVideoID())) {
+                    sdosToRemoveFromYoutubePlaylistUrls.add(youtubePlaylistUrlsNoDupe.get(i));
+                }
+            }
+
+            //We remove the list we got from the above for loop and remove it from the youtubePlaylistUrls list
+            youtubePlaylistUrlsNoDupe.removeAll(sdosToRemoveFromYoutubePlaylistUrls);
+            youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrlsNoDupe);//Adds the entire string array of converted youtube urls to the download queue.
+            isPlaylistUrlGetterCurrentlyGettingUrls = false;
+        } else {
+            errorList.add(new ErrorDataObject(true, "Please finish getting the current playlist before getting another playlist."));
             return;
         }
-        LinkedList<SongDataObject> sdosToRemoveFromYoutubePlaylistUrls = new LinkedList<>();
-        LinkedList<SongDataObject> youtubePlaylistUrlsNoDupe = new LinkedList<>();
-        //There is a youtube bug where two of the same videos are added to one playlist, this will completely break the program, we prevent this by removing duplicate videos which were in the youtube playlist
-        LinkedList<String> sdoIdArray = SongDataObject.getYoutubeIdList(youtubePlaylistUrls);
-        LinkedList<String> sdoCompareToArray = new LinkedList<>();
-        for (int i = 0; i < youtubePlaylistUrls.size(); i++) {
-            if (!sdoCompareToArray.contains(sdoIdArray.get(i))) {
-                youtubePlaylistUrlsNoDupe.add(youtubePlaylistUrls.get(i));
-                sdoCompareToArray.add(youtubePlaylistUrls.get(i).getVideoID());
-            }
-        }
-
-        //This for loop will get a list of songs which have already been downloaded, or are already in the download manager
-        for (int i = 0; i < youtubePlaylistUrlsNoDupe.size(); i++) {
-            if (getYoutubeUrlDownloadQueueListVideoIds().contains(youtubePlaylistUrlsNoDupe.get(i).getVideoID()) || Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(youtubePlaylistUrls.get(i).getVideoID())) {
-                sdosToRemoveFromYoutubePlaylistUrls.add(youtubePlaylistUrlsNoDupe.get(i));
-            }
-        }
-
-        //We remove the list we got from the above for loop and remove it from the youtubePlaylistUrls list
-        youtubePlaylistUrlsNoDupe.removeAll(sdosToRemoveFromYoutubePlaylistUrls);
-        youtubeUrlDownloadQueueList.addAll(youtubePlaylistUrlsNoDupe);//Adds the entire string array of converted youtube urls to the download queue.
-        isPlaylistUrlGetterCurrentlyGettingUrls = false;
     }
 
     private boolean isPlaylistUrlGetterCurrentlyGettingUrls() {
@@ -346,7 +350,6 @@ public class YoutubeDownloader {
     }
 
     private void addYoutubeLinkToDownloadQueue(String youtubeUrl) throws IOException {
-        YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
         if (yvpp.isLinkAPlaylist(youtubeUrl)) {
             addSongsFromPlaylistToDownloadQueue(youtubeUrl);
         } else {
@@ -356,7 +359,6 @@ public class YoutubeDownloader {
 
     public void addYoutubeLinkToDownloadQueueAndStartDownload(String youtubeUrl) {
         try {
-            YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
             ErrorDataObject errorData = yvpp.isUrlValid(youtubeUrl);
             if (!errorData.didErrorOccur()) {
                 addYoutubeLinkToDownloadQueue(youtubeUrl);
@@ -377,7 +379,6 @@ public class YoutubeDownloader {
     }
 
     private void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
-        YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
         youtubeUrl = yvpp.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in may be of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
         String youtubeId = yvpp.getYoutubeVideoID(youtubeUrl);//We compare with video ids because it's easier
         if (!getYoutubeUrlDownloadQueueListVideoIds().contains(youtubeId) && !Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(youtubeId)) {//Stops you from inputting the same url into the downloadQueue
@@ -397,7 +398,6 @@ public class YoutubeDownloader {
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeSongData.getVideoUrl());
         if (!possibleYoutubeUrl.equals("error") && !possibleYoutubeUrl.equals("No Wifi") && !possibleYoutubeUrl.equals("clearCalled")) {
             //We add range=0-99999999999999999999 to the url below to bypass throttling which speeds up download times by nearly 95 times!
-            YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
             System.out.println(yvpp.extractMaxByteRange(possibleYoutubeUrl));
             int maxByteRange = yvpp.extractMaxByteRange(possibleYoutubeUrl);
 
@@ -475,7 +475,6 @@ public class YoutubeDownloader {
         setupChromeDriver();
         while (!youtubeUrlDownloadQueueList.isEmpty() && !stopAllDownloadingProcesses && wifiConnected) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
             DownloadPageViewController.setFirstLinkFromDownloadQueueIsDownloading(true);
-            YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
             ErrorDataObject errorData = yvpp.isUrlValid(youtubeUrlDownloadQueueList.get(0).getVideoUrl());
             if (!errorData.didErrorOccur() && !youtubeUrlDownloadQueueList.isEmpty()) {//The youtube urls in the playlists are not checked, so we must check those here.
                 downloadYoutubeVideoUrl(youtubeUrlDownloadQueueList.get(0));//Gets the first youtube url in the download queue list
