@@ -61,6 +61,7 @@ public class YoutubeDownloader {
     private SimpleDoubleProperty downloadPercentage = new SimpleDoubleProperty();
     private SimpleDoubleProperty conversionPercentage = new SimpleDoubleProperty();
     private SimpleStringProperty songNameDownloading = new SimpleStringProperty();
+    private SimpleDoubleProperty playlistGettingPercentage = new SimpleDoubleProperty();
     private boolean isPlaylistUrlGetterCurrentlyGettingUrls = false;
     private int BYTE_AMT_FOR_3_MIN_VID = 3402697;//We should download videos in three minute segments
     private final String YOUTUBE_VIDEO_AGE_RESTRICTED_IDENTIFIER = "Age-restricted";
@@ -103,6 +104,14 @@ public class YoutubeDownloader {
             setWifiConnected(false);
             errorList.add(new ErrorDataObject(true, "You aren't connected to wifi!"));
         }
+    }
+
+    public YoutubeVideoPageParser getYoutubeVideoPageParserUsing() {
+        return yvpp;
+    }
+
+    public SimpleDoubleProperty getPlaylistGettingPercentage() {
+        return playlistGettingPercentage;
     }
 
     public AudioConverter getAudioEncoderUsing() {

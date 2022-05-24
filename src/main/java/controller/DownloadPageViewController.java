@@ -97,6 +97,8 @@ public class DownloadPageViewController implements Initializable {
     private Text conversionPercentageText;
     @FXML
     private Label songNameDownloadingLabel;
+    @FXML
+    private Text gettingPlaylistPercentageText;
 
     private void retryDownloadOption() {
         new Thread(
@@ -271,7 +273,25 @@ public class DownloadPageViewController implements Initializable {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        conversionPercentageText.setText("Conversion Percentage: " + Math.round(newNum.doubleValue() * 100) + "%");
+                        conversionPercentageText.setText("Conversion Percent: " + Math.round(newNum.doubleValue() * 100) + "%");
+                    }
+                });
+            }
+        });
+        //This will automatically update the text for the playlist getter percentage
+        ytd.getPlaylistGettingPercentage().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldNum, Number newNum) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (newNum.doubleValue() >= 0) {
+                            gettingPlaylistPercentageText.setText("Getting Playlist: " + Math.round(newNum.doubleValue() * 100) + "%");
+                        } else if (newNum.doubleValue() < 0) {
+                            gettingPlaylistPercentageText.setText("Failed");
+                        } else {
+                            gettingPlaylistPercentageText.setText("Finished Getting Playlists");
+                        }
                     }
                 });
             }

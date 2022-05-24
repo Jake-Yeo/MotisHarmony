@@ -57,6 +57,7 @@
                   <Font name="Quicksand Regular" size="17.0" />
                </font>
             </Button>
+            <Text fx:id="gettingPlaylistPercentageText" fill="#ee4540" layoutX="282.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Getting Playlist:" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="831.0" layoutY="25.0" prefHeight="30.0" prefWidth="30.0">
