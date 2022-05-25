@@ -11,6 +11,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,8 +26,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.Duration;
 import model.YoutubeDownloader;
 
 /**
@@ -40,6 +45,18 @@ public class BrowserPageViewController implements Initializable {
     private WebEngine engine;
     @FXML
     private AnchorPane webViewMainAnchorPane;
+    @FXML
+    private Text downloadingText;
+    private FadeTransition fadeTransition = new FadeTransition();
+    private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.5), e -> {
+        fadeTransition.setDuration(Duration.seconds(1));
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.setCycleCount(1);
+        fadeTransition.setNode(downloadingText);
+        fadeTransition.play();
+
+    }));
 
     /**
      * Initializes the controller class.
@@ -53,6 +70,7 @@ public class BrowserPageViewController implements Initializable {
         clip.heightProperty().bind(webViewMainAnchorPane.heightProperty());
         clip.setArcWidth(50);//this sets the rounded corners
         clip.setArcHeight(50);
+        downloadingText.setVisible(false);
         webViewMainAnchorPane.setClip(clip);
         //browserWebView.getEngine().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/538.19 (KHTML, like Gecko) JavaFX/8.0 Safari/538.19");
         browserWebView.setContextMenuEnabled(true);
@@ -68,7 +86,19 @@ public class BrowserPageViewController implements Initializable {
         browserWebView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
     }
 
+    private void playFadeAnimation() throws InterruptedException {
+        //model.MusicPlayerManager.playMusic();
+        downloadingText.setVisible(true);
+        timeline.stop();
+        timeline.play();
+    }
+
     public void downloadBrowserUrl(ActionEvent event) throws IOException {
+        try {
+            playFadeAnimation();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BrowserPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         new Thread(
                 new Runnable() {
             public void run() {
@@ -98,6 +128,11 @@ public class BrowserPageViewController implements Initializable {
     }
 
     private void downloadVideoOrPlaylist() throws IOException {//we may have to prevent button spamming.
+        try {
+            playFadeAnimation();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BrowserPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         new Thread(
                 new Runnable() {
             public void run() {
