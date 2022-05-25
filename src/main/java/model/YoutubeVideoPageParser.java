@@ -87,7 +87,7 @@ public class YoutubeVideoPageParser {
     public boolean isGettingPlaylist() {
         return isGettingPlaylist;
     }
-    
+
     public String getHtml(String url) throws IOException {//To prevent an ip ban from websites, don't overuse this method.
         System.out.println("html getter called");
         String html = "";
@@ -256,10 +256,11 @@ public class YoutubeVideoPageParser {
     public LinkedList<SongDataObject> getPlaylistYoutubeUrls(String youtubePlaylistUrl) throws IOException {//in this method, you can download playlists containing between and including 1-5000 videos
 
         isGettingPlaylist = true;
-        YoutubeDownloader.getYtdCurrentlyUsing().getPlaylistGettingPercentage().set(0);
         youtubePlaylistUrl = getDownloadablePlaylistUrl(youtubePlaylistUrl); // this will allow the user to input playlists in whole view or playlists which are downloadable without any errors.
         String html = getHtml(youtubePlaylistUrl);
         LinkedList<String> youtubeIdsCurrentlyInSongDataList = new LinkedList<>();
+        //The linked list below will help to keep track of how many videos we have parsed so we can update the user on how many videos are left to scan
+        LinkedList<String> youtubeIdsScannedThrough = new LinkedList<>();
         LinkedList<SongDataObject> songDataList = new LinkedList<>();//This will return a list of songDataObjects containing data about the video duration, title, channel name etc.
         //html = infoParserToolTrimToStart(html, YT_PLAYLIST_START_IDENTIFIER);//This will find the start of the playlist information in the html thus getting rid of any urls that may interfere with this method
         int playlistLength = 0;
@@ -275,6 +276,7 @@ public class YoutubeVideoPageParser {
         int repeatAmt = (int) Math.ceil(playlistLength / YT_PLAYLISTVIDEO_CAPPED_VIDEO_AMT) + 1; //200 goes into 502 twice. Since we want to get the last 102 videos we add one since we are flooring it. However, by adding 3 instead, we ensure that the user is able to download the maximum amount of youtube videos allowed in a playlist which is 5000
         //html = html.substring(0, html.lastIndexOf(YT_DOWNLOADABLE_PLAYLIST_END_IDENTIFIER));//This will cut off all the youtube urls which are not in the playlist when you only repeat through once. Also we do this last so as to not intefere with the code above
         System.out.println("Reapeats " + repeatAmt);//tells us how many times the for loop will repeat
+        int numVideosGotten = 0;
         for (int timesRepeated = 0; timesRepeated < repeatAmt; timesRepeated++) {
             System.out.println("Outer loop running");
             while (html.contains(YOUTUBE_PLAYLIST_VIDEO_INFO_START_IDENTIFIER)) {
@@ -292,13 +294,18 @@ public class YoutubeVideoPageParser {
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
                 System.out.println(videoID);
+                if (!youtubeIdsScannedThrough.contains(videoID)) {
+                    youtubeIdsScannedThrough.add(videoID);
+                    numVideosGotten++;
+                }
+                //The code below automatically updates the text which displays the playing getting percentage, discreprenciese in the percentage is due to youtube not giving accurate playlist sizes when certain videos are hidden, private or restricted
+                YoutubeDownloader.getYtdCurrentlyUsing().getPlaylistGettingPercentage().set((double) numVideosGotten / playlistLength);
                 if (!youtubeIdsCurrentlyInSongDataList.contains(videoID) && !YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueListVideoIds().contains(videoID) && !Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(videoID)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the SongDataObject to the SongDataList. This ensure that urls are not inputted into the downloadQueue multiple times
                     songDataList.add(new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
                     youtubeIdsCurrentlyInSongDataList.add(videoID);
                 }
                 lastVideoUrlGotten = videoUrl;
             }
-            YoutubeDownloader.getYtdCurrentlyUsing().getPlaylistGettingPercentage().set((double)timesRepeated/repeatAmt);
             if (timesRepeated == repeatAmt) {
                 break;
             }
