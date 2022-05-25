@@ -21,7 +21,7 @@ public class SettingsObject implements Serializable {
     private boolean playSongInLoop = false;
     private boolean stayLoggedIn = true;
     private boolean saveDownloadQueue = true;
-    private boolean savePlayPreference = false;
+    private boolean savePlayPreference = true;
     private boolean saveSongPosition = true;
     private String lastPlaylistPlayed = null;
     private SongDataObject lastSongPlayed = null;
