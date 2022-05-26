@@ -17,11 +17,11 @@
             <fx:include source="SlidingMenuBar.fxml" />
          </children>
       </AnchorPane>
-      <Button fx:id="logoutButton" layoutX="71.0" layoutY="107.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
-      <RadioButton fx:id="saveDownloadQueueRadioButton" layoutX="562.0" layoutY="472.0" mnemonicParsing="false" onAction="#updateSaveDownloadQueue" text="Save Download Queue" />
-      <RadioButton fx:id="saveSongPositionRadioButton" layoutX="562.0" layoutY="432.0" mnemonicParsing="false" onAction="#updateSaveSongPosition" text="Save Song Position" />
-      <RadioButton fx:id="savePlayPreference" layoutX="562.0" layoutY="404.0" mnemonicParsing="false" onAction="#updateSavePlayPreference" text="Save Play Preference" />
-      <RadioButton fx:id="stayLoggedInRadioButton" layoutX="562.0" layoutY="371.0" mnemonicParsing="false" onAction="#updateStayLoggedIn" text="Stay Logged In" />
-      <Button fx:id="deleteAccountButton" layoutX="72.0" layoutY="151.0" mnemonicParsing="false" onAction="#showDeletionAccountDialogBox" prefHeight="25.0" prefWidth="158.0" text="Delete Account" />
+      <Button fx:id="logoutButton" layoutX="711.0" layoutY="540.0" mnemonicParsing="false" onAction="#logout" onMouseEntered="#mouseEnterLogoutButton" onMouseExited="#mouseExitLogoutButton" onMousePressed="#mousePressedLogoutButton" onMouseReleased="#mouseReleasedLogoutButton" style="-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: transparent;" text="Logout" />
+      <RadioButton fx:id="saveDownloadQueueRadioButton" layoutX="21.0" layoutY="161.0" mnemonicParsing="false" onAction="#updateSaveDownloadQueue" text="Save Download Queue" textFill="#ee4540" />
+      <RadioButton fx:id="saveSongPositionRadioButton" layoutX="21.0" layoutY="133.0" mnemonicParsing="false" onAction="#updateSaveSongPosition" text="Save Song Position" textFill="#ee4540" />
+      <RadioButton fx:id="savePlayPreference" layoutX="21.0" layoutY="105.0" mnemonicParsing="false" onAction="#updateSavePlayPreference" text="Save Play Preference" textFill="#ee4540" />
+      <RadioButton fx:id="stayLoggedInRadioButton" layoutX="21.0" layoutY="77.0" mnemonicParsing="false" onAction="#updateStayLoggedIn" text="Stay Logged In" textFill="#ee4540" />
+      <Button fx:id="deleteAccountButton" layoutX="771.0" layoutY="540.0" mnemonicParsing="false" onAction="#showDeletionAccountDialogBox" onMouseEntered="#mouseEnterDeleteAccountButton" onMouseExited="#mouseExitDeleteAccountButton" onMousePressed="#mousePressedDeleteAccountButton" onMouseReleased="#mouseReleasedDeleteAccountButton" prefHeight="9.0" prefWidth="101.0" style="-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: transparent;" text="Delete Account" />
    </children>
 </AnchorPane>

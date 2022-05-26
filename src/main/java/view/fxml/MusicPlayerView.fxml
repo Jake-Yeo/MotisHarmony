@@ -14,7 +14,7 @@
 
 <AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerViewController">
    <children>
-      <ChoiceBox fx:id="sortPlaylistChoiceBox" layoutX="45.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" />
+      <ChoiceBox fx:id="sortPlaylistChoiceBox" layoutX="45.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
       <AnchorPane layoutX="831.0" layoutY="25.0" prefHeight="30.0" prefWidth="30.0">
          <children>
             <fx:include source="ExitButton.fxml" />
@@ -77,11 +77,11 @@
          </children>
       </AnchorPane>
       <ListView fx:id="playlistList" layoutX="45.0" layoutY="82.0" onMouseClicked="#showPlaylistListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
-      <ListView fx:id="songList" layoutX="631.0" layoutY="86.0" onMouseClicked="#showSongListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
-      <Button fx:id="addPlaylistButton" layoutX="45.0" layoutY="55.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="25.0" prefWidth="77.0" text="add playlist" />
-      <TextField fx:id="playlistNameTextField" layoutX="123.0" layoutY="55.0" prefHeight="25.0" prefWidth="121.0" promptText="Enter Playlist Name" />
-      <ComboBox fx:id="comboBox" layoutX="631.0" layoutY="59.0" onAction="#onComboBoxClicked" prefHeight="25.0" prefWidth="200.0" />
-      <ChoiceBox fx:id="sortChoiceBox" layoutX="631.0" layoutY="59.0" prefHeight="25.0" prefWidth="200.0" />
-      <TextField fx:id="searchTextField" layoutX="631.0" layoutY="59.0" onKeyTyped="#searchTextFieldWhenTyped" prefHeight="25.0" prefWidth="200.0" promptText="Enter Search Query And Hit Enter" />
+      <ListView fx:id="songList" layoutX="631.0" layoutY="82.0" onMouseClicked="#showSongListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
+      <Button fx:id="addPlaylistButton" layoutX="45.0" layoutY="52.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="25.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-background-radius: 30px 0 0 0; -fx-border-color: #bc0c54; -fx-border-radius: 30px 0 0 0; -fx-border-width: 5px;" text="Add" textFill="#ee4540" />
+      <TextField fx:id="playlistNameTextField" layoutX="117.0" layoutY="52.0" prefHeight="35.0" prefWidth="128.0" promptText="Enter Playlist Name" style="-fx-background-color: transparent; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: #ee4540; -fx-background-radius: 0 30px 30px 0; -fx-border-color: #bc0c54; -fx-border-radius: 0 30px 0 0; -fx-border-width: 5px;" />
+      <ComboBox fx:id="comboBox" layoutX="631.0" layoutY="55.0" onAction="#onComboBoxClicked" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
+      <ChoiceBox fx:id="sortChoiceBox" layoutX="631.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
+      <TextField fx:id="searchTextField" layoutX="631.0" layoutY="52.0" onKeyTyped="#searchTextFieldWhenTyped" prefHeight="25.0" prefWidth="200.0" promptText="Enter Search Query And Hit Enter" style="-fx-background-color: transparent; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: #ee4540; -fx-background-radius: 0 30px 30px 0; -fx-border-color: #bc0c54; -fx-border-radius: 30px 30px 0 0px; -fx-border-width: 5px;" />
    </children>
 </AnchorPane>

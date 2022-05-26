@@ -23,6 +23,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 import model.Accounts;
 import model.AccountsDataManager;
 import model.AlarmClock;
@@ -59,10 +60,62 @@ public class SettingsPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(settingsViewMainAnchorPane.widthProperty());
+        clip.heightProperty().bind(settingsViewMainAnchorPane.heightProperty());
+        clip.setArcWidth(50);//this sets the rounded corners
+        clip.setArcHeight(50);
+        settingsViewMainAnchorPane.setClip(clip);
+
+        saveDownloadQueueRadioButton.getStylesheets().add("/css/customRadioButton.css");
+        saveSongPositionRadioButton.getStylesheets().add("/css/customRadioButton.css");
+        savePlayPreference.getStylesheets().add("/css/customRadioButton.css");
+        stayLoggedInRadioButton.getStylesheets().add("/css/customRadioButton.css");
+
         saveDownloadQueueRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue());
         saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
         savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
         stayLoggedInRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn());
+    }
+    
+        @FXML
+    public void mouseEnterDeleteAccountButton() {
+        deleteAccountButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: #791c48;");
+    }
+
+    @FXML
+    public void mouseExitDeleteAccountButton() {
+        deleteAccountButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: transparent;");
+    }
+
+    @FXML
+    public void mouseEnterLogoutButton() {
+        logoutButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: #791c48;");
+    }
+
+    @FXML
+    public void mouseExitLogoutButton() {
+        logoutButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: transparent;");
+    }
+
+    @FXML
+    public void mousePressedLogoutButton() {
+        logoutButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: #791c48; -fx-background-color: #791c48; -fx-background-radius: 1em");
+    }
+
+    @FXML
+    public void mouseReleasedLogoutButton() {
+        logoutButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: transparent; -fx-background-color: transparent; -fx-background-radius: 1em");
+    }
+
+    @FXML
+    public void mousePressedDeleteAccountButton() {
+        deleteAccountButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: #791c48; -fx-background-color: #791c48; -fx-background-radius: 1em");
+    }
+
+    @FXML
+    public void mouseReleasedDeleteAccountButton() {
+        deleteAccountButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: transparent; -fx-background-color: transparent; -fx-background-radius: 1em");
     }
 
     @FXML

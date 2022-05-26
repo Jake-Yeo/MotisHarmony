@@ -138,6 +138,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        addPlaylistButton.getStylesheets().add("/css/customButtonActions.css");
+        
         mpm = new MusicPlayerManager();
         searchTextField.setText("");
         MusicPlayerManager.setMpmCurrentlyUsing(mpm);
