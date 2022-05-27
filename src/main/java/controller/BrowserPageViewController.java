@@ -48,15 +48,6 @@ public class BrowserPageViewController implements Initializable {
     @FXML
     private Text downloadingText;
     private FadeTransition fadeTransition = new FadeTransition();
-    private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.5), e -> {
-        fadeTransition.setDuration(Duration.seconds(1));
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
-        fadeTransition.setCycleCount(1);
-        fadeTransition.setNode(downloadingText);
-        fadeTransition.play();
-
-    }));
 
     /**
      * Initializes the controller class.
@@ -72,6 +63,13 @@ public class BrowserPageViewController implements Initializable {
         clip.setArcHeight(50);
         downloadingText.setVisible(false);
         webViewMainAnchorPane.setClip(clip);
+
+        fadeTransition.setDuration(Duration.seconds(1));
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.setCycleCount(1);
+        fadeTransition.setNode(downloadingText);
+
         //browserWebView.getEngine().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/538.19 (KHTML, like Gecko) JavaFX/8.0 Safari/538.19");
         browserWebView.setContextMenuEnabled(true);
         /*WebConsoleListener.setDefaultListener(new WebConsoleListener() { //This does not work and causes an error
@@ -89,8 +87,8 @@ public class BrowserPageViewController implements Initializable {
     private void playFadeAnimation() throws InterruptedException {
         //model.MusicPlayerManager.playMusic();
         downloadingText.setVisible(true);
-        timeline.stop();
-        timeline.play();
+        fadeTransition.stop();
+        fadeTransition.play();
     }
 
     public void downloadBrowserUrl(ActionEvent event) throws IOException {
