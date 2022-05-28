@@ -1,0 +1,23 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ee4540;
+    -fx-background-radius: 1em;
+    -fx-border-radius: 1em;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.button:hover {
+    -fx-background-color: transparent;
+    -fx-border-color:  #f04369;
+}
+
+.button:pressed {
+    -fx-background-color: #f04369;
+    -fx-border-color:  #f04369;
+    -fx-text-fill: #58143c;
+}

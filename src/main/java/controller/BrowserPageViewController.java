@@ -48,6 +48,12 @@ public class BrowserPageViewController implements Initializable {
     @FXML
     private Text downloadingText;
     private FadeTransition fadeTransition = new FadeTransition();
+    @FXML
+    private Button downloadUrlButton;
+    @FXML
+    private Button backButton;
+    @FXML
+    private Button forwardButton;
 
     /**
      * Initializes the controller class.
@@ -55,6 +61,10 @@ public class BrowserPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        downloadUrlButton.getStylesheets().add("/css/browserPageCustomButtons.css");
+        backButton.getStylesheets().add("/css/browserPageCustomButtons.css");
+        forwardButton.getStylesheets().add("/css/browserPageCustomButtons.css");
+        
         setUpContextMenu();
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(webViewMainAnchorPane.widthProperty());
@@ -94,6 +104,7 @@ public class BrowserPageViewController implements Initializable {
         fadeTransition.play();
     }
 
+    @FXML
     public void downloadBrowserUrl(ActionEvent event) throws IOException {
         try {
             playFadeAnimation();
@@ -108,6 +119,7 @@ public class BrowserPageViewController implements Initializable {
         }).start();
     }
 
+    @FXML
     public void showContextMenu(MouseEvent e) {
         if (e.getButton() == MouseButton.SECONDARY) {
             contextMenu.show(browserWebView, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
@@ -120,10 +132,12 @@ public class BrowserPageViewController implements Initializable {
         //browserWebView.getEngine().load("https://www.youtube.com/");
     }
 
+    @FXML
     public void goBack() {
         browserWebView.getEngine().executeScript("history.back()");
     }
 
+    @FXML
     public void goForward() {
         browserWebView.getEngine().executeScript("history.forward()");
     }
