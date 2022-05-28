@@ -62,6 +62,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -75,6 +76,7 @@ import model.PlaylistMap;
 import model.SettingsObject;
 import model.SleepTimer;
 import model.SongDataObject;
+import model.UIHelper;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
 
@@ -951,6 +953,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
+    public Rectangle getDialogPaneClip(DialogPane dp) {
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(dp.widthProperty());
+        clip.heightProperty().bind(dp.heightProperty());
+        clip.setArcWidth(50);//this sets the rounded corners
+        clip.setArcHeight(50);
+        return clip;
+    }
+
     public void editSongDataOption() throws IOException {
         //This creates a dialog popup to allow the user to edit the data of a SongDataObject
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -966,6 +977,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setTitle("Song Data Editor");
         songDialogEditor.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
+
+        songDialogEditor.setClip(UIHelper.getDialogPaneClip(songDialogEditor));
+        dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             sdeController.applyDataChangesToSongDataObject(sdoToEdit);
@@ -989,6 +1004,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setTitle("Playlist Name Editor");
         playlistDialogEditor.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
+
+        playlistDialogEditor.setClip(UIHelper.getDialogPaneClip(playlistDialogEditor));
+        dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             pdeController.updatePlaylistName(playlistSong);
@@ -1013,6 +1032,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setTitle("Sleep Timer Editor");
         songDialogEditor.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
+
+        songDialogEditor.setClip(UIHelper.getDialogPaneClip(songDialogEditor));
+        dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
 
         if (buttonClicked.get() == ButtonType.APPLY) {
@@ -1047,6 +1070,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setTitle("Alarm Clock Editor");
         alarmDialogEditor.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
+
+        alarmDialogEditor.setClip(UIHelper.getDialogPaneClip(alarmDialogEditor));
+        dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY && !Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
             AccountsDataManager.saveAlarmClockSettings();

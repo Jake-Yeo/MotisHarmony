@@ -23,6 +23,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.StageStyle;
 import model.Accounts;
@@ -30,6 +31,7 @@ import model.AccountsDataManager;
 import model.AlarmClock;
 import model.Encryption;
 import model.MusicPlayerManager;
+import model.UIHelper;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
 
@@ -172,6 +174,9 @@ public class SettingsPageViewController implements Initializable {
         dialog.setTitle("Delete Account");
         accountDeletionDialog.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
+        accountDeletionDialog.setClip(UIHelper.getDialogPaneClip(accountDeletionDialog));
+        dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
+        
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.CANCEL) {
 

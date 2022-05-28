@@ -9,6 +9,7 @@
     }
     .dialog-pane > *.button-bar > *.container{
         -fx-background-color: #5c1c48;
+        -fx-background-radius: 0 0 15 15;
     }
     .dialog-pane > *.label.content{
         -fx-font-size: 14px;
