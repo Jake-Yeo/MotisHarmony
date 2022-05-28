@@ -8,12 +8,12 @@
 
 <DialogPane prefHeight="122.0" prefWidth="230.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SongDialogEditorController">
    <content>
-      <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="222.0">
+      <AnchorPane id="AnchorPane" fx:id="infoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="222.0" style="-fx-background-color: #5c1c48;">
          <children>
-            <TextField fx:id="songTextField" layoutX="47.0" layoutY="14.0" prefHeight="25.0" prefWidth="172.0" />
-            <TextField fx:id="artistTextField" layoutX="48.0" layoutY="51.0" prefHeight="25.0" prefWidth="172.0" />
-            <Text layoutX="14.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Song" wrappingWidth="44.13671875" />
-            <Text layoutX="14.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist" wrappingWidth="44.13671875" />
+            <TextField fx:id="songTextField" layoutX="47.0" layoutY="14.0" prefHeight="25.0" prefWidth="172.0" style="-fx-background-color: transparent; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: white; -fx-border-color: #bc0c54; -fx-border-radius: 30px; -fx-border-width: 2px;" />
+            <TextField fx:id="artistTextField" layoutX="48.0" layoutY="51.0" prefHeight="25.0" prefWidth="172.0" style="-fx-background-color: transparent; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: white; -fx-border-color: #bc0c54; -fx-border-radius: 30px; -fx-border-width: 2px;" />
+            <Text fill="WHITE" layoutX="14.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Song" wrappingWidth="44.13671875" />
+            <Text fill="WHITE" layoutX="14.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist" wrappingWidth="44.13671875" />
          </children>
       </AnchorPane>
    </content>

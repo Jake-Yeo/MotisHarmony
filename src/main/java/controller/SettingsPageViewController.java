@@ -77,8 +77,8 @@ public class SettingsPageViewController implements Initializable {
         savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
         stayLoggedInRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn());
     }
-    
-        @FXML
+
+    @FXML
     public void mouseEnterDeleteAccountButton() {
         deleteAccountButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ffffff7d; -fx-border-radius: 1em; -fx-border-color: #791c48;");
     }
@@ -165,6 +165,7 @@ public class SettingsPageViewController implements Initializable {
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/AccountDeletionDialog.fxml"));
         DialogPane accountDeletionDialog = fxmlLoader.load();
         AccountDeletionDialogController addcController = fxmlLoader.getController();
+        accountDeletionDialog.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(accountDeletionDialog);
         dialog.setTitle("hi");

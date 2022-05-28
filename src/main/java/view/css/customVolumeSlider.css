@@ -7,7 +7,7 @@
     }
 
     .slider:vertical .track {
-        -fx-pref-height:3;
+        -fx-pref-width:3;
         -fx-background-color : #5c1c48;
     }
 

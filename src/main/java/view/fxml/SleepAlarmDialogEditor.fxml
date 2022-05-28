@@ -11,13 +11,13 @@
 
 <DialogPane prefHeight="122.0" prefWidth="230.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SleepAlarmDialogEditorController">
    <content>
-      <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="102.0" prefWidth="268.0">
+      <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="102.0" prefWidth="268.0" style="-fx-background-color: #5c1c48;">
          <children>
             <ComboBox fx:id="minuteComboBox" layoutX="99.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onMinuteComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
             <ComboBox fx:id="hourComboBox" layoutX="14.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onHourComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
             <Button fx:id="showHourChoiceBox" layoutX="14.0" layoutY="39.0" mnemonicParsing="false" onAction="#showHourComboBox" prefHeight="25.0" prefWidth="74.0" text="Set Hour" />
             <Button fx:id="showMinuteChoiceBox" layoutX="99.0" layoutY="40.0" mnemonicParsing="false" onAction="#showMinuteComboBox" text="Set Minute" />
-            <Text fx:id="sleepTimerStopTimeText" layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1hr 30min" wrappingWidth="253.13671875">
+            <Text fx:id="sleepTimerStopTimeText" fill="WHITE" layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1hr 30min" wrappingWidth="253.13671875">
                <font>
                   <Font size="33.0" />
                </font>

@@ -6,13 +6,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-
 <DialogPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PlaylistDialogEditorController">
    <content>
-      <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="274.0">
+      <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="274.0" style="-fx-background-color: #5c1c48;">
          <children>
-            <TextField fx:id="playlistNameTextField" layoutX="107.0" layoutY="9.0" />
-            <Text layoutX="19.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Playlist Name" />
+            <TextField fx:id="playlistNameTextField" layoutX="107.0" layoutY="9.0" style="-fx-background-color: transparent; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: white; -fx-border-color: #bc0c54; -fx-border-radius: 30px; -fx-border-width: 2px;" />
+            <Text fill="WHITE" layoutX="19.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Playlist Name" />
          </children>
       </AnchorPane>
    </content>

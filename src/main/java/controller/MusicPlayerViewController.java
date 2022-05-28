@@ -111,6 +111,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @FXML
     private ImageView thumbnailImageView;
     @FXML
+    private AnchorPane thumbnailAnchorPane;
+    @FXML
     private Text currentTimeText;
     @FXML
     private Text totalTimeText;
@@ -685,7 +687,29 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songInfoViewList.getItems().add("Song name: " + mpm.getSongObjectBeingPlayed().getTitle());
         songInfoViewList.getItems().add("Song creator: " + mpm.getSongObjectBeingPlayed().getChannelName());
         songInfoViewList.getItems().add("Song duration: " + mpm.getSongObjectBeingPlayed().getVideoDuration());
-        thumbnailImageView.setImage(new Image(mpm.getSongObjectBeingPlayed().getPathToThumbnail()));
+
+        Image imageToDisplay = new Image(mpm.getSongObjectBeingPlayed().getPathToThumbnail());
+        double w = 0;
+        double h = 0;
+
+        double ratioX = thumbnailImageView.getFitWidth() / imageToDisplay.getWidth();
+        double ratioY = thumbnailImageView.getFitHeight() / imageToDisplay.getHeight();
+
+        double reducCoeff = 0;
+        if (ratioX >= ratioY) {
+            reducCoeff = ratioY;
+        } else {
+            reducCoeff = ratioX;
+        }
+
+        w = imageToDisplay.getWidth() * reducCoeff;
+        h = imageToDisplay.getHeight() * reducCoeff;
+
+        thumbnailImageView.setX((thumbnailImageView.getFitWidth() - w) / 2);
+        thumbnailImageView.setY((thumbnailImageView.getFitHeight() - h) / 2);
+
+        thumbnailImageView.setImage(imageToDisplay);
+        thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0px 0px; -fx-border-width: 5px; -fx-background-radius: 33px 33px 0px 0px;");
     }
 
     private String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
@@ -935,6 +959,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         int indexOfSongToDisplay = songList.selectionModelProperty().get().getSelectedIndex();
         SongDataObject sdoToEdit = mpm.getCurrentSongList().get(indexOfSongToDisplay);
         sdeController.setDialogSongDisplay(sdoToEdit);
+        songDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(songDialogEditor);
         dialog.setTitle("hi");
@@ -957,6 +982,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         PlaylistDialogEditorController pdeController = fxmlLoader.getController();
         String playlistSong = playlistList.getSelectionModel().getSelectedItem();
         pdeController.setPlaylistToEdit(playlistSong);
+        playlistDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(playlistDialogEditor);
         dialog.setTitle("hi");
@@ -980,6 +1006,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/SleepAlarmDialogEditor.fxml"));
         DialogPane songDialogEditor = fxmlLoader.load();
         SleepAlarmDialogEditorController sadeController = fxmlLoader.getController();
+        songDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(songDialogEditor);
         dialog.setTitle("hi");
@@ -1011,10 +1038,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/AlarmClockDialogEditor.fxml"));
-        DialogPane songDialogEditor = fxmlLoader.load();
+        DialogPane alarmDialogEditor = fxmlLoader.load();
         AlarmClockDialogEditorController acdeController = fxmlLoader.getController();
+        alarmDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setDialogPane(songDialogEditor);
+        dialog.setDialogPane(alarmDialogEditor);
         dialog.setTitle("hi");
         dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
         dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());

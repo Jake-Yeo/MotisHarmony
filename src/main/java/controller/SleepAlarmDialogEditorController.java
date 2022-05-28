@@ -46,6 +46,9 @@ public class SleepAlarmDialogEditorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        hourComboBox.getStylesheets().add("/css/comboBox.css");
+        minuteComboBox.getStylesheets().add("/css/comboBox.css");
+
         SleepTimer accSleepTimer = Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer();
         sleepTimer = new SleepTimer(accSleepTimer.getHour(), accSleepTimer.getMinute());
         sleepTimer.setEnableTimer(accSleepTimer.getEnableTimer());

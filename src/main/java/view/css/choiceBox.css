@@ -1,0 +1,22 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.choice-box .context-menu {
+    -fx-background-color: #f04369;
+    -fx-background-radius: 1em;
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: #ff6e8e;
+    -fx-background-radius: 4em;
+}
+
+.choice-box .menu-item > .label {
+    -fx-text-fill: white;
+}
+
+.choice-box .menu-item:focused > .label {
+    -fx-text-fill: white;
+}
+

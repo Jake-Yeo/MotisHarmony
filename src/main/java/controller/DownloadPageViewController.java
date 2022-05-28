@@ -310,7 +310,7 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     public void mouseEnterClearQueueButton() {
-        clearQueueButton.setStyle("-fx-background-color: transparent; -fx-background-radius: 0 0 30px 0; -fx-border-color: #d87ccc; -fx-border-radius: 0 0 30px 0; -fx-border-width: 5px;");
+        clearQueueButton.setStyle("-fx-background-color: transparent; -fx-background-radius: 0 0 30px 0; -fx-border-color: #f04369; -fx-border-radius: 0 0 30px 0; -fx-border-width: 5px;");
     }
 
     @FXML
@@ -320,7 +320,7 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     public void mousePressedClearQueueButton() {
-        clearQueueButton.setStyle("-fx-background-color: #d87ccc; -fx-background-radius: 0 0 30px 0; -fx-border-color: #d87ccc; -fx-border-radius: 0 0 30px 0; -fx-border-width: 5px;");
+        clearQueueButton.setStyle("-fx-background-color: #f04369; -fx-background-radius: 0 0 30px 0; -fx-border-color: #f04369; -fx-border-radius: 0 0 30px 0; -fx-border-width: 5px;");
     }
 
     @FXML
@@ -331,7 +331,7 @@ public class DownloadPageViewController implements Initializable {
     ////////////////////////
     @FXML
     public void mouseEnterDeleteSelectedLinkButton() {
-        deleteSelectedLinkButton.setStyle("-fx-background-color: transparent; -fx-background-radius: 0 0 0 30px; -fx-border-color: #d87ccc; -fx-border-radius: 0 0 0 30px; -fx-border-width: 5px;");
+        deleteSelectedLinkButton.setStyle("-fx-background-color: transparent; -fx-background-radius: 0 0 0 30px; -fx-border-color: #f04369; -fx-border-radius: 0 0 0 30px; -fx-border-width: 5px;");
     }
 
     @FXML
@@ -341,7 +341,7 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     public void mousePressedDeleteSelectedLinkButton() {
-        deleteSelectedLinkButton.setStyle("-fx-background-color: #d87ccc; -fx-background-radius: 0 0 0 30px; -fx-border-color: #d87ccc; -fx-border-radius: 0 0 0 30px; -fx-border-width: 5px;");
+        deleteSelectedLinkButton.setStyle("-fx-background-color: #f04369; -fx-background-radius: 0 0 0 30px; -fx-border-color: #f04369; -fx-border-radius: 0 0 0 30px; -fx-border-width: 5px;");
     }
 
     @FXML
@@ -352,7 +352,7 @@ public class DownloadPageViewController implements Initializable {
     ////////////////////////
     @FXML
     public void mouseEnterDeleteErrorListButton() {
-        deleteErrorListButton.setStyle("-fx-background-color: transparent; -fx-background-radius: 0 0 30px 30px; -fx-border-color: #d87ccc; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px;");
+        deleteErrorListButton.setStyle("-fx-background-color: transparent; -fx-background-radius: 0 0 30px 30px; -fx-border-color: #f04369; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px;");
     }
 
     @FXML
@@ -362,7 +362,7 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     public void mousePressedDeleteErrorListButton() {
-        deleteErrorListButton.setStyle("-fx-background-color: #d87ccc; -fx-background-radius: 0 0 30px 30px; -fx-border-color: #d87ccc; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px;");
+        deleteErrorListButton.setStyle("-fx-background-color: #f04369; -fx-background-radius: 0 0 30px 30px; -fx-border-color: #f04369; -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px;");
     }
 
     @FXML
@@ -373,7 +373,7 @@ public class DownloadPageViewController implements Initializable {
     //////////////////////
     @FXML
     public void mouseEnterDownloadButton() {
-        downloadButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ee4540; -fx-border-width: 5px; -fx-border-radius:   30px 0 0 0; -fx-border-color: #d07ccc;");//#841858
+        downloadButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ee4540; -fx-border-width: 5px; -fx-border-radius:   30px 0 0 0; -fx-border-color: #f04369;");//#841858
     }
 
     @FXML
@@ -383,7 +383,7 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     public void mousePressedDownloadButton() {
-        downloadButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ee4540; -fx-border-width: 5px; -fx-border-radius:   30px 0 0 0; -fx-border-color: #d07ccc; -fx-background-color: #d07ccc; -fx-text-fill: #58143c; -fx-background-radius:   30px 0 0 0");
+        downloadButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #ee4540; -fx-border-width: 5px; -fx-border-radius:   30px 0 0 0; -fx-border-color: #f04369; -fx-background-color: #f04369; -fx-text-fill: #58143c; -fx-background-radius:   30px 0 0 0");
     }
 
     @FXML
@@ -393,7 +393,7 @@ public class DownloadPageViewController implements Initializable {
 
     @FXML
     public void mouseEnterYoutubeLinkField() {
-        youtubeLinkField.setStyle("-fx-background-color: transparent; -fx-border-width: 5px; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: #ee4540; -fx-background-radius:  0 30px 0 0; -fx-border-color: #d07ccc; -fx-border-radius:  0 30px 0 0;");
+        youtubeLinkField.setStyle("-fx-background-color: transparent; -fx-border-width: 5px; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: #ee4540; -fx-background-radius:  0 30px 0 0; -fx-border-color: #f04369; -fx-border-radius:  0 30px 0 0;");
     }
 
     @FXML

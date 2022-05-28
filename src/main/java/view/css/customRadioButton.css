@@ -6,18 +6,16 @@
     -fx-border-width: 2px;
     -fx-border-color: #ee4540;
     -fx-background-color: transparent;
-    -fx-background-image: transparent;
     -fx-border-radius: 15px;
-    -fx-padding: -1px, 1px, 1px, 1px;
+    -fx-padding: -1px;
 }
 
 .radio-button:selected .radio {
     -fx-border-width: 2px;
     -fx-border-color: #ee4540;
     -fx-background-color: transparent;
-    -fx-background-image: transparent;
     -fx-border-radius: 15px;
-    -fx-padding: -1px, 1px, 1px, 1px;
+    -fx-padding: -1px;
 }
 
 .radio-button:selected .radio .dot {

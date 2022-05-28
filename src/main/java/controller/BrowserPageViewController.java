@@ -69,7 +69,10 @@ public class BrowserPageViewController implements Initializable {
         fadeTransition.setToValue(0);
         fadeTransition.setCycleCount(1);
         fadeTransition.setNode(downloadingText);
-
+        //The code below will stop the downloadingText from preventing the user to click where the downloadingText is displayed on the screen
+        fadeTransition.setOnFinished(e -> {
+            downloadingText.setVisible(false);
+        });
         //browserWebView.getEngine().setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/538.19 (KHTML, like Gecko) JavaFX/8.0 Safari/538.19");
         browserWebView.setContextMenuEnabled(true);
         /*WebConsoleListener.setDefaultListener(new WebConsoleListener() { //This does not work and causes an error

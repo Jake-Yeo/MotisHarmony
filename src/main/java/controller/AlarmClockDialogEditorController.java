@@ -41,6 +41,9 @@ public class AlarmClockDialogEditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        hourComboBox.getStylesheets().add("/css/comboBox.css");
+        minuteComboBox.getStylesheets().add("/css/comboBox.css");
+        amOrPmChoiceBox.getStylesheets().add("/css/choiceBox.css");
         AlarmClock accAlarmClock = Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock();
         alarmClock = new AlarmClock(accAlarmClock.getHour(), accAlarmClock.getMinute(), accAlarmClock.getAmOrPm());
         alarmClock.setEnableAlarm(accAlarmClock.getEnableAlarm());
