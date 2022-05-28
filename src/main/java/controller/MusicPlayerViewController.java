@@ -65,6 +65,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.Accounts;
 import model.AccountsDataManager;
@@ -963,8 +964,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(songDialogEditor);
         dialog.setTitle("Song Data Editor");
-        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
-        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
+        songDialogEditor.getScene().getWindow().centerOnScreen();
+        dialog.initStyle(StageStyle.TRANSPARENT);
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             sdeController.applyDataChangesToSongDataObject(sdoToEdit);
@@ -986,8 +987,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(playlistDialogEditor);
         dialog.setTitle("Playlist Name Editor");
-        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
-        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
+        playlistDialogEditor.getScene().getWindow().centerOnScreen();
+        dialog.initStyle(StageStyle.TRANSPARENT);
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             pdeController.updatePlaylistName(playlistSong);
@@ -1010,8 +1011,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(songDialogEditor);
         dialog.setTitle("Sleep Timer Editor");
-        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
-        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
+        songDialogEditor.getScene().getWindow().centerOnScreen();
+        dialog.initStyle(StageStyle.TRANSPARENT);
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
 
         if (buttonClicked.get() == ButtonType.APPLY) {
@@ -1044,8 +1045,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(alarmDialogEditor);
         dialog.setTitle("Alarm Clock Editor");
-        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
-        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
+        alarmDialogEditor.getScene().getWindow().centerOnScreen();
+        dialog.initStyle(StageStyle.TRANSPARENT);
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY && !Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
             AccountsDataManager.saveAlarmClockSettings();

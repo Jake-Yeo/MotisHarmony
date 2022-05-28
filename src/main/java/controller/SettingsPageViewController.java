@@ -24,6 +24,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.StageStyle;
 import model.Accounts;
 import model.AccountsDataManager;
 import model.AlarmClock;
@@ -169,8 +170,8 @@ public class SettingsPageViewController implements Initializable {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(accountDeletionDialog);
         dialog.setTitle("Delete Account");
-        dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
-        dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
+        accountDeletionDialog.getScene().getWindow().centerOnScreen();
+        dialog.initStyle(StageStyle.TRANSPARENT);
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.CANCEL) {
 

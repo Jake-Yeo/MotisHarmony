@@ -9,9 +9,13 @@ import java.text.ParseException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
+import javafx.scene.layout.Background;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import model.Accounts;
 import model.AlarmClock;
@@ -34,6 +38,14 @@ public class AlarmClockDialogEditorController implements Initializable {
     private RadioButton enableAlarmRadioButton;
     @FXML
     private Text alarmClockRingTimeText;
+    @FXML
+    private DialogPane dialogPane;
+    @FXML
+    private Button showHourChoiceBox;
+    @FXML
+    private Button showMinuteChoiceBox;
+    @FXML
+    private Button showAmOrPmComboFBox;
 
     /**
      * Initializes the controller class.
