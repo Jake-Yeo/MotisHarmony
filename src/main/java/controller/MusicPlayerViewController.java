@@ -138,8 +138,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        addPlaylistButton.getStylesheets().add("/css/customButtonActions.css");
-        
+        addPlaylistButton.getStylesheets().add("/css/musicPlayerAddPlaylistButton.css");
+        playlistNameTextField.getStylesheets().add("/css/musicPlayerPlaylistNameField.css");
+        searchTextField.getStylesheets().add("/css/musicPlayerSearchField.css");
+        seekSlider.getStylesheets().add("/css/customSeekSlider.css");
+        volumeSlider.getStylesheets().add("/css/customVolumeSlider.css");
+
         mpm = new MusicPlayerManager();
         searchTextField.setText("");
         MusicPlayerManager.setMpmCurrentlyUsing(mpm);
@@ -176,7 +180,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        seekSlider.getStylesheets().add("/css/customSlider.css");
         try {
             updatePlaylistList();
         } catch (Exception ex) {
@@ -325,8 +328,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
             if (Accounts.getLoggedInAccount().getSettingsObject().getPlayType().equals("Random Play")) {
                 mpm.setPlayType("Random Play");
-                shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
-                shuffleButton.setTextFill(Paint.valueOf("#d07ccc"));
+                shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #ff6c8c; -fx-border-width: 3px; -fx-border-radius: 50px;");
+                shuffleButton.setTextFill(Paint.valueOf("#ff6c8c"));
             } else if (Accounts.getLoggedInAccount().getSettingsObject().getPlayType().equals("Ordered Play")) {
                 mpm.setPlayType("Ordered Play");
                 shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
@@ -334,8 +337,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
 
             if (Accounts.getLoggedInAccount().getSettingsObject().getPlaySongInLoop()) {
-                loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
-                loopButton.setTextFill(Paint.valueOf("#d07ccc"));
+                loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #ff6c8c; -fx-border-width: 3px; -fx-border-radius: 50px;");
+                loopButton.setTextFill(Paint.valueOf("#ff6c8c"));
             } else {
                 loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
                 loopButton.setTextFill(Paint.valueOf("#f04444"));
@@ -402,8 +405,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (mpm.getPlayType().equals("Ordered Play")) {
             mpm.getSongHistory().clear();//Just in case
             mpm.setPlayType("Random Play");
-            shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
-            shuffleButton.setTextFill(Paint.valueOf("#d07ccc"));
+            shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #ff6c8c; -fx-border-width: 3px; -fx-border-radius: 50px;");
+            shuffleButton.setTextFill(Paint.valueOf("#ff6c8c"));
         } else if (mpm.getPlayType().equals("Random Play")) {
             mpm.setPlayType("Ordered Play");
             shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
@@ -429,8 +432,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         } else {
             mpm.setPlaySongInLoop(true);
-            loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #d07ccc; -fx-border-width: 3px; -fx-border-radius: 50px;");
-            loopButton.setTextFill(Paint.valueOf("#d07ccc"));
+            loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #ff6c8c; -fx-border-width: 3px; -fx-border-radius: 50px;");
+            loopButton.setTextFill(Paint.valueOf("#ff6c8c"));
         }
         if (Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference()) {
             try {

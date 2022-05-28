@@ -1,0 +1,19 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+    .slider .track {
+    }
+
+    .slider:vertical .track {
+        -fx-pref-height:3;
+        -fx-background-color : #5c1c48;
+    }
+
+    .slider .thumb {
+        -fx-pref-height: 10;
+        -fx-pref-width: 10;
+        -fx-background-color : #5c1c48;
+    }
+}

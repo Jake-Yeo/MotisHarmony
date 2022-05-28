@@ -1,0 +1,24 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.text-field  {
+    -fx-background-color: transparent;
+    -fx-prompt-text-fill: #ffffff7d;
+    -fx-text-fill: #ee4540;
+    -fx-background-radius: 0 30px 30px 0;
+    -fx-border-color: #bc0c54;
+    -fx-border-radius: 0 30px 0 0;
+    -fx-padding:0px 12px 0px 0px;
+    -fx-border-width: 5px;
+}
+
+.text-field:hover {
+    -fx-background-color: transparent;
+    -fx-border-color:  #f04369;
+}
+
+.text-field:focused {
+    -fx-background-color: transparent;
+    -fx-border-color:  #f04369;
+}

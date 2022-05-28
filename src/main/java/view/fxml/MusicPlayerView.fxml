@@ -26,10 +26,10 @@
          </children>
       </AnchorPane>
       <fx:include source="DragWindowButton.fxml" />
-      <Slider fx:id="volumeSlider" layoutX="854.0" layoutY="423.0" max="1.0" orientation="VERTICAL" />
-      <ListView fx:id="songInfoViewList" layoutX="357.0" layoutY="198.0" prefHeight="200.0" prefWidth="200.0" />
-      <ImageView fx:id="thumbnailImageView" fitHeight="158.0" fitWidth="276.0" layoutX="319.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <AnchorPane layoutX="296.0" layoutY="452.0" prefHeight="111.0" prefWidth="322.0" style="-fx-background-color: linear-gradient(to bottom, #ee4540, #c12c4e, #8e224e, #5b1d43, #2d142c); -fx-background-radius: 50px;">
+      <Slider fx:id="volumeSlider" layoutX="852.0" layoutY="398.0" max="1.0" orientation="VERTICAL" />
+      <ListView fx:id="songInfoViewList" layoutX="282.0" layoutY="229.0" prefHeight="200.0" prefWidth="322.0" />
+      <ImageView fx:id="thumbnailImageView" fitHeight="179.0" fitWidth="322.0" layoutX="282.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true" />
+      <AnchorPane layoutX="282.0" layoutY="452.0" prefHeight="111.0" prefWidth="322.0" style="-fx-background-color: linear-gradient(to bottom, #ee4540, #c12c4e, #8e224e, #5b1d43, #2d142c); -fx-background-radius: 50px;">
          <children>
             <Slider fx:id="seekSlider" layoutX="23.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="9.0" prefWidth="276.0" style="-fx-orientation: horizontal;" />
             <AnchorPane layoutX="42.0" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="239.0">
@@ -78,10 +78,15 @@
       </AnchorPane>
       <ListView fx:id="playlistList" layoutX="45.0" layoutY="82.0" onMouseClicked="#showPlaylistListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
       <ListView fx:id="songList" layoutX="631.0" layoutY="82.0" onMouseClicked="#showSongListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
-      <Button fx:id="addPlaylistButton" layoutX="45.0" layoutY="52.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="25.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-background-radius: 30px 0 0 0; -fx-border-color: #bc0c54; -fx-border-radius: 30px 0 0 0; -fx-border-width: 5px;" text="Add" textFill="#ee4540" />
-      <TextField fx:id="playlistNameTextField" layoutX="117.0" layoutY="52.0" prefHeight="35.0" prefWidth="128.0" promptText="Enter Playlist Name" style="-fx-background-color: transparent; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: #ee4540; -fx-background-radius: 0 30px 30px 0; -fx-border-color: #bc0c54; -fx-border-radius: 0 30px 0 0; -fx-border-width: 5px;" />
+      <Button fx:id="addPlaylistButton" layoutX="45.0" layoutY="52.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="25.0" prefWidth="77.0" text="Add" textFill="#ee4540" />
+      <TextField fx:id="playlistNameTextField" alignment="CENTER" layoutX="117.0" layoutY="52.0" prefHeight="35.0" prefWidth="128.0" promptText="Enter Playlist Name" />
       <ComboBox fx:id="comboBox" layoutX="631.0" layoutY="55.0" onAction="#onComboBoxClicked" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
       <ChoiceBox fx:id="sortChoiceBox" layoutX="631.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
-      <TextField fx:id="searchTextField" layoutX="631.0" layoutY="52.0" onKeyTyped="#searchTextFieldWhenTyped" prefHeight="25.0" prefWidth="200.0" promptText="Enter Search Query And Hit Enter" style="-fx-background-color: transparent; -fx-prompt-text-fill: #ffffff7d; -fx-text-fill: #ee4540; -fx-background-radius: 0 30px 30px 0; -fx-border-color: #bc0c54; -fx-border-radius: 30px 30px 0 0px; -fx-border-width: 5px;" />
+      <TextField fx:id="searchTextField" alignment="CENTER" layoutX="631.0" layoutY="52.0" onKeyTyped="#searchTextFieldWhenTyped" prefHeight="35.0" prefWidth="200.0" promptText="Enter Search Query" style="-fx-padding: 2 2 2 12;" />
+      <Text fill="#5c1c48" layoutX="847.0" layoutY="561.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🔊">
+         <font>
+            <Font name="Quicksand Medium" size="24.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>
