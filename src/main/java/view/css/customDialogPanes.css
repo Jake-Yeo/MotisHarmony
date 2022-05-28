@@ -13,6 +13,7 @@
     }
     .dialog-pane > *.label.content{
         -fx-font-size: 14px;
+        -fx-font-family: "Quicksand SemiBold";
         -fx-font-weight: bold;
     }
     .dialog-pane:header *.header-panel{
@@ -29,6 +30,7 @@
         -fx-background-radius: 30px;
         -fx-border-color: #bc0c54;
         -fx-text-fill: white;
+        -fx-font-family: "Quicksand SemiBold";
         -fx-border-radius: 30px;
         -fx-border-width: 2px;
     }
@@ -42,6 +44,7 @@
         -fx-background-color: #f04369;
         -fx-border-color:  #f04369;
         -fx-text-fill: white;
+        -fx-font-family: "Quicksand SemiBold";
     }
 
     .radio-button .radio {
@@ -76,6 +79,7 @@
         -fx-background-radius: 30px;
         -fx-border-color: #bc0c54;
         -fx-text-fill: white;
+        -fx-font-family: "Quicksand SemiBold";
         -fx-border-radius: 30px;
         -fx-border-width: 2px;
     }
@@ -89,6 +93,7 @@
         -fx-background-color: #f04369;
         -fx-border-color:  #f04369;
         -fx-text-fill: white;
+        -fx-font-family: "Quicksand SemiBold";
     }
 
 }

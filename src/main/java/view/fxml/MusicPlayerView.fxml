@@ -70,14 +70,26 @@
                   </Button>
                </children>
             </AnchorPane>
-            <Text fx:id="timeText" fill="#f04444" layoutX="23.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="103.0" />
-            <Label fx:id="songInfoLabel" layoutX="35.0" layoutY="6.0" prefHeight="17.0" prefWidth="252.0" text="Song name" textFill="#5c1c48" />
-            <Label fx:id="artistNameLabel" layoutX="35.0" layoutY="23.0" prefHeight="17.0" prefWidth="252.0" text="Artist Name" textFill="#5c1c48" />
+            <Text fx:id="timeText" fill="#f04444" layoutX="23.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="103.0">
+               <font>
+                  <Font name="Quicksand SemiBold" size="12.0" />
+               </font></Text>
+            <Label fx:id="songInfoLabel" layoutX="35.0" layoutY="6.0" prefHeight="17.0" prefWidth="252.0" text="Song name" textFill="#5c1c48">
+               <font>
+                  <Font name="Quicksand SemiBold" size="12.0" />
+               </font></Label>
+            <Label fx:id="artistNameLabel" layoutX="35.0" layoutY="23.0" prefHeight="17.0" prefWidth="252.0" text="Artist Name" textFill="#5c1c48">
+               <font>
+                  <Font name="Quicksand SemiBold" size="12.0" />
+               </font></Label>
          </children>
       </AnchorPane>
       <ListView fx:id="playlistList" layoutX="55.0" layoutY="82.0" onMouseClicked="#showPlaylistListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
       <ListView fx:id="songList" layoutX="631.0" layoutY="82.0" onMouseClicked="#showSongListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
-      <Button fx:id="addPlaylistButton" layoutX="55.0" layoutY="52.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="25.0" prefWidth="77.0" text="Add" textFill="#ee4540" />
+      <Button fx:id="addPlaylistButton" layoutX="55.0" layoutY="52.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="25.0" prefWidth="77.0" text="Add" textFill="#ee4540">
+         <font>
+            <Font name="Quicksand SemiBold" size="12.0" />
+         </font></Button>
       <TextField fx:id="playlistNameTextField" alignment="CENTER" layoutX="127.0" layoutY="52.0" prefHeight="35.0" prefWidth="128.0" promptText="Enter Playlist Name">
          <font>
             <Font name="Quicksand SemiBold" size="12.0" />

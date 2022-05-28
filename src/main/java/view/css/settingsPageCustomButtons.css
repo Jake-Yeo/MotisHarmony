@@ -4,7 +4,7 @@
 
 .button {
     -fx-background-color: transparent;
-    -fx-text-fill: #ee4540;
+    -fx-text-fill: #58143c;
     -fx-font-family: "Quicksand SemiBold";
     -fx-background-radius: 1em;
     -fx-border-radius: 1em;
@@ -14,11 +14,11 @@
 
 .button:hover {
     -fx-background-color: transparent;
-    -fx-border-color:  #f04369;
+    -fx-border-color:  #58143c;
 }
 
 .button:pressed {
-    -fx-background-color: #f04369;
-    -fx-border-color:  #f04369;
-    -fx-text-fill: #58143c;
+    -fx-background-color: #58143c;
+    -fx-border-color:  #58143c;
+    -fx-text-fill: #ee4540;
 }
