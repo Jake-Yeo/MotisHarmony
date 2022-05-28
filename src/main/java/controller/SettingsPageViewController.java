@@ -168,7 +168,7 @@ public class SettingsPageViewController implements Initializable {
         accountDeletionDialog.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(accountDeletionDialog);
-        dialog.setTitle("hi");
+        dialog.setTitle("Delete Account");
         dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
         dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();

@@ -962,7 +962,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(songDialogEditor);
-        dialog.setTitle("hi");
+        dialog.setTitle("Song Data Editor");
         dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
         dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
@@ -985,7 +985,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playlistDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(playlistDialogEditor);
-        dialog.setTitle("hi");
+        dialog.setTitle("Playlist Name Editor");
         dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
         dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
@@ -1009,7 +1009,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(songDialogEditor);
-        dialog.setTitle("hi");
+        dialog.setTitle("Sleep Timer Editor");
         dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
         dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
@@ -1043,7 +1043,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         alarmDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(alarmDialogEditor);
-        dialog.setTitle("hi");
+        dialog.setTitle("Alarm Clock Editor");
         dialog.setX(MouseInfo.getPointerInfo().getLocation().getX());
         dialog.setY(MouseInfo.getPointerInfo().getLocation().getY());
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
