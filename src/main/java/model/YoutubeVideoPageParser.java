@@ -88,6 +88,10 @@ public class YoutubeVideoPageParser {
         return isGettingPlaylist;
     }
 
+    public void setIsGettingPlaylist(boolean tf) {
+        isGettingPlaylist = tf;
+    }
+
     public String getHtml(String url) throws IOException {//To prevent an ip ban from websites, don't overuse this method.
         System.out.println("html getter called");
         String html = "";

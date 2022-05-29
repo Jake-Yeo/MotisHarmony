@@ -914,7 +914,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     public void updatePlaylistToAddToChoiceBox() {
         comboBox.getItems().clear();
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
-        comboBox.getItems().addAll(map.getArrayOfPlaylistNames());
+        comboBox.getItems().addAll(map.getArrayOfPlaylistNames());  
     }
 
     public void deleteSongFromPlaylistOption() throws Exception {
