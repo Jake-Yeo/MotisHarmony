@@ -148,7 +148,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         musicPlayerBackgroundImageView.setImage(new Image("/images/musicPlayerBackground.png"));
-        
+
         addPlaylistButton.getStylesheets().add("/css/musicPlayerAddPlaylistButton.css");
         playlistNameTextField.getStylesheets().add("/css/musicPlayerPlaylistNameField.css");
         searchTextField.getStylesheets().add("/css/musicPlayerSearchField.css");
@@ -902,6 +902,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             playlistList.getSelectionModel().select("All Songs");
             updateModelCurrentSongList();
         }
+        if (selectedItem.equals(mpm.getCurrentPlaylistPlayling())) {
+            playPlaylist("All Songs");
+        }
         updatePlaylistList();
         mpm.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());
         playlistList.getSelectionModel().select(mpm.getPlaylistCurrentlyViewing());
@@ -925,12 +928,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         updateModelCurrentSongList();
     }
 
-    public void playPlaylistOption() throws IOException, Exception {
-        if (!mpm.isThisPlaylistEmpty(playlistList.getSelectionModel().getSelectedItem())) {
+    public void playPlaylist(String playlistName) throws Exception {
+        if (!mpm.isThisPlaylistEmpty(playlistName)) {
             System.out.println("playling playlist");
             if (mpm.isMusicPlayerInitialized()) {
                 mpm.setIndexForOrderedPlay(0);
-                mpm.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+                mpm.playThisPlaylist(playlistName);
                 mpm.nextOrPrevSong();
                 init();//initalize again because a new MediaPlayer is made
                 updateInfoDisplays();
@@ -940,10 +943,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 playButton.setText("⏸︎");
             } else {
                 mpm.setIndexForOrderedPlay(0);
-                mpm.playThisPlaylist(playlistList.getSelectionModel().getSelectedItem());
+                mpm.playThisPlaylist(playlistName);
                 onFirstMusicPlayerPlay();
             }
         }
+    }
+
+    public void playPlaylistOption() throws IOException, Exception {
+        playPlaylist(playlistList.getSelectionModel().getSelectedItem());
     }
 
     public void deleteSongFromAccountOption() throws IOException, Exception {
