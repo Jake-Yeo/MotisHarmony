@@ -932,6 +932,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (!mpm.isThisPlaylistEmpty(playlistName)) {
             System.out.println("playling playlist");
             if (mpm.isMusicPlayerInitialized()) {
+                //The chunk of code below will stop loop play if it was enabled because there's no point in using looped play when you want to play a new playlist
+                if (mpm.getPlaySongInLoop()) {
+                    loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
+                    loopButton.setTextFill(Paint.valueOf("#f04444"));
+                    mpm.setPlaySongInLoop(false);
+                }
+
                 mpm.setIndexForOrderedPlay(0);
                 mpm.playThisPlaylist(playlistName);
                 mpm.nextOrPrevSong();
