@@ -99,7 +99,7 @@ public class InfoDialogController implements Initializable {
 
         private HashMap<String, String> parseInfo() throws FileNotFoundException, IOException {
             HashMap<String, String> questionsAndAnswers = new HashMap<>();
-            BufferedReader txtReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/txt/info.txt")));
+            BufferedReader txtReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/txt/info.txt"), "UTF-8"));
             String info = "";
             for (String line; (line = txtReader.readLine()) != null;) {
                 info += line + "\n";

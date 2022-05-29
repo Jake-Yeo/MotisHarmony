@@ -244,4 +244,31 @@
     .scroll-bar:horizontal {
         -fx-background-color: transparent;
     }
+    
+    .context-menu {
+    -fx-background-radius: 1em;
+    -fx-background-color: #f04369;
+    -fx-text-fill: white;
+}
+
+.menu-item .label {
+    -fx-font-family: "Quicksand SemiBold";
+    -fx-text-fill: white;
+}
+
+.menu-item:focused .label {
+    -fx-font-family: "Quicksand SemiBold";
+    -fx-background-color: #ff6e8e;
+    -fx-text-fill: white;
+}
+
+.menu-item {
+    -fx-background-radius: 4em;
+    -fx-background-color: #f04369;
+}
+
+.menu-item:focused {
+    -fx-background-radius: 4em;
+    -fx-background-color: #ff6e8e;
+}
 }

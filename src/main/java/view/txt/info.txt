@@ -1,7 +1,130 @@
-What is MotisHarmony
+What is MotisHarmony?
 :::::::::::::::::::::::::::::::::::
-The best program??
+MotisHarmony is a program which I made for my grade 12 highschool capstone. This program provides a clean intuitive UI for an adequate user experience. 
+
+Unlike other technologies such as online youtube downloaders, my program is able to bypass youtubes download throttling and cipher signatures. Since I use a headless driver to obtain the audio source from the youtube link.
+
+Now you might be wondering, why not just use one of the many other youtube downloaders on github such as youtube-dl? Well it's because these programs instead obtain the audio source from a youtube link by obtaining its cipher signature and then decoding it. To do that, they must obtain a .js script from the webpage which they must then interpret to decode this cipher signature. What makes this method much harder is that Youtube knows that people are figuring out ways to download youtube audio and is trying to make it more difficult for such downloads to occur. What ends up happening is a cat and mouse game where Youtube updates its webpage to make it harder for programmers to find and acess its .js scripts which decodes their cipher signatures. This results in continous updates from youtube-dl.
+
+not done plz update and make grammar better
 :::::::::::::::::::::::::::::::::::
-Uhh
+Resourses which have helped me complete my project
 :::::::::::::::::::::::::::::::::::
-ahh
+Gave me an idea of how to download audio from Youtube
+https://ericdraken.com/download-youtube-videos-with-php/
+
+Helped me download audio from Youtube
+https://www.selenium.dev/
+
+Helped me fixed a bug in my program
+https://stackoverflow.com/questions/71820204/javafx-mediaplayer-runs-into-error-whenever-you-disconnect-bluetooth-headphones
+
+Helped me fixed a bug in my program
+https://stackoverflow.com/questions/71540519/unable-to-delete-mp3-file-due-to-javafx-mediaplayer
+
+Helped me fixed a bug in my program
+https://stackoverflow.com/questions/71003130/how-do-i-edit-the-javafx-ui-in-another-class
+
+Helped me fixed a bug in my program
+https://stackoverflow.com/questions/71096610/cant-play-wav-or-mp3-files-with-javafx-mediaplayer-also-cant-play-wav-files-w
+
+Helped me with my UI
+https://coolbackgrounds.io/
+
+Helped me with my UI
+https://mycolor.space/gradient
+
+Helped me with my UI
+https://gluonhq.com/products/scene-builder/
+
+Helped me create a dialog box
+https://youtu.be/vwMtQJf1enQ
+
+Helped me start my project
+https://youtu.be/9XJicRt_FaI
+
+Helped me automatically update the chrome driver
+https://github.com/bonigarcia/webdrivermanager
+:::::::::::::::::::::::::::::::::::
+How do I download songs from entire Youtube playlists?
+:::::::::::::::::::::::::::::::::::
+1. Copy the url to a Youtube playlist you would like to download
+
+2. Open the sliding menu in the bottom left and click on the button which looks like this "📥"
+
+3. Paste the url into the field which reads
+"Enter a playlist or video link to download here!"
+
+4. Press the button to the right of the field which looks like this "📥"
+:::::::::::::::::::::::::::::::::::
+How do I download an individual song from Youtube?
+:::::::::::::::::::::::::::::::::::
+1. Copy the url to a Youtube video you would like to download
+
+2. Open the sliding menu in the bottom left and click on the button which looks like this "📥"
+
+3. Paste the url into the field which reads
+"Enter a playlist or video link to download here!"
+
+4. Press the button to the right of the field which looks like this "📥"
+:::::::::::::::::::::::::::::::::::
+What does the "Stay Logged In" radio button in settings do?
+:::::::::::::::::::::::::::::::::::
+It you select that radio button then you will be logged back in if you were to exit the program and start it up again.
+
+If you deselect that radio button then if you were to exit the program and start it up again, you would have to login in order to get into your account.
+:::::::::::::::::::::::::::::::::::
+What does the "Save Play Preference" radio button in settings do?
+:::::::::::::::::::::::::::::::::::
+If you select that radio button then the program will remember if you were playing a song in loop, a playlist in shuffle etc.
+
+If you deselect that radio button then the program will not remember if you were playing a song in loop, a playlist in shuffle etc.
+:::::::::::::::::::::::::::::::::::
+What does the "Save Song Position" radio button in settings do?
+:::::::::::::::::::::::::::::::::::
+If you select that radio button then the program will remember the last song and playlist you played.
+
+If you deselect that option the the program will not remember the last song and playlist you played. Instead the program will pick a random song from the "All Songs" playlist or it will choose the first song from the "All Songs" playlist based on wether or not you enabled shuffle play.
+:::::::::::::::::::::::::::::::::::
+What does the "Save Download Queue" radio button in settings do?
+:::::::::::::::::::::::::::::::::::
+If you select that radio button then the program will remember the Download Queue and load it up again if you were to exit and re-enter the program.
+
+If you deselect that radio button then the program will not remember the Download Queue.
+:::::::::::::::::::::::::::::::::::
+More about MotisHarmony
+:::::::::::::::::::::::::::::::::::
+You can find the code for MotisHarmony here:
+https://github.com/Jake-Yeo/MotisHarmony
+:::::::::::::::::::::::::::::::::::
+Where can I submit a bug report?
+:::::::::::::::::::::::::::::::::::
+You can submit a bug report here:
+https://github.com/Jake-Yeo/MotisHarmony/issues
+:::::::::::::::::::::::::::::::::::
+List of features in MotisHarmony
+:::::::::::::::::::::::::::::::::::
+1. Create, rename and delete playlists
+
+2. Download playlists and videos from Youtube
+
+3. Download playlists and videos from Youtube using the built in browser
+
+4. Edit song data
+
+5. Built in alarm
+
+6. Built in sleep timer
+
+7. Ability to use shuffle play
+
+8. Ability to loop a song
+
+9. Ability to create and use multiple accounts
+:::::::::::::::::::::::::::::::::::
+What is the sleep timer and how do I use it?
+:::::::::::::::::::::::::::::::::::
+The sleep timer is a timer which will pause the music player once it reaches zero.
+
+You can use it by going to the music player page and clicking on the button which looks like this "⏲".
+blah blah blah
