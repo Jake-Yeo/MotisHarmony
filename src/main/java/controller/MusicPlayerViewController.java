@@ -116,10 +116,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     @FXML
     private AnchorPane thumbnailAnchorPane;
     @FXML
-    private Text currentTimeText;
-    @FXML
-    private Text totalTimeText;
-    @FXML
     private Button addPlaylistButton;
     @FXML
     private TextField playlistNameTextField;
@@ -139,10 +135,20 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private ChoiceBox<String> sortPlaylistChoiceBox;
     @FXML
     private TextField searchTextField;
+    @FXML
+    Label playlistPlayingLabel;
+    @FXML
+    private ImageView musicPlayerBackgroundImageView;
+    @FXML
+    private Button alarmClockButton;
+    @FXML
+    private Button sleepTimerButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        musicPlayerBackgroundImageView.setImage(new Image("/images/musicPlayerBackground.png"));
+        
         addPlaylistButton.getStylesheets().add("/css/musicPlayerAddPlaylistButton.css");
         playlistNameTextField.getStylesheets().add("/css/musicPlayerPlaylistNameField.css");
         searchTextField.getStylesheets().add("/css/musicPlayerSearchField.css");
@@ -687,6 +693,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songInfoViewList.getItems().clear();
         songInfoLabel.setText("Title: " + mpm.getSongObjectBeingPlayed().getTitle());
         artistNameLabel.setText("Artist: " + mpm.getSongObjectBeingPlayed().getChannelName());
+        playlistPlayingLabel.setText("Playlist Playing: " + mpm.getCurrentPlaylistPlayling());
         songInfoViewList.getItems().add("Song name: " + mpm.getSongObjectBeingPlayed().getTitle());
         songInfoViewList.getItems().add("Song creator: " + mpm.getSongObjectBeingPlayed().getChannelName());
         songInfoViewList.getItems().add("Song duration: " + mpm.getSongObjectBeingPlayed().getVideoDuration());
@@ -1018,6 +1025,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
+    @FXML
     public void showSleepAlarmDialog() throws IOException, ParseException {
         if (SleepTimer.getTimerCurrentlyUsing() != null) {
             SleepTimer.getTimerCurrentlyUsing().stopTimerCheck();
@@ -1055,6 +1063,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
+    @FXML
     public void showAlarmClockDialog() throws IOException, ParseException {
         //This creates a dialog popup to allow the user to edit the data of a SongDataObject
         if (AlarmClock.getAlarmCurrentlyUsing() != null) {
@@ -1233,6 +1242,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 System.out.println("worked");
                 //updateModelCurrentSongList();
                 playlistListContextMenu.show(playlistList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+            } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
+                //Will play that playlist on double tap
+                playPlaylistOption();
             } else {
                 playlistListContextMenu.hide();
                 mpm.setPlaylistCurrentlyViewing(playlistList.getSelectionModel().getSelectedItem());

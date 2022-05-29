@@ -22,6 +22,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -56,6 +58,8 @@ public class SettingsPageViewController implements Initializable {
     private RadioButton stayLoggedInRadioButton;
     @FXML
     private Button deleteAccountButton;
+    @FXML
+    private ImageView settingsPageBackgroundImageView;
 
     /**
      * Initializes the controller class.
@@ -63,9 +67,10 @@ public class SettingsPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        settingsPageBackgroundImageView.setImage(new Image("/images/settingsPageBackground.png"));
         logoutButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
         deleteAccountButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
-        
+
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(settingsViewMainAnchorPane.widthProperty());
         clip.heightProperty().bind(settingsViewMainAnchorPane.heightProperty());
@@ -139,7 +144,7 @@ public class SettingsPageViewController implements Initializable {
         dialog.initStyle(StageStyle.TRANSPARENT);
         accountDeletionDialog.setClip(UIHelper.getDialogPaneClip(accountDeletionDialog));
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
-        
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.CANCEL) {
 

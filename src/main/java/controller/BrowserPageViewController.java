@@ -22,6 +22,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -54,6 +56,8 @@ public class BrowserPageViewController implements Initializable {
     private Button backButton;
     @FXML
     private Button forwardButton;
+    @FXML
+    private ImageView browserBackgroundImageView;
 
     /**
      * Initializes the controller class.
@@ -61,6 +65,8 @@ public class BrowserPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        browserBackgroundImageView.setImage(new Image("/images/browserPageBackground.png"));
+        
         downloadUrlButton.getStylesheets().add("/css/browserPageCustomButtons.css");
         backButton.getStylesheets().add("/css/browserPageCustomButtons.css");
         forwardButton.getStylesheets().add("/css/browserPageCustomButtons.css");

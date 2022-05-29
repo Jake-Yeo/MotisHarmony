@@ -14,6 +14,7 @@
 
 <AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerViewController">
    <children>
+      <ImageView fx:id="musicPlayerBackgroundImageView" fitHeight="577.0" fitWidth="886.0" pickOnBounds="true" />
       <ChoiceBox fx:id="sortPlaylistChoiceBox" layoutX="45.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
       <AnchorPane layoutX="831.0" layoutY="25.0" prefHeight="30.0" prefWidth="30.0">
          <children>
@@ -86,11 +87,11 @@
       </AnchorPane>
       <ListView fx:id="playlistList" layoutX="55.0" layoutY="82.0" onMouseClicked="#showPlaylistListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
       <ListView fx:id="songList" layoutX="631.0" layoutY="82.0" onMouseClicked="#showSongListContextMenu" prefHeight="405.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0 0 30px 30px; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
-      <Button fx:id="addPlaylistButton" layoutX="55.0" layoutY="52.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="25.0" prefWidth="77.0" text="Add" textFill="#ee4540">
+      <Button fx:id="addPlaylistButton" layoutX="55.0" layoutY="52.0" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="35.0" prefWidth="77.0" text="Add" textFill="#ee4540">
          <font>
             <Font name="Quicksand SemiBold" size="12.0" />
          </font></Button>
-      <TextField fx:id="playlistNameTextField" alignment="CENTER" layoutX="127.0" layoutY="52.0" prefHeight="35.0" prefWidth="128.0" promptText="Enter Playlist Name">
+      <TextField fx:id="playlistNameTextField" alignment="CENTER" layoutX="127.0" layoutY="52.0" prefHeight="35.0" prefWidth="128.0" promptText="New Playlist Name">
          <font>
             <Font name="Quicksand SemiBold" size="12.0" />
          </font></TextField>
@@ -100,7 +101,7 @@
          <font>
             <Font name="Quicksand SemiBold" size="12.0" />
          </font></TextField>
-      <Text fill="#5c1c48" layoutX="847.0" layoutY="561.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🔊">
+      <Text fill="#ee4540" layoutX="847.0" layoutY="561.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🔊">
          <font>
             <Font name="Quicksand Medium" size="24.0" />
          </font>
@@ -108,6 +109,11 @@
       <AnchorPane fx:id="thumbnailAnchorPane" layoutX="264.0" layoutY="52.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="271.0" prefWidth="358.0" style="-fx-background-color: transparent; -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0px 0px; -fx-border-width: 5px; -fx-background-radius: 33px 33px 0px 0px;">
          <children>
             <ImageView fx:id="thumbnailImageView" fitHeight="236.0" fitWidth="348.0" layoutX="5.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="playlistPlayingLabel" layoutX="17.0" layoutY="12.0" prefHeight="15.0" prefWidth="322.0" text="Playlist Playing:" textFill="WHITE">
+               <font>
+                  <Font name="Quicksand SemiBold" size="12.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

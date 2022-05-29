@@ -8,12 +8,15 @@
 
     .slider:vertical .track {
         -fx-pref-width:3;
-        -fx-background-color : #5c1c48;
+        -fx-background-color : linear-gradient(to bottom, #4c154a, #781655, #a41957, #cd2950, #ee4540);
     }
 
     .slider .thumb {
         -fx-pref-height: 10;
         -fx-pref-width: 10;
-        -fx-background-color : #5c1c48;
+        -fx-border-width: 1px;
+        -fx-border-color: #ff6c8c;
+        -fx-border-radius:3em;
+        -fx-background-color : #ee4540;
     }
 }
