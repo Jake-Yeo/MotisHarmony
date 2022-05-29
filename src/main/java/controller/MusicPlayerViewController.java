@@ -851,7 +851,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             public void run() {
                 mpm.setVolume(volumeSlider.getValue());//Sets the volume
                 mpm.setSliderVolume(volumeSlider.getValue());
-                seekSlider.setMax(mpm.getMediaPlayer().getTotalDuration().toSeconds());
+                seekSlider.setMax(mpm.getMediaPlayer().getMedia().getDuration().toSeconds());
                 //seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> mpm.getMediaPlayer().getTotalDuration().toSeconds(), mpm.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
             }
         });
