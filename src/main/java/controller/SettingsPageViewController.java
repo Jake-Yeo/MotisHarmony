@@ -60,6 +60,8 @@ public class SettingsPageViewController implements Initializable {
     private Button deleteAccountButton;
     @FXML
     private ImageView settingsPageBackgroundImageView;
+    @FXML
+    private Button infoButton;
 
     /**
      * Initializes the controller class.
@@ -70,6 +72,7 @@ public class SettingsPageViewController implements Initializable {
         settingsPageBackgroundImageView.setImage(new Image("/images/settingsPageBackground.png"));
         logoutButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
         deleteAccountButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
+        infoButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(settingsViewMainAnchorPane.widthProperty());
@@ -172,6 +175,24 @@ public class SettingsPageViewController implements Initializable {
                 a.show();
             }
         }
+    }
+
+    @FXML
+    private void showInfoDialogBox(ActionEvent event) throws IOException, Exception {
+        //This creates a dialog popup to allow the user to delete their account
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/InfoDialog.fxml"));
+        DialogPane infoDialog = fxmlLoader.load();
+        InfoDialogController infoController = fxmlLoader.getController();
+        infoDialog.getStylesheets().add("/css/customDialogPanes.css");
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setDialogPane(infoDialog);
+        dialog.setTitle("Info");
+        infoDialog.getScene().getWindow().centerOnScreen();
+        dialog.initStyle(StageStyle.TRANSPARENT);
+        infoDialog.setClip(UIHelper.getDialogPaneClip(infoDialog));
+        dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
+        Optional<ButtonType> buttonClicked = dialog.showAndWait();
     }
 
 }

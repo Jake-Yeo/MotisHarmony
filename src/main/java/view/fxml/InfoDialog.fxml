@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<DialogPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InfoDialogController">
+   <content>
+      <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="886.0" style="-fx-background-color: #5c1c48;">
+         <children>
+            <TextField fx:id="infoSearchField" layoutX="14.0" layoutY="14.0" onKeyPressed="#searchTextFieldWhenTyped" prefHeight="25.0" prefWidth="422.0" promptText="Search For Info Here" />
+            <TextArea fx:id="infoTextArea" editable="false" layoutX="450.0" layoutY="14.0" prefHeight="524.0" prefWidth="422.0" text="Click On A Question To Get Started!" wrapText="true" />
+            <ListView fx:id="questionsListView" layoutX="14.0" layoutY="53.0" onMouseClicked="#updateInfoTextArea" prefHeight="485.0" prefWidth="422.0" style="-fx-background-color: null; -fx-border-color: #bc0c54; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-selection-bar: derive(purple, 100%); -fx-focus-color: white; -fx-padding: 7px;" />
+         </children>
+      </AnchorPane>
+   </content>
+   <buttonTypes>
+      <ButtonType fx:constant="OK" />
+   </buttonTypes>
+</DialogPane>

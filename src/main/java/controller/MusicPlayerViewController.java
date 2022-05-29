@@ -960,15 +960,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
-    public Rectangle getDialogPaneClip(DialogPane dp) {
-        Rectangle clip = new Rectangle();
-        clip.widthProperty().bind(dp.widthProperty());
-        clip.heightProperty().bind(dp.heightProperty());
-        clip.setArcWidth(50);//this sets the rounded corners
-        clip.setArcHeight(50);
-        return clip;
-    }
-
     public void editSongDataOption() throws IOException {
         //This creates a dialog popup to allow the user to edit the data of a SongDataObject
         FXMLLoader fxmlLoader = new FXMLLoader();
