@@ -688,6 +688,24 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
+    private void resetInfoDisplaysAndChangeSong() throws Exception {
+        mpm.pauseSong();
+        mpm.setSongObjectBeingPlayed(null);
+
+        //The code below is just incase all songs have been deleted
+        if (Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
+            songInfoViewList.getItems().clear();
+            songInfoLabel.setText("Title: ");
+            artistNameLabel.setText("Artist: ");
+            songInfoViewList.getItems().add("Song name: ");
+            songInfoViewList.getItems().add("Song creator: ");
+            songInfoViewList.getItems().add("Song duration: ");
+            thumbnailImageView.setImage(null);
+        } else {
+            playPlaylist("All Songs");
+        }
+    }
+
     private void updateInfoDisplays() {
         //This code will update the UI with data of the current song playing
         songInfoViewList.getItems().clear();
@@ -793,7 +811,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 playButton.setText("▶");
                 //probably don't need the init() method below
                 init();
-                updateInfoDisplays();
+                if (mpm.getSongObjectBeingPlayed() != null) {
+                    updateInfoDisplays();
+                }
                 System.out.println("Setting the pause button to paused");
             }
         });
@@ -902,7 +922,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             playlistList.getSelectionModel().select("All Songs");
             updateModelCurrentSongList();
         }
-        if (selectedItem.equals(mpm.getCurrentPlaylistPlayling())) {
+        if (selectedItem.equals(mpm.getCurrentPlaylistPlayling()) && !mpm.getCurrentPlaylistPlayling().equals("All Songs")) {
             playPlaylist("All Songs");
         }
         updatePlaylistList();
@@ -914,7 +934,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     public void updatePlaylistToAddToChoiceBox() {
         comboBox.getItems().clear();
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
-        comboBox.getItems().addAll(map.getArrayOfPlaylistNames());  
+        comboBox.getItems().addAll(map.getArrayOfPlaylistNames());
     }
 
     public void deleteSongFromPlaylistOption() throws Exception {
@@ -924,6 +944,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             //This else statement should only run when the user does not click on any playlists during startup
             AccountsDataManager.removeSongFromPlaylist(mpm.getCurrentPlaylistPlayling(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
 
+        }
+
+        //This if statement will stop the musicPlayer if the playlist which is currently playing has had all its songs removed by the user.
+        if (playlistList.getSelectionModel().getSelectedItem().equals(mpm.getCurrentPlaylistPlayling()) && Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(mpm.getCurrentPlaylistPlayling()).isEmpty()) {
+            resetInfoDisplaysAndChangeSong();
         }
         updateModelCurrentSongList();
     }
@@ -967,10 +992,18 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (mpm.getSongObjectBeingPlayed() != null) {
             for (SongDataObject sdo : sdosToDelete) {
                 if (sdo.getVideoID().equals(mpm.getSongObjectBeingPlayed().getVideoID())) {
-                    mpm.smartPlay();
+                    if (Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
+                        resetInfoDisplaysAndChangeSong();
+                    } else {
+                        mpm.smartPlay();
+                    }
                     break;
                 }
             }
+        }
+        //This if statement will stop the musicPlayer if the playlist which is currently playing has had all its songs deleted by the user.
+        if (playlistList.getSelectionModel().getSelectedItem().equals(mpm.getCurrentPlaylistPlayling()) && Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(mpm.getCurrentPlaylistPlayling()).isEmpty()) {
+            resetInfoDisplaysAndChangeSong();
         }
     }
 
