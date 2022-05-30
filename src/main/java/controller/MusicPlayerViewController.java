@@ -992,6 +992,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (mpm.getSongObjectBeingPlayed() != null) {
             for (SongDataObject sdo : sdosToDelete) {
                 if (sdo.getVideoID().equals(mpm.getSongObjectBeingPlayed().getVideoID())) {
+                    //If there user deleted all the songs then no song will be displayed
                     if (Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
                         resetInfoDisplaysAndChangeSong();
                     } else {
@@ -1030,6 +1031,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (buttonClicked.get() == ButtonType.APPLY) {
             sdeController.applyDataChangesToSongDataObject(sdoToEdit);
             updateViewCurrentSongList();
+            updateInfoDisplays();
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             return;
         }
