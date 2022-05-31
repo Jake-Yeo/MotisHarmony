@@ -170,9 +170,7 @@ public class SettingsPageViewController implements Initializable {
                 MainViewRunner.getSceneChanger().switchToLoginPageView();
             } else {
                 addcController.clearPasswordField();
-                Alert a = new Alert(Alert.AlertType.ERROR);
-                a.setContentText("The password you entered is wrong!");
-                a.show();
+                UIHelper.getCustomAlert("The password you entered is wrong!").show();
             }
         }
     }

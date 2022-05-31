@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import model.Accounts;
 import model.AccountsDataManager;
+import model.MusicPlayerManager;
 
 /**
  * FXML Controller class
@@ -34,8 +35,17 @@ public class PlaylistDialogEditorController implements Initializable {
     public void setPlaylistToEdit(String playlistName) {
         playlistNameTextField.setText(playlistName);
     }
+    
+    public String getPlaylistNameTextFieldText() {
+        return playlistNameTextField.getText();
+    }
 
     public void updatePlaylistName(String playlistName) throws Exception {
+        MusicPlayerManager mpm = MusicPlayerManager.getMpmCurrentlyUsing();
+        //Here we update the name of the current song playing if the playlist which is being renamed is the same as the playlist being played
+        if (mpm.getCurrentPlaylistPlayling().equals(playlistName)) {
+            mpm.setCurrentPlaylistPlayling(playlistNameTextField.getText());
+        }
         AccountsDataManager.renamePlaylist(playlistName, playlistNameTextField.getText());
     }
 

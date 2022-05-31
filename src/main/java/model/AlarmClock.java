@@ -47,6 +47,7 @@ public class AlarmClock implements Serializable {
                 if (alarmCurrentlyUsing.timeToGoOff.compareTo(Calendar.getInstance()) <= 0) {
                     //alarmCurrentlyUsing.stopAlarmCheck();
                     try {
+                        //If statement will make sure that nothing happens if the user has not downloaded any songs
                         if (!Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
                             if (MusicPlayerManager.getMpmCurrentlyUsing().getSongObjectBeingPlayed() == null) {
                                 MusicPlayerManager.getMpmCurrentlyUsing().smartPlay();

@@ -32,6 +32,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.Accounts;
 import model.ErrorDataObject;
+import model.UIHelper;
 import model.YoutubeDownloader;
 
 /**
@@ -72,7 +73,6 @@ public class LoginPageViewController implements Initializable {
     @FXML
     private Text pointThreeText;
     @FXML
-    private Text errorText;
 
     private void playFadeAnimation() throws InterruptedException {
         //model.MusicPlayerManager.playMusic();
@@ -116,7 +116,7 @@ public class LoginPageViewController implements Initializable {
     public void login(ActionEvent event) throws IOException, Exception {
         ErrorDataObject errObj = Accounts.login(usernameTextField.getText(), passwordPasswordField.getText());//This line will attempt to login, it will return true if successful
         if (errObj.didErrorOccur()) {
-            setErrorTextViewWithJavafxThread(true, errObj.getErrorMessage());
+            showErrorWithJavafxThread(true, errObj.getErrorMessage());
         }
         usernameTextField.clear();
         passwordPasswordField.clear();
@@ -126,23 +126,23 @@ public class LoginPageViewController implements Initializable {
     public void signup(ActionEvent event) throws IOException, Exception {
         ErrorDataObject errObj = Accounts.signup(usernameTextField.getText(), passwordPasswordField.getText());//This line will attempt to signup, it will return true if successful
         if (errObj.didErrorOccur()) {
-            setErrorTextViewWithJavafxThread(true, errObj.getErrorMessage());
+            showErrorWithJavafxThread(true, errObj.getErrorMessage());
         }
         usernameTextField.clear();
         passwordPasswordField.clear();
     }
 
     @FXML
-    public void setErrorTextViewWithJavafxThread(boolean withJavafxThread, String textToDisplay) {
+    public void showErrorWithJavafxThread(boolean withJavafxThread, String textToDisplay) {
         if (withJavafxThread) {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    errorText.setText(textToDisplay);
+                    UIHelper.getCustomAlert(textToDisplay).show();
                 }
             });
         } else {
-            errorText.setText(textToDisplay);
+            UIHelper.getCustomAlert(textToDisplay).show();
         }
     }
 
@@ -192,7 +192,6 @@ public class LoginPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        errorText.setText("");
         loginSignupMainAnchorPane.setBackground(Background.EMPTY);//This will make the main anchor pane of the login page transparent for aethetics
         loginPageImageView.setImage(new Image(getClass().getResourceAsStream("/images/loginPage.png")));
         Rectangle clip = new Rectangle(

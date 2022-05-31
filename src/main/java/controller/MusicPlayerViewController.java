@@ -915,7 +915,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     public void contextMenuDeletePlaylistOption() throws Exception {
         String selectedItem = playlistList.getSelectionModel().getSelectedItem();
-
+        if (!selectedItem.equals("All Songs")) {
         AccountsDataManager.deletePlaylist(selectedItem);
         if (selectedItem.equals(mpm.getPlaylistCurrentlyViewing())) {
             mpm.setPlaylistCurrentlyViewing("All Songs");
@@ -924,11 +924,14 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         if (selectedItem.equals(mpm.getCurrentPlaylistPlayling()) && !mpm.getCurrentPlaylistPlayling().equals("All Songs")) {
             playPlaylist("All Songs");
-        }
+        }       
         updatePlaylistList();
         mpm.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());
         playlistList.getSelectionModel().select(mpm.getPlaylistCurrentlyViewing());
         updateModelCurrentSongList();
+        } else {
+            UIHelper.getCustomAlert("You cannot delete the \"All Songs\" Playlist!").show();
+        }
     }
 
     public void updatePlaylistToAddToChoiceBox() {
@@ -1043,8 +1046,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         fxmlLoader.setLocation(MainViewRunner.class.getResource("/fxml/PlaylistDialogEditor.fxml"));
         DialogPane playlistDialogEditor = fxmlLoader.load();
         PlaylistDialogEditorController pdeController = fxmlLoader.getController();
-        String playlistSong = playlistList.getSelectionModel().getSelectedItem();
-        pdeController.setPlaylistToEdit(playlistSong);
+        String oldPlaylistName = playlistList.getSelectionModel().getSelectedItem();
+        pdeController.setPlaylistToEdit(oldPlaylistName);
         playlistDialogEditor.getStylesheets().add("/css/customDialogPanes.css");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(playlistDialogEditor);
@@ -1057,9 +1060,21 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
-            pdeController.updatePlaylistName(playlistSong);
-            //We update the playlistList so that the new name of the playlist shows up
-            updatePlaylistList();
+            String newPlaylistName = pdeController.getPlaylistNameTextFieldText();
+            //This if statement will check to make sure that the user isn't trying to rename the playlist with the same name as another playlist
+            if (!Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().keySet().contains(newPlaylistName) && !oldPlaylistName.equals("All Songs")) {
+                pdeController.updatePlaylistName(oldPlaylistName);
+                //We update the playlistList so that the new name of the playlist shows up
+                updatePlaylistList();
+                updateInfoDisplays();
+
+                playlistList.getSelectionModel().clearSelection();
+                playlistList.getSelectionModel().select(newPlaylistName);
+            } else if (oldPlaylistName.equals("All Songs")) {
+                UIHelper.getCustomAlert("You cannot rename the \"All Songs\" Playlist!").show();
+            } else {
+                UIHelper.getCustomAlert("You already have a playlist with that same name!").show();
+            }
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             return;
         }
@@ -1124,7 +1139,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
 
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
-        if (buttonClicked.get() == ButtonType.APPLY && !Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
+        if (buttonClicked.get() == ButtonType.APPLY) {
             AccountsDataManager.saveAlarmClockSettings();
             if (AlarmClock.getAlarmCurrentlyUsing().getEnableAlarm()) {
                 AlarmClock.getAlarmCurrentlyUsing().startAlarmCheck();
@@ -1141,10 +1156,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             } else {
                 AlarmClock.getAlarmCurrentlyUsing().stopAlarmCheck();
             }
-        } else {
-            Alert a = new Alert(AlertType.ERROR);
-            a.setContentText("You need to have downloaded at least one song before using this feature! Changes not saved");
-            a.show();
         }
     }
 

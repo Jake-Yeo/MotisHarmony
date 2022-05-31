@@ -19,9 +19,19 @@
     .dialog-pane:header *.header-panel{
         -fx-background-color: #5c1c48;
     }
+
+    .dialog-pane > .content.label {
+        -fx-font-size: 14px;
+        -fx-font-family: "Quicksand SemiBold";
+        -fx-font-weight: bold;
+        -fx-background-color: #5c1c48;
+        -fx-text-fill: white;
+    }
     .dialog-pane:header *.header-panel *.label{
         -fx-font-size: 18px;
-        -fx-font-style: italic;
+        -fx-font-family: "Quicksand SemiBold";
+        -fx-text-fill: white;
+        -fx-font-weight: bold;
         -fx-fill: #5c1c48;
     }
 
@@ -205,12 +215,12 @@
 
     .scroll-bar .increment-arrow,
     .scroll-bar .decrement-arrow{
-        -fx-shape : " ";    
+        -fx-shape : " ";
     }
 
     .scroll-bar:vertical .increment-arrow,
         .scroll-bar:vertical .decrement-arrow{
-        -fx-shape : " ";    
+        -fx-shape : " ";
     }
 
     .corner {
@@ -244,31 +254,31 @@
     .scroll-bar:horizontal {
         -fx-background-color: transparent;
     }
-    
+
     .context-menu {
-    -fx-background-radius: 1em;
-    -fx-background-color: #f04369;
-    -fx-text-fill: white;
-}
+        -fx-background-radius: 1em;
+        -fx-background-color: #f04369;
+        -fx-text-fill: white;
+    }
 
-.menu-item .label {
-    -fx-font-family: "Quicksand SemiBold";
-    -fx-text-fill: white;
-}
+    .menu-item .label {
+        -fx-font-family: "Quicksand SemiBold";
+        -fx-text-fill: white;
+    }
 
-.menu-item:focused .label {
-    -fx-font-family: "Quicksand SemiBold";
-    -fx-background-color: #ff6e8e;
-    -fx-text-fill: white;
-}
+    .menu-item:focused .label {
+        -fx-font-family: "Quicksand SemiBold";
+        -fx-background-color: #ff6e8e;
+        -fx-text-fill: white;
+    }
 
-.menu-item {
-    -fx-background-radius: 4em;
-    -fx-background-color: #f04369;
-}
+    .menu-item {
+        -fx-background-radius: 4em;
+        -fx-background-color: #f04369;
+    }
 
-.menu-item:focused {
-    -fx-background-radius: 4em;
-    -fx-background-color: #ff6e8e;
-}
+    .menu-item:focused {
+        -fx-background-radius: 4em;
+        -fx-background-color: #ff6e8e;
+    }
 }

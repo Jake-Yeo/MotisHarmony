@@ -167,6 +167,7 @@ public class Accounts implements Serializable {//This class will store account u
                 loggedInAccount.playlistDataObject.createPlaylist("All Songs");
                 loggedInAccount.serializeAccount();//If the username contains "/" or "\\" the serialization will fail, so we put it in a try catch loop.
             } catch (Exception e) {
+                //This error occurs when the username is unavailable file names such as con, we still print the stack trace here since if there is any other errors then we will know
                 e.printStackTrace();
                 Accounts.setLoggedInAccount(null);
                 return new ErrorDataObject(true, "Username is not available");
