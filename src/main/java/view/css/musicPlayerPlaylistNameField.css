@@ -5,12 +5,12 @@
 .text-field  {
     -fx-background-color: transparent;
     -fx-prompt-text-fill: #ffffff7d;
-    -fx-text-fill: #ee4540;
+    -fx-text-fill: white;
     -fx-font-family: "Quicksand SemiBold";
     -fx-background-radius: 0 30px 30px 0;
     -fx-border-color: #bc0c54;
     -fx-border-radius: 0 30px 0 0;
-    -fx-padding:0px 12px 0px 0px;
+    -fx-padding:0px 12px 0px 5px;
     -fx-border-width: 5px;
 }
 

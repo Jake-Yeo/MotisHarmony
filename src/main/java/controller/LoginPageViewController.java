@@ -32,7 +32,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.Accounts;
 import model.ErrorDataObject;
-import model.UIHelper;
+import view.UIHelper;
 import model.YoutubeDownloader;
 
 /**

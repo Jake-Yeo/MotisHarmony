@@ -208,7 +208,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     public static void createPlaylist(String playlistName) throws Exception {
         //If statement makes sure that the user does not accidentally delete a playlist by creating two playlists with the same name
-        if (!playlistName.equals("All Songs") && !Arrays.asList(Accounts.getLoggedInAccount().getPlaylistDataObject().getArrayOfPlaylistNames()).contains(playlistName)) {
+        if (!playlistName.equals(MusicPlayerManager.getAllSongsPlaylistName()) && !Arrays.asList(Accounts.getLoggedInAccount().getPlaylistDataObject().getArrayOfPlaylistNames()).contains(playlistName)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().createPlaylist(playlistName);
         }
     }
@@ -231,7 +231,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
 
     public static void addSongToPlaylist(String playlistName, SongDataObject sdo) throws Exception {
         //If the song is already present in the playlist then remove it
-        if (!playlistName.equals("All Songs") && !Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName).contains(sdo)) {
+        if (!playlistName.equals(MusicPlayerManager.getAllSongsPlaylistName()) && !Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(playlistName).contains(sdo)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, sdo);
         }
     }
@@ -246,20 +246,20 @@ public class AccountsDataManager implements Serializable {//This class will be u
             }
         }
         listOfSongs.removeAll(songsToRemoveFromList);
-        if (!playlistName.equals("All Songs")) {
+        if (!playlistName.equals(MusicPlayerManager.getAllSongsPlaylistName())) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(playlistName, listOfSongs);
         }
     }
 
     public static void deletePlaylist(String playlistName) throws Exception {
         //All Songs is a unique playlist which musn't be editied
-        if (!playlistName.equals("All Songs")) {
+        if (!playlistName.equals(MusicPlayerManager.getAllSongsPlaylistName())) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().deletePlaylist(playlistName);
         }
     }
 
     public static void renamePlaylist(String playlistToRename, String newPlaylistName) throws Exception {
-        if (!playlistToRename.equals("All Songs") && !playlistToRename.equals(newPlaylistName)) {
+        if (!playlistToRename.equals(MusicPlayerManager.getAllSongsPlaylistName()) && !playlistToRename.equals(newPlaylistName)) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().renamePlaylist(playlistToRename, newPlaylistName);
         }
     }
@@ -280,7 +280,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void removeSongFromPlaylist(String playlistName, SongDataObject[] sdoArray) throws Exception {
-        if (!playlistName.equals("All Songs")) {
+        if (!playlistName.equals(MusicPlayerManager.getAllSongsPlaylistName())) {
             Accounts.getLoggedInAccount().getPlaylistDataObject().removeSongFromPlaylist(playlistName, sdoArray);
         }
     }
@@ -296,7 +296,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
                 System.out.println("Saving SDO to account");
                 saveThumbnail(songDataObject.getThumbnailUrl(), songDataObject.getPathToThumbnail());
                 Accounts.getLoggedInAccount().addSongDataObjectToAccount(songDataObject);
-                Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist("All Songs", songDataObject);
+                Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(MusicPlayerManager.getAllSongsPlaylistName(), songDataObject);
             } catch (Exception e) {
                 System.out.println("Error downloading image");
             }

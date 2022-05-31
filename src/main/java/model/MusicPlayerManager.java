@@ -51,6 +51,7 @@ public class MusicPlayerManager {
     private int posInSongHistory = 0;
     private String currentPlaylistPlayling;
     private double sliderVolume = Accounts.getLoggedInAccount().getSettingsObject().getPrefVolume();
+    public static final String allSongsPlaylistName = "🅰🅻🅻 🆂🅾🅽🅶🆂";
 
     public static void setMpmCurrentlyUsing(MusicPlayerManager mpm) {
         mpmCurrentlyUsing = mpm;
@@ -58,6 +59,10 @@ public class MusicPlayerManager {
 
     public static MusicPlayerManager getMpmCurrentlyUsing() {
         return mpmCurrentlyUsing;
+    }
+    
+    public static String getAllSongsPlaylistName() {
+        return allSongsPlaylistName;
     }
 
     public SimpleBooleanProperty getUiUpdater() {

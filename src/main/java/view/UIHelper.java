@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model;
+package view;
 
+import java.awt.Toolkit;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
@@ -40,6 +41,9 @@ public class UIHelper {
         a.getDialogPane().setClip(UIHelper.getDialogPaneClip(a.getDialogPane()));
         a.getDialogPane().getScene().setFill(Color.TRANSPARENT);
         a.setContentText(message);
+        a.setOnShowing(e -> {
+            Toolkit.getDefaultToolkit().beep();
+        });
         return a;
     }
 }

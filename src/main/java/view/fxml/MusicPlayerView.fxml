@@ -91,13 +91,13 @@
          <font>
             <Font name="Quicksand SemiBold" size="12.0" />
          </font></Button>
-      <TextField fx:id="playlistNameTextField" alignment="CENTER" layoutX="127.0" layoutY="52.0" prefHeight="35.0" prefWidth="128.0" promptText="New Playlist Name">
+      <TextField fx:id="playlistNameTextField" alignment="CENTER" layoutX="127.0" layoutY="52.0" prefHeight="35.0" prefWidth="128.0" promptText="New Playlist">
          <font>
             <Font name="Quicksand SemiBold" size="12.0" />
          </font></TextField>
       <ComboBox fx:id="comboBox" layoutX="631.0" layoutY="55.0" onAction="#onComboBoxClicked" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
       <ChoiceBox fx:id="sortChoiceBox" layoutX="631.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
-      <TextField fx:id="searchTextField" alignment="CENTER" layoutX="631.0" layoutY="52.0" onKeyTyped="#searchTextFieldWhenTyped" prefHeight="35.0" prefWidth="200.0" promptText="Enter Search Query" style="-fx-padding: 2 2 2 12;">
+      <TextField fx:id="searchTextField" alignment="CENTER" layoutX="631.0" layoutY="52.0" onKeyTyped="#searchTextFieldWhenTyped" prefHeight="35.0" prefWidth="200.0" promptText="Enter Search Query">
          <font>
             <Font name="Quicksand SemiBold" size="12.0" />
          </font></TextField>

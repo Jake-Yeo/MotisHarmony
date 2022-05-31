@@ -33,7 +33,7 @@ import model.AccountsDataManager;
 import model.AlarmClock;
 import model.Encryption;
 import model.MusicPlayerManager;
-import model.UIHelper;
+import view.UIHelper;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
 

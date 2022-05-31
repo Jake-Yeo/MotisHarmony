@@ -76,7 +76,7 @@ import model.PlaylistMap;
 import model.SettingsObject;
 import model.SleepTimer;
 import model.SongDataObject;
-import model.UIHelper;
+import view.UIHelper;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
 
@@ -262,13 +262,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         } else {
             //If the user does not want to save their song posititon, then the program will just set the playlist to default
             try {
-                AccountsDataManager.setLastPlaylistPlayed("All Songs");
-                mpm.setCurrentPlaylistPlayling("All Songs");
+                AccountsDataManager.setLastPlaylistPlayed(mpm.getAllSongsPlaylistName());
+                mpm.setCurrentPlaylistPlayling(mpm.getAllSongsPlaylistName());
             } catch (Exception ex) {
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            playlistList.getSelectionModel().select("All Songs");
-            mpm.setPlaylistCurrentlyViewing("All Songs");
+            playlistList.getSelectionModel().select(mpm.getAllSongsPlaylistName());
+            mpm.setPlaylistCurrentlyViewing(mpm.getAllSongsPlaylistName());
         }
         mpm.updateSongList(Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(Accounts.getLoggedInAccount().getSettingsObject().getLastPlaylistPlayed()));//This will set the currentSongList with all the songs which have been downloaded so far. This ensures that no errors occur when the user presses play without picking a playlist
 
@@ -701,8 +701,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             songInfoViewList.getItems().add("Song creator: ");
             songInfoViewList.getItems().add("Song duration: ");
             thumbnailImageView.setImage(null);
+            thumbnailAnchorPane.setStyle("-fx-background-color: transparent; -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0px 0px; -fx-border-width: 5px; -fx-background-radius: 33px 33px 0px 0px;");
+
         } else {
-            playPlaylist("All Songs");
+            playPlaylist(mpm.getAllSongsPlaylistName());
         }
     }
 
@@ -915,22 +917,22 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
     public void contextMenuDeletePlaylistOption() throws Exception {
         String selectedItem = playlistList.getSelectionModel().getSelectedItem();
-        if (!selectedItem.equals("All Songs")) {
-        AccountsDataManager.deletePlaylist(selectedItem);
-        if (selectedItem.equals(mpm.getPlaylistCurrentlyViewing())) {
-            mpm.setPlaylistCurrentlyViewing("All Songs");
-            playlistList.getSelectionModel().select("All Songs");
+        if (!selectedItem.equals(mpm.getAllSongsPlaylistName())) {
+            AccountsDataManager.deletePlaylist(selectedItem);
+            if (selectedItem.equals(mpm.getPlaylistCurrentlyViewing())) {
+                mpm.setPlaylistCurrentlyViewing(mpm.getAllSongsPlaylistName());
+                playlistList.getSelectionModel().select(mpm.getAllSongsPlaylistName());
+                updateModelCurrentSongList();
+            }
+            if (selectedItem.equals(mpm.getCurrentPlaylistPlayling()) && !mpm.getCurrentPlaylistPlayling().equals(mpm.getAllSongsPlaylistName())) {
+                playPlaylist(mpm.getAllSongsPlaylistName());
+            }
+            updatePlaylistList();
+            mpm.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());
+            playlistList.getSelectionModel().select(mpm.getPlaylistCurrentlyViewing());
             updateModelCurrentSongList();
-        }
-        if (selectedItem.equals(mpm.getCurrentPlaylistPlayling()) && !mpm.getCurrentPlaylistPlayling().equals("All Songs")) {
-            playPlaylist("All Songs");
-        }       
-        updatePlaylistList();
-        mpm.updateSongList(Accounts.getLoggedInAccount().getListOfSongDataObjects());
-        playlistList.getSelectionModel().select(mpm.getPlaylistCurrentlyViewing());
-        updateModelCurrentSongList();
         } else {
-            UIHelper.getCustomAlert("You cannot delete the \"All Songs\" Playlist!").show();
+            UIHelper.getCustomAlert("You cannot delete the \"" + mpm.getAllSongsPlaylistName() + "\" Playlist!").show();
         }
     }
 
@@ -941,19 +943,24 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     }
 
     public void deleteSongFromPlaylistOption() throws Exception {
-        if (playlistList.getSelectionModel().getSelectedItem() != null) {
-            AccountsDataManager.removeSongFromPlaylist(playlistList.getSelectionModel().getSelectedItem(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
+        String playlistToRemoveFrom = playlistList.getSelectionModel().getSelectedItem();
+        if (!playlistToRemoveFrom.equals(mpm.getAllSongsPlaylistName())) {
+            if (playlistToRemoveFrom != null) {
+                AccountsDataManager.removeSongFromPlaylist(playlistToRemoveFrom, mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
+            } else {
+                //This else statement should only run when the user does not click on any playlists during startup
+                AccountsDataManager.removeSongFromPlaylist(mpm.getCurrentPlaylistPlayling(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
+
+            }
+
+            //This if statement will stop the musicPlayer if the playlist which is currently playing has had all its songs removed by the user.
+            if (playlistToRemoveFrom.equals(mpm.getCurrentPlaylistPlayling()) && Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(mpm.getCurrentPlaylistPlayling()).isEmpty()) {
+                resetInfoDisplaysAndChangeSong();
+            }
+            updateModelCurrentSongList();
         } else {
-            //This else statement should only run when the user does not click on any playlists during startup
-            AccountsDataManager.removeSongFromPlaylist(mpm.getCurrentPlaylistPlayling(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
-
+            UIHelper.getCustomAlert("You cannot remove songs from \"" + mpm.getAllSongsPlaylistName() + "\"!").show();
         }
-
-        //This if statement will stop the musicPlayer if the playlist which is currently playing has had all its songs removed by the user.
-        if (playlistList.getSelectionModel().getSelectedItem().equals(mpm.getCurrentPlaylistPlayling()) && Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(mpm.getCurrentPlaylistPlayling()).isEmpty()) {
-            resetInfoDisplaysAndChangeSong();
-        }
-        updateModelCurrentSongList();
     }
 
     public void playPlaylist(String playlistName) throws Exception {
@@ -1062,7 +1069,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (buttonClicked.get() == ButtonType.APPLY) {
             String newPlaylistName = pdeController.getPlaylistNameTextFieldText();
             //This if statement will check to make sure that the user isn't trying to rename the playlist with the same name as another playlist
-            if (!Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().keySet().contains(newPlaylistName) && !oldPlaylistName.equals("All Songs")) {
+            if (!Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().keySet().contains(newPlaylistName) && !oldPlaylistName.equals(mpm.getAllSongsPlaylistName())) {
                 pdeController.updatePlaylistName(oldPlaylistName);
                 //We update the playlistList so that the new name of the playlist shows up
                 updatePlaylistList();
@@ -1070,8 +1077,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
                 playlistList.getSelectionModel().clearSelection();
                 playlistList.getSelectionModel().select(newPlaylistName);
-            } else if (oldPlaylistName.equals("All Songs")) {
-                UIHelper.getCustomAlert("You cannot rename the \"All Songs\" Playlist!").show();
+            } else if (oldPlaylistName.equals(mpm.getAllSongsPlaylistName())) {
+                UIHelper.getCustomAlert("You cannot rename the \"" + mpm.getAllSongsPlaylistName()+ "\" Playlist!").show();
             } else {
                 UIHelper.getCustomAlert("You already have a playlist with that same name!").show();
             }
@@ -1315,8 +1322,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             sortPlaylistList(sortPlaylistChoiceBox.getSelectionModel().getSelectedItem());
         }
         //Make sure that All Songs is always at the very top of the list
-        playlistList.getItems().remove("All Songs");
-        playlistList.getItems().add(0, "All Songs");
+        playlistList.getItems().remove(mpm.getAllSongsPlaylistName());
+        playlistList.getItems().add(0, mpm.getAllSongsPlaylistName());
         playlistList.getSelectionModel().select(itemSelected);
     }
 
