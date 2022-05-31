@@ -99,6 +99,8 @@ public class DownloadPageViewController implements Initializable {
     private Label songNameDownloadingLabel;
     @FXML
     private Text gettingPlaylistPercentageText;
+    @FXML
+    private Text statusText;
 
     private void retryDownloadOption() {
         new Thread(
@@ -210,6 +212,20 @@ public class DownloadPageViewController implements Initializable {
         downloadErrorList.getStylesheets().add("/css/customListView.css");
         videoInfoList.getStylesheets().add("/css/customScrollBar.css");
         videoInfoList.getStylesheets().add("/css/customListView.css");
+
+        //We need set up the status listener here so that if we change the status in the if statement chunk below the status is updated
+        ytd.getStatus().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String oldString, String newString) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        statusText.setText("Status: " + newString);
+                    }
+                });
+            }
+        });
+
         if (Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue() && !Accounts.getLoggedInAccount().getSongsInQueueList().isEmpty() && Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue()) {
             ytd.getYoutubeUrlDownloadQueueList().addAll(Accounts.getLoggedInAccount().getSongsInQueueList());
             updateDownloadQueueListViewWithJavafxThread(true);

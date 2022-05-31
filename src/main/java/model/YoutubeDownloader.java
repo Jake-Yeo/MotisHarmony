@@ -48,7 +48,7 @@ import ws.schild.jave.EncoderException;
  * @author Jake Yeo
  */
 public class YoutubeDownloader {
-    
+
     private static YoutubeDownloader ytdCurrentlyUsing;
     private AudioConverter ac = new AudioConverter();
     private WebDriver driver;
@@ -58,6 +58,7 @@ public class YoutubeDownloader {
     private boolean isConvertingAudio = false;
     private boolean stopDownloading = false;
     private boolean stopAllDownloadingProcesses = false;
+    private SimpleStringProperty status = new SimpleStringProperty();
     private SimpleDoubleProperty downloadPercentage = new SimpleDoubleProperty();
     private SimpleDoubleProperty conversionPercentage = new SimpleDoubleProperty();
     private SimpleStringProperty songNameDownloading = new SimpleStringProperty();
@@ -74,15 +75,15 @@ public class YoutubeDownloader {
     private ObservableList<SongDataObject> youtubeUrlDownloadQueueList = FXCollections.observableArrayList();
     private ObservableList<ErrorDataObject> errorList = FXCollections.observableArrayList();
     private YoutubeVideoPageParser yvpp = new YoutubeVideoPageParser();
-    
+
     public static YoutubeDownloader getYtdCurrentlyUsing() {
         return ytdCurrentlyUsing;
     }
-    
+
     public static void setYtdCurrentlyUsing(YoutubeDownloader ytd) {
         ytdCurrentlyUsing = ytd;
     }
-    
+
     private void setupChromeDriver() {
         //Set the Path of Executable Browser Driver
         //System.setProperty("webdriver.chrome.driver", "chromedriver.exe");//We probably don't need this anymore because we automatically get the webdriver below
@@ -105,51 +106,55 @@ public class YoutubeDownloader {
             errorList.add(new ErrorDataObject(true, "You aren't connected to wifi!"));
         }
     }
-    
+
     public YoutubeVideoPageParser getYoutubeVideoPageParserUsing() {
         return yvpp;
     }
-    
+
     public SimpleDoubleProperty getPlaylistGettingPercentage() {
         return playlistGettingPercentage;
     }
-    
+
+    public SimpleStringProperty getStatus() {
+        return status;
+    }
+
     public AudioConverter getAudioEncoderUsing() {
         return ac;
     }
-    
+
     public boolean isConvertingAudio() {
         return isConvertingAudio;
     }
-    
+
     public void setIsConvertingAudio(boolean tf) {
         isConvertingAudio = tf;
     }
-    
+
     public void setRemoveFirstLink(boolean tf) {
         removeFirstLink = tf;
     }
-    
+
     public SimpleDoubleProperty getDownloadPercentage() {
         return downloadPercentage;
     }
-    
+
     public SimpleDoubleProperty getConversionPercentage() {
         return conversionPercentage;
     }
-    
+
     public SimpleStringProperty getSongNameDownloading() {
         return songNameDownloading;
     }
-    
+
     public boolean getWifiConnected() {
         return wifiConnected;
     }
-    
+
     public void setWifiConnected(boolean tf) {
         wifiConnected = tf;
     }
-    
+
     private void quitChromeDriver() {
         try {
             driver.quit();
@@ -157,15 +162,15 @@ public class YoutubeDownloader {
             System.err.println("Driver not properly initialized");
         }
     }
-    
+
     public boolean getStopAllDownloadingProcesses() {
         return stopAllDownloadingProcesses;
     }
-    
+
     public void setStopAllDownloadingProcesses(boolean tf) {
         stopAllDownloadingProcesses = tf;
     }
-    
+
     private void addYoutubeUrlsToDownloadQueue(String youtubeUrl) throws IOException {//Since we allow the user to input as many playlists as they want to download, we need a way to manage and organize downloads so that we don't end up with corrupted audio downloads
         youtubeUrl = yvpp.getRegularYoutubeUrl(youtubeUrl);//makes sure that any variations of one youtube url will always be turned into one variation to allow for url comparison so that duplicated urls are not present withing the downloader queue
         String youtubeId = yvpp.getYoutubeVideoID(youtubeUrl);//Its easier to compare videos with ids rather than with urls
@@ -181,19 +186,19 @@ public class YoutubeDownloader {
             errorList.add(new ErrorDataObject(true, youtubeUrl + " has already been added to the download queue, or has already been downloaded", youtubeUrl));
         }
     }
-    
+
     private boolean isAppDownloadingFromDownloadQueue() {
         return isChromeDriverActive;
     }
-    
+
     private void setIsChromeDriverActive(boolean tf) {
         isChromeDriverActive = tf;
     }
-    
+
     public ObservableList<SongDataObject> getYoutubeUrlDownloadQueueList() {
         return youtubeUrlDownloadQueueList;
     }
-    
+
     public LinkedList<String> getYoutubeUrlDownloadQueueListVideoIds() {
         LinkedList<String> idList = new LinkedList<>();
         for (SongDataObject sdo : youtubeUrlDownloadQueueList) {
@@ -201,11 +206,11 @@ public class YoutubeDownloader {
         }
         return idList;
     }
-    
+
     public ObservableList<ErrorDataObject> getErrorList() {
         return errorList;
     }
-    
+
     private void addSongsFromPlaylistToDownloadQueue(String youtubePlaylistLink) {
         if (yvpp.isGettingPlaylist() == false) {
             isPlaylistUrlGetterCurrentlyGettingUrls = true;
@@ -251,7 +256,7 @@ public class YoutubeDownloader {
             return;
         }
     }
-    
+
     private boolean isPlaylistUrlGetterCurrentlyGettingUrls() {
         return isPlaylistUrlGetterCurrentlyGettingUrls;
     }
@@ -267,7 +272,7 @@ public class YoutubeDownloader {
         }
         return netData;
     }
-    
+
     private String obtainYoutubeUrlAudioSource(String youtubeUrl) throws MalformedURLException, IOException {//Gets the audio source of a youtube video and returns it
         try {
             driver.get(youtubeUrl);
@@ -359,9 +364,9 @@ public class YoutubeDownloader {
             setWifiConnected(false);
             return "No Wifi";
         }
-        
+
     }
-    
+
     private void addYoutubeLinkToDownloadQueue(String youtubeUrl) throws IOException {
         if (yvpp.isLinkAPlaylist(youtubeUrl)) {
             addSongsFromPlaylistToDownloadQueue(youtubeUrl);
@@ -370,7 +375,7 @@ public class YoutubeDownloader {
             addYoutubeVideoUrlToDownloadQueue(youtubeUrl);
         }
     }
-    
+
     public void addYoutubeLinkToDownloadQueueAndStartDownload(String youtubeUrl) {
         try {
             ErrorDataObject errorData = yvpp.isUrlValid(youtubeUrl);
@@ -391,7 +396,7 @@ public class YoutubeDownloader {
             Logger.getLogger(DownloadPageViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void addYoutubeVideoUrlToDownloadQueue(String youtubeUrl) throws IOException {//make private
         youtubeUrl = yvpp.getRegularYoutubeUrl(youtubeUrl);//The url the user pastes in may be of many varaition, we use this method to turn many variations of a url into just one url. This lets us compare urls in the download manager so that we don't add two urls of the same video in the download manager.
         String youtubeId = yvpp.getYoutubeVideoID(youtubeUrl);//We compare with video ids because it's easier
@@ -401,11 +406,11 @@ public class YoutubeDownloader {
             errorList.add(new ErrorDataObject(true, youtubeUrl + " has already been added to the download queue, or has already been downloaded", youtubeUrl));
         }
     }
-    
+
     public void setStopDownloading(boolean tf) {
         stopDownloading = tf;
     }
-    
+
     private void downloadYoutubeVideoUrl(SongDataObject youtubeSongData) throws MalformedURLException, IOException, EncoderException { //this will download and obtain any youtube audio source links given to it.
         URL downloadURL = null;
         boolean skipAudioConversion = false;
@@ -414,7 +419,7 @@ public class YoutubeDownloader {
             //We add range=0-99999999999999999999 to the url below to bypass throttling which speeds up download times by nearly 95 times!
             System.out.println(yvpp.extractMaxByteRange(possibleYoutubeUrl));
             int maxByteRange = yvpp.extractMaxByteRange(possibleYoutubeUrl);
-            
+
             int count = 0;
             long bytesDownloaded = 0;
             long timeStart = System.currentTimeMillis();
@@ -432,7 +437,7 @@ public class YoutubeDownloader {
                     String urlToDownload = possibleYoutubeUrl + "range=" + bytesToStart + "-" + (bytesToStart + BYTE_AMT_FOR_3_MIN_VID);
                     downloadURL = new URL(urlToDownload);//Out of range happens when mime=audio cannot be found
                     System.out.println(urlToDownload);
-                    
+
                     BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());
                     int i = 0;
                     System.out.println("Stop downloading is " + stopDownloading);
@@ -456,7 +461,7 @@ public class YoutubeDownloader {
                         return;
                     }
                 }
-                
+
             } catch (IOException ex) {
                 System.err.print("error downloading song");
             }
@@ -474,7 +479,7 @@ public class YoutubeDownloader {
                 errorList.add(new ErrorDataObject(true, "Download could not be completed as wifi is disconnected"));
                 setWifiConnected(false);
             }
-            
+
         } else if (possibleYoutubeUrl.equals("error")) {
             errorList.add(new ErrorDataObject(true, youtubeSongData.getVideoUrl() + " could not be downloaded at this time, please try again later or find an alternative link", youtubeSongData.getVideoUrl()));
             System.err.print("Failed to download this song");
@@ -483,8 +488,9 @@ public class YoutubeDownloader {
             setWifiConnected(false);
         }
     }
-    
+
     public void downloadSongsFromDownloadQueue() throws FileNotFoundException, IOException, EncoderException {//We put this method here so that we don't need a while loop to update the downloadQueueList
+        status.set("Downloading");
         setIsChromeDriverActive(true); // this will make sure that the chrome driver isn't restarted multiple times in order to increase download speed.
         setupChromeDriver();
         while (!youtubeUrlDownloadQueueList.isEmpty() && !stopAllDownloadingProcesses && wifiConnected) {//The user may continue to add urls to the download queue list, so we continue to download untill the download queue is empty
@@ -508,8 +514,12 @@ public class YoutubeDownloader {
         }
         if (!wifiConnected) {
             errorList.add(new ErrorDataObject(true, "You aren't connected to wifi!"));
+            status.set("Download Paused");
         }
         quitChromeDriver();//Finally, when all the youtube videos have been downloaded, exit the download queue
         setIsChromeDriverActive(false);
+        if (wifiConnected) {
+            status.set("Finished Downloading Queue");
+        }
     }
 }

@@ -109,5 +109,10 @@
             <Font name="Quicksand SemiBold" size="11.0" />
          </font>
       </Label>
+      <Text fx:id="statusText" fill="#ee4540" layoutX="296.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status:" wrappingWidth="228.31200408935547">
+         <font>
+            <Font name="Quicksand SemiBold" size="12.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

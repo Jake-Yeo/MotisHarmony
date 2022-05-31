@@ -956,6 +956,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             //This if statement will stop the musicPlayer if the playlist which is currently playing has had all its songs removed by the user.
             if (playlistToRemoveFrom.equals(mpm.getCurrentPlaylistPlayling()) && Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(mpm.getCurrentPlaylistPlayling()).isEmpty()) {
                 resetInfoDisplaysAndChangeSong();
+                //The if statement below will play another song from the playlist if the current playlist had all its songs removed by the user and if the song which was playing was removed from the playlist
+            } else if (playlistToRemoveFrom.equals(mpm.getCurrentPlaylistPlayling()) && Arrays.asList(mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices())).contains(mpm.getSongObjectBeingPlayed())) {
+                mpm.smartPlay();
             }
             updateModelCurrentSongList();
         } else {
@@ -1078,7 +1081,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 playlistList.getSelectionModel().clearSelection();
                 playlistList.getSelectionModel().select(newPlaylistName);
             } else if (oldPlaylistName.equals(mpm.getAllSongsPlaylistName())) {
-                UIHelper.getCustomAlert("You cannot rename the \"" + mpm.getAllSongsPlaylistName()+ "\" Playlist!").show();
+                UIHelper.getCustomAlert("You cannot rename the \"" + mpm.getAllSongsPlaylistName() + "\" Playlist!").show();
             } else {
                 UIHelper.getCustomAlert("You already have a playlist with that same name!").show();
             }
