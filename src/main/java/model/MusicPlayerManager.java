@@ -90,7 +90,7 @@ public class MusicPlayerManager {
         ObservableList<SongDataObject> currentSongListToUpdateTo = FXCollections.observableArrayList();
         LinkedList<SongDataObject> listToSearchThrough = Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(getPlaylistCurrentlyViewing());
         for (SongDataObject sdo : listToSearchThrough) {
-            if (sdo.getTitle().toLowerCase().contains(searchQuery) || sdo.getChannelName().toLowerCase().contains(searchQuery) || sdo.getVideoID().contains(searchQuery)) {
+            if (sdo.getTitle().toLowerCase().contains(searchQuery) || sdo.getChannelName().toLowerCase().contains(searchQuery) || sdo.getVideoID().toLowerCase().contains(searchQuery)) {
                 currentSongListToUpdateTo.add(sdo);
             }
         }
