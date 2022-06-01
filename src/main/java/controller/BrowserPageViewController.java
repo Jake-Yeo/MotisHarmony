@@ -162,6 +162,11 @@ public class BrowserPageViewController implements Initializable {
         }).start();
     }
 
+    public void reload() {
+        String currentWebLocation = browserWebView.getEngine().getLocation();
+        browserWebView.getEngine().load(currentWebLocation);
+    }
+    
     public void setUpContextMenu() {
         MenuItem downloadLink = new MenuItem("Download Video Audio");
         downloadLink.setOnAction(e -> {
@@ -173,7 +178,7 @@ public class BrowserPageViewController implements Initializable {
         });
 
         MenuItem reload = new MenuItem("Reload");
-        reload.setOnAction(e -> browserWebView.getEngine().reload());
+        reload.setOnAction(e -> reload());
 
         MenuItem goBack = new MenuItem("Go Back");
         goBack.setOnAction(e -> goBack());
