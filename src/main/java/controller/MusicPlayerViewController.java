@@ -651,7 +651,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
             goToNextSong();
         }
-
+        updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
     }
 
     private void goToNextSong() throws Exception {
@@ -688,7 +688,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             init();//initalize again because a new MediaPlayer is made
             updatePlayerDisplays();
         }
-        updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
     }
 
     private void resetInfoDisplaysAndChangeSong() throws Exception {
