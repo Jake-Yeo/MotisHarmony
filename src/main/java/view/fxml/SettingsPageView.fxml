@@ -39,5 +39,10 @@
          </font></RadioButton>
       <Button fx:id="deleteAccountButton" layoutX="771.0" layoutY="540.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showDeletionAccountDialogBox" prefHeight="25.0" prefWidth="101.0" text="Delete Account" />
       <Button fx:id="infoButton" layoutX="5.0" layoutY="498.0" mnemonicParsing="false" onAction="#showInfoDialogBox" prefHeight="25.0" prefWidth="39.0" text="Info" />
+      <RadioButton fx:id="displaySongOnClickRadioButton" layoutX="21.0" layoutY="189.0" mnemonicParsing="false" onAction="#updateDisplaySongOnClick" text="Display Song On Click" textFill="#ee4540">
+         <font>
+            <Font name="Quicksand SemiBold" size="12.0" />
+         </font>
+      </RadioButton>
    </children>
 </AnchorPane>

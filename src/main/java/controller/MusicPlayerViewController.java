@@ -173,10 +173,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songInfoViewList.getStylesheets().add("/css/customScrollBar.css");
         songInfoViewList.getStylesheets().add("/css/customListView.css");
 
-        if (mpm.getSongObjectBeingPlayed() != null) {
-            updateInfoDisplays();
-        }
-
         if (mpm.getMediaPlayer() != null) {
             volumeSlider.setValue(mpm.getVolume());
             seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> mpm.getMediaPlayer().getTotalDuration().toSeconds(), mpm.getMediaPlayer().totalDurationProperty()));
@@ -258,7 +254,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             playButton.setStyle("-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("▶");
             init();
-            updateInfoDisplays();
+            updatePlayerDisplays();
         } else {
             //If the user does not want to save their song posititon, then the program will just set the playlist to default
             try {
@@ -369,7 +365,8 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
             init();
-            updateInfoDisplays();
+            updatePlayerDisplays();
+            updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
             mpm.pauseSong();
         }
 //This block of code below will automatically sort the songList on startup.
@@ -395,12 +392,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             @Override
             public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
                 init();
-                updateInfoDisplays();
+                updatePlayerDisplays();
                 mpm.pauseSong();
                 mpm.resumeSong();
             }
         });
-
+        if (mpm.getSongObjectBeingPlayed() != null) {
+            updatePlayerDisplays();
+            updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
+        }
     }
 
     @FXML
@@ -561,7 +561,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         //This code below initalizes the MusicPlayer
         mpm.smartPlay();
         init();//initalize again because a new MediaPlayer is made
-        updateInfoDisplays();
+        updatePlayerDisplays();
         mpm.setMusicPlayerInitialized(true);
         mpm.setPaused(false);
         playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
@@ -596,7 +596,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playButton.setText("⏸︎");
         mpm.setPaused(false);
         init();//initalize again because a new MediaPlayer is made
-        updateInfoDisplays();
+        updatePlayerDisplays();
     }
 
     @FXML
@@ -634,7 +634,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 //Since the looping code in in the manager, we just need to run code from the manager and update the UI
                 mpm.nextOrPrevSong();
                 init();//initalize again because a new MediaPlayer is made
-                updateInfoDisplays();
+                updatePlayerDisplays();
             }
         }
     }
@@ -684,7 +684,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             //Since the looping code in in the manager, we just need to run code from the manager and update the UI
             mpm.nextOrPrevSong();
             init();//initalize again because a new MediaPlayer is made
-            updateInfoDisplays();
+            updatePlayerDisplays();
         }
     }
 
@@ -708,17 +708,21 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
     }
 
-    private void updateInfoDisplays() {
-        //This code will update the UI with data of the current song playing
-        songInfoViewList.getItems().clear();
-        songInfoLabel.setText("Title: " + mpm.getSongObjectBeingPlayed().getTitle());
-        artistNameLabel.setText("Artist: " + mpm.getSongObjectBeingPlayed().getChannelName());
-        playlistPlayingLabel.setText("Playlist Playing: " + mpm.getCurrentPlaylistPlayling());
-        songInfoViewList.getItems().add("Song name: " + mpm.getSongObjectBeingPlayed().getTitle());
-        songInfoViewList.getItems().add("Song creator: " + mpm.getSongObjectBeingPlayed().getChannelName());
-        songInfoViewList.getItems().add("Song duration: " + mpm.getSongObjectBeingPlayed().getVideoDuration());
+    @FXML
+    private void updateSongInfoDisplaysWhenClickPlayerText() {
+        if (mpm.getSongObjectBeingPlayed() != null) {
+            updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
+        }
+    }
 
-        Image imageToDisplay = new Image(mpm.getSongObjectBeingPlayed().getPathToThumbnail());
+    //This is for updating the song info displays, the one which has all the song info in a viewlist, it also contains the thumbnail
+    private void updateSongInfoDisplays(SongDataObject sdo) {
+        songInfoViewList.getItems().clear();
+        songInfoViewList.getItems().add("Song name: " + sdo.getTitle());
+        songInfoViewList.getItems().add("Song creator: " + sdo.getChannelName());
+        songInfoViewList.getItems().add("Song duration: " + sdo.getVideoDuration());
+
+        Image imageToDisplay = new Image(sdo.getPathToThumbnail());
         double w = 0;
         double h = 0;
 
@@ -740,6 +744,19 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
 
         thumbnailImageView.setImage(imageToDisplay);
         thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0px 0px; -fx-border-width: 5px; -fx-background-radius: 33px 33px 0px 0px;");
+
+    }
+
+    //This is for updating the player display. Ex: The one which contains the play, next, previous buttons etc. This would also include the text label "Playlist playing"
+    private void updatePlayerDisplays() {
+        //This code will update the UI with data of the current song playing
+        songInfoLabel.setText("Title: " + mpm.getSongObjectBeingPlayed().getTitle());
+        artistNameLabel.setText("Artist: " + mpm.getSongObjectBeingPlayed().getChannelName());
+        playlistPlayingLabel.setText("Playlist Playing: " + mpm.getCurrentPlaylistPlayling());
+
+        if (!Accounts.getLoggedInAccount().getSettingsObject().getDisplaySongOnClick()) {
+            updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
+        }
     }
 
     private String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
@@ -787,7 +804,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 try {
                     mpm.smartPlay();
                     init();
-                    updateInfoDisplays();
+                    updatePlayerDisplays();
                 } catch (IOException ex) {
                     Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
@@ -801,7 +818,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
             playButton.setText("⏸︎");
             init();
-            updateInfoDisplays();
+            updatePlayerDisplays();
             System.out.println("Setting the pause button to play");
         });
 
@@ -814,7 +831,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 //probably don't need the init() method below
                 init();
                 if (mpm.getSongObjectBeingPlayed() != null) {
-                    updateInfoDisplays();
+                    updatePlayerDisplays();
                 }
                 System.out.println("Setting the pause button to paused");
             }
@@ -824,7 +841,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             public void run() {
                 mpm.resetPlayerOnError();
                 init();
-                updateInfoDisplays();
+                updatePlayerDisplays();
                 mpm.getMediaPlayer().setOnPlaying(() -> {
                     mpm.getMediaPlayer().setStartTime(Duration.ZERO);
                     mpm.getMediaPlayer().setOnPlaying(null);
@@ -836,7 +853,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         mpm.getMediaPlayer().setOnHalted(() -> {
             mpm.resetPlayerOnError();
             init();
-            updateInfoDisplays();
+            updatePlayerDisplays();
             mpm.getMediaPlayer().setOnPlaying(() -> {
                 mpm.getMediaPlayer().setStartTime(Duration.ZERO);
                 mpm.getMediaPlayer().setOnPlaying(null);
@@ -907,7 +924,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
         playButton.setText("⏸︎");
         init();//initalize again because a new MediaPlayer is made
-        updateInfoDisplays();
+        updatePlayerDisplays();
     }
 
     public void contextMenuAddToPlaylistOption() {
@@ -987,7 +1004,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 mpm.playThisPlaylist(playlistName);
                 mpm.nextOrPrevSong();
                 init();//initalize again because a new MediaPlayer is made
-                updateInfoDisplays();
+                updatePlayerDisplays();
                 mpm.setMusicPlayerInitialized(true);
                 mpm.setPaused(false);
                 playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
@@ -1056,7 +1073,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         if (buttonClicked.get() == ButtonType.APPLY) {
             sdeController.applyDataChangesToSongDataObject(sdoToEdit);
             updateViewCurrentSongList();
-            updateInfoDisplays();
+            updatePlayerDisplays();
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             return;
         }
@@ -1088,7 +1105,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 pdeController.updatePlaylistName(oldPlaylistName);
                 //We update the playlistList so that the new name of the playlist shows up
                 updatePlaylistList();
-                updateInfoDisplays();
+                updatePlayerDisplays();
 
                 playlistList.getSelectionModel().clearSelection();
                 playlistList.getSelectionModel().select(newPlaylistName);
@@ -1306,6 +1323,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 songListContextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
             } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
                 playSelectedSongOption();
+            } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 1) {
+                if (Accounts.getLoggedInAccount().getSettingsObject().getDisplaySongOnClick()) {
+                    updateSongInfoDisplays(mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
+                }
             } else {
                 songListContextMenu.hide();
             }

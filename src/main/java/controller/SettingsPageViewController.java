@@ -58,6 +58,8 @@ public class SettingsPageViewController implements Initializable {
     @FXML
     private RadioButton stayLoggedInRadioButton;
     @FXML
+    private RadioButton displaySongOnClickRadioButton;
+    @FXML
     private Button deleteAccountButton;
     @FXML
     private ImageView settingsPageBackgroundImageView;
@@ -91,6 +93,7 @@ public class SettingsPageViewController implements Initializable {
         saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
         savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
         stayLoggedInRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn());
+        displaySongOnClickRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getDisplaySongOnClick());
     }
 
     @FXML
@@ -134,6 +137,11 @@ public class SettingsPageViewController implements Initializable {
     @FXML
     private void updateStayLoggedIn(ActionEvent event) throws Exception {
         AccountsDataManager.setStayLoggedIn(stayLoggedInRadioButton.isSelected());
+    }
+
+    @FXML
+    private void updateDisplaySongOnClick(ActionEvent event) throws Exception {
+        AccountsDataManager.setUpdateDisplaySongOnClick(displaySongOnClickRadioButton.isSelected());
     }
 
     @FXML

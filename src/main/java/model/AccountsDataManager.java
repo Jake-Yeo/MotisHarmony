@@ -146,6 +146,10 @@ public class AccountsDataManager implements Serializable {//This class will be u
         Accounts.getLoggedInAccount().getSettingsObject().setSaveDownloadQueue(tf);
     }
 
+    public static void setUpdateDisplaySongOnClick(boolean tf) throws Exception {
+        Accounts.getLoggedInAccount().getSettingsObject().setDisplaySongOnClick(tf);
+    }
+
     public static void setStayLoggedIn(boolean tf) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setStayLoggedIn(tf);
     }
