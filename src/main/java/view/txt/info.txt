@@ -4,9 +4,9 @@ MotisHarmony is a program which I made for my grade 12 highschool capstone. This
 
 Unlike other technologies such as online youtube downloaders, my program is able to bypass youtubes download throttling and cipher signatures. Since I use a headless driver to obtain the audio source from the youtube link.
 
-Now you might be wondering, why not just use one of the many other youtube downloaders on github such as youtube-dl? Well it's because these programs instead obtain the audio source from a youtube link by obtaining its cipher signature and then decoding it. To do that, they must obtain a .js script from the webpage which they must then interpret to decode this cipher signature. What makes this method much harder is that Youtube knows that people are figuring out ways to download youtube audio and is trying to make it more difficult for such downloads to occur. What ends up happening is a cat and mouse game where Youtube updates its webpage to make it harder for programmers to find and acess its .js scripts which decodes their cipher signatures. This results in continous updates from youtube-dl.
+Now you might be wondering, why not just use one of the many other youtube downloaders on github such as youtube-dl? Well it's because these programs instead obtain the audio source from a youtube link by obtaining its cipher signature and then decoding it. To do that, they must first  obtain a .js script from the webpage which decodes this signature cipher.  What makes this method much harder to do is the fact that Youtube knows what people are trying to do. So what Youtube does to try to hide this .js script is by giving the script and variables within that script abstract names making it much harder for coders to parse the information from that .js file. In addition, Youtube also updates its website constantly, changing and implementing the way Youtube works so that it's harder for people to decipher signature ciphers. What ends up happening is a cat and mouse game where Youtube updates its webpage to make it harder for programmers to find and acess its .js scripts which decodes their cipher signatures. This results in continous updates from Youtube-dl.
 
-not done plz update and make grammar better
+Because my program instead gets the audio source from Youtube videos using Chrome rather than through Youtube we are able to bypass all of Youtubes methods to prevent users from downloading Youtube videos. In return, I was able to create a Youtube downloader which requires less maintnece and updates than a program such as Youtube-dl.
 :::::::::::::::::::::::::::::::::::
 Resourses which have helped me complete my project
 :::::::::::::::::::::::::::::::::::
@@ -127,4 +127,41 @@ What is the sleep timer and how do I use it?
 The sleep timer is a timer which will pause the music player once it reaches zero.
 
 You can use it by going to the music player page and clicking on the button which looks like this "⏲".
-blah blah blah
+
+From there a dialog will appear displaying these buttons 
+"Start Timer"
+"Set Hour"
+"Set Minute"
+"Cancel"
+"Apply"
+
+What do these buttons do?
+"Start Timer":
+When clicked, the text of this button will change to "Stop Timer" and the Sleep Timer will start when you press the "Apply" button.
+
+"Set Hour":
+This will set how many hours you would like your Sleep Timer to count down from.
+
+"Set Minute":
+This will set how many additional minutes along with the hours you've selected, you would like your Sleep Timer to count down from
+
+"Cancel":
+This will cancel the changes you've made to the Sleep Timer
+
+"Apply":
+This will apply the changes you've made to the Sleep Timer. If you chose to enable the Sleep Timer, then the Sleep Timer will start once you click this button.
+:::::::::::::::::::::::::::::::::::
+What problem am I trying to solve with my program?
+:::::::::::::::::::::::::::::::::::
+Like iron rods built into a concrete floor, so too is music the support for our cultures,
+relationships and core identities. It’s what allows us to experience and express our
+emotions. That’s why companies such as Google provide us with services such as
+Spotify and Youtube, to allow us easy access to music which is woven into our daily
+lives. However, when I use these services, I find that the music I want to listen to isn't
+available on Spotify, and the music player on YouTube is designed to pause the video
+after a specific period of time to persuade the user to upgrade to a premium version of
+Youtube. As a result, I began using alternative services like Bolt and Documents by
+Readdle. Unfortunately, more issues occurred; downloading and finding songs saved in
+my YouTube playlists was difficult and time-consuming. And with Bolt, there was an
+inability to create playlists without duplicating music files which took up unnecessary
+space on the device you were using.
