@@ -33,6 +33,7 @@ import model.AccountsDataManager;
 import model.AlarmClock;
 import model.Encryption;
 import model.MusicPlayerManager;
+import model.SleepTimer;
 import view.UIHelper;
 import model.YoutubeDownloader;
 import view.MainViewRunner;
@@ -94,6 +95,10 @@ public class SettingsPageViewController implements Initializable {
 
     @FXML
     private void logout(ActionEvent event) throws Exception {
+        //Stop the sleep timer from checking the time
+        SleepTimer.getTimerCurrentlyUsing().stopTimerCheck();
+        //We make sure that the sleepTimer is no longer enabled since there's no point in having a timer that starts when the app starts
+        Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer().setEnableTimer(false);
         AccountsDataManager.saveAllSettings();
         MusicPlayerManager.getMpmCurrentlyUsing().stopDisposeMediaPlayer();
         AccountsDataManager adm = new AccountsDataManager();

@@ -1137,6 +1137,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             SleepTimer.getTimerCurrentlyUsing().setHour(setttingSleepalarm.getHour());
             SleepTimer.getTimerCurrentlyUsing().setMinute(setttingSleepalarm.getMinute());
             SleepTimer.getTimerCurrentlyUsing().setEnableTimer(setttingSleepalarm.getEnableTimer());
+            if (SleepTimer.getTimerCurrentlyUsing().getEnableTimer()) {
+                SleepTimer.getTimerCurrentlyUsing().startTimerCheck();
+                System.out.println("Starting chek ");
+            }
         }
     }
 
