@@ -88,6 +88,7 @@ public class SettingsPageViewController implements Initializable {
         saveSongPositionRadioButton.getStylesheets().add("/css/customRadioButton.css");
         savePlayPreference.getStylesheets().add("/css/customRadioButton.css");
         stayLoggedInRadioButton.getStylesheets().add("/css/customRadioButton.css");
+        displaySongOnClickRadioButton.getStylesheets().add("/css/customRadioButton.css");
 
         saveDownloadQueueRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue());
         saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
