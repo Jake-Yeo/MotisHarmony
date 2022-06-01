@@ -587,6 +587,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 playButton.setText("⏸︎");
                 System.out.println(mpm.getMediaPlayer().getStatus());
             }
+            updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         }
     }
 
@@ -637,6 +638,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 updatePlayerDisplays();
             }
         }
+        updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
     }
 
     @FXML
@@ -686,6 +688,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             init();//initalize again because a new MediaPlayer is made
             updatePlayerDisplays();
         }
+        updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
     }
 
     private void resetInfoDisplaysAndChangeSong() throws Exception {
@@ -984,6 +987,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 searchTextField.clear();
             }
             updateModelCurrentSongList();
+            updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         } else {
             UIHelper.getCustomAlert("You cannot remove songs from \"" + mpm.getAllSongsPlaylistName() + "\"!").show();
         }
@@ -1014,6 +1018,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 mpm.playThisPlaylist(playlistName);
                 onFirstMusicPlayerPlay();
             }
+            updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         }
     }
 
@@ -1024,7 +1029,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     public void deleteSongFromAccountOption() throws IOException, Exception {
         SongDataObject[] sdosToDelete = mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices());
         AccountsDataManager.deleteSong(sdosToDelete);
-        updateModelCurrentSongList();
         if (mpm.getSongObjectBeingPlayed() != null) {
             for (SongDataObject sdo : sdosToDelete) {
                 if (sdo.getVideoID().equals(mpm.getSongObjectBeingPlayed().getVideoID())) {
@@ -1044,9 +1048,17 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 }
             }
         }
+        if (mpm.getSongObjectBeingPlayed() != null) {
+            updateModelCurrentSongList();
+            updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
+        }
         //This if statement will stop the musicPlayer if the playlist which is currently playing has had all its songs deleted by the user.
         if (playlistList.getSelectionModel().getSelectedItem().equals(mpm.getCurrentPlaylistPlayling()) && Accounts.getLoggedInAccount().getPlaylistDataObject().getMapOfPlaylists().get(mpm.getCurrentPlaylistPlayling()).isEmpty()) {
             resetInfoDisplaysAndChangeSong();
+            //Since all songs are downloaded to the "All Songs" playlist we will just play the "All Songs" playlist so that when a song has been downloaded the user can play with no issues
+            mpm.playThisPlaylist(mpm.getAllSongsPlaylistName());
+            playlistPlayingLabel.setText("Playlist Playing: " + mpm.getCurrentPlaylistPlayling());
+            mpm.setMusicPlayerInitialized(false);
         }
     }
 
