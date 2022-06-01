@@ -958,7 +958,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 resetInfoDisplaysAndChangeSong();
                 //The if statement below will play another song from the playlist if the current playlist had all its songs removed by the user and if the song which was playing was removed from the playlist
             } else if (playlistToRemoveFrom.equals(mpm.getCurrentPlaylistPlayling()) && Arrays.asList(mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices())).contains(mpm.getSongObjectBeingPlayed())) {
-                mpm.smartPlay();
+                if (mpm.isSongPaused()) {
+                    mpm.smartPlay();
+                    mpm.pauseSong();
+                } else {
+                    mpm.smartPlay();
+                }
+                searchTextField.clear();
             }
             updateModelCurrentSongList();
         } else {
@@ -1009,7 +1015,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                     if (Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
                         resetInfoDisplaysAndChangeSong();
                     } else {
-                        mpm.smartPlay();
+                        if (mpm.isSongPaused()) {
+                            mpm.smartPlay();
+                            mpm.pauseSong();
+                        } else {
+                            mpm.smartPlay();
+                        }
+                        searchTextField.clear();
                     }
                     break;
                 }
