@@ -756,7 +756,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         artistNameLabel.setText("Artist: " + mpm.getSongObjectBeingPlayed().getChannelName());
         playlistPlayingLabel.setText("Playlist Playing: " + mpm.getCurrentPlaylistPlayling());
 
-        if (!Accounts.getLoggedInAccount().getSettingsObject().getDisplaySongOnClick()) {
+        if (Accounts.getLoggedInAccount().getSettingsObject().getAutoDisplayNextSong()) {
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         }
     }
@@ -1335,9 +1335,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
                 playSelectedSongOption();
             } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 1) {
-                if (Accounts.getLoggedInAccount().getSettingsObject().getDisplaySongOnClick()) {
+
                     updateSongInfoDisplays(mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
-                }
+                
             } else {
                 songListContextMenu.hide();
             }

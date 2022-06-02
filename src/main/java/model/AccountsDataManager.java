@@ -147,7 +147,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void setUpdateDisplaySongOnClick(boolean tf) throws Exception {
-        Accounts.getLoggedInAccount().getSettingsObject().setDisplaySongOnClick(tf);
+        Accounts.getLoggedInAccount().getSettingsObject().setAutoDisplayNextSong(tf);
     }
 
     public static void setStayLoggedIn(boolean tf) throws Exception {

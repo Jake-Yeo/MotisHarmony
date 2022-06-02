@@ -94,7 +94,7 @@ public class SettingsPageViewController implements Initializable {
         saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
         savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
         stayLoggedInRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn());
-        displaySongOnClickRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getDisplaySongOnClick());
+        displaySongOnClickRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getAutoDisplayNextSong());
     }
 
     @FXML

@@ -23,7 +23,7 @@ public class SettingsObject implements Serializable {
     private boolean saveDownloadQueue = true;
     private boolean savePlayPreference = true;
     private boolean saveSongPosition = true;
-    private boolean displaySongOnClick = true;
+    private boolean autoDisplayNextSong = true;
     private String lastPlaylistPlayed = null;
     private SongDataObject lastSongPlayed = null;
     private AlarmClock alarmClock = new AlarmClock(8, 0, "AM");
@@ -33,12 +33,12 @@ public class SettingsObject implements Serializable {
         System.out.println("playlistListSortPreference = " + playlistListSortPreference);
     }
 
-    public boolean getDisplaySongOnClick() {
-        return displaySongOnClick;
+    public boolean getAutoDisplayNextSong() {
+        return autoDisplayNextSong;
     }
 
-    public void setDisplaySongOnClick(boolean tf) {
-        displaySongOnClick = tf;
+    public void setAutoDisplayNextSong(boolean tf) {
+        autoDisplayNextSong = tf;
     }
 
     public void setStayLoggedIn(boolean tf) {
