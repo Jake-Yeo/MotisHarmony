@@ -161,7 +161,153 @@ lives. However, when I use these services, I find that the music I want to liste
 available on Spotify, and the music player on YouTube is designed to pause the video
 after a specific period of time to persuade the user to upgrade to a premium version of
 Youtube. As a result, I began using alternative services like Bolt and Documents by
-Readdle. Unfortunately, more issues occurred; downloading and finding songs saved in
+Readdle. Unfortunately, more issues occurred, downloading and finding songs saved in
 my YouTube playlists was difficult and time-consuming. And with Bolt, there was an
 inability to create playlists without duplicating music files which took up unnecessary
 space on the device you were using.
+:::::::::::::::::::::::::::::::::::
+What does the "Automatically Display Next Song" radio button in settings do?
+:::::::::::::::::::::::::::::::::::
+If you select that radio button then the program will automatically update the MusicPlayer view when the current song ends and new song is played.
+
+If you deselect that radio button then the program will not automatically update the MusicPlayer view when the current song ends and new song is played.
+:::::::::::::::::::::::::::::::::::
+What is the download error "You aren't connected to wifi!"?
+:::::::::::::::::::::::::::::::::::
+It means you aren't connected to wifi. 
+
+To fix this do the following:
+
+1. Reconnect to wifi
+
+2. Go to the Download Page and right click the panel which shows the songs you are downloading, a context menu will appear
+
+3. In the context menu click on the option which reads "Retry Download"
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] has already been added to the download queue, or has already been downloaded"
+:::::::::::::::::::::::::::::::::::
+It means that the Youtube link you've inputted has aleady been downloaded or added to the download queue.
+:::::::::::::::::::::::::::::::::::
+What is the download error "Failed to get playlist since you are disconnected from wifi"?
+:::::::::::::::::::::::::::::::::::
+It means that while the playlist you were trying to get was being parsed, the wifi disconnected and the playlist was unable to be parsed. You must reconnect to wifi and get your playlist again.
+:::::::::::::::::::::::::::::::::::
+What is the download error "You're currently IP banned from Youtube and cannot download songs at this time"?
+:::::::::::::::::::::::::::::::::::
+It means that you probably downloaded a ton of songs from Youtube(1000+ songs!). 
+
+To fix this you can try the following:
+
+1. Use a VPN such as Proton VPN to bypass the IP ban
+
+2. Wait out the ban, I'd say it lasts around a week
+
+3. You can also try to change you IP address by restarting your WIFI router.
+:::::::::::::::::::::::::::::::::::
+What is the download error "Sorry we cannot download the url you entered at this time."?
+:::::::::::::::::::::::::::::::::::
+It means that there was unknown error which occured while downloading your requested link. Perhaps try downloading an alternate link.
+:::::::::::::::::::::::::::::::::::
+What is the download error "Please finish getting the current playlist before getting another playlist."?
+:::::::::::::::::::::::::::::::::::
+It means that that the program is still getting the playlist which you requested. You must wait until the first playlist is parsed before getting another playlist.
+:::::::::::::::::::::::::::::::::::
+What is the download error "Download could not be completed as wifi is disconnected"?
+:::::::::::::::::::::::::::::::::::
+It means you aren't connected to wifi. 
+
+To fix this do the following:
+
+1. Reconnect to wifi
+
+2. Go to the Download Page and right click the panel which shows the songs you are downloading, a context menu will appear
+
+3. In the context menu click on the option which reads "Retry Download"
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] could not be downloaded at this time, please try again later or find an alternative link"?
+:::::::::::::::::::::::::::::::::::
+It means that there was unknown error which occured while downloading your requested link. Perhaps try downloading an alternate link.
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] failed to download because you are not connected to wifi"?
+:::::::::::::::::::::::::::::::::::
+It means you aren't connected to wifi. 
+
+To fix this do the following:
+
+1. Reconnect to wifi
+
+2. Go to the Download Page and right click the panel which shows the songs you are downloading, a context menu will appear
+
+3. In the context menu click on the option which reads "Retry Download"
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] could not be accessed because you are not connected to wifi"?
+:::::::::::::::::::::::::::::::::::
+It means you aren't connected to wifi. 
+
+To fix this do the following:
+
+1. Reconnect to wifi
+
+2. Go to the Download Page and right click the panel which shows the songs you are downloading, a context menu will appear
+
+3. In the context menu click on the option which reads "Retry Download"
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] cannot be downloaded at this time as you are IP blocked by youtube! Wait out the ban or change your ip."?
+:::::::::::::::::::::::::::::::::::
+It means that you probably downloaded a ton of songs from Youtube(1000+ songs!). 
+
+To fix this you can try the following:
+
+1. Use a VPN such as Proton VPN to bypass the IP ban
+
+2. Wait out the ban, I'd say it lasts around a week
+
+3. You can also try to change you IP address by restarting your WIFI router.
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] is likely not a link!"?
+:::::::::::::::::::::::::::::::::::
+It means that the link you entered is not a valid link to a Youtube video or playlist.
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] is age restricted and cannot be downloaded!"?
+:::::::::::::::::::::::::::::::::::
+It means that the link you entered is a link to an age restricted Youtube Video whose audio source cannot be accessed anonymously. Perhaps try an alternative link which isn't age restricted. 
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] is unavailable to the public!"?
+:::::::::::::::::::::::::::::::::::
+It means that the link you entered is a link to an Youtube Video that is may be banned in your country or banned by Youtube. Perhaps try an alternative link which banned in your country or banned by Youtube
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] is private and cannot be downloaded!"?
+:::::::::::::::::::::::::::::::::::
+It means that the link you entered is a link to an Youtube Video that is private. Perhaps try an alternative link which is not private. If you are able to edit this Youtube link you could set it to unlisted instead of private.
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] is a livestream and cannot be downloaded!"?
+:::::::::::::::::::::::::::::::::::
+It means that the link you entered is a link to a livestream which cannot be downloaded since it's a livestream.
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] is a radio player and cannot be downloaded!"?
+:::::::::::::::::::::::::::::::::::
+It means that the link you entered is a link to a radio player. A Youtube radio player looks similar to a Youtube playlist. The difference between them is that a radio player is constantly updating and "infinite" and therefore cannot be downloaded. Get a link to a Youtube playlist instead!
+:::::::::::::::::::::::::::::::::::
+What is the download error "[My Youtube link] is a playlist that is either private or does not exist!"?
+:::::::::::::::::::::::::::::::::::
+It means that the link you entered is a link to a playlist which is either private or does not exist.
+
+If you own this private playlist, set it to unlisted rather and private and download it again.
+
+If the playlist does not exist the please get a playlist that exists.
+:::::::::::::::::::::::::::::::::::
+What is the alert which shows "You cannot delete the 🅰🅻🅻 🆂🅾🅽🅶🆂" playlist!"?
+:::::::::::::::::::::::::::::::::::
+It means you cannot delete the 🅰🅻🅻 🆂🅾🅽🅶🆂 playlist because it is a special playlist which shows all the songs downloaded.
+:::::::::::::::::::::::::::::::::::
+What is the alert which shows "You cannot remove songs from the 🅰🅻🅻 🆂🅾🅽🅶🆂" playlist!"?
+:::::::::::::::::::::::::::::::::::
+It means you cannot delete songs from the 🅰🅻🅻 🆂🅾🅽🅶🆂 playlist because it is a special playlist which shows all the songs downloaded.
+:::::::::::::::::::::::::::::::::::
+What is the alert which shows "You cannot rename the 🅰🅻🅻 🆂🅾🅽🅶🆂" playlist!"?
+:::::::::::::::::::::::::::::::::::
+It means you cannot rename the 🅰🅻🅻 🆂🅾🅽🅶🆂 playlist because it is a special playlist which shows all the songs downloaded.
+:::::::::::::::::::::::::::::::::::
+What is the alert which shows "You already have a playlist with that same name!"?
+:::::::::::::::::::::::::::::::::::
+It means you cannot rename or create a playlist with that name since another playlist already has that name. Please pick a different name!

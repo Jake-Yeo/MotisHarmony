@@ -951,7 +951,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             playlistList.getSelectionModel().select(mpm.getPlaylistCurrentlyViewing());
             updateModelCurrentSongList();
         } else {
-            UIHelper.getCustomAlert("You cannot delete the \"" + mpm.getAllSongsPlaylistName() + "\" Playlist!").show();
+            UIHelper.getCustomAlert("You cannot delete the \"" + mpm.getAllSongsPlaylistName() + "\" playlist!").show();
         }
     }
 
@@ -988,7 +988,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             updateModelCurrentSongList();
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         } else {
-            UIHelper.getCustomAlert("You cannot remove songs from \"" + mpm.getAllSongsPlaylistName() + "\"!").show();
+            UIHelper.getCustomAlert("You cannot remove songs from the \"" + mpm.getAllSongsPlaylistName() + "\" playlist!").show();
         }
     }
 
@@ -1121,7 +1121,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 playlistList.getSelectionModel().clearSelection();
                 playlistList.getSelectionModel().select(newPlaylistName);
             } else if (oldPlaylistName.equals(mpm.getAllSongsPlaylistName())) {
-                UIHelper.getCustomAlert("You cannot rename the \"" + mpm.getAllSongsPlaylistName() + "\" Playlist!").show();
+                UIHelper.getCustomAlert("You cannot rename the \"" + mpm.getAllSongsPlaylistName() + "\" playlist!").show();
             } else {
                 UIHelper.getCustomAlert("You already have a playlist with that same name!").show();
             }
