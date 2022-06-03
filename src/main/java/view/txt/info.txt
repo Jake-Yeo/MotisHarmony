@@ -121,6 +121,10 @@ List of features in MotisHarmony
 8. Ability to loop a song
 
 9. Ability to create and use multiple accounts
+
+10. Ability to communicate with headphones/earbuds
+
+11. Ability to alter audio balance
 :::::::::::::::::::::::::::::::::::
 What is the sleep timer and how do I use it?
 :::::::::::::::::::::::::::::::::::
@@ -136,6 +140,7 @@ From there a dialog will appear displaying these buttons
 "Apply"
 
 What do these buttons do?
+
 "Start Timer":
 When clicked, the text of this button will change to "Stop Timer" and the Sleep Timer will start when you press the "Apply" button.
 
@@ -143,7 +148,7 @@ When clicked, the text of this button will change to "Stop Timer" and the Sleep 
 This will set how many hours you would like your Sleep Timer to count down from.
 
 "Set Minute":
-This will set how many additional minutes along with the hours you've selected, you would like your Sleep Timer to count down from
+This will set how many additional minutes along with the hours you've selected, you would like your Sleep Timer to count down from.
 
 "Cancel":
 This will cancel the changes you've made to the Sleep Timer
@@ -153,18 +158,7 @@ This will apply the changes you've made to the Sleep Timer. If you chose to enab
 :::::::::::::::::::::::::::::::::::
 What problem am I trying to solve with my program?
 :::::::::::::::::::::::::::::::::::
-Like iron rods built into a concrete floor, so too is music the support for our cultures,
-relationships and core identities. It’s what allows us to experience and express our
-emotions. That’s why companies such as Google provide us with services such as
-Spotify and Youtube, to allow us easy access to music which is woven into our daily
-lives. However, when I use these services, I find that the music I want to listen to isn't
-available on Spotify, and the music player on YouTube is designed to pause the video
-after a specific period of time to persuade the user to upgrade to a premium version of
-Youtube. As a result, I began using alternative services like Bolt and Documents by
-Readdle. Unfortunately, more issues occurred, downloading and finding songs saved in
-my YouTube playlists was difficult and time-consuming. And with Bolt, there was an
-inability to create playlists without duplicating music files which took up unnecessary
-space on the device you were using.
+Like iron rods built into a concrete floor, so too is music the support for our cultures, relationships and core identities. It’s what allows us to experience and express our emotions. That’s why companies such as Google provide us with services such as Spotify and Youtube, to allow us easy access to music which is woven into our daily lives. However, when I use these services, I find that the music I want to listen to isn't available on Spotify, and the music player on YouTube is designed to pause the video after a specific period of time to persuade the user to upgrade to a premium version of Youtube. As a result, I began using alternative services like Bolt and Documents by Readdle. Unfortunately, more issues occurred, downloading and finding songs saved in my YouTube playlists was difficult and time-consuming. And with Bolt, there was an inability to create playlists without duplicating music files which took up unnecessary space on the device you were using.
 :::::::::::::::::::::::::::::::::::
 What does the "Automatically Display Next Song" radio button in settings do?
 :::::::::::::::::::::::::::::::::::
@@ -311,3 +305,33 @@ It means you cannot rename the 🅰🅻🅻 🆂🅾🅽🅶🆂 playlist becaus
 What is the alert which shows "You already have a playlist with that same name!"?
 :::::::::::::::::::::::::::::::::::
 It means you cannot rename or create a playlist with that name since another playlist already has that name. Please pick a different name!
+:::::::::::::::::::::::::::::::::::
+What does the "Audio Balance" slider in settings do?
+:::::::::::::::::::::::::::::::::::
+It's used to alter the loudness of audio while wearing headphones. By sliding it closer to "R" the audio will become louder on your right ear. By sliding it closer to "L" the audio will become louder on your left ear. This feature is typically used when a defect in your headphones causes audio to play louder on one ear than the other.
+:::::::::::::::::::::::::::::::::::
+What does the "On Headphones Clicked" button in settings do?
+:::::::::::::::::::::::::::::::::::
+When clicked, a Combo Box will appear with a list of items reading:
+"Next Song"
+"Pause/Play"
+"Do Nothing"
+
+You may click on one of these items to set what happens when you use your headphones communicate to the program. For example, if you have Airpods then by double tapping your Airpods the program may pause your song.
+
+What do these options do?
+
+"Next Song": When you use a certain button on you headphones the Music Player will go to the next song.
+
+"Pause/Play": When you use a certain button on you headphones the Music Player stop or pause the Music Player.
+
+"Do Nothing": When you use a certain button on you headphones the Music Player does nothing.
+:::::::::::::::::::::::::::::::::::
+Why isn't anything happening when I use my headphones/earbuds to change/pause/play the current song?
+:::::::::::::::::::::::::::::::::::
+Some headphones are not supported by Windows, for example Apple's wire earbuds are unable to communicate with Windows, therefore the program does nothing.
+:::::::::::::::::::::::::::::::::::
+Where can I submit feature requests?
+:::::::::::::::::::::::::::::::::::
+You can submit feature requests here:
+https://github.com/Jake-Yeo/MotisHarmony/issues
