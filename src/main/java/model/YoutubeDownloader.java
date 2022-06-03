@@ -165,6 +165,13 @@ public class YoutubeDownloader {
         }
     }
 
+    public static void closeAndQuitAllChromeDrivers() throws IOException {
+        //This also closes the chrome tab if you are using it
+        Runtime rt = Runtime.getRuntime();
+        Process pr = rt.exec("taskkill /F /IM chromedriver.exe");
+        pr = rt.exec("taskkill /F /IM chrome.exe");
+    }
+
     public boolean getStopAllDownloadingProcesses() {
         return stopAllDownloadingProcesses;
     }

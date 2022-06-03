@@ -76,6 +76,8 @@ public class SettingsPageViewController implements Initializable {
     private ChoiceBox<String> headphonesActionChoiceBox;
     @FXML
     private Slider audioBalanceSlider;
+    @FXML
+    private Button closeAllChromeDriversButton;
 
     /**
      * Initializes the controller class.
@@ -108,6 +110,7 @@ public class SettingsPageViewController implements Initializable {
         logoutButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
         deleteAccountButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
         headphoneActionButton.getStylesheets().add("/css/settingsPageCustomHeadphoneActionButton.css");
+        closeAllChromeDriversButton.getStylesheets().add("/css/settingsPageCustomHeadphoneActionButton.css");
         infoButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
         audioBalanceSlider.getStylesheets().add("/css/customSeekSlider.css");//poorly named css file, still works though
 
@@ -138,6 +141,15 @@ public class SettingsPageViewController implements Initializable {
     @FXML
     private void showHeadphoneActionChoiceBox(ActionEvent event) {
         headphonesActionChoiceBox.show();
+    }
+    
+    @FXML
+    private void closeAllChromeDrivers() throws IOException {
+        if (YoutubeDownloader.getYtdCurrentlyUsing().getStatus().getValue().equals("Finished Downloading Queue")) {
+        YoutubeDownloader.closeAndQuitAllChromeDrivers();
+        } else {
+            UIHelper.getCustomAlert("You need to have an empty Download Queue to use this!").show();
+        }
     }
     
     @FXML

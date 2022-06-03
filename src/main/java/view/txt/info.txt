@@ -335,3 +335,19 @@ Where can I submit feature requests?
 :::::::::::::::::::::::::::::::::::
 You can submit feature requests here:
 https://github.com/Jake-Yeo/MotisHarmony/issues
+:::::::::::::::::::::::::::::::::::
+In the Download Page what does it mean when the Status reads "Downloading"?
+:::::::::::::::::::::::::::::::::::
+It means songs are currently being downloaded.
+:::::::::::::::::::::::::::::::::::
+In the Download Page what does it mean when the Status reads "Finished Downloading Queue"?
+:::::::::::::::::::::::::::::::::::
+It means all the songs in the download queue have been downloaded.
+:::::::::::::::::::::::::::::::::::
+In the Download Page what does it mean when the Status reads "Download Paused"?
+:::::::::::::::::::::::::::::::::::
+It means the download queue has been paused since you are not connected to wifi.
+:::::::::::::::::::::::::::::::::::
+What does the "Close All Chrome Drivers" button in settings do?
+:::::::::::::::::::::::::::::::::::
+This button is used to close all the chrome drivers and browsers opened by the program. Unfortunately, this will also close any Chrome tabs you have opened. So use this button cautiously.

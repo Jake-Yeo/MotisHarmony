@@ -57,5 +57,6 @@
       <Text fill="#ee4540" layoutX="199.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="R" textAlignment="RIGHT" wrappingWidth="30.0" />
       <ChoiceBox fx:id="headphonesActionChoiceBox" layoutX="21.0" layoutY="257.0" prefHeight="25.0" prefWidth="208.0" style="-fx-background-color: transparent;" />
       <Button fx:id="headphoneActionButton" layoutX="21.0" layoutY="257.0" mnemonicParsing="false" onAction="#showHeadphoneActionChoiceBox" prefHeight="25.0" prefWidth="208.0" text="On Headphones Clicked" />
+      <Button fx:id="closeAllChromeDriversButton" layoutX="21.0" layoutY="293.0" mnemonicParsing="false" onAction="#closeAllChromeDrivers" prefHeight="25.0" prefWidth="208.0" text="Close All Chrome Drivers" />
    </children>
 </AnchorPane>
