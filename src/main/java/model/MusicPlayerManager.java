@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import javafx.scene.media.Media;
@@ -33,6 +34,7 @@ public class MusicPlayerManager {
     private static MusicPlayerManager mpmCurrentlyUsing;
     private boolean paused = false;
     private int indexForOrderedPlay = 0;
+    private LinkedList<SongDataObject> shuffledPlaylist = new LinkedList<>();
     private Duration backupCurrentDuration = null;
     private boolean musicPlayerInitalized = false;
     private boolean playSongInLoop = false;
@@ -60,7 +62,7 @@ public class MusicPlayerManager {
     public static MusicPlayerManager getMpmCurrentlyUsing() {
         return mpmCurrentlyUsing;
     }
-    
+
     public static String getAllSongsPlaylistName() {
         return allSongsPlaylistName;
     }
@@ -171,6 +173,8 @@ public class MusicPlayerManager {
             return;
         }
         getSongHistory().clear();
+        //We clear the shuffled playlist so that it can be reshuffled with the correct playlist
+        shuffledPlaylist.clear();
         setCurrentPlaylistPlayling(playlistName);
         setIndexForOrderedPlay(0);
         syncPlaylistSongsPlaylingWithSelectedPlaylist(playlistName);
@@ -281,16 +285,19 @@ public class MusicPlayerManager {
     }
 
     public void randomPlay() throws IOException, Exception {
-        ObservableList<SongDataObject> songDataObjects = playlistSongsPlaying;
+        //If the shuffled playlist has no more songs to play then reshuffle it
+        if (shuffledPlaylist.isEmpty()) {
+            shuffledPlaylist.addAll(playlistSongsPlaying);
+            Collections.shuffle(shuffledPlaylist);
+        }
+        SongDataObject nextSdoToPlay = shuffledPlaylist.removeFirst();
         //String[] musicPaths = new String(Files.readAllBytes(PathsManager.getLoggedInUserSongsTxtPath())).split(System.lineSeparator());
         //System.out.println(Arrays.toString(musicPaths));
-        Random randomNumGen = new Random();
-        System.out.println(songDataObjects.size());
-        int indexOfNextSongToPlay = randomNumGen.nextInt(songDataObjects.size());
-        setSongObjectBeingPlayed(songDataObjects.get(indexOfNextSongToPlay));
+
+        setSongObjectBeingPlayed(nextSdoToPlay);
         songHistory.add(getSongObjectBeingPlayed());
         posInSongHistory = songHistory.size() - 1;
-        File file = new File(songDataObjects.get(indexOfNextSongToPlay).getPathToWavFile());//replace with correct path when testing
+        File file = new File(nextSdoToPlay.getPathToWavFile());//replace with correct path when testing
         System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         stopDisposeMediaPlayer();
@@ -312,6 +319,8 @@ public class MusicPlayerManager {
     }
 
     public void orderedPlay() throws IOException, Exception {
+        //We clear the shuffled playlist so that it can be reshuffled
+        shuffledPlaylist.clear();
         songHistory.clear();
         if (indexForOrderedPlay > playlistSongsPlaying.size() - 1) {
             indexForOrderedPlay = 0;
@@ -337,6 +346,8 @@ public class MusicPlayerManager {
 
     //the bySelection boolean will indicate if the user used the double click or context menu to play the song
     public void playSong(SongDataObject songToPlay, boolean bySelection) throws Exception {
+        //We clear the shuffled playlist so that it can be reshuffled
+        shuffledPlaylist.clear();
         setSongObjectBeingPlayed(songToPlay);
         if (bySelection) {
             //This if statement will make sure that the end of the linked list is not removed if you play songs by selection multiple times
