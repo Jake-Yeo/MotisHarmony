@@ -158,6 +158,8 @@ public class YoutubeDownloader {
     private void quitChromeDriver() {
         try {
             driver.quit();
+            Runtime rt = Runtime.getRuntime();
+            Process pr = rt.exec("taskkill /F /IM chromedriver.exe");
         } catch (Exception e) {
             System.err.println("Driver not properly initialized");
         }

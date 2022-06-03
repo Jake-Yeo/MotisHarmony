@@ -48,6 +48,12 @@ public class AppRunner {
         //This ensures that when the user does not use the exit button to exit the program all settings are still saved
         shutdownHook = new Thread() {
             public void run() {
+                Runtime rt = Runtime.getRuntime();
+                try {
+                    Process pr = rt.exec("taskkill /F /IM chromedriver.exe");
+                } catch (IOException ex) {
+                    Logger.getLogger(AppRunner.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 try {
                     //We disable the timer when the user exits because there is no point in having a timer that automatically starts on launch
                     if (Accounts.getLoggedInAccount() != null) {
