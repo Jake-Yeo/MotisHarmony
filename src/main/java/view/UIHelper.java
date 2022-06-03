@@ -46,4 +46,18 @@ public class UIHelper {
         });
         return a;
     }
+
+    public static Alert getCustomWarning(String message) {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        //Styling
+        a.getDialogPane().getStylesheets().add("/css/customDialogPanes.css");
+        a.initStyle(StageStyle.TRANSPARENT);
+        a.getDialogPane().setClip(UIHelper.getDialogPaneClip(a.getDialogPane()));
+        a.getDialogPane().getScene().setFill(Color.TRANSPARENT);
+        a.setContentText(message);
+        a.setOnShowing(e -> {
+            Toolkit.getDefaultToolkit().beep();
+        });
+        return a;
+    }
 }
