@@ -12,8 +12,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.scene.text.Text;
 import model.Accounts;
 import model.AlarmClock;
@@ -72,7 +74,6 @@ public class SleepAlarmDialogEditorController implements Initializable {
             toggleTimerButton.setText("Start Timer");
         }
         updateAlarmTimeText();
-
     }
 
     private void updateAlarmTimeText() {

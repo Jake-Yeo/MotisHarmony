@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" fx:id="settingsViewMainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SettingsPageViewController">
    <children>
@@ -44,5 +47,15 @@
             <Font name="Quicksand SemiBold" size="12.0" />
          </font>
       </RadioButton>
+      <Slider fx:id="audioBalanceSlider" layoutX="26.0" layoutY="229.0" prefHeight="14.0" prefWidth="208.0" />
+      <Text fill="#ee4540" layoutX="26.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Audio Balance" textAlignment="CENTER" wrappingWidth="208.0">
+         <font>
+            <Font name="Quicksand SemiBold" size="12.0" />
+         </font>
+      </Text>
+      <Text fill="#ee4540" layoutX="26.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="L" />
+      <Text fill="#ee4540" layoutX="199.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="R" textAlignment="RIGHT" wrappingWidth="30.0" />
+      <ChoiceBox fx:id="headphonesActionChoiceBox" layoutX="21.0" layoutY="257.0" prefHeight="25.0" prefWidth="208.0" style="-fx-background-color: transparent;" />
+      <Button fx:id="headphoneActionButton" layoutX="21.0" layoutY="257.0" mnemonicParsing="false" onAction="#showHeadphoneActionChoiceBox" prefHeight="25.0" prefWidth="208.0" text="On Headphones Clicked" />
    </children>
 </AnchorPane>

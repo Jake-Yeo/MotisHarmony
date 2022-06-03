@@ -85,6 +85,8 @@ public class AlarmClockDialogEditorController implements Initializable {
         System.out.println(Accounts.getLoggedInAccount().getSettingsObject().getAlarmClock().getAmOrPm());
         alarmClockRingTimeText.setText(alarmClock.getHour() + ":" + alarmClockMinuteString + " " + alarmClock.getAmOrPm());
 
+        //Select the correct options which are saved in the settings. I'm unable to find a way to do this with comboboxes however.
+        amOrPmChoiceBox.getSelectionModel().select(accAlarmClock.getAmOrPm());
     }
 
     private void updateAlarmTimeText() {

@@ -74,6 +74,13 @@
                     <artifactId>webdrivermanager</artifactId>
                     <version>5.0.3</version>
                 </dependency>
+                <!-- https://mvnrepository.com/artifact/com.melloware/jintellitype -->
+                <dependency>
+                    <groupId>com.melloware</groupId>
+                    <artifactId>jintellitype</artifactId>
+                    <version>1.4.0</version>
+                </dependency>
+
             </dependencies>
             <build>
                 <plugins>
@@ -83,18 +90,18 @@
                         <version>3.1.1</version>
  
                             
-                            <configuration>
-                                <descriptorRefs>
-                                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                                </descriptorRefs>
-                                                  <archive>
-                                    <manifest>
-                                        <addClasspath>true</addClasspath>
-                                        <classpathPrefix>lib/</classpathPrefix>
-                                        <mainClass>apprunner.AppRunner</mainClass>
-                                    </manifest>
-                                </archive>
-                            </configuration>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <classpathPrefix>lib/</classpathPrefix>
+                                    <mainClass>apprunner.AppRunner</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
 
          
                         <executions>

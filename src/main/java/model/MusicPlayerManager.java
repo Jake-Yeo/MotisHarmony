@@ -442,10 +442,10 @@ public class MusicPlayerManager {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
                     SongDataObject secondSdo = (SongDataObject) sdo2;
                     int returnValue;
-                    if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) < 0) {
+                    if (firstSdo.getTitle().toLowerCase().compareTo(secondSdo.getTitle().toLowerCase()) < 0) {
                         returnValue = 0;
                     } else {
-                        if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) > 0) {
+                        if (firstSdo.getTitle().toLowerCase().compareTo(secondSdo.getTitle().toLowerCase()) > 0) {
                             returnValue = 1;
                         } else {
                             returnValue = -1;
@@ -463,10 +463,10 @@ public class MusicPlayerManager {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
                     SongDataObject secondSdo = (SongDataObject) sdo2;
                     int returnValue;
-                    if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) > 0) {
+                    if (firstSdo.getTitle().toLowerCase().compareTo(secondSdo.getTitle().toLowerCase()) > 0) {
                         returnValue = 0;
                     } else {
-                        if (firstSdo.getTitle().compareTo(secondSdo.getTitle()) < 0) {
+                        if (firstSdo.getTitle().toLowerCase().compareTo(secondSdo.getTitle().toLowerCase()) < 0) {
                             returnValue = 1;
                         } else {
                             returnValue = -1;
@@ -484,10 +484,10 @@ public class MusicPlayerManager {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
                     SongDataObject secondSdo = (SongDataObject) sdo2;
                     int returnValue;
-                    if (firstSdo.getChannelName().compareTo(secondSdo.getChannelName()) < 0) {
+                    if (firstSdo.getChannelName().toLowerCase().compareTo(secondSdo.getChannelName().toLowerCase()) < 0) {
                         returnValue = 0;
                     } else {
-                        if (firstSdo.getChannelName().compareTo(secondSdo.getChannelName()) > 0) {
+                        if (firstSdo.getChannelName().toLowerCase().compareTo(secondSdo.getChannelName().toLowerCase()) > 0) {
                             returnValue = 1;
                         } else {
                             returnValue = -1;
@@ -506,10 +506,10 @@ public class MusicPlayerManager {
                     SongDataObject firstSdo = (SongDataObject) sdo1;
                     SongDataObject secondSdo = (SongDataObject) sdo2;
                     int returnValue;
-                    if (firstSdo.getChannelName().compareTo(secondSdo.getChannelName()) > 0) {
+                    if (firstSdo.getChannelName().toLowerCase().compareTo(secondSdo.getChannelName().toLowerCase()) > 0) {
                         returnValue = 0;
                     } else {
-                        if (firstSdo.getChannelName().compareTo(secondSdo.getChannelName()) < 0) {
+                        if (firstSdo.getChannelName().toLowerCase().compareTo(secondSdo.getChannelName().toLowerCase()) < 0) {
                             returnValue = 1;
                         } else {
                             returnValue = -1;

@@ -5,6 +5,7 @@
  */
 package apprunner;
 
+import com.melloware.jintellitype.JIntellitype;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Accounts;
 import model.AccountsDataManager;
+import model.HeadphoneButtonDetector;
 import model.PathsManager;
 import view.MainViewRunner;
 
@@ -27,12 +29,30 @@ import view.MainViewRunner;
 public class AppRunner {
 
     private static Thread shutdownHook;
+     private static HeadphoneButtonDetector mainFrame;
 
     public static Thread getShutdownHook() {
         return shutdownHook;
     }
 
     public static void main(String[] args) throws MalformedURLException, IOException, Exception {
+        //This code will set up the headphone button detector
+        // first check to see if an instance of this application is already
+        // running, use the name of the window title of this JFrame for checking
+        if (JIntellitype.checkInstanceAlreadyRunning("JIntellitype Test Application")) {
+            System.exit(1);
+        }
+
+        // next check to make sure JIntellitype DLL can be found and we are on
+        // a Windows operating System
+        if (!JIntellitype.isJIntellitypeSupported()) {
+            System.exit(1);
+        }
+
+        mainFrame = new HeadphoneButtonDetector();
+        mainFrame.initJIntellitype();
+        
+        
         //This ensures that when the user does not use the exit button to exit the program all settings are still saved
         shutdownHook = new Thread() {
             public void run() {

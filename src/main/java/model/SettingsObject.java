@@ -28,9 +28,27 @@ public class SettingsObject implements Serializable {
     private SongDataObject lastSongPlayed = null;
     private AlarmClock alarmClock = new AlarmClock(8, 0, "AM");
     private SleepTimer sleepTimer = new SleepTimer(1, 30);
+    private double audioBalance = 0;
+    private String headphoneAction = "Next Song";//Choices are "Do Nothing", "Next Song", "Pause/Play"
 
     public SettingsObject() {
         System.out.println("playlistListSortPreference = " + playlistListSortPreference);
+    }
+
+    public String getHeadphoneAction() {
+        return headphoneAction;
+    }
+
+    public void setHeadphoneAction(String action) {
+        headphoneAction = action;
+    }
+
+    public double getAudioBalance() {
+        return audioBalance;
+    }
+
+    public void setAudioBalance(double balance) {
+        audioBalance = balance;
     }
 
     public boolean getAutoDisplayNextSong() {

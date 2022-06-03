@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,11 +21,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -44,7 +49,7 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class SettingsPageViewController implements Initializable {
-
+    
     @FXML
     private AnchorPane settingsViewMainAnchorPane;
     @FXML
@@ -65,6 +70,12 @@ public class SettingsPageViewController implements Initializable {
     private ImageView settingsPageBackgroundImageView;
     @FXML
     private Button infoButton;
+    @FXML
+    private Button headphoneActionButton;
+    @FXML
+    private ChoiceBox<String> headphonesActionChoiceBox;
+    @FXML
+    private Slider audioBalanceSlider;
 
     /**
      * Initializes the controller class.
@@ -72,31 +83,63 @@ public class SettingsPageViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        headphonesActionChoiceBox.getItems().add("Next Song");
+        headphonesActionChoiceBox.getItems().add("Pause/Play");
+        headphonesActionChoiceBox.getItems().add("Do Nothing");
+        headphonesActionChoiceBox.setVisible(false);
+        headphonesActionChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getHeadphoneAction());
+        headphonesActionChoiceBox.setOnAction(e -> {//I tried to do this via scene builder but it didn't work for some reason
+            try {
+                updateHeadphoneAction();
+            } catch (Exception ex) {
+                Logger.getLogger(SettingsPageViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        audioBalanceSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(
+                    ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                AccountsDataManager.setAudioBalance(audioBalanceSlider.getValue());
+                MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().setBalance(audioBalanceSlider.getValue());
+            }
+        });
+        
         settingsPageBackgroundImageView.setImage(new Image("/images/settingsPageBackground.png"));
         logoutButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
         deleteAccountButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
+        headphoneActionButton.getStylesheets().add("/css/settingsPageCustomHeadphoneActionButton.css");
         infoButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
+        audioBalanceSlider.getStylesheets().add("/css/customSeekSlider.css");//poorly named css file, still works though
 
+        audioBalanceSlider.setMax(1);
+        audioBalanceSlider.setMin(-1);
+        audioBalanceSlider.setValue(Accounts.getLoggedInAccount().getSettingsObject().getAudioBalance());
+        
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(settingsViewMainAnchorPane.widthProperty());
         clip.heightProperty().bind(settingsViewMainAnchorPane.heightProperty());
         clip.setArcWidth(50);//this sets the rounded corners
         clip.setArcHeight(50);
         settingsViewMainAnchorPane.setClip(clip);
-
+        
         saveDownloadQueueRadioButton.getStylesheets().add("/css/customRadioButton.css");
         saveSongPositionRadioButton.getStylesheets().add("/css/customRadioButton.css");
         savePlayPreference.getStylesheets().add("/css/customRadioButton.css");
         stayLoggedInRadioButton.getStylesheets().add("/css/customRadioButton.css");
         displaySongOnClickRadioButton.getStylesheets().add("/css/customRadioButton.css");
-
+        
         saveDownloadQueueRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue());
         saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
         savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
         stayLoggedInRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getStayLoggedIn());
         displaySongOnClickRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getAutoDisplayNextSong());
     }
-
+    
+    @FXML
+    private void showHeadphoneActionChoiceBox(ActionEvent event) {
+        headphonesActionChoiceBox.show();
+    }
+    
     @FXML
     private void logout(ActionEvent event) throws Exception {
         //Stop the sleep timer from checking the time
@@ -119,32 +162,39 @@ public class SettingsPageViewController implements Initializable {
         MainViewRunner.getSceneChanger().addScreen("LoginPage", FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml")));
         MainViewRunner.getSceneChanger().switchToLoginPageView();
     }
-
+    
     @FXML
     private void updateSaveDownloadQueue(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveDownloadQueue(saveDownloadQueueRadioButton.isSelected());
     }
-
+    
     @FXML
     private void updateSaveSongPosition(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveSongPosition(saveSongPositionRadioButton.isSelected());
     }
-
+    
     @FXML
     private void updateSavePlayPreference(ActionEvent event) throws Exception {
         AccountsDataManager.setSavePlayPreference(savePlayPreference.isSelected());
     }
-
+    
     @FXML
     private void updateStayLoggedIn(ActionEvent event) throws Exception {
         AccountsDataManager.setStayLoggedIn(stayLoggedInRadioButton.isSelected());
     }
-
+    
     @FXML
     private void updateDisplaySongOnClick(ActionEvent event) throws Exception {
         AccountsDataManager.setUpdateDisplaySongOnClick(displaySongOnClickRadioButton.isSelected());
     }
-
+    
+    private void updateHeadphoneAction() throws Exception {
+        System.out.println(headphonesActionChoiceBox.getSelectionModel().getSelectedItem());
+        if (headphonesActionChoiceBox.getSelectionModel().getSelectedItem() != null) {
+            AccountsDataManager.setHeadphoneAction(headphonesActionChoiceBox.getSelectionModel().getSelectedItem());
+        }
+    }
+    
     @FXML
     private void showDeletionAccountDialogBox(ActionEvent event) throws IOException, Exception {
         //This creates a dialog popup to allow the user to delete their account
@@ -161,10 +211,10 @@ public class SettingsPageViewController implements Initializable {
         dialog.initStyle(StageStyle.TRANSPARENT);
         accountDeletionDialog.setClip(UIHelper.getDialogPaneClip(accountDeletionDialog));
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
-
+        
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.CANCEL) {
-
+            
         } else if (buttonClicked.get() == ButtonType.FINISH) {
             if (encryption.sha256Hash(encryption.encrypt(addcController.getPasswordText())).equals(Accounts.getLoggedInAccount().getPassword())) {
                 AccountsDataManager.deleteCurrentAccount();
@@ -188,7 +238,7 @@ public class SettingsPageViewController implements Initializable {
             }
         }
     }
-
+    
     @FXML
     private void showInfoDialogBox(ActionEvent event) throws IOException, Exception {
         //This creates a dialog popup to allow the user to delete their account
@@ -206,5 +256,5 @@ public class SettingsPageViewController implements Initializable {
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
     }
-
+    
 }
