@@ -49,7 +49,7 @@ import view.MainViewRunner;
  * @author Jake Yeo
  */
 public class SettingsPageViewController implements Initializable {
-    
+
     @FXML
     private AnchorPane settingsViewMainAnchorPane;
     @FXML
@@ -104,10 +104,12 @@ public class SettingsPageViewController implements Initializable {
             public void changed(
                     ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
                 AccountsDataManager.setAudioBalance(audioBalanceSlider.getValue());
-                MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().setBalance(audioBalanceSlider.getValue());
+                if (MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer() != null) {
+                    MusicPlayerManager.getMpmCurrentlyUsing().getMediaPlayer().setBalance(audioBalanceSlider.getValue());
+                }
             }
         });
-        
+
         settingsPageBackgroundImageView.setImage(new Image("/images/settingsPageBackground.png"));
         logoutButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
         deleteAccountButton.getStylesheets().add("/css/settingsPageCustomButtons.css");
@@ -119,21 +121,21 @@ public class SettingsPageViewController implements Initializable {
         audioBalanceSlider.setMax(1);
         audioBalanceSlider.setMin(-1);
         audioBalanceSlider.setValue(Accounts.getLoggedInAccount().getSettingsObject().getAudioBalance());
-        
+
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(settingsViewMainAnchorPane.widthProperty());
         clip.heightProperty().bind(settingsViewMainAnchorPane.heightProperty());
         clip.setArcWidth(50);//this sets the rounded corners
         clip.setArcHeight(50);
         settingsViewMainAnchorPane.setClip(clip);
-        
+
         saveDownloadQueueRadioButton.getStylesheets().add("/css/customRadioButton.css");
         saveSongPositionRadioButton.getStylesheets().add("/css/customRadioButton.css");
         savePlayPreference.getStylesheets().add("/css/customRadioButton.css");
         stayLoggedInRadioButton.getStylesheets().add("/css/customRadioButton.css");
         displaySongOnClickRadioButton.getStylesheets().add("/css/customRadioButton.css");
         soundVisualizerRadioButton.getStylesheets().add("/css/customRadioButton.css");
-        
+
         saveDownloadQueueRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveDownloadQueue());
         saveSongPositionRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSaveSongPosition());
         savePlayPreference.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference());
@@ -141,12 +143,12 @@ public class SettingsPageViewController implements Initializable {
         displaySongOnClickRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getAutoDisplayNextSong());
         soundVisualizerRadioButton.setSelected(Accounts.getLoggedInAccount().getSettingsObject().getEnableSoundVisualizer());
     }
-    
+
     @FXML
     private void showHeadphoneActionChoiceBox(ActionEvent event) {
         headphonesActionChoiceBox.show();
     }
-    
+
     @FXML
     private void closeAllChromeDrivers() throws IOException {
         Alert warnDialog = UIHelper.getCustomWarning("Warning! Clicking on yes will also close any Chrome Browsers you yourself have opened! Are you sure you want to continue?");
@@ -154,7 +156,7 @@ public class SettingsPageViewController implements Initializable {
         warnDialog.getButtonTypes().add(ButtonType.NO);
         warnDialog.getButtonTypes().remove(ButtonType.CANCEL);
         warnDialog.getButtonTypes().remove(ButtonType.OK);
-        
+
         Optional<ButtonType> buttonClicked = warnDialog.showAndWait();
         if (buttonClicked.get() == ButtonType.YES) {
             if (YoutubeDownloader.getYtdCurrentlyUsing().getStatus().getValue() != null && YoutubeDownloader.getYtdCurrentlyUsing().getStatus().getValue().equals("Finished Downloading Queue")) {
@@ -168,7 +170,7 @@ public class SettingsPageViewController implements Initializable {
             return;
         }
     }
-    
+
     @FXML
     private void logout(ActionEvent event) throws Exception {
         //Stop the sleep timer from checking the time
@@ -191,45 +193,45 @@ public class SettingsPageViewController implements Initializable {
         MainViewRunner.getSceneChanger().addScreen("LoginPage", FXMLLoader.load(getClass().getResource("/fxml/LoginPageView.fxml")));
         MainViewRunner.getSceneChanger().switchToLoginPageView();
     }
-    
+
     @FXML
     private void updateEnableSoundVisualizer(ActionEvent event) throws Exception {
         AccountsDataManager.setEnableSoundVisualizer(soundVisualizerRadioButton.isSelected());
         MusicPlayerManager.getMpmCurrentlyUsing().changeEnableSoundVisualizerUpdater();
     }
-    
+
     @FXML
     private void updateSaveDownloadQueue(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveDownloadQueue(saveDownloadQueueRadioButton.isSelected());
     }
-    
+
     @FXML
     private void updateSaveSongPosition(ActionEvent event) throws Exception {
         AccountsDataManager.setSaveSongPosition(saveSongPositionRadioButton.isSelected());
     }
-    
+
     @FXML
     private void updateSavePlayPreference(ActionEvent event) throws Exception {
         AccountsDataManager.setSavePlayPreference(savePlayPreference.isSelected());
     }
-    
+
     @FXML
     private void updateStayLoggedIn(ActionEvent event) throws Exception {
         AccountsDataManager.setStayLoggedIn(stayLoggedInRadioButton.isSelected());
     }
-    
+
     @FXML
     private void updateDisplaySongOnClick(ActionEvent event) throws Exception {
         AccountsDataManager.setUpdateDisplaySongOnClick(displaySongOnClickRadioButton.isSelected());
     }
-    
+
     private void updateHeadphoneAction() throws Exception {
         System.out.println(headphonesActionChoiceBox.getSelectionModel().getSelectedItem());
         if (headphonesActionChoiceBox.getSelectionModel().getSelectedItem() != null) {
             AccountsDataManager.setHeadphoneAction(headphonesActionChoiceBox.getSelectionModel().getSelectedItem());
         }
     }
-    
+
     @FXML
     private void showDeletionAccountDialogBox(ActionEvent event) throws IOException, Exception {
         //This creates a dialog popup to allow the user to delete their account
@@ -246,10 +248,10 @@ public class SettingsPageViewController implements Initializable {
         dialog.initStyle(StageStyle.TRANSPARENT);
         accountDeletionDialog.setClip(UIHelper.getDialogPaneClip(accountDeletionDialog));
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
-        
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.CANCEL) {
-            
+
         } else if (buttonClicked.get() == ButtonType.FINISH) {
             if (encryption.sha256Hash(encryption.encrypt(addcController.getPasswordText())).equals(Accounts.getLoggedInAccount().getPassword())) {
                 AccountsDataManager.deleteCurrentAccount();
@@ -273,7 +275,7 @@ public class SettingsPageViewController implements Initializable {
             }
         }
     }
-    
+
     @FXML
     private void showInfoDialogBox(ActionEvent event) throws IOException, Exception {
         //This creates a dialog popup to allow the user to delete their account
@@ -291,5 +293,5 @@ public class SettingsPageViewController implements Initializable {
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
     }
-    
+
 }

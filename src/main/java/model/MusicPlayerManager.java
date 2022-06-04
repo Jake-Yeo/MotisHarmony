@@ -317,8 +317,8 @@ public class MusicPlayerManager {
         stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
-            changeUiUpdater();
-        
+        changeUiUpdater();
+
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();
@@ -352,7 +352,7 @@ public class MusicPlayerManager {
         indexForOrderedPlay++;
         updatePlayTypeAtEndOfMedia();
         //Updates the GUI when the MediaPlayer is Null
-            changeUiUpdater();
+        changeUiUpdater();
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();
@@ -456,6 +456,51 @@ public class MusicPlayerManager {
     public void updateSongList(LinkedList<SongDataObject> sdota) {
         getCurrentSongList().clear();
         getCurrentSongList().addAll(sdota);
+    }
+    
+    public void sortPlaylistList(String sortType, ObservableList<String> obPlaylist) throws Exception {
+        //we sort the view of the current playlist selected
+        if (sortType.equals("A-Z")) {
+            FXCollections.sort(obPlaylist, new Comparator() {
+                @Override
+                public int compare(Object string1, Object string2) {
+                    String firstString = (String) string1;
+                    String secondString = (String) string2;
+                    int returnValue;
+                    if (firstString.compareTo(secondString) < 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstString.compareTo(secondString) > 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+            System.out.println(sortType);
+            //updateViewCurrentSongList();
+        } else if (sortType.equals("Z-A")) {
+            FXCollections.sort(obPlaylist, new Comparator() {
+                @Override
+                public int compare(Object string1, Object string2) {
+                    String firstString = (String) string1;
+                    String secondString = (String) string2;
+                    int returnValue;
+                    if (firstString.compareTo(secondString) > 0) {
+                        returnValue = 0;
+                    } else {
+                        if (firstString.compareTo(secondString) < 0) {
+                            returnValue = 1;
+                        } else {
+                            returnValue = -1;
+                        }
+                    }
+                    return returnValue;
+                }
+            });
+        }
     }
 
     public void sortCurrentSongList(String sortType, ObservableList<SongDataObject> listToSort) {
@@ -624,5 +669,44 @@ public class MusicPlayerManager {
 
     public double getCurrentTimeInSeconds() {
         return mediaPlayer.getCurrentTime().toSeconds();
+    }
+
+    static public String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
+        //This will get the current position of the song along with its total time EXx: 1:43/5:00
+        boolean getTotalSecondsInHourFormat = false;
+        String totalTime = getCurrentTimeString(totalSeconds, false);
+        if (totalTime.length() > 5) {
+            getTotalSecondsInHourFormat = true;
+        }
+        String currentSeconds = getCurrentTimeString(currentseconds, getTotalSecondsInHourFormat);
+        return currentSeconds + "/" + totalTime;
+    }
+
+    static public String getCurrentTimeString(int seconds, boolean inHourFormat) {
+        String videoDuration = "";
+        String stringDurationMinutes = "";
+        int durationInSeconds = seconds;
+        int durationMinutes = (int) Math.floor(durationInSeconds / 60);
+        int durationHours = 0;
+        String remaindingSeconds = "" + (durationInSeconds - durationMinutes * 60);
+        if (remaindingSeconds.length() == 1) {
+            remaindingSeconds = 0 + remaindingSeconds;
+        }
+        if (durationMinutes >= 60 || inHourFormat) { //This will convert the youtube duration from milliseconds, to a readable format.
+            durationHours = (int) Math.floor(durationMinutes / 60);
+            durationMinutes = durationMinutes - durationHours * 60;
+            stringDurationMinutes = durationMinutes + "";
+            if (stringDurationMinutes.length() == 1) {
+                stringDurationMinutes = 0 + stringDurationMinutes;
+            }
+            if (durationHours == 0) {
+                videoDuration = "0:" + stringDurationMinutes + ":" + remaindingSeconds;
+            } else {
+                videoDuration = durationHours + ":" + stringDurationMinutes + ":" + remaindingSeconds;
+            }
+        } else {
+            videoDuration = durationMinutes + ":" + remaindingSeconds;
+        }
+        return videoDuration;
     }
 }

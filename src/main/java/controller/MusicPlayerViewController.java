@@ -158,9 +158,9 @@ public class MusicPlayerViewController implements Initializable {
     private XYChart.Data[] series1Data;
     XYChart.Series<String, Number> series1;
     private static final int BANDS = 100;
+    private static final int THRESHOLD = -60;
     private static final int series1DataLength = BANDS * 2;
     private static final double INTERVAL = 0.005;
-    private static final double DROPDOWN = 1;
     float[] buffer;
 
     AudioSpectrumListener asl = new AudioSpectrumListener() {
@@ -229,7 +229,7 @@ public class MusicPlayerViewController implements Initializable {
         barChart.getStylesheets().add("/css/barChart.css");
         barChart.setBarGap(-3);
         barChart.setCategoryGap(0);
-        yAxis.setUpperBound(60);
+        yAxis.setUpperBound(Math.abs(THRESHOLD));
 
         if (mpm.getMediaPlayer() != null) {
             volumeSlider.setValue(mpm.getVolume());
@@ -550,51 +550,6 @@ public class MusicPlayerViewController implements Initializable {
         }
     }
 
-    private void sortPlaylistList(String sortType) throws Exception {
-        //we sort the view of the current playlist selected
-        if (sortType.equals("A-Z")) {
-            FXCollections.sort(playlistList.getItems(), new Comparator() {
-                @Override
-                public int compare(Object string1, Object string2) {
-                    String firstString = (String) string1;
-                    String secondString = (String) string2;
-                    int returnValue;
-                    if (firstString.compareTo(secondString) < 0) {
-                        returnValue = 0;
-                    } else {
-                        if (firstString.compareTo(secondString) > 0) {
-                            returnValue = 1;
-                        } else {
-                            returnValue = -1;
-                        }
-                    }
-                    return returnValue;
-                }
-            });
-            System.out.println(sortType);
-            //updateViewCurrentSongList();
-        } else if (sortType.equals("Z-A")) {
-            FXCollections.sort(playlistList.getItems(), new Comparator() {
-                @Override
-                public int compare(Object string1, Object string2) {
-                    String firstString = (String) string1;
-                    String secondString = (String) string2;
-                    int returnValue;
-                    if (firstString.compareTo(secondString) > 0) {
-                        returnValue = 0;
-                    } else {
-                        if (firstString.compareTo(secondString) < 0) {
-                            returnValue = 1;
-                        } else {
-                            returnValue = -1;
-                        }
-                    }
-                    return returnValue;
-                }
-            });
-        }
-    }
-
     @FXML
     private void onComboBoxClicked(ActionEvent e) throws Exception {
         if (comboBox.getSelectionModel().selectedIndexProperty().get() >= 0) {
@@ -851,44 +806,7 @@ public class MusicPlayerViewController implements Initializable {
         }
     }
 
-    private String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
-        //This will get the current position of the song along with its total time EXx: 1:43/5:00
-        boolean getTotalSecondsInHourFormat = false;
-        String totalTime = getCurrentTimeString(totalSeconds, false);
-        if (totalTime.length() > 5) {
-            getTotalSecondsInHourFormat = true;
-        }
-        String currentSeconds = getCurrentTimeString(currentseconds, getTotalSecondsInHourFormat);
-        return currentSeconds + "/" + totalTime;
-    }
 
-    private String getCurrentTimeString(int seconds, boolean inHourFormat) {
-        String videoDuration = "";
-        String stringDurationMinutes = "";
-        int durationInSeconds = seconds;
-        int durationMinutes = (int) Math.floor(durationInSeconds / 60);
-        int durationHours = 0;
-        String remaindingSeconds = "" + (durationInSeconds - durationMinutes * 60);
-        if (remaindingSeconds.length() == 1) {
-            remaindingSeconds = 0 + remaindingSeconds;
-        }
-        if (durationMinutes >= 60 || inHourFormat) { //This will convert the youtube duration from milliseconds, to a readable format.
-            durationHours = (int) Math.floor(durationMinutes / 60);
-            durationMinutes = durationMinutes - durationHours * 60;
-            stringDurationMinutes = durationMinutes + "";
-            if (stringDurationMinutes.length() == 1) {
-                stringDurationMinutes = 0 + stringDurationMinutes;
-            }
-            if (durationHours == 0) {
-                videoDuration = "0:" + stringDurationMinutes + ":" + remaindingSeconds;
-            } else {
-                videoDuration = durationHours + ":" + stringDurationMinutes + ":" + remaindingSeconds;
-            }
-        } else {
-            videoDuration = durationMinutes + ":" + remaindingSeconds;
-        }
-        return videoDuration;
-    }
 
     public void init() {
 
@@ -980,7 +898,7 @@ public class MusicPlayerViewController implements Initializable {
         });
 
         //The audio spectrum threshold is basically how loud the audio has to be to show up i think. The graph yaxis should be the same as the audio spectrum threshold
-        mpm.getMediaPlayer().setAudioSpectrumThreshold(-60);
+        mpm.getMediaPlayer().setAudioSpectrumThreshold(THRESHOLD);
 
         mpm.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.
             public void run() {
@@ -1002,7 +920,7 @@ public class MusicPlayerViewController implements Initializable {
         mpm.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {//This will automatically update the seekSlider to match the current position of the song
             public void invalidated(Observable ov) {
                 seekSlider.setValue(mpm.getCurrentTimeInSeconds());
-                timeText.setText(getCurrentTimeStringFormatted((int) Math.floor(mpm.getCurrentTimeInSeconds()), (int) Math.floor(mpm.getTotalDurationInSeconds())));
+                timeText.setText(mpm.getCurrentTimeStringFormatted((int) Math.floor(mpm.getCurrentTimeInSeconds()), (int) Math.floor(mpm.getTotalDurationInSeconds())));
             }
         });
 
@@ -1473,7 +1391,7 @@ public class MusicPlayerViewController implements Initializable {
         playlistList.getItems().clear();
         playlistList.getItems().addAll(map.getArrayOfPlaylistNames());
         if (sortPlaylistChoiceBox.getSelectionModel().getSelectedItem() != null) {
-            sortPlaylistList(sortPlaylistChoiceBox.getSelectionModel().getSelectedItem());
+            mpm.sortPlaylistList(sortPlaylistChoiceBox.getSelectionModel().getSelectedItem(), playlistList.getItems());
         }
         //Make sure that All Songs is always at the very top of the list
         playlistList.getItems().remove(mpm.getAllSongsPlaylistName());
