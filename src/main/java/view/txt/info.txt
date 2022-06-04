@@ -251,9 +251,9 @@ To fix this do the following:
 
 3. In the context menu click on the option which reads "Retry Download"
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] cannot be downloaded at this time as you are IP blocked by youtube! Wait out the ban or change your ip."?
+What is the download error "[My Youtube link] " cannot be downloaded at this as you may be IP blocked by youtube! Or You may be disconnected from wifi."?
 :::::::::::::::::::::::::::::::::::
-It means that you probably downloaded a ton of songs from Youtube(1000+ songs!). 
+If you downloaded a ton of songs from Youtube(1000+ songs!) then you're probably IP banned from youtube.
 
 To fix this you can try the following:
 
@@ -262,6 +262,8 @@ To fix this you can try the following:
 2. Wait out the ban, I'd say it lasts around a week
 
 3. You can also try to change you IP address by restarting your WIFI router.
+
+If you haven't downloaded many songs, then you may be disconnected from wifi.
 :::::::::::::::::::::::::::::::::::
 What is the download error "[My Youtube link] is likely not a link!"?
 :::::::::::::::::::::::::::::::::::

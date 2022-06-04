@@ -129,7 +129,8 @@ public class YoutubeVideoPageParser {
             return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         } catch (java.io.IOException e) {
             didErrorOccur = true;
-            errorMessage = videoUrl + " cannot be downloaded at this time as you are IP blocked by youtube! Wait out the ban or change your ip.";
+            errorMessage = videoUrl + " cannot be downloaded at this as you may be IP blocked by youtube! Or You may be disconnected from wifi.";
+            YoutubeDownloader.getYtdCurrentlyUsing().setWifiConnected(false);
             return new ErrorDataObject(didErrorOccur, errorMessage, videoUrl);
         } catch (Exception e) {
             didErrorOccur = true;
@@ -305,6 +306,9 @@ public class YoutubeVideoPageParser {
                 //The code below automatically updates the text which displays the playing getting percentage, discreprenciese in the percentage is due to youtube not giving accurate playlist sizes when certain videos are hidden, private or restricted
                 YoutubeDownloader.getYtdCurrentlyUsing().getPlaylistGettingPercentage().set((double) numVideosGotten / playlistLength);
                 if (!youtubeIdsCurrentlyInSongDataList.contains(videoID) && !YoutubeDownloader.getYtdCurrentlyUsing().getYoutubeUrlDownloadQueueListVideoIds().contains(videoID) && !Accounts.getLoggedInAccount().getListOfSongVideoIds().contains(videoID)) {//This if statement should look through a txt file containing all the ids of videos downloaded, if one of the ids matches the video, then don't add the SongDataObject to the SongDataList. This ensure that urls are not inputted into the downloadQueue multiple times
+                    //we replace here because for some reason when I do this in the SongDataObject class it doesen't work and I cannot find out why!!!!
+                    videoTitle = videoTitle.replace("\\u0026", "&");
+                    channelName = channelName.replace("\\u0026", "&");
                     songDataList.add(new SongDataObject(videoTitle, videoDuration, channelName, thumbnailUrl, videoUrl, videoID));
                     youtubeIdsCurrentlyInSongDataList.add(videoID);
                 }

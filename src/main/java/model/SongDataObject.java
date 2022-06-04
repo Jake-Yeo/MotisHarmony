@@ -44,7 +44,7 @@ public class SongDataObject implements Serializable {
     }
     
     public static String convertCodeToCharacter(String title) {//https://www.youtube.com/watch?v=jb4ybTQwcdw
-        String newTitle = title.replace("\u0026", "&");
+        String newTitle = title.replace("\\u0026", "&");
         newTitle = title.replace("&amp;", "&");
         newTitle = newTitle.replace("\\\"", "\"");
         return newTitle;

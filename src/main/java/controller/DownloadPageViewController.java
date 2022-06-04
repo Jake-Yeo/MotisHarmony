@@ -439,7 +439,6 @@ public class DownloadPageViewController implements Initializable {
                     downloadErrorList.getItems().clear();
                     try {
                         ObservableList<String> edol = ErrorDataObject.getListOfErrorMessages(ytd.getErrorList());
-                        edol.removeIf(s -> (s.equals(null)));
                         edol.removeIf(s -> (s.equals("null")));
                         downloadErrorList.getItems().addAll(edol);
                     } catch (java.util.ConcurrentModificationException e) {
@@ -450,7 +449,6 @@ public class DownloadPageViewController implements Initializable {
         } else {
             downloadErrorList.getItems().clear();
             ObservableList<String> edol = ErrorDataObject.getListOfErrorMessages(ytd.getErrorList());
-            edol.removeIf(s -> (s.equals(null)));
             edol.removeIf(s -> (s.equals("null")));
             downloadErrorList.getItems().addAll(edol);
         }
