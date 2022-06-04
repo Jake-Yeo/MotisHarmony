@@ -37,6 +37,9 @@ https://mycolor.space/gradient
 Helped me with my UI
 https://gluonhq.com/products/scene-builder/
 
+Helped me create my sound visualizer
+https://victor-fx.blogspot.com/2017/08/audio-visualization-in-javafx.html
+
 Helped me create a dialog box
 https://youtu.be/vwMtQJf1enQ
 
@@ -351,3 +354,9 @@ It means the download queue has been paused since you are not connected to wifi.
 What does the "Close All Chrome Drivers" button in settings do?
 :::::::::::::::::::::::::::::::::::
 This button is used to close all the chrome drivers and browsers opened by the program. Unfortunately, this will also close any Chrome tabs you have opened. So use this button cautiously.
+:::::::::::::::::::::::::::::::::::
+What does the "Enable Sound Visualizer" radio button in settings do?
+:::::::::::::::::::::::::::::::::::
+It you select that radio button then the program will display a cool sound visualizer for you to look at.
+
+If you deselect that radio button then the program will not display a cool sound visualizer for you to look at.

@@ -39,6 +39,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -62,6 +68,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -84,8 +91,8 @@ import view.MainViewRunner;
  *
  * @author 1100007967
  */
-public class MusicPlayerViewController implements Initializable, PropertyChangeListener {
-    
+public class MusicPlayerViewController implements Initializable {
+
     private ContextMenu songListContextMenu = new ContextMenu();
     private ContextMenu playlistListContextMenu = new ContextMenu();
     private MusicPlayerManager mpm;
@@ -143,18 +150,55 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
     private Button alarmClockButton;
     @FXML
     private Button sleepTimerButton;
-    
+
+    @FXML
+    private BarChart<String, Number> barChart;
+    @FXML
+    private NumberAxis yAxis;
+    private XYChart.Data[] series1Data;
+    XYChart.Series<String, Number> series1;
+    private static final int BANDS = 100;
+    private static final int series1DataLength = BANDS * 2;
+    private static final double INTERVAL = 0.005;
+    private static final double DROPDOWN = 1;
+    float[] buffer;
+
+    AudioSpectrumListener asl = new AudioSpectrumListener() {
+        @Override
+        public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
+            int index = 0;
+            for (int seriesPointer = magnitudes.length - 1; seriesPointer >= 0; seriesPointer--, index++) {
+                if (magnitudes[seriesPointer] >= buffer[seriesPointer]) {
+                    buffer[seriesPointer] = magnitudes[seriesPointer];
+                    series1Data[index].setYValue(magnitudes[seriesPointer] - mpm.getMediaPlayer().getAudioSpectrumThreshold());
+                } else {
+                    series1Data[index].setYValue(buffer[seriesPointer] - mpm.getMediaPlayer().getAudioSpectrumThreshold());
+                    buffer[seriesPointer] -= 0.25;
+                }
+            }
+            for (int i = 0; i < magnitudes.length; i++, index++) {
+                if (magnitudes[i] >= buffer[i]) {
+                    buffer[i] = magnitudes[i];
+                    series1Data[index].setYValue(magnitudes[i] - mpm.getMediaPlayer().getAudioSpectrumThreshold());
+                } else {
+                    series1Data[index].setYValue(buffer[i] - mpm.getMediaPlayer().getAudioSpectrumThreshold());
+                    buffer[i] -= 0.25;
+                }
+            }
+        }
+    };
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         musicPlayerBackgroundImageView.setImage(new Image("/images/musicPlayerBackground.png"));
-        
+
         addPlaylistButton.getStylesheets().add("/css/musicPlayerAddPlaylistButton.css");
         playlistNameTextField.getStylesheets().add("/css/musicPlayerPlaylistNameField.css");
         searchTextField.getStylesheets().add("/css/musicPlayerSearchField.css");
         seekSlider.getStylesheets().add("/css/customSeekSlider.css");
         volumeSlider.getStylesheets().add("/css/customVolumeSlider.css");
-        
+
         mpm = new MusicPlayerManager();
         searchTextField.setText("");
         MusicPlayerManager.setMpmCurrentlyUsing(mpm);
@@ -172,7 +216,21 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songList.getStylesheets().add("/css/customListView.css");
         songInfoViewList.getStylesheets().add("/css/customScrollBar.css");
         songInfoViewList.getStylesheets().add("/css/customListView.css");
-        
+
+        series1 = new XYChart.Series<>();
+        series1Data = new XYChart.Data[series1DataLength];
+        for (int i = 0; i < series1Data.length; i++) {
+            series1Data[i] = new XYChart.Data<>(Integer.toString(i + 1), 0);
+            series1.getData().add(series1Data[i]);
+        }
+
+        barChart.getData().add(series1);
+        barChart.getYAxis().setAutoRanging(false);
+        barChart.getStylesheets().add("/css/barChart.css");
+        barChart.setBarGap(-3);
+        barChart.setCategoryGap(0);
+        yAxis.setUpperBound(60);
+
         if (mpm.getMediaPlayer() != null) {
             volumeSlider.setValue(mpm.getVolume());
             seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> mpm.getMediaPlayer().getTotalDuration().toSeconds(), mpm.getMediaPlayer().totalDurationProperty()));
@@ -282,7 +340,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 System.out.println("view listener ran");
             }
         });
-        
+
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         playButton.textOverrunProperty().set(OverrunStyle.CLIP);
         System.out.println("SongList sort " + Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
@@ -330,9 +388,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 });
             }
         });
-        
+
         if (Accounts.getLoggedInAccount().getSettingsObject().getSavePlayPreference()) {
-            
+
             if (Accounts.getLoggedInAccount().getSettingsObject().getPlayType().equals("Random Play")) {
                 mpm.setPlayType("Random Play");
                 shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #ff6c8c; -fx-border-width: 3px; -fx-border-radius: 50px;");
@@ -342,7 +400,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 shuffleButton.setStyle("-fx-padding: 0 0 0 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
                 shuffleButton.setTextFill(Paint.valueOf("#f04444"));
             }
-            
+
             if (Accounts.getLoggedInAccount().getSettingsObject().getPlaySongInLoop()) {
                 loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #ff6c8c; -fx-border-width: 3px; -fx-border-radius: 50px;");
                 loopButton.setTextFill(Paint.valueOf("#ff6c8c"));
@@ -352,7 +410,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
             mpm.setPlaySongInLoop(Accounts.getLoggedInAccount().getSettingsObject().getPlaySongInLoop());
         }
-        
+
         MainViewRunner.getStage().setOnCloseRequest(windowEvent -> {
             mpm.getMediaPlayer().stop();
         });
@@ -388,6 +446,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 Logger.getLogger(AlarmClock.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
         mpm.getUiUpdater().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
@@ -397,19 +456,45 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 mpm.resumeSong();
             }
         });
+
+        mpm.getEnableSoundVisualizerUpdater().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+                if (Accounts.getLoggedInAccount().getSettingsObject().getEnableSoundVisualizer()) {
+                    mpm.getMediaPlayer().setAudioSpectrumListener(asl);
+                    barChart.setVisible(true);
+                } else {
+                    mpm.getMediaPlayer().setAudioSpectrumListener(null);
+                    barChart.setVisible(false);
+                }
+            }
+        });
         if (mpm.getSongObjectBeingPlayed() != null) {
             updatePlayerDisplays();
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         }
+
+        buffer = new float[series1DataLength];
+        Arrays.fill(buffer, -1000);
+
+        //This will set up the data which can then be altered to change the display of the music visualizer
+        series1 = new XYChart.Series<>();
+        series1Data = new XYChart.Data[series1DataLength];
+        for (int i = 0; i < series1Data.length; i++) {
+            series1Data[i] = new XYChart.Data<>(Integer.toString(i + 1), 0);
+            //noinspection unchecked
+            series1.getData().add(series1Data[i]);
+        }
+        barChart.getData().add(series1);
     }
-    
+
     @FXML
     private void searchTextFieldWhenTyped(KeyEvent e) {
         //Search everytime the text input is changed
         System.out.println("Searching!!");
         mpm.updateCurrentSongListWithSearchQuery(searchTextField.getText());
     }
-    
+
     @FXML
     private void shuffleButtonOnAction() {
         //The code below immitates what spotify does when a shuffle button is pressed
@@ -429,10 +514,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             } catch (Exception ex) {
                 Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
     }
-    
+
     @FXML
     private void loopButtonOnAction() {
         //The code below immitates what spotify does when a loop button button is pressed
@@ -440,7 +525,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             mpm.setPlaySongInLoop(false);
             loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #f04444; -fx-border-width: 3px; -fx-border-radius: 50px;");
             loopButton.setTextFill(Paint.valueOf("#f04444"));
-            
+
         } else {
             mpm.setPlaySongInLoop(true);
             loopButton.setStyle("-fx-padding: 0 0 2 0; -fx-background-color: transparent; -fx-border-color: #ff6c8c; -fx-border-width: 3px; -fx-border-radius: 50px;");
@@ -452,10 +537,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             } catch (Exception ex) {
                 Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
     }
-    
+
     private void sortModelCurrentSongList(String sortType) throws Exception {
         //we sort the view of the current playlist selected
         mpm.sortCurrentSongList(sortType, mpm.getCurrentSongList());
@@ -464,7 +549,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             mpm.setIndexForOrderedPlay(mpm.getPlaylistSongsPlaying().indexOf(mpm.getSongObjectBeingPlayed()) + 1);
         }
     }
-    
+
     private void sortPlaylistList(String sortType) throws Exception {
         //we sort the view of the current playlist selected
         if (sortType.equals("A-Z")) {
@@ -509,7 +594,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             });
         }
     }
-    
+
     @FXML
     private void onComboBoxClicked(ActionEvent e) throws Exception {
         if (comboBox.getSelectionModel().selectedIndexProperty().get() >= 0) {
@@ -546,7 +631,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         System.out.println(comboBox.getSelectionModel().selectedIndexProperty().get());
     }
-    
+
     @FXML
     private void createNewPlaylist(ActionEvent event) throws Exception {
         //Code to create a new playlist
@@ -556,7 +641,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             playlistNameTextField.clear();
         }
     }
-    
+
     private void onFirstMusicPlayerPlay() throws IOException, Exception {
         //This code below initalizes the MusicPlayer
         mpm.smartPlay();
@@ -567,7 +652,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
         playButton.setText("⏸︎");
     }
-    
+
     @FXML
     private void playMusic(ActionEvent event) throws IOException, Exception {
         if (!mpm.isThisPlaylistEmpty(mpm.getCurrentPlaylistPlayling())) {
@@ -587,10 +672,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 playButton.setText("⏸︎");
                 System.out.println(mpm.getMediaPlayer().getStatus());
             }
+
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         }
     }
-    
+
     public void setUpPlayButton() {
         seekSlider.setValue(0);
         playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
@@ -599,7 +685,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         init();//initalize again because a new MediaPlayer is made
         updatePlayerDisplays();
     }
-    
+
     @FXML
     private void previousSong() throws IOException, Exception {
         if (!mpm.isThisPlaylistEmpty(mpm.getCurrentPlaylistPlayling())) {
@@ -640,7 +726,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
     }
-    
+
     @FXML
     private void nextSong(ActionEvent event) throws IOException, Exception {
         if (!mpm.isThisPlaylistEmpty(mpm.getCurrentPlaylistPlayling())) {
@@ -653,7 +739,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
     }
-    
+
     private void goToNextSong() throws Exception {
         if (!mpm.getPlaySongInLoop()) {
             if (mpm.getPlayType().equals("Ordered Play")) {
@@ -661,7 +747,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 mpm.getSongHistory().clear();
                 //The code below will let the mpm know to play the next song
                 mpm.setIndexForOrderedPlay(mpm.getPlaylistSongsPlaying().indexOf(mpm.getSongObjectBeingPlayed()) + 1);
-                
+
                 mpm.nextOrPrevSong();
                 //This code will set up the play button and audio info displays
                 setUpPlayButton();
@@ -689,7 +775,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             updatePlayerDisplays();
         }
     }
-    
+
     private void resetInfoDisplaysAndChangeSong() throws Exception {
         mpm.pauseSong();
         mpm.setSongObjectBeingPlayed(null);
@@ -704,12 +790,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             songInfoViewList.getItems().add("Song duration: ");
             thumbnailImageView.setImage(null);
             thumbnailAnchorPane.setStyle("-fx-background-color: transparent; -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0px 0px; -fx-border-width: 5px; -fx-background-radius: 33px 33px 0px 0px;");
-            
+
         } else {
             playPlaylist(mpm.getAllSongsPlaylistName());
         }
     }
-    
+
     @FXML
     private void updateSongInfoDisplaysWhenClickPlayerText() {
         if (mpm.getSongObjectBeingPlayed() != null) {
@@ -724,27 +810,27 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             songInfoViewList.getItems().add("Song name: " + sdo.getTitle());
             songInfoViewList.getItems().add("Song creator: " + sdo.getChannelName());
             songInfoViewList.getItems().add("Song duration: " + sdo.getVideoDuration());
-            
+
             Image imageToDisplay = new Image(sdo.getPathToThumbnail());
             double w = 0;
             double h = 0;
-            
+
             double ratioX = thumbnailImageView.getFitWidth() / imageToDisplay.getWidth();
             double ratioY = thumbnailImageView.getFitHeight() / imageToDisplay.getHeight();
-            
+
             double reducCoeff = 0;
             if (ratioX >= ratioY) {
                 reducCoeff = ratioY;
             } else {
                 reducCoeff = ratioX;
             }
-            
+
             w = imageToDisplay.getWidth() * reducCoeff;
             h = imageToDisplay.getHeight() * reducCoeff;
-            
+
             thumbnailImageView.setX((thumbnailImageView.getFitWidth() - w) / 2);
             thumbnailImageView.setY((thumbnailImageView.getFitHeight() - h) / 2);
-            
+
             thumbnailImageView.setImage(imageToDisplay);
             thumbnailAnchorPane.setStyle("-fx-background-color: black; -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0px 0px; -fx-border-width: 5px; -fx-background-radius: 33px 33px 0px 0px;");
         }
@@ -758,12 +844,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             artistNameLabel.setText("Artist: " + mpm.getSongObjectBeingPlayed().getChannelName());
             playlistPlayingLabel.setText("Playlist Playing: " + mpm.getCurrentPlaylistPlayling());
         }
-        
+
         if (Accounts.getLoggedInAccount().getSettingsObject().getAutoDisplayNextSong()) {
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         }
     }
-    
+
     private String getCurrentTimeStringFormatted(int currentseconds, int totalSeconds) {
         //This will get the current position of the song along with its total time EXx: 1:43/5:00
         boolean getTotalSecondsInHourFormat = false;
@@ -774,7 +860,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         String currentSeconds = getCurrentTimeString(currentseconds, getTotalSecondsInHourFormat);
         return currentSeconds + "/" + totalTime;
     }
-    
+
     private String getCurrentTimeString(int seconds, boolean inHourFormat) {
         String videoDuration = "";
         String stringDurationMinutes = "";
@@ -802,8 +888,9 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         }
         return videoDuration;
     }
-    
+
     public void init() {
+
         mpm.getMediaPlayer().setOnEndOfMedia(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
                 try {
@@ -817,7 +904,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 }
             }
         });
-        
+
         mpm.getMediaPlayer().setOnPlaying(() -> {
             mpm.setPaused(false);
             playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
@@ -826,7 +913,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             updatePlayerDisplays();
             System.out.println("Setting the pause button to play");
         });
-        
+
         mpm.getMediaPlayer().setOnPaused(() -> {
             //The if statement ensures that the mediaPlayer is not paused when seeking. We pause when we seek if not weird audio is generated
             if (!mpm.getIsSeeking()) {
@@ -841,7 +928,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 System.out.println("Setting the pause button to paused");
             }
         });
-        
+
         mpm.getMediaPlayer().setOnError(new Runnable() {//this will tell the music player what to do when the song ends. Since a new media player is created each time, we must call the init() method again to set and initialize the media player again
             public void run() {
                 mpm.resetPlayerOnError();
@@ -854,7 +941,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 mpm.getMediaPlayer().play();
             }
         });
-        
+
         mpm.getMediaPlayer().setOnHalted(() -> {
             mpm.resetPlayerOnError();
             init();
@@ -865,7 +952,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             });
             mpm.getMediaPlayer().play();
         });
-        
+
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(
@@ -874,12 +961,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 mpm.setSliderVolume(volumeSlider.getValue());
             }
         });
-        
+
         seekSlider.setOnMousePressed((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             mpm.setIsSeeking(true);
             mpm.getMediaPlayer().pause();//Pause the song so there is no weird audio. However do not change the boolean isPaused value so we can choose wether or not to resume the song or not after we finish seeking
         });
-        
+
         seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             mpm.seekTo(Duration.seconds(seekSlider.getValue()));//Set where to resume the song
             System.out.println(seekSlider.getValue() + " seek slider");
@@ -890,16 +977,27 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
             mpm.setIsSeeking(false);
         });
-        
+
+        //The audio spectrum threshold is basically how loud the audio has to be to show up i think. The graph yaxis should be the same as the audio spectrum threshold
+        mpm.getMediaPlayer().setAudioSpectrumThreshold(-60);
+
         mpm.getMediaPlayer().setOnReady(new Runnable() {//This will set the volume of the song, and the max value of the seekSlider once the media player has finished analyzing and reading the song.
             public void run() {
                 mpm.setVolume(volumeSlider.getValue());//Sets the volume
                 mpm.setSliderVolume(volumeSlider.getValue());
                 seekSlider.setMax(mpm.getMediaPlayer().getMedia().getDuration().toSeconds());
+
+                if (Accounts.getLoggedInAccount().getSettingsObject().getEnableSoundVisualizer()) {
+                    //This will update the barChart bars
+                    barChart.setVisible(true);
+                    mpm.getMediaPlayer().setAudioSpectrumListener(asl);
+                }
+                mpm.getMediaPlayer().setAudioSpectrumNumBands(BANDS);
+                mpm.getMediaPlayer().setAudioSpectrumInterval(INTERVAL);
                 //seekSlider.maxProperty().bind(Bindings.createDoubleBinding(() -> mpm.getMediaPlayer().getTotalDuration().toSeconds(), mpm.getMediaPlayer().totalDurationProperty()));//Sets the max values of the seekSlider to the duration of the song that is to be played
             }
         });
-        
+
         mpm.getMediaPlayer().currentTimeProperty().addListener(new InvalidationListener() {//This will automatically update the seekSlider to match the current position of the song
             public void invalidated(Observable ov) {
                 seekSlider.setValue(mpm.getCurrentTimeInSeconds());
@@ -912,7 +1010,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         //Will set up the audio balance for the music player
         mpm.getMediaPlayer().setBalance(Accounts.getLoggedInAccount().getSettingsObject().getAudioBalance());
     }
-    
+
     public void playSelectedSongOption() throws Exception {
         //This if statement will clear the songHistory if you play a song from a different playlist than the one you are currently playing
         if (!mpm.getCurrentPlaylistPlayling().equals(playlistList.getSelectionModel().getSelectedItem())) {
@@ -932,12 +1030,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         init();//initalize again because a new MediaPlayer is made
         updatePlayerDisplays();
     }
-    
+
     public void contextMenuAddToPlaylistOption() {
         updatePlaylistToAddToChoiceBox();
         comboBox.show();
     }
-    
+
     public void contextMenuDeletePlaylistOption() throws Exception {
         String selectedItem = playlistList.getSelectionModel().getSelectedItem();
         if (!selectedItem.equals(mpm.getAllSongsPlaylistName())) {
@@ -958,13 +1056,13 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             UIHelper.getCustomAlert("You cannot delete the \"" + mpm.getAllSongsPlaylistName() + "\" playlist!").show();
         }
     }
-    
+
     public void updatePlaylistToAddToChoiceBox() {
         comboBox.getItems().clear();
         PlaylistMap map = Accounts.getLoggedInAccount().getPlaylistDataObject();
         comboBox.getItems().addAll(map.getArrayOfPlaylistNames());
     }
-    
+
     public void deleteSongFromPlaylistOption() throws Exception {
         String playlistToRemoveFrom = playlistList.getSelectionModel().getSelectedItem();
         if (!playlistToRemoveFrom.equals(mpm.getAllSongsPlaylistName())) {
@@ -973,7 +1071,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             } else {
                 //This else statement should only run when the user does not click on any playlists during startup
                 AccountsDataManager.removeSongFromPlaylist(mpm.getCurrentPlaylistPlayling(), mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices()));
-                
+
             }
 
             //This if statement will stop the musicPlayer if the playlist which is currently playing has had all its songs removed by the user.
@@ -995,7 +1093,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             UIHelper.getCustomAlert("You cannot remove songs from the \"" + mpm.getAllSongsPlaylistName() + "\" playlist!").show();
         }
     }
-    
+
     public void playPlaylist(String playlistName) throws Exception {
         if (!mpm.isThisPlaylistEmpty(playlistName)) {
             System.out.println("playling playlist");
@@ -1006,7 +1104,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                     loopButton.setTextFill(Paint.valueOf("#f04444"));
                     mpm.setPlaySongInLoop(false);
                 }
-                
+
                 mpm.setIndexForOrderedPlay(0);
                 mpm.playThisPlaylist(playlistName);
                 mpm.nextOrPrevSong();
@@ -1024,11 +1122,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         }
     }
-    
+
     public void playPlaylistOption() throws IOException, Exception {
         playPlaylist(playlistList.getSelectionModel().getSelectedItem());
     }
-    
+
     public void deleteSongFromAccountOption() throws IOException, Exception {
         SongDataObject[] sdosToDelete = mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices());
         AccountsDataManager.deleteSong(sdosToDelete);
@@ -1064,7 +1162,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             mpm.setMusicPlayerInitialized(false);
         }
     }
-    
+
     public void editSongDataOption() throws IOException {
         //This creates a dialog popup to allow the user to edit the data of a SongDataObject
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -1080,10 +1178,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setTitle("Song Data Editor");
         songDialogEditor.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
-        
+
         songDialogEditor.setClip(UIHelper.getDialogPaneClip(songDialogEditor));
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
-        
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             sdeController.applyDataChangesToSongDataObject(sdoToEdit);
@@ -1093,7 +1191,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             return;
         }
     }
-    
+
     public void editPlaylistNameOption() throws IOException, Exception {
         //This creates a dialog popup to allow the user to edit the name of a playlist
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -1108,10 +1206,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setTitle("Playlist Name Editor");
         playlistDialogEditor.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
-        
+
         playlistDialogEditor.setClip(UIHelper.getDialogPaneClip(playlistDialogEditor));
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
-        
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             String newPlaylistName = pdeController.getPlaylistNameTextFieldText();
@@ -1121,7 +1219,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
                 //We update the playlistList so that the new name of the playlist shows up
                 updatePlaylistList();
                 updatePlayerDisplays();
-                
+
                 playlistList.getSelectionModel().clearSelection();
                 playlistList.getSelectionModel().select(newPlaylistName);
             } else if (oldPlaylistName.equals(mpm.getAllSongsPlaylistName())) {
@@ -1133,7 +1231,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             return;
         }
     }
-    
+
     @FXML
     public void showSleepAlarmDialog() throws IOException, ParseException {
         if (SleepTimer.getTimerCurrentlyUsing() != null) {
@@ -1149,12 +1247,12 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setTitle("Sleep Timer Editor");
         songDialogEditor.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
-        
+
         songDialogEditor.setClip(UIHelper.getDialogPaneClip(songDialogEditor));
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
-        
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
-        
+
         if (buttonClicked.get() == ButtonType.APPLY) {
             AccountsDataManager.saveSleepTimerSettings();
             if (SleepTimer.getTimerCurrentlyUsing().getEnableTimer()) {
@@ -1175,7 +1273,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         }
     }
-    
+
     @FXML
     public void showAlarmClockDialog() throws IOException, ParseException {
         //This creates a dialog popup to allow the user to edit the data of a SongDataObject
@@ -1192,10 +1290,10 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         dialog.setTitle("Alarm Clock Editor");
         alarmDialogEditor.getScene().getWindow().centerOnScreen();
         dialog.initStyle(StageStyle.TRANSPARENT);
-        
+
         alarmDialogEditor.setClip(UIHelper.getDialogPaneClip(alarmDialogEditor));
         dialog.getDialogPane().getScene().setFill(Color.TRANSPARENT);
-        
+
         Optional<ButtonType> buttonClicked = dialog.showAndWait();
         if (buttonClicked.get() == ButtonType.APPLY) {
             AccountsDataManager.saveAlarmClockSettings();
@@ -1216,11 +1314,11 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         }
     }
-    
+
     public void sortPlaylistOption() throws Exception {
         sortPlaylistChoiceBox.show();
     }
-    
+
     private void copyUrlOption() {
         String stringToCopy = mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()).getVideoUrl();
         if (!stringToCopy.isBlank()) {
@@ -1229,7 +1327,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             clipboard.setContents(stringSelection, null);
         }
     }
-    
+
     private void copyArtistNameOption() {
         String stringToCopy = mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()).getChannelName();
         if (!stringToCopy.isBlank()) {
@@ -1238,7 +1336,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             clipboard.setContents(stringSelection, null);
         }
     }
-    
+
     private void copyTitleNameOption() {
         String stringToCopy = mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()).getTitle();
         if (!stringToCopy.isBlank()) {
@@ -1247,7 +1345,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             clipboard.setContents(stringSelection, null);
         }
     }
-    
+
     public void setUpContextMenus() {
         MenuItem sortSongList = new MenuItem("Sort Song List");
         sortSongList.setOnAction(e -> sortChoiceBox.show());
@@ -1329,7 +1427,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         });
         playlistListContextMenu.getItems().addAll(sortPlaylist, editPlaylistName, playPlaylist, deletePlaylist);
     }
-    
+
     @FXML
     public void showSongListContextMenu(MouseEvent e) throws Exception {
         if (songList.getSelectionModel().getSelectedIndex() != -1 || !songList.getSelectionModel().getSelectedIndices().isEmpty()) {
@@ -1339,15 +1437,15 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
                 playSelectedSongOption();
             } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 1) {
-                
+
                 updateSongInfoDisplays(mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
-                
+
             } else {
                 songListContextMenu.hide();
             }
         }
     }
-    
+
     @FXML
     public void showPlaylistListContextMenu(MouseEvent e) throws Exception {
         if (playlistList.getSelectionModel().getSelectedIndex() != -1) {
@@ -1366,7 +1464,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         }
     }
-    
+
     private void updatePlaylistList() throws Exception {
         //Since all selections are wiped when updating, we must set what the selected item is once we finish updating.
         String itemSelected = playlistList.getSelectionModel().getSelectedItem();
@@ -1381,7 +1479,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         playlistList.getItems().add(0, mpm.getAllSongsPlaylistName());
         playlistList.getSelectionModel().select(itemSelected);
     }
-    
+
     private void updateModelCurrentSongList() throws Exception {
         if (Accounts.getLoggedInAccount() != null) {
             //We must keep track of the selected items which we can do below
@@ -1405,7 +1503,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             }
         }
     }
-    
+
     private void updateViewCurrentSongList() {
         //we clear the list and then put the new list of song names in
         System.out.println("updating current song list");
@@ -1419,7 +1517,7 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
             songList.getSelectionModel().select(s);
         }
     }
-    
+
     private void updateViewCurrentSongList(ObservableList<String> listOfItems) {
         //we clear the list and then put the new list of song names in
         System.out.println("updating current song list");
@@ -1427,15 +1525,6 @@ public class MusicPlayerViewController implements Initializable, PropertyChangeL
         songList.getItems().addAll(mpm.getArrayOfSongInfoInCurrentSongList());
         for (String s : listOfItems) {
             songList.getSelectionModel().select(s);
-        }
-    }
-    
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        try {
-            updatePlaylistList();
-        } catch (Exception ex) {
-            Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

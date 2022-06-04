@@ -24,6 +24,7 @@ public class SettingsObject implements Serializable {
     private boolean savePlayPreference = true;
     private boolean saveSongPosition = true;
     private boolean autoDisplayNextSong = true;
+    private boolean enableSoundVisualizer = true;
     private String lastPlaylistPlayed = null;
     private SongDataObject lastSongPlayed = null;
     private AlarmClock alarmClock = new AlarmClock(8, 0, "AM");
@@ -33,6 +34,14 @@ public class SettingsObject implements Serializable {
 
     public SettingsObject() {
         System.out.println("playlistListSortPreference = " + playlistListSortPreference);
+    }
+    
+    public boolean getEnableSoundVisualizer() {
+        return enableSoundVisualizer;
+    }
+    
+    public void setEnableSoundVisualizer(boolean tf) {
+        enableSoundVisualizer = tf;
     }
 
     public String getHeadphoneAction() {

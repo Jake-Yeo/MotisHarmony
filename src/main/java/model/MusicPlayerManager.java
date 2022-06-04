@@ -48,6 +48,8 @@ public class MusicPlayerManager {
     private ObservableList<SongDataObject> currentSongList = FXCollections.observableArrayList();
     //The variable below is really just being used to update the GUI when the alarm goes off
     private SimpleBooleanProperty uiUpdater = new SimpleBooleanProperty(true);
+    //This variable really is just to update the GUI aswell, you shouldn't actually use this as a "enableSoundVisualizer" variable
+    private SimpleBooleanProperty enableSoundVisualizerUpdater = new SimpleBooleanProperty(true);
     private ObservableList<SongDataObject> playlistSongsPlaying = FXCollections.observableArrayList();
     private LinkedList<SongDataObject> songHistory = new LinkedList<>();
     private int posInSongHistory = 0;
@@ -67,8 +69,20 @@ public class MusicPlayerManager {
         return allSongsPlaylistName;
     }
 
+    public SimpleBooleanProperty getEnableSoundVisualizerUpdater() {
+        return enableSoundVisualizerUpdater;
+    }
+
+    public void changeEnableSoundVisualizerUpdater() {
+        enableSoundVisualizerUpdater.setValue(!enableSoundVisualizerUpdater.getValue());
+    }
+
     public SimpleBooleanProperty getUiUpdater() {
         return uiUpdater;
+    }
+
+    public void changeUiUpdater() {
+        uiUpdater.setValue(!uiUpdater.getValue());
     }
 
     public void setIsSeeking(boolean seeking) {
@@ -304,7 +318,9 @@ public class MusicPlayerManager {
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
         //Updates the GUI when the MediaPlayer is Null
-        uiUpdater.set(!uiUpdater.get());
+        if (mediaPlayer == null) {
+            changeUiUpdater();
+        }
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();
@@ -338,7 +354,9 @@ public class MusicPlayerManager {
         indexForOrderedPlay++;
         updatePlayTypeAtEndOfMedia();
         //Updates the GUI when the MediaPlayer is Null
-        uiUpdater.set(!uiUpdater.get());
+        if (mediaPlayer == null) {
+            changeUiUpdater();
+        }
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();

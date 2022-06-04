@@ -153,13 +153,17 @@ public class AccountsDataManager implements Serializable {//This class will be u
     public static void setHeadphoneAction(String action) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setHeadphoneAction(action);
     }
-    
+
     public static void setAudioBalance(double d) {
         Accounts.getLoggedInAccount().getSettingsObject().setAudioBalance(d);
     }
 
     public static void setStayLoggedIn(boolean tf) throws Exception {
         Accounts.getLoggedInAccount().getSettingsObject().setStayLoggedIn(tf);
+    }
+
+    public static void setEnableSoundVisualizer(boolean tf) throws Exception {
+        Accounts.getLoggedInAccount().getSettingsObject().setEnableSoundVisualizer(tf);
     }
 
     public static void updateSongsInQueueList(ObservableList<SongDataObject> songsToUpdateWith) throws Exception {
