@@ -779,6 +779,7 @@ public class MusicPlayerViewController implements Initializable {
     private void resetInfoDisplaysAndChangeSong() throws Exception {
         mpm.pauseSong();
         mpm.setSongObjectBeingPlayed(null);
+        barChart.setVisible(false);
 
         //The code below is just incase all songs have been deleted
         if (Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {

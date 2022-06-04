@@ -317,10 +317,8 @@ public class MusicPlayerManager {
         stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
-        //Updates the GUI when the MediaPlayer is Null
-        if (mediaPlayer == null) {
             changeUiUpdater();
-        }
+        
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();
@@ -354,9 +352,7 @@ public class MusicPlayerManager {
         indexForOrderedPlay++;
         updatePlayTypeAtEndOfMedia();
         //Updates the GUI when the MediaPlayer is Null
-        if (mediaPlayer == null) {
             changeUiUpdater();
-        }
         mediaPlayer.play();
         System.out.println("finished playling");
         //playMusic();
