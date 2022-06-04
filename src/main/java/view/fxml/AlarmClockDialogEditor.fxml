@@ -14,7 +14,7 @@
    <content>
       <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="102.0" prefWidth="268.0" style="-fx-background-color: #5c1c48;">
          <children>
-            <RadioButton fx:id="enableAlarmRadioButton" layoutX="14.0" layoutY="10.0" mnemonicParsing="false" onAction="#onEnableAlarmRadioButtonPressed" text="enableAlarm" textFill="WHITE" />
+            <RadioButton fx:id="enableAlarmRadioButton" layoutX="14.0" layoutY="10.0" mnemonicParsing="false" onAction="#onEnableAlarmRadioButtonPressed" text="Enable Alarm" textFill="WHITE" />
             <ComboBox fx:id="minuteComboBox" layoutX="99.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onMinuteComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
             <ComboBox fx:id="hourComboBox" layoutX="14.0" layoutY="39.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onHourComboBoxPressed" prefHeight="25.0" prefWidth="74.0" />
             <ChoiceBox fx:id="amOrPmChoiceBox" layoutX="184.0" layoutY="40.0" onDragDetected="#onAmOrPmChoiceBoxPressed" prefWidth="74.0" />
