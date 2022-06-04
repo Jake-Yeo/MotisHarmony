@@ -162,7 +162,7 @@ public class SettingsPageViewController implements Initializable {
             if (YoutubeDownloader.getYtdCurrentlyUsing().getStatus().getValue() != null && YoutubeDownloader.getYtdCurrentlyUsing().getStatus().getValue().equals("Finished Downloading Queue")) {
                 YoutubeDownloader.closeAndQuitAllChromeDrivers();
             } else if (YoutubeDownloader.getYtdCurrentlyUsing().getStatus().getValue() == null) {
-                UIHelper.getCustomAlert("The program not have any Chrome Drivers for you to close!").show();
+                UIHelper.getCustomAlert("The does program not have any Chrome Drivers for you to close!").show();
             } else {
                 UIHelper.getCustomAlert("You need to have an empty Download Queue to use this!").show();
             }

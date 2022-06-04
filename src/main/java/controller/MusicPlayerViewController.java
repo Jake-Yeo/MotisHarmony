@@ -732,7 +732,9 @@ public class MusicPlayerViewController implements Initializable {
     }
 
     private void resetInfoDisplaysAndChangeSong() throws Exception {
-        mpm.pauseSong();
+        if (mpm.getMediaPlayer() != null) {
+            mpm.pauseSong();
+        }
         mpm.setSongObjectBeingPlayed(null);
         barChart.setVisible(false);
 
@@ -805,8 +807,6 @@ public class MusicPlayerViewController implements Initializable {
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
         }
     }
-
-
 
     public void init() {
 
@@ -1049,21 +1049,23 @@ public class MusicPlayerViewController implements Initializable {
     public void deleteSongFromAccountOption() throws IOException, Exception {
         SongDataObject[] sdosToDelete = mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices());
         AccountsDataManager.deleteSong(sdosToDelete);
+        //If there user deleted all the songs then no song will be displayed
+        if (Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
+            resetInfoDisplaysAndChangeSong();
+            return;
+        }
         if (mpm.getSongObjectBeingPlayed() != null) {
             for (SongDataObject sdo : sdosToDelete) {
+                //This if statement will just switch to another song if the current song is deleted
                 if (sdo.getVideoID().equals(mpm.getSongObjectBeingPlayed().getVideoID())) {
-                    //If there user deleted all the songs then no song will be displayed
-                    if (Accounts.getLoggedInAccount().getListOfSongDataObjects().isEmpty()) {
-                        resetInfoDisplaysAndChangeSong();
+                    if (mpm.isSongPaused()) {
+                        mpm.smartPlay();
+                        mpm.pauseSong();
                     } else {
-                        if (mpm.isSongPaused()) {
-                            mpm.smartPlay();
-                            mpm.pauseSong();
-                        } else {
-                            mpm.smartPlay();
-                        }
-                        searchTextField.clear();
+                        mpm.smartPlay();
                     }
+                    searchTextField.clear();
+
                     break;
                 }
             }

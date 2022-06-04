@@ -30,22 +30,23 @@ public class SongDataObject implements Serializable {
     private int orderAdded;
 
     public SongDataObject(String videoTitle, String videoDuration, String channelName, String thumbnailUrl, String videoUrl, String videoID) {
-        this.videoTitle = videoTitle;
+        this.videoTitle = convertCodeToCharacter(videoTitle);
         this.videoDuration = videoDuration;
-        this.channelName = channelName;
+        this.channelName = convertCodeToCharacter(channelName);
         this.thumbnailUrl = thumbnailUrl;
         this.videoUrl = videoUrl;
         this.videoID = videoID;
-        //We concatanate the current time in milliseconds so that it's impossible for file names to ever be the same
-        this.safeTitleName = convertCodeToCharacter(videoTitle).replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "(" + videoID + ")" + System.currentTimeMillis(); //Gets rid all special characters that may mess up file path
+        //We concatenate the current time in milliseconds so that it's impossible for file names to ever be the same
+        this.safeTitleName = this.videoTitle.replaceAll("[^a-zA-Z]", "").replaceAll("[^\\x20-\\x7e]", "") + "(" + videoID + ")" + System.currentTimeMillis(); //Gets rid all special characters that may mess up file path
         this.pathToWebaFile = PathsManager.WEBA_FOLDER_PATH.toString() + "/" + this.safeTitleName + ".weba";
         this.pathToWavFile = PathsManager.getLoggedInUserMusicFolderPath().toString() + "/" + this.safeTitleName + ".m4a";
         this.pathToThumbnail = Paths.get(PathsManager.getLoggedInUserThumbnailsPath().toString(), (this.safeTitleName + ".png")).toString();
     }
     
-    private static String convertCodeToCharacter(String title) {
-        String newTitle = title.replaceAll("\\u0026", "&");
-        newTitle.replaceAll("\\\"", "\"");
+    public static String convertCodeToCharacter(String title) {//https://www.youtube.com/watch?v=jb4ybTQwcdw
+        String newTitle = title.replace("\u0026", "&");
+        newTitle = title.replace("&amp;", "&");
+        newTitle = newTitle.replace("\\\"", "\"");
         return newTitle;
     }
 

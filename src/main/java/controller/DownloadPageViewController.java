@@ -12,6 +12,7 @@ import java.awt.datatransfer.StringSelection;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -437,7 +438,10 @@ public class DownloadPageViewController implements Initializable {
                 public void run() {
                     downloadErrorList.getItems().clear();
                     try {
-                        downloadErrorList.getItems().addAll(ErrorDataObject.getListOfErrorMessages(ytd.getErrorList()));
+                        ObservableList<String> edol = ErrorDataObject.getListOfErrorMessages(ytd.getErrorList());
+                        edol.removeIf(s -> (s.equals(null)));
+                        edol.removeIf(s -> (s.equals("null")));
+                        downloadErrorList.getItems().addAll(edol);
                     } catch (java.util.ConcurrentModificationException e) {
                         System.out.println("Stop modifying the view so fast");
                     }
@@ -445,7 +449,10 @@ public class DownloadPageViewController implements Initializable {
             });
         } else {
             downloadErrorList.getItems().clear();
-            downloadErrorList.getItems().addAll(ErrorDataObject.getListOfErrorMessages(ytd.getErrorList()));
+            ObservableList<String> edol = ErrorDataObject.getListOfErrorMessages(ytd.getErrorList());
+            edol.removeIf(s -> (s.equals(null)));
+            edol.removeIf(s -> (s.equals("null")));
+            downloadErrorList.getItems().addAll(edol);
         }
     }
 

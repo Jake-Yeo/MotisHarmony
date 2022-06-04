@@ -128,6 +128,8 @@ List of features in MotisHarmony
 10. Ability to communicate with headphones/earbuds
 
 11. Ability to alter audio balance
+
+12. Sound visualizer
 :::::::::::::::::::::::::::::::::::
 What is the sleep timer and how do I use it?
 :::::::::::::::::::::::::::::::::::
@@ -364,3 +366,37 @@ If you deselect that radio button then the program will not display a cool sound
 What is the download error "Error starting download. Make sure you have Chrome installed!"?
 :::::::::::::::::::::::::::::::::::
 It's an error when the Chrome driver cannot be started. The most likely reason for this is that Chrome isn't installed. Make sure you install chrome!
+:::::::::::::::::::::::::::::::::::
+What is the alarm and how do I use it?
+:::::::::::::::::::::::::::::::::::
+The alarm is basically a clock which keeps track of time and tells the music player to play when a specific time is reached.
+
+You can use it by going to the music player page and clicking on the button which looks like this "⏰".
+
+From there a dialog will appear displaying these buttons 
+"Set Hour"
+"Set Minute"
+"Am/Pm"
+"Cancel"
+"Apply"
+"Enable Alarm"
+
+What do these buttons do?
+
+"Set Hour":
+This will set the alarm time in hours.
+
+"Set Minute":
+This will set the alarm time in minutes.
+
+"Am/Pm"
+This will allow you to chooses wether you want the alarm to ring before noon or after noon.
+
+"Cancel":
+This will cancel the changes you've made to the Alarm.
+
+"Apply":
+This will apply the changes you've made to the Sleep Timer. If you chose to enable the Sleep Timer, then the Sleep Timer will start once you click this button.
+
+"Enable Alarm"
+By selecting this radio button, the program will begin to keep track of the time after you press apply. The alarm will play music when the desired time is reached
