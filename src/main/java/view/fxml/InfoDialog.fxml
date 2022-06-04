@@ -12,7 +12,7 @@
       <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="886.0" style="-fx-background-color: #5c1c48;">
          <children>
             <TextField fx:id="infoSearchField" layoutX="14.0" layoutY="14.0" onKeyPressed="#searchTextFieldWhenTyped" prefHeight="25.0" prefWidth="422.0" promptText="Search For Info Here" />
-            <TextArea fx:id="infoTextArea" layoutX="450.0" layoutY="14.0" prefHeight="474.0" prefWidth="422.0" text="Click On A Question To Get Started!" wrapText="true" />
+            <TextArea fx:id="infoTextArea" editable="false" layoutX="450.0" layoutY="14.0" prefHeight="474.0" prefWidth="422.0" text="Click On A Question To Get Started!" wrapText="true" />
             <ListView fx:id="questionsListView" layoutX="14.0" layoutY="53.0" onMouseClicked="#updateInfoTextArea" prefHeight="435.0" prefWidth="422.0" style="-fx-background-color: null; -fx-border-color: #bc0c54; -fx-border-radius: 30px; -fx-border-width: 2px; -fx-selection-bar: derive(purple, 100%); -fx-focus-color: white; -fx-padding: 7px;" />
          </children>
       </AnchorPane>

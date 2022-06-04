@@ -12,13 +12,13 @@
 <AnchorPane id="AnchorPane" fx:id="downloadPageMainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="886.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #3b1532, #4b1637, #5b1539, #6b1439, #7b163b, #8c183c, #9c1c3c, #b1243f, #c62e41, #da3941, #ee4540);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DownloadPageViewController">
    <children>
       <ImageView fx:id="downloadQueueImageView" fitHeight="577.0" fitWidth="886.0" pickOnBounds="true" />
-      <ListView fx:id="downloadErrorList" layoutX="487.0" layoutY="359.0" onMouseClicked="#showErrorListContextMenu" prefHeight="115.0" prefWidth="365.0" style="-fx-background-color: null; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: #4c154a; -fx-border-radius: 30px 30px 0 0; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
+      <ListView fx:id="downloadErrorList" layoutX="487.0" layoutY="359.0" onMouseClicked="#showErrorListContextMenu" prefHeight="115.0" prefWidth="365.0" style="-fx-background-color: null; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: #f04369; -fx-border-color: #4c154a; -fx-border-radius: 30px 30px 0 0; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
       <Text fill="#ee4540" layoutX="523.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Download Errors">
          <font>
             <Font name="Quicksand SemiBold" size="23.0" />
          </font>
       </Text>
-      <ListView fx:id="videoInfoList" layoutX="486.0" layoutY="73.0" prefHeight="121.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0 0; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
+      <ListView fx:id="videoInfoList" layoutX="486.0" layoutY="73.0" prefHeight="121.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: #f04369; -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 30px 30px 0 0; -fx-border-width: 5px; -fx-focus-color: white; -fx-padding: 10px;" />
       <Text fill="#ee4540" layoutX="508.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selected video info">
          <font>
             <Font name="Quicksand SemiBold" size="23.0" />
@@ -31,7 +31,7 @@
                   <Font name="Quicksand SemiBold" size="31.0" />
                </font>
             </Text>
-            <ListView fx:id="listViewDownloadManager" layoutX="20.0" layoutY="73.0" onMouseClicked="#displaySelectedVideoInfo" prefHeight="355.0" prefWidth="419.0" style="-fx-background-color: null; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: derive(purple, 100%); -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0; -fx-border-width: 0 5px 0 5px 0; -fx-focus-color: white; -fx-padding: 5px;" />
+            <ListView fx:id="listViewDownloadManager" layoutX="20.0" layoutY="73.0" onMouseClicked="#displaySelectedVideoInfo" prefHeight="355.0" prefWidth="419.0" style="-fx-background-color: null; -fx-control-inner-background: derive(transparent, 100%); -fx-control-inner-background-alt: derive(transparent, 100%); -fx-selection-bar: #f04369; -fx-border-color: linear-gradient(to bottom, #bc0c54, #a10c57, #841157, #681452, #4c154a); -fx-border-radius: 0; -fx-border-width: 0 5px 0 5px 0; -fx-focus-color: white; -fx-padding: 5px;" />
             <Button fx:id="downloadButton" layoutX="20.0" layoutY="31.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#downloadVideoOrPlaylist" onMouseEntered="#mouseEnterDownloadButton" onMouseExited="#mouseExitDownloadButton" onMousePressed="#mousePressedDownloadButton" onMouseReleased="#mouseReleasedDownloadButton" prefHeight="46.0" prefWidth="65.0" style="-fx-background-color: transparent; -fx-background-radius: 30px 0 0 0; -fx-border-color: #bc0c54; -fx-border-radius: 30px 0 0 0; -fx-border-width: 5px;" text="📥" textFill="#ee4540">
                <font>
                   <Font name="Quicksand SemiBold" size="19.0" />

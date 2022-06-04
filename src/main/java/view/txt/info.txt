@@ -360,3 +360,7 @@ What does the "Enable Sound Visualizer" radio button in settings do?
 It you select that radio button then the program will display a cool sound visualizer for you to look at.
 
 If you deselect that radio button then the program will not display a cool sound visualizer for you to look at.
+:::::::::::::::::::::::::::::::::::
+What is the download error "Error starting download. Make sure you have Chrome installed!"?
+:::::::::::::::::::::::::::::::::::
+It's an error when the Chrome driver cannot be started. The most likely reason for this is that Chrome isn't installed. Make sure you install chrome!

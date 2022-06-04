@@ -101,6 +101,8 @@ public class YoutubeDownloader {
             } catch (Exception e) {
                 setWifiConnected(false);
             }
+        } catch (org.openqa.selenium.WebDriverException e) {
+            errorList.add(new ErrorDataObject(true, "Error starting download. Make sure you have Chrome installed!"));
         } catch (Exception e) {
             setWifiConnected(false);
             errorList.add(new ErrorDataObject(true, "You aren't connected to wifi!"));
