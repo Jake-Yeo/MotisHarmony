@@ -66,7 +66,7 @@
         </AnchorPane>
         <AnchorPane fx:id="infoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="577.0" prefWidth="461.0" style="-fx-background-color: linear-gradient(to bottom, #2d142c, #511a3e, #791c48, #a22049, #c72c41);">
             <children>
-                <Text fx:id="motisHarmonyText" fill="#ee4540" layoutX="27.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🎧MotisHarmony">
+                <Text fx:id="motisHarmonyText" fill="#ee4540" layoutX="38.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🎧MotisHarmony">
                     <font>
                         <Font name="Quicksand SemiBold" size="51.0" />
                     </font>
@@ -79,12 +79,12 @@
                 <Polyline fill="#c72c41" layoutX="431.0" layoutY="431.0" points="-92.0, -155.0, -139.0, 25.0, -127.0, 98.0, -61.0, 45.0" stroke="TRANSPARENT" strokeType="INSIDE" />
                 <Polyline fill="#c72c41" layoutX="303.0" layoutY="555.0" points="-104.0, -192.0, -145.0, -23.0, -93.0, 46.0, -81.0, -8.0" stroke="TRANSPARENT" strokeType="INSIDE" />
                 <Polyline fill="#c72c41" layoutX="146.0" layoutY="574.0" points="-22.0, -327.0, -143.0, -55.0, -93.0, 46.0, -81.0, -8.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-                <Text fx:id="welcomeText" fill="#ee4540" layoutX="145.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome">
+                <Text fx:id="welcomeText" fill="#ee4540" layoutX="154.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome">
                     <font>
                         <Font name="Quicksand SemiBold" size="35.0" />
                     </font>
                 </Text>
-                <Text fx:id="taglineText" fill="#ee4540" layoutX="125.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="its noisy out there... Enter!">
+                <Text fx:id="taglineText" fill="#ee4540" layoutX="110.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Listen to musics without ads!">
                     <font>
                         <Font name="Quicksand Light" size="19.0" />
                     </font>
