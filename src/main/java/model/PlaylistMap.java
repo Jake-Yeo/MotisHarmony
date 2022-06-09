@@ -10,15 +10,10 @@ package model;
  * @author Jake Yeo
  */
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ResourceBundle;
-import javafx.collections.ObservableList;
-import javafx.fxml.Initializable;
 
 public class PlaylistMap implements Serializable {
 

@@ -21,7 +21,6 @@ package model;
 
 import com.melloware.jintellitype.IntellitypeListener;
 import com.melloware.jintellitype.JIntellitype;
-import controller.MusicPlayerViewController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;

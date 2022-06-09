@@ -6,12 +6,9 @@
 package controller;
 
 import view.SceneChanger;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.Animation.Status;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -19,8 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import view.MainViewRunner;
 

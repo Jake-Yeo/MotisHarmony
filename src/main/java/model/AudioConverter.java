@@ -8,7 +8,6 @@ package model;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.Queue;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.EncoderException;
 import ws.schild.jave.MultimediaObject;

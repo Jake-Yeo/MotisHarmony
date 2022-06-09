@@ -33,7 +33,6 @@ import javafx.util.Duration;
 import model.Accounts;
 import model.ErrorDataObject;
 import view.UIHelper;
-import model.YoutubeDownloader;
 
 /**
  * FXML Controller class

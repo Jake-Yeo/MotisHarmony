@@ -6,19 +6,11 @@
 package model;
 
 import java.io.BufferedReader;
-import java.io.FileWriter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.image.Image;
 
 /**
  *

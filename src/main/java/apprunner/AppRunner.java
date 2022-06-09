@@ -5,13 +5,8 @@
  */
 package apprunner;
 
-import com.melloware.jintellitype.JIntellitype;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Accounts;

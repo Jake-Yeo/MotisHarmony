@@ -5,7 +5,6 @@
  */
 package controller;
 
-import java.awt.MouseInfo;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -28,7 +27,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
