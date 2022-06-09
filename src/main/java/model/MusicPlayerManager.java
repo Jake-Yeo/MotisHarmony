@@ -76,6 +76,10 @@ public class MusicPlayerManager {
     public void changeEnableSoundVisualizerUpdater() {
         enableSoundVisualizerUpdater.setValue(!enableSoundVisualizerUpdater.getValue());
     }
+    
+    public void shufflePlaylist() {
+        shuffledPlaylist.clear();
+    }
 
     public SimpleBooleanProperty getUiUpdater() {
         return uiUpdater;
@@ -188,7 +192,7 @@ public class MusicPlayerManager {
         }
         getSongHistory().clear();
         //We clear the shuffled playlist so that it can be reshuffled with the correct playlist
-        shuffledPlaylist.clear();
+        shufflePlaylist();
         setCurrentPlaylistPlayling(playlistName);
         setIndexForOrderedPlay(0);
         syncPlaylistSongsPlaylingWithSelectedPlaylist(playlistName);
@@ -334,7 +338,7 @@ public class MusicPlayerManager {
 
     public void orderedPlay() throws IOException, Exception {
         //We clear the shuffled playlist so that it can be reshuffled
-        shuffledPlaylist.clear();
+        shufflePlaylist();
         songHistory.clear();
         if (indexForOrderedPlay > playlistSongsPlaying.size() - 1) {
             indexForOrderedPlay = 0;
@@ -361,7 +365,7 @@ public class MusicPlayerManager {
     //the bySelection boolean will indicate if the user used the double click or context menu to play the song
     public void playSong(SongDataObject songToPlay, boolean bySelection) throws Exception {
         //We clear the shuffled playlist so that it can be reshuffled
-        shuffledPlaylist.clear();
+        shufflePlaylist();
         setSongObjectBeingPlayed(songToPlay);
         if (bySelection) {
             //This if statement will make sure that the end of the linked list is not removed if you play songs by selection multiple times

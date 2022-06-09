@@ -1005,6 +1005,9 @@ public class MusicPlayerViewController implements Initializable {
                     mpm.smartPlay();
                 }
                 searchTextField.clear();
+                //If statement below will reshuffle the playlist if the playlist which is playing has had a song removed. This will ensure that the removed song will not play again unless added again
+            } else if (playlistToRemoveFrom.equals(mpm.getCurrentPlaylistPlayling()) && !Arrays.asList(mpm.getArrayOfSdoFromCurrentSongListViaIndicies(songList.selectionModelProperty().get().getSelectedIndices())).contains(mpm.getSongObjectBeingPlayed()) && mpm.getPlayType().equals("Random Play")) {
+                mpm.shufflePlaylist();
             }
             updateModelCurrentSongList();
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
