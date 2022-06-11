@@ -84,7 +84,7 @@ public class LoginPageViewController implements Initializable {
                 fadeTransition.setNode(motisHarmonyText);
                 fadeTransition.play();
                 animationNum++;
-                System.out.println(animationNum);
+                //System.out.println(animationNum);
             } else if (animationNum == 1) {
                 fadeTransition.setNode(welcomeText);
                 fadeTransition.play();

@@ -25,7 +25,7 @@ public class SleepTimer implements Serializable {
     private Calendar timeToStopSong;
     static private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
             e -> {
-                System.out.println("checking");
+                //System.out.println("checking");
                 if (Calendar.getInstance().compareTo(sleepTimerCurrentlyUsing.timeToStopSong) > 0) {
                     sleepTimerCurrentlyUsing.stopTimerCheck();
                     //We must set wether or not the timer is enabled with the account settings so that the settings are saved no matter what!
@@ -37,7 +37,7 @@ public class SleepTimer implements Serializable {
                             i.printStackTrace();
                         }
                     }
-                    System.out.println("Sleeping");
+                    //System.out.println("Sleeping");
                 }
             }
     ));

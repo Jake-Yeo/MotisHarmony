@@ -58,7 +58,7 @@ public class AppRunner {
                 } catch (Exception ex) {
                     Logger.getLogger(AppRunner.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println("Exited!");
+                //System.out.println("Exited!");
             }
         };
         Runtime.getRuntime().addShutdownHook(shutdownHook);

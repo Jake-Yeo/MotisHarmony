@@ -64,8 +64,8 @@ public class AudioConverter {
             SongDataObject[] sdoToDelete = {songDataObject};
             AccountsDataManager.deleteSong(sdoToDelete);
         }
-        System.out.println("done converting");
-        System.out.println("Time taken to convert: " + (System.currentTimeMillis() - timeStart) / 1000 + " Seconds");
+        //System.out.println("done converting");
+        //System.out.println("Time taken to convert: " + (System.currentTimeMillis() - timeStart) / 1000 + " Seconds");
     }
 
     public void addToConversionQueue(SongDataObject songDataObject) throws EncoderException, IOException, Exception {

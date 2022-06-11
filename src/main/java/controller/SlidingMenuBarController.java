@@ -85,25 +85,25 @@ public class SlidingMenuBarController implements Initializable {
     @FXML
     private void switchToPlayer(ActionEvent event) throws IOException {
         sceneChanger.switchToMusicPlayerPageView();
-        System.out.println("player");
+        //System.out.println("player");
     }
 
     @FXML
     private void switchToBrowser(ActionEvent event) throws IOException {
         sceneChanger.switchToBrowserPageView();
-        System.out.println("browser");
+        //System.out.println("browser");
     }
 
     @FXML
     private void switchToDownloadPage(ActionEvent event) throws IOException {
         sceneChanger.switchToDownloadPageView();
-        System.out.println("download");
+        //System.out.println("download");
     }
 
     @FXML
     private void switchToSettings(ActionEvent event) throws IOException {
         sceneChanger.switchToSettingsPageView();
-        System.out.println("settings");
+        //System.out.println("settings");
     }
 
     /////////////////////////////////

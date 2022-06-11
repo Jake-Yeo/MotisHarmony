@@ -58,7 +58,7 @@ public class ExitButtonController implements Initializable {//if you want to cha
     @FXML
     private void exitAppMainButton(ActionEvent event) throws Exception {
         AccountsDataManager.saveAllSettings();//Saves all account data so far into an .acc file
-        System.out.println("Exited!");
+        //System.out.println("Exited!");
         System.exit(0);
     }
 

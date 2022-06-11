@@ -224,7 +224,7 @@ public class SettingsPageViewController implements Initializable {
     }
 
     private void updateHeadphoneAction() throws Exception {
-        System.out.println(headphonesActionChoiceBox.getSelectionModel().getSelectedItem());
+        //System.out.println(headphonesActionChoiceBox.getSelectionModel().getSelectedItem());
         if (headphonesActionChoiceBox.getSelectionModel().getSelectedItem() != null) {
             AccountsDataManager.setHeadphoneAction(headphonesActionChoiceBox.getSelectionModel().getSelectedItem());
         }

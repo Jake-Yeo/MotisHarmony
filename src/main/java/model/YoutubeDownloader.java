@@ -296,15 +296,15 @@ public class YoutubeDownloader {
             int repeats = 0;
             while (!audioHtmlSource.contains("media")) {
                 while (!netData.contains(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)) { //Sometimes url is loaded but the audio source isn't present in the network traffic data, so reload the site and do it until we get the audio source.
-                    System.out.println("Error saved!");
-                    System.out.println(youtubeUrl + " This link didn't have mime=audio!");
+                    //System.out.println("Error saved!");
+                    //System.out.println(youtubeUrl + " This link didn't have mime=audio!");
                     if (repeats > 5) {
-                        System.out.println("Error getting this this link " + youtubeUrl);
+                        //System.out.println("Error getting this this link " + youtubeUrl);
                         netData = "error";
                         break;
                         //If statement below will stop the program from trying to get the audio source if it's unable to find it when the user clears the download queue
                     } else if (getStopAllDownloadingProcesses() || stopDownloading) {
-                        System.out.println("clearCalled");
+                        //System.out.println("clearCalled");
                         netData = "clearCalled";
                         stopDownloading = false;
                         break;
@@ -325,19 +325,19 @@ public class YoutubeDownloader {
                 if (netData.equals("clearCalled")) {
                     break;
                 }
-                System.out.println("Netdata stuff: " + netData);
+                //System.out.println("Netdata stuff: " + netData);
                 if (netData.contains(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER)) {
                     //PrintWriter pw = new PrintWriter(new FileWriter("html.txt"));
                     //pw.print(netData);
                     //pw.close();
-                    System.out.println("Identifier at index " + netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER));//we should probably do what we did above in the while loop which gets rid of ad link!!!!!!
+                    //System.out.println("Identifier at index " + netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER));//we should probably do what we did above in the while loop which gets rid of ad link!!!!!!
                     netData = netData.substring(netData.lastIndexOf(YOUTUBE_AUDIO_SOURCE_START_IDENTIFIER, netData.indexOf(YOUTUBE_AUDIO_SOURCE_IDENTIFIER)));//This will get rid of everything up to the start of the youtube audio source link
                     netData = netData.substring(0, netData.indexOf(YOUTUBE_AUDIO_SOURCE_END_IDENTIFIER));//We must get rid of the range in order for the source audio url to actually load properly
-                    System.out.println("Pure weba url: " + netData);
+                    //System.out.println("Pure weba url: " + netData);
                     try {
                         driver.get(netData);
                         audioHtmlSource = driver.getPageSource();//Sometimes an audio link which is parsed may contain another url to the correct source audio url which is why we check the html of the url we obtain. Also, it seems impossible to read the data with htmlGetter, so we use the selenium method instead
-                        System.out.println("Audio html stuff " + audioHtmlSource);
+                        //System.out.println("Audio html stuff " + audioHtmlSource);
                         driver.get("data:,");//just prevents sound from playing from chrome driver by switching it to an easy to load website.
                     } catch (Exception e) {
                         setWifiConnected(false);
@@ -376,7 +376,7 @@ public class YoutubeDownloader {
             ErrorDataObject errorData = yvpp.isUrlValid(youtubeUrl);
             if (!errorData.didErrorOccur()) {
                 addYoutubeLinkToDownloadQueue(youtubeUrl);
-                System.out.println(!isAppDownloadingFromDownloadQueue());
+                //System.out.println(!isAppDownloadingFromDownloadQueue());
                 if (!isAppDownloadingFromDownloadQueue()) {
                     try {
                         downloadSongsFromDownloadQueue();
@@ -412,7 +412,7 @@ public class YoutubeDownloader {
         String possibleYoutubeUrl = obtainYoutubeUrlAudioSource(youtubeSongData.getVideoUrl());
         if (!possibleYoutubeUrl.equals("error") && !possibleYoutubeUrl.equals("No Wifi") && !possibleYoutubeUrl.equals("clearCalled")) {
             //We add range=0-99999999999999999999 to the url below to bypass throttling which speeds up download times by nearly 95 times!
-            System.out.println(yvpp.extractMaxByteRange(possibleYoutubeUrl));
+            //System.out.println(yvpp.extractMaxByteRange(possibleYoutubeUrl));
             int maxByteRange = yvpp.extractMaxByteRange(possibleYoutubeUrl);
 
             int count = 0;
@@ -428,14 +428,14 @@ public class YoutubeDownloader {
                 FileOutputStream fos = new FileOutputStream(youtubeSongData.getPathToWebaFile());
                 //Here in this for loop we download songs in three minute segments. This will bypass download throttling. Though there is no difference when downloading 3-8 minute songs, it decreases download times for 2 hr songs from approximately 1hr donwload time to 70 seconds.
                 for (int bytesToStart = 0; bytesToStart < maxByteRange; bytesToStart += BYTE_AMT_FOR_3_MIN_VID + 1) {//+1 since we have to change the range parameter from (0, 1000) to (1001, 2001) not (1000, 2000) which would cause an error
-                    System.out.println("for loop ran");
+                    //System.out.println("for loop ran");
                     String urlToDownload = possibleYoutubeUrl + "range=" + bytesToStart + "-" + (bytesToStart + BYTE_AMT_FOR_3_MIN_VID);
                     downloadURL = new URL(urlToDownload);//Out of range happens when mime=audio cannot be found
-                    System.out.println(urlToDownload);
+                    //System.out.println(urlToDownload);
 
                     BufferedInputStream bis = new BufferedInputStream(downloadURL.openStream());
                     int i = 0;
-                    System.out.println("Stop downloading is " + stopDownloading);
+                    //System.out.println("Stop downloading is " + stopDownloading);
                     byte[] data = new byte[256000];
                     while ((count = bis.read(data)) != -1) {
                         if (stopDownloading) {//If stop downloading is true then stop this while loop to stop downloading the song. This allows the user to cancel downloads using the "clear" and "delete url" button
@@ -460,7 +460,7 @@ public class YoutubeDownloader {
             } catch (IOException ex) {
                 System.err.print("error downloading song");
             }
-            System.out.println("Time taken to download: " + (System.currentTimeMillis() - timeStart) / 1000 + " Seconds");
+            //System.out.println("Time taken to download: " + (System.currentTimeMillis() - timeStart) / 1000 + " Seconds");
             if (skipAudioConversion) {//Skips the audio conversion
                 return;
             }

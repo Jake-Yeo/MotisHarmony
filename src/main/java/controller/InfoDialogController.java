@@ -100,7 +100,7 @@ public class InfoDialogController implements Initializable {
             for (String line; (line = txtReader.readLine()) != null;) {
                 info += line + "\n";
             }
-            System.out.println(info);
+            //System.out.println(info);
             Scanner sc = new Scanner(info);
             sc.useDelimiter(DELIMITER);
             while (sc.hasNext()) {

@@ -50,10 +50,10 @@ public class HeadphoneButtonDetector implements IntellitypeListener {
     * @see com.melloware.jintellitype.IntellitypeListener#onIntellitype(int)
      */
     public void onIntellitype(int aCommand) {
-        System.out.println(aCommand);
+        //System.out.println(aCommand);
         switch (aCommand) {
             case JIntellitype.APPCOMMAND_MEDIA_PLAY_PAUSE:
-                System.out.println("Play/Pause message received " + Integer.toString(aCommand));
+                //System.out.println("Play/Pause message received " + Integer.toString(aCommand));
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -78,13 +78,13 @@ public class HeadphoneButtonDetector implements IntellitypeListener {
                                         mpm.setMusicPlayerInitialized(true);
                                         mpm.setPaused(false);
                                     } else if (!mpm.isSongPaused()) {
-                                        System.out.println("Paused Song");
+                                        //System.out.println("Paused Song");
                                         mpm.pauseSong();
-                                        System.out.println(mpm.getMediaPlayer().getStatus());
+                                        //System.out.println(mpm.getMediaPlayer().getStatus());
                                     } else {
-                                        System.out.println("Resumed Song");
+                                        //System.out.println("Resumed Song");
                                         mpm.resumeSong();
-                                        System.out.println(mpm.getMediaPlayer().getStatus());
+                                        //System.out.println(mpm.getMediaPlayer().getStatus());
                                     }
                                 }
                             }
@@ -93,7 +93,7 @@ public class HeadphoneButtonDetector implements IntellitypeListener {
                 });
                 break;
             default:
-                System.out.println("Undefined INTELLITYPE message caught " + Integer.toString(aCommand));
+                //System.out.println("Undefined INTELLITYPE message caught " + Integer.toString(aCommand));
                 break;
         }
     }

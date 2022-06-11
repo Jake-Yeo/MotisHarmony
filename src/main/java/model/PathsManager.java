@@ -50,7 +50,7 @@ public class PathsManager {//This class will handle all the folder and txt creat
         if (!Files.exists(folderOrTextPath)) {
             new File(folderOrTextPath.toString()).mkdir();
         } else {
-            System.out.println("Directory " + folderOrTextPath.toString() + " already exists");
+            //System.out.println("Directory " + folderOrTextPath.toString() + " already exists");
         }
     }
 
@@ -76,9 +76,9 @@ public class PathsManager {//This class will handle all the folder and txt creat
         LinkedList<SongDataObject> sdoDataToDeleteFromFiles = adm.getDeletionQueue();
         for (int i = 0; i < sdoDataToDeleteFromFiles.size(); i++) {
             try {
-                System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToWavFile());
+                //System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToWavFile());
                 Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToWavFile()));
-                System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToThumbnail());
+                //System.out.println("deleteing " + sdoDataToDeleteFromFiles.get(i).getPathToThumbnail());
                 Files.delete(Paths.get(sdoDataToDeleteFromFiles.get(i).getPathToThumbnail()));
             } catch (Exception e) {
                 System.err.println("File does not exist");
@@ -103,11 +103,11 @@ public class PathsManager {//This class will handle all the folder and txt creat
     public static void createTextFile(Path whereToCreateTextFile, String textName) throws IOException {
         Path folderOrTextPath = null;
         folderOrTextPath = Paths.get(whereToCreateTextFile.toString(), textName + ".txt");
-        System.out.println("folder text path: " + folderOrTextPath);
+        //System.out.println("folder text path: " + folderOrTextPath);
         if (!Files.exists(folderOrTextPath)) {
             new FileWriter(folderOrTextPath.toString());
         } else {
-            System.out.println("Directory " + folderOrTextPath.toString() + " already exists");
+            //System.out.println("Directory " + folderOrTextPath.toString() + " already exists");
         }
     }
 }

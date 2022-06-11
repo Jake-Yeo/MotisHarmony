@@ -249,7 +249,7 @@ public class DownloadPageViewController implements Initializable {
                         Logger.getLogger(YoutubeDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                System.out.println("listener ran");
+                //System.out.println("listener ran");
             }
         });
         ytd.getSongNameDownloading().addListener(new ChangeListener<String>() {
@@ -312,7 +312,7 @@ public class DownloadPageViewController implements Initializable {
             @Override
             public void onChanged(ListChangeListener.Change<? extends ErrorDataObject> change) {
                 updateErrorListViewWithJavafxThread(true);
-                System.out.println("listener ran");
+                //System.out.println("listener ran");
             }
 
         });
@@ -436,7 +436,7 @@ public class DownloadPageViewController implements Initializable {
                         edol.removeIf(s -> (s.equals("null")));
                         downloadErrorList.getItems().addAll(edol);
                     } catch (java.util.ConcurrentModificationException e) {
-                        System.out.println("Stop modifying the view so fast");
+                        System.err.println("Stop modifying the view so fast");
                     }
                 }
             });
@@ -537,7 +537,7 @@ public class DownloadPageViewController implements Initializable {
         if (listViewDownloadManager.getSelectionModel().getSelectedIndex() != -1) {
             sdoSelected = ytd.getYoutubeUrlDownloadQueueList().get(listViewDownloadManager.getSelectionModel().getSelectedIndex());
             if (e.getButton() == MouseButton.SECONDARY) {
-                System.out.println("worked");
+                //System.out.println("worked");
                 downloadManagerContextMenu.show(listViewDownloadManager, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
             } else {
                 downloadManagerContextMenu.hide();
@@ -555,7 +555,7 @@ public class DownloadPageViewController implements Initializable {
                                     public void run() {
                                         if (videoInfoList.getItems().size() != 3) {
                                             videoInfoList.getItems().add("Music Title: " + youtubeData.getTitle());
-                                            System.out.println(youtubeData.getTitle());
+                                            //System.out.println(youtubeData.getTitle());
                                             videoInfoList.getItems().add("Channel Name: " + youtubeData.getChannelName());
                                             videoInfoList.getItems().add("Music Duration: " + youtubeData.getVideoDuration());
                                             videoInfoList.getItems().add("Video Url: " + youtubeData.getVideoUrl());

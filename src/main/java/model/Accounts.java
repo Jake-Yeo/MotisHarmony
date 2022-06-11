@@ -82,7 +82,7 @@ public class Accounts implements Serializable {//This class will store account u
         for (int i = 0; i < songDataObjectList.size(); i++) {
             listOfSongsToReturn.add(songDataObjectList.get(i).getPathToWavFile());
         }
-        System.out.println("This ran " + listOfSongsToReturn.size());
+        //System.out.println("This ran " + listOfSongsToReturn.size());
         return listOfSongsToReturn;
     }
 
@@ -115,7 +115,7 @@ public class Accounts implements Serializable {//This class will store account u
     }
 
     public void serializeAccount() throws Exception {
-        System.out.println(this.username);
+        //System.out.println(this.username);
         FileOutputStream fileOut = new FileOutputStream(Paths.get(PathsManager.getLoggedInUserDataPath().toString(), this.username + ".acc").toString());
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
         out.writeObject(this);
@@ -177,7 +177,7 @@ public class Accounts implements Serializable {//This class will store account u
             MainViewRunner.getSceneChanger().addScreen("MusicPlayerPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/MusicPlayerView.fxml")));
             MainViewRunner.getSceneChanger().addScreen("SettingsPage", FXMLLoader.load(MainViewRunner.class.getResource("/fxml/SettingsPageView.fxml")));
             sceneSwitcher.switchToDownloadPageView();//The Account signup was successful and we can now let the user use the application
-            System.out.println(PathsManager.getLoggedInUserDataPath().toString());
+            //System.out.println(PathsManager.getLoggedInUserDataPath().toString());
         } else {
             return new ErrorDataObject(true, "Username is not available");
         }

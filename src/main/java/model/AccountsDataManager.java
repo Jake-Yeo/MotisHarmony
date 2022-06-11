@@ -131,7 +131,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
             accSo.setPrefVolume(MusicPlayerManager.getMpmCurrentlyUsing().getSliderVolume());
-            System.out.println("Setting saved");
+            //System.out.println("Setting saved");
         }
     }
 
@@ -163,7 +163,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         if (Accounts.getLoggedInAccount() != null) {
             Accounts.getLoggedInAccount().getSongsInQueueList().clear();
             Accounts.getLoggedInAccount().getSongsInQueueList().addAll(songsToUpdateWith);
-            System.out.println("Current download queue saved!");
+            //System.out.println("Current download queue saved!");
         }
     }
 
@@ -174,7 +174,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
     public static void setLastSongPlayed(SongDataObject lastSdoPlayed) throws Exception {
         if (lastSdoPlayed != null) {
             Accounts.getLoggedInAccount().getSettingsObject().setLastSongPlayed(lastSdoPlayed);
-            System.out.println("Last song saved: " + lastSdoPlayed.getTitle());
+            //System.out.println("Last song saved: " + lastSdoPlayed.getTitle());
         }
     }
 
@@ -195,7 +195,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
     public static void setLastPlaylistPlayed(String nameOfLastPlaylistPlayed) throws Exception {
         if (Accounts.getLoggedInAccount() != null && nameOfLastPlaylistPlayed != null) {
             Accounts.getLoggedInAccount().getSettingsObject().setLastPlaylistPlayed(nameOfLastPlaylistPlayed);
-            System.out.println("Last playlist played: " + nameOfLastPlaylistPlayed);
+            //System.out.println("Last playlist played: " + nameOfLastPlaylistPlayed);
         }
     }
 
@@ -203,7 +203,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
             accSo.setPlaylistListSortPreference(sortType);
-            System.out.println("Setting saved");
+            //System.out.println("Setting saved");
         }
     }
 
@@ -211,7 +211,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         if (Accounts.getLoggedInAccount() != null) {
             SettingsObject accSo = Accounts.getLoggedInAccount().getSettingsObject();
             accSo.setSongListSortPreference(sortType);
-            System.out.println("Setting saved");
+            //System.out.println("Setting saved");
         }
     }
 
@@ -302,12 +302,12 @@ public class AccountsDataManager implements Serializable {//This class will be u
                 songDataObject.setOrderAdded(Accounts.getLoggedInAccount().getListOfSongDataObjects().get(Accounts.getLoggedInAccount().getListOfSongDataObjects().size() - 1).getOrderAdded() + 1);
             }
             try {
-                System.out.println("Saving SDO to account");
+                //System.out.println("Saving SDO to account");
                 saveThumbnail(songDataObject.getThumbnailUrl(), songDataObject.getPathToThumbnail());
                 Accounts.getLoggedInAccount().addSongDataObjectToAccount(songDataObject);
                 Accounts.getLoggedInAccount().getPlaylistDataObject().addSongToPlaylist(MusicPlayerManager.getAllSongsPlaylistName(), songDataObject);
             } catch (Exception e) {
-                System.out.println("Error downloading image");
+                //System.out.println("Error downloading image");
             }
         }
     }
@@ -331,7 +331,7 @@ public class AccountsDataManager implements Serializable {//This class will be u
         accManToReturn = (AccountsDataManager) in.readObject();
         in.close();
         fileIn.close();
-        System.out.println("deserialized Acc Man");
+        //System.out.println("deserialized Acc Man");
         return accManToReturn;
     }
 }

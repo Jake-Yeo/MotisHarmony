@@ -233,7 +233,7 @@ public class MusicPlayerManager {
     }
 
     public void updatePlayTypeAtEndOfMedia() {
-        System.out.println(playSongInLoop);
+        //System.out.println(playSongInLoop);
         if (!playSongInLoop) {
             if (playType.equals("Random Play")) {
                 mediaPlayer.setOnEndOfMedia(() -> {
@@ -289,13 +289,13 @@ public class MusicPlayerManager {
 
     public void loopPlay() {
         File file = new File(getSongObjectBeingPlayed().getPathToWavFile());
-        System.out.println("song playing: " + file.toPath().toString());
+        //System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
         updatePlayTypeAtEndOfMedia();
         mediaPlayer.play();
-        System.out.println("finished playling");
+        //System.out.println("finished playling");
     }
 
     public void randomPlay() throws IOException, Exception {
@@ -312,7 +312,7 @@ public class MusicPlayerManager {
         songHistory.add(getSongObjectBeingPlayed());
         posInSongHistory = songHistory.size() - 1;
         File file = new File(nextSdoToPlay.getPathToWavFile());//replace with correct path when testing
-        System.out.println("song playing: " + file.toPath().toString());
+        //System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
@@ -320,7 +320,7 @@ public class MusicPlayerManager {
         changeUiUpdater();
 
         mediaPlayer.play();
-        System.out.println("finished playling");
+        //System.out.println("finished playling");
         //playMusic();
     }
 
@@ -345,7 +345,7 @@ public class MusicPlayerManager {
         ObservableList<SongDataObject> songDataObjects = playlistSongsPlaying;
         setSongObjectBeingPlayed(songDataObjects.get(indexForOrderedPlay));
         File file = new File(songDataObjects.get(indexForOrderedPlay).getPathToWavFile());//replace with correct path when testing
-        System.out.println("song playing: " + file.toPath().toString());
+        //System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
@@ -354,7 +354,7 @@ public class MusicPlayerManager {
         //Updates the GUI when the MediaPlayer is Null
         changeUiUpdater();
         mediaPlayer.play();
-        System.out.println("finished playling");
+        //System.out.println("finished playling");
         //playMusic();
     }
 
@@ -367,7 +367,7 @@ public class MusicPlayerManager {
             //This if statement will make sure that the end of the linked list is not removed if you play songs by selection multiple times
             if (posInSongHistory != songHistory.size() - 1) {
                 //Here we must remove the end of the linked list from the users position in the songHistory to the size of the linked list
-                System.out.println("Size of song history is: " + songHistory.size() + " Position in song history is: " + posInSongHistory);
+                //System.out.println("Size of song history is: " + songHistory.size() + " Position in song history is: " + posInSongHistory);
                 int sizeOfSongHistoryBeforeChanged = songHistory.size();
                 for (int i = 0; i < sizeOfSongHistoryBeforeChanged - posInSongHistory - 1; i++) {
                     songHistory.remove(songHistory.size() - 1);
@@ -382,7 +382,7 @@ public class MusicPlayerManager {
         }
         //If we don't play the song via selection, we don't have to add that song to the songHistory since it's already been added
         File file = new File(songToPlay.getPathToWavFile());//replace with correct path when testing
-        System.out.println("song playing: " + file.toPath().toString());
+        //System.out.println("song playing: " + file.toPath().toString());
         Media media = new Media(file.toURI().toASCIIString());
         stopDisposeMediaPlayer();
         mediaPlayer = new MediaPlayer(media);
@@ -479,7 +479,7 @@ public class MusicPlayerManager {
                     return returnValue;
                 }
             });
-            System.out.println(sortType);
+            //System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("Z-A")) {
             FXCollections.sort(obPlaylist, new Comparator() {
@@ -524,7 +524,7 @@ public class MusicPlayerManager {
                     return returnValue;
                 }
             });
-            System.out.println(sortType);
+            //System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("Z-A")) {
             FXCollections.sort(listToSort, new Comparator() {
@@ -545,7 +545,7 @@ public class MusicPlayerManager {
                     return returnValue;
                 }
             });
-            System.out.println(sortType);
+            //System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("A-Z By Artist")) {
             FXCollections.sort(listToSort, new Comparator() {
@@ -566,7 +566,7 @@ public class MusicPlayerManager {
                     return returnValue;
                 }
             });
-            System.out.println(sortType);
+           //System.out.println(sortType);
             //updateViewCurrentSongList();
 
         } else if (sortType.equals("Z-A By Artist")) {
@@ -588,7 +588,7 @@ public class MusicPlayerManager {
                     return returnValue;
                 }
             });
-            System.out.println(sortType);
+            //System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("Oldest Added")) {
             FXCollections.sort(listToSort, new Comparator() {
@@ -609,7 +609,7 @@ public class MusicPlayerManager {
                     return returnValue;
                 }
             });
-            System.out.println(sortType);
+            //System.out.println(sortType);
             //updateViewCurrentSongList();
         } else if (sortType.equals("Newest Added")) {
             FXCollections.sort(listToSort, new Comparator() {
@@ -630,7 +630,7 @@ public class MusicPlayerManager {
                     return returnValue;
                 }
             });
-            System.out.println(sortType);
+            //System.out.println(sortType);
             //updateViewCurrentSongList();
         }
     }

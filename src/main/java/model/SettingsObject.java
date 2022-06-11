@@ -33,7 +33,7 @@ public class SettingsObject implements Serializable {
     private String headphoneAction = "Next Song";//Choices are "Do Nothing", "Next Song", "Pause/Play"
 
     public SettingsObject() {
-        System.out.println("playlistListSortPreference = " + playlistListSortPreference);
+        //System.out.println("playlistListSortPreference = " + playlistListSortPreference);
     }
     
     public boolean getEnableSoundVisualizer() {

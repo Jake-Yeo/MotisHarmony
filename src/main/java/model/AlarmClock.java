@@ -29,7 +29,7 @@ public class AlarmClock implements Serializable {
     private Calendar timeToGoOff;
     static private Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
             e -> {
-                System.out.println("checking");
+                //System.out.println("checking");
                 if (alarmCurrentlyUsing.timeToGoOff.compareTo(Calendar.getInstance()) <= 0) {
                     //alarmCurrentlyUsing.stopAlarmCheck();
                     try {
@@ -46,7 +46,7 @@ public class AlarmClock implements Serializable {
                     }
                     //This will ensure that the alarm continues to check the time even after it goes off, because the user may end up pausing the song
                     alarmCurrentlyUsing.setTimeForAlarmToGoOff();
-                    System.out.println("Alarm");
+                    //System.out.println("Alarm");
                 }
             }
     ));
@@ -104,9 +104,9 @@ public class AlarmClock implements Serializable {
             futureAlarmDate.set(monthDayYearHourMinute[2], monthDayYearHourMinute[0] - 1, monthDayYearHourMinute[1] + 1);
         }
         timeToGoOff = futureAlarmDate;
-        System.out.println(Arrays.toString(monthDayYearHourMinute));
-        System.out.println(dateFormatter.format(currentDate.getTime()));
-        System.out.println(dateFormatter.format(futureAlarmDate.getTime()));
+        //System.out.println(Arrays.toString(monthDayYearHourMinute));
+        //System.out.println(dateFormatter.format(currentDate.getTime()));
+        //System.out.println(dateFormatter.format(futureAlarmDate.getTime()));
     }
 
     public void stopAlarmCheck() {

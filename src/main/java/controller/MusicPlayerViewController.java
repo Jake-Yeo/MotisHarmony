@@ -325,13 +325,13 @@ public class MusicPlayerViewController implements Initializable {
                     //If the view of the same playlist which is currently playing is changed, then those changes will be synced with the model so the user knows which song will play next when using ordered play
                     mpm.syncPlaylistSongsPlaylingWithCurentSongsList();
                 }
-                System.out.println("view listener ran");
+                //System.out.println("view listener ran");
             }
         });
 
         songList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         playButton.textOverrunProperty().set(OverrunStyle.CLIP);
-        System.out.println("SongList sort " + Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
+        //System.out.println("SongList sort " + Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
         //Here we automatically sort the currentSongList based on the users preference
         sortChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getSongListSortPreference());
 
@@ -343,7 +343,6 @@ public class MusicPlayerViewController implements Initializable {
                 if (newValue != null) {
                     //updatePlaylistList() automatically sorts the list
                     updatePlaylistList();
-                    System.out.println("Save thingsjfoiajweoifj");
                     try {
                         AccountsDataManager.updateCurrentPlaylistListSortType(newValue);
                     } catch (Exception ex) {
@@ -354,7 +353,7 @@ public class MusicPlayerViewController implements Initializable {
                 Logger.getLogger(MusicPlayerViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        System.out.println("PlaylistList sort" + Accounts.getLoggedInAccount().getSettingsObject().getPlaylistListSortPreference());
+        //System.out.println("PlaylistList sort" + Accounts.getLoggedInAccount().getSettingsObject().getPlaylistListSortPreference());
         sortPlaylistChoiceBox.getSelectionModel().select(Accounts.getLoggedInAccount().getSettingsObject().getPlaylistListSortPreference());
 //playlistList.getItems().add(new PlaylistDataObject().getMapOfPlaylists().keySet().);
 
@@ -479,7 +478,7 @@ public class MusicPlayerViewController implements Initializable {
     @FXML
     private void searchTextFieldWhenTyped(KeyEvent e) {
         //Search everytime the text input is changed
-        System.out.println("Searching!!");
+        //System.out.println("Searching!!");
         mpm.updateCurrentSongListWithSearchQuery(searchTextField.getText());
     }
 
@@ -542,7 +541,7 @@ public class MusicPlayerViewController implements Initializable {
     private void onComboBoxClicked(ActionEvent e) throws Exception {
         if (comboBox.getSelectionModel().selectedIndexProperty().get() >= 0) {
             if (songList.getSelectionModel().getSelectedIndices().size() == 1) {
-                System.out.println(comboBox.getSelectionModel().getSelectedItem());
+                //System.out.println(comboBox.getSelectionModel().getSelectedItem());
                 AccountsDataManager.addSongToPlaylist(comboBox.getSelectionModel().getSelectedItem(), mpm.getCurrentSongList().get(songList.getSelectionModel().getSelectedIndex()));
                 //The if statment below ensures that if the user were to remove a song from a playlist, and then add that song back, and then not refresh that playlist, then if they are currently playing that playlist, that song which was added will be played if the user is using ordered or random play
                 if (mpm.getCurrentPlaylistPlayling().equals(comboBox.getSelectionModel().getSelectedItem())) {
@@ -572,7 +571,7 @@ public class MusicPlayerViewController implements Initializable {
                 }
             }
         }
-        System.out.println(comboBox.getSelectionModel().selectedIndexProperty().get());
+        //System.out.println(comboBox.getSelectionModel().selectedIndexProperty().get());
     }
 
     @FXML
@@ -603,17 +602,17 @@ public class MusicPlayerViewController implements Initializable {
             if (!mpm.isMusicPlayerInitialized()) {
                 onFirstMusicPlayerPlay();
             } else if (!mpm.isSongPaused()) {
-                System.out.println("Paused Song");
+                //System.out.println("Paused Song");
                 mpm.pauseSong();
                 playButton.setStyle("-fx-padding: -2 0 0 3; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
                 playButton.setText("▶");
-                System.out.println(mpm.getMediaPlayer().getStatus());
+                //System.out.println(mpm.getMediaPlayer().getStatus());
             } else {
-                System.out.println("Resumed Song");
+                //System.out.println("Resumed Song");
                 mpm.resumeSong();
                 playButton.setStyle("-fx-padding: -4 0 3 1; -fx-background-radius: 50px; -fx-border-radius: 50px; -fx-border-width: 3px; -fx-background-color: transparent; -fx-border-color: #f04444;");
                 playButton.setText("⏸︎");
-                System.out.println(mpm.getMediaPlayer().getStatus());
+                //System.out.println(mpm.getMediaPlayer().getStatus());
             }
 
             updateSongInfoDisplays(mpm.getSongObjectBeingPlayed());
@@ -699,7 +698,7 @@ public class MusicPlayerViewController implements Initializable {
                 int indexOfNextSong = mpm.getPosInSongHistory() + 1;
                 //If there is no next song left to play in the song history, then we play a random song and add that to our song history
                 if (indexOfNextSong > mpm.getSongHistory().size() - 1) {
-                    System.out.println("got random");
+                    //System.out.println("got random");
                     mpm.nextOrPrevSong();
                     setUpPlayButton();
                     return;
@@ -818,7 +817,7 @@ public class MusicPlayerViewController implements Initializable {
             playButton.setText("⏸︎");
             init();
             updatePlayerDisplays();
-            System.out.println("Setting the pause button to play");
+            //System.out.println("Setting the pause button to play");
         });
 
         mpm.getMediaPlayer().setOnPaused(() -> {
@@ -832,7 +831,7 @@ public class MusicPlayerViewController implements Initializable {
                 if (mpm.getSongObjectBeingPlayed() != null) {
                     updatePlayerDisplays();
                 }
-                System.out.println("Setting the pause button to paused");
+                //System.out.println("Setting the pause button to paused");
             }
         });
 
@@ -876,7 +875,7 @@ public class MusicPlayerViewController implements Initializable {
 
         seekSlider.setOnMouseReleased((MouseEvent mouseEvent) -> {//This handles the seeking of the song
             mpm.seekTo(Duration.seconds(seekSlider.getValue()));//Set where to resume the song
-            System.out.println(seekSlider.getValue() + " seek slider");
+            //System.out.println(seekSlider.getValue() + " seek slider");
             //Here we keep a backup of the current duration of the song just incase the mediaPlayer crashes, which it does everytime you disconnect a bluetooth headset for some reason
             mpm.setBackUpCurrentDuration(mpm.getMediaPlayer().getCurrentTime());
             if (!mpm.isSongPaused()) {
@@ -1006,7 +1005,7 @@ public class MusicPlayerViewController implements Initializable {
 
     public void playPlaylist(String playlistName) throws Exception {
         if (!mpm.isThisPlaylistEmpty(playlistName)) {
-            System.out.println("playling playlist");
+            //System.out.println("playling playlist");
             if (mpm.isMusicPlayerInitialized()) {
                 //The chunk of code below will stop loop play if it was enabled because there's no point in using looped play when you want to play a new playlist
                 if (mpm.getPlaySongInLoop()) {
@@ -1169,10 +1168,10 @@ public class MusicPlayerViewController implements Initializable {
             AccountsDataManager.saveSleepTimerSettings();
             if (SleepTimer.getTimerCurrentlyUsing().getEnableTimer()) {
                 SleepTimer.getTimerCurrentlyUsing().startTimerCheck();
-                System.out.println("Starting chek ");
+                //System.out.println("Starting chek ");
             } else {
                 SleepTimer.getTimerCurrentlyUsing().stopTimerCheck();
-                System.out.println("Stopping chek ");
+                //System.out.println("Stopping chek ");
             }
         } else if (buttonClicked.get() == ButtonType.CANCEL) {
             SleepTimer setttingSleepalarm = Accounts.getLoggedInAccount().getSettingsObject().getSleepTimer();
@@ -1181,7 +1180,7 @@ public class MusicPlayerViewController implements Initializable {
             SleepTimer.getTimerCurrentlyUsing().setEnableTimer(setttingSleepalarm.getEnableTimer());
             if (SleepTimer.getTimerCurrentlyUsing().getEnableTimer()) {
                 SleepTimer.getTimerCurrentlyUsing().startTimerCheck();
-                System.out.println("Starting chek ");
+                //System.out.println("Starting chek ");
             }
         }
     }
@@ -1344,7 +1343,7 @@ public class MusicPlayerViewController implements Initializable {
     public void showSongListContextMenu(MouseEvent e) throws Exception {
         if (songList.getSelectionModel().getSelectedIndex() != -1 || !songList.getSelectionModel().getSelectedIndices().isEmpty()) {
             if (e.getButton() == MouseButton.SECONDARY) {
-                System.out.println("worked");
+                //System.out.println("worked");
                 songListContextMenu.show(songList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
             } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
                 playSelectedSongOption();
@@ -1362,7 +1361,7 @@ public class MusicPlayerViewController implements Initializable {
     public void showPlaylistListContextMenu(MouseEvent e) throws Exception {
         if (playlistList.getSelectionModel().getSelectedIndex() != -1) {
             if (e.getButton() == MouseButton.SECONDARY) {
-                System.out.println("worked");
+                //System.out.println("worked");
                 //updateModelCurrentSongList();
                 playlistListContextMenu.show(playlistList, MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
             } else if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
@@ -1403,7 +1402,7 @@ public class MusicPlayerViewController implements Initializable {
             int selectedIndex = playlistList.getSelectionModel().getSelectedIndex();
             if (selectedIndex != -1) {
                 String keyValue = playlistList.getItems().get(selectedIndex);
-                System.out.println(keyValue);
+                //System.out.println(keyValue);
                 LinkedList<SongDataObject> songDataObjectsToAdd = map.getMapOfPlaylists().get(keyValue);
                 mpm.updateSongList(songDataObjectsToAdd);//Updates the currentSongList. SongListView automatically updates
                 if (sortChoiceBox.getValue() != null) {
@@ -1418,7 +1417,7 @@ public class MusicPlayerViewController implements Initializable {
 
     private void updateViewCurrentSongList() {
         //we clear the list and then put the new list of song names in
-        System.out.println("updating current song list");
+        //System.out.println("updating current song list");
         ObservableList<String> listOfItems = FXCollections.observableArrayList();
         for (String s : songList.getSelectionModel().getSelectedItems()) {
             listOfItems.add(s);
@@ -1432,7 +1431,7 @@ public class MusicPlayerViewController implements Initializable {
 
     private void updateViewCurrentSongList(ObservableList<String> listOfItems) {
         //we clear the list and then put the new list of song names in
-        System.out.println("updating current song list");
+        //System.out.println("updating current song list");
         songList.getItems().clear();
         songList.getItems().addAll(mpm.getArrayOfSongInfoInCurrentSongList());
         for (String s : listOfItems) {

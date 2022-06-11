@@ -85,7 +85,7 @@ public class YoutubeVideoPageParser {
     }
 
     public String getHtml(String url) throws IOException {//To prevent an ip ban from websites, don't overuse this method.
-        System.out.println("html getter called");
+        //System.out.println("html getter called");
         String html = "";
         URL ytLink = new URL(url);
         BufferedReader in = null;
@@ -109,7 +109,7 @@ public class YoutubeVideoPageParser {
         }
         if (videoUrl.contains(YT_PLAYLIST_LIST_IDENTIFIER)) {
             videoUrl = convertToWholePlaylistView(videoUrl);
-            System.out.println("converted wholelist " + videoUrl);
+            //System.out.println("converted wholelist " + videoUrl);
         }
         try {
             html = getHtml(videoUrl);
@@ -222,7 +222,7 @@ public class YoutubeVideoPageParser {
         String channelName = infoParserTool(html, YOUTUBE_VIDEO_CHANNEL_NAME_START_IDENTIFIER, YOUTUBE_VIDEO_CHANNEL_NAME_END_IDENTIFIER);
         String videoTitle = infoParserTool(html, YT_TITLE_START_IDENTIFIER, YT_TITLE_END_IDENTIFIER);
         String youtubeVideoId = infoParserTool(infoParserToolTrimToStart(html, YOUTUBE_VIDEO_INFO_START_IDENTIFIER), YOUTUBE_VIDEO_ID_START_IDENTIFIER, YOUTUBE_VIDEO_ID_END_IDENTIFIER);
-        System.out.println(youtubeVideoId);
+        //System.out.println(youtubeVideoId);
         videoTitle = videoTitle.replace("&#39;", "'"); //Replaces the apostrophe identifier with apostrophe
         //title = title.replaceAll("[^\\x20-\\x7e]", ""); //Gets rid of foreign language characters
         videoTitle = videoTitle.trim().replaceAll(" +", " ");
@@ -272,13 +272,13 @@ public class YoutubeVideoPageParser {
         String lastVideoUrlGotten = "";
         int repeatAmt = (int) Math.ceil(playlistLength / YT_PLAYLISTVIDEO_CAPPED_VIDEO_AMT) + 1; //200 goes into 502 twice. Since we want to get the last 102 videos we add one since we are flooring it. However, by adding 3 instead, we ensure that the user is able to download the maximum amount of youtube videos allowed in a playlist which is 5000
         //html = html.substring(0, html.lastIndexOf(YT_DOWNLOADABLE_PLAYLIST_END_IDENTIFIER));//This will cut off all the youtube urls which are not in the playlist when you only repeat through once. Also we do this last so as to not intefere with the code above
-        System.out.println("Reapeats " + repeatAmt);//tells us how many times the for loop will repeat
+        //System.out.println("Reapeats " + repeatAmt);//tells us how many times the for loop will repeat
         int numVideosGotten = 0;
         for (int timesRepeated = 0; timesRepeated < repeatAmt; timesRepeated++) {
-            System.out.println("Outer loop running");
+            //System.out.println("Outer loop running");
             while (html.contains(YOUTUBE_PLAYLIST_VIDEO_INFO_START_IDENTIFIER)) {
                 html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_INFO_START_IDENTIFIER);//This will cut off all html up to the start of the first video in the playlist.
-                System.out.println("while loop ran");
+                //System.out.println("while loop ran");
                 html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_TITLES_START_IDENTIFIER);//Make sure you cut off the top in the right order or we won't be able to parse the video info properly.
                 String videoTitle = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_TITLES_END_IDENTIFIER);
                 html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_CHANNEL_NAME_START_IDENTIFIER);
@@ -290,7 +290,7 @@ public class YoutubeVideoPageParser {
                 html = infoParserToolTrimToStart(html, YOUTUBE_PLAYLIST_VIDEO_ID_START_IDENTIFIER);
                 String videoID = infoParserToolRemoveEnd(html, YOUTUBE_PLAYLIST_VIDEO_ID_END_IDENTIFIER);
                 String videoUrl = constructYoutubeUrlViaID(videoID);
-                System.out.println(videoID);
+                //System.out.println(videoID);
                 if (!youtubeIdsScannedThrough.contains(videoID)) {
                     youtubeIdsScannedThrough.add(videoID);
                     numVideosGotten++;
@@ -309,7 +309,7 @@ public class YoutubeVideoPageParser {
             if (timesRepeated == repeatAmt) {
                 break;
             }
-            System.out.println(lastVideoUrlGotten + " video to make playlist with");
+            //System.out.println(lastVideoUrlGotten + " video to make playlist with");
             html = getHtml(YT_PLAYLIST_AND_VIDEO_URL_START + getYoutubeVideoID(lastVideoUrlGotten) + YT_DOWNLOADABLE_PLAYLIST_LIST_ID_START_IDENTIFIER + getYoutubePlaylistListId(youtubePlaylistUrl)); //This will load up the new videos in the playlist
         }
         YoutubeDownloader.getYtdCurrentlyUsing().getPlaylistGettingPercentage().set(1);
