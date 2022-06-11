@@ -1,19 +1,19 @@
 What is MotisHarmony?
 :::::::::::::::::::::::::::::::::::
-MotisHarmony is a program which I made for my grade 12 highschool capstone. This program provides a clean intuitive UI for an adequate user experience. 
+MotisHarmony is a program which I made for my grade 12 highschool capstone. This program provides a clean responsive UI for an adequate user experience. 
 
-Unlike other technologies such as online youtube downloaders, my program is able to bypass youtubes download throttling and cipher signatures. Since I use a headless driver to obtain the audio source from the youtube link.
+Unlike other technologies such as online YouTube downloaders, my program is able to bypass YouTube's download throttling and cipher signatures. Since I use a headless driver to obtain the audio source from the youtube link.
 
-Now you might be wondering, why not just use one of the many other youtube downloaders on github such as youtube-dl? Well it's because these programs instead obtain the audio source from a youtube link by obtaining its cipher signature and then decoding it. To do that, they must first  obtain a .js script from the webpage which decodes this signature cipher.  What makes this method much harder to do is the fact that Youtube knows what people are trying to do. So what Youtube does to try to hide this .js script is by giving the script and variables within that script abstract names making it much harder for coders to parse the information from that .js file. In addition, Youtube also updates its website constantly, changing and implementing the way Youtube works so that it's harder for people to decipher signature ciphers. What ends up happening is a cat and mouse game where Youtube updates its webpage to make it harder for programmers to find and acess its .js scripts which decodes their cipher signatures. This results in continous updates from Youtube-dl.
+Now you might be wondering, why not just use one of the many other YouTube downloaders on github such as YouTube-dl? Well it's because these programs instead obtain the audio source from a youtube link by obtaining its cipher signature and then decoding it. To do that, they must first  obtain a .js script from the webpage which decodes this signature cipher.  What makes this method much harder to do is the fact that Youtube knows what people are trying to do. So what Youtube does to try to hide this .js script is by giving the script and variables within that script abstract names making it much harder for coders to parse the information from that .js file. In addition, Youtube also updates its website constantly, changing and implementing the way Youtube works so that it's harder for people to decipher signature ciphers. What ends up happening is a cat and mouse game where Youtube updates its webpage to make it harder for programmers to find and acess its .js scripts which decodes their cipher signatures. This results in continous updates from Youtube-dl.
 
-Because my program instead gets the audio source from Youtube videos using Chrome rather than through Youtube we are able to bypass all of Youtubes methods to prevent users from downloading Youtube videos. In return, I was able to create a Youtube downloader which requires less maintnece and updates than a program such as Youtube-dl.
+Because my program instead gets the audio source from YouTube videos using Chrome rather than through YouTube we are able to bypass all of YouTube's methods to prevent users from downloading Youtube videos. In return, I was able to create a Youtube downloader which requires less maintnece and updates than a program such as Youtube-dl.
 :::::::::::::::::::::::::::::::::::
 Resourses which have helped me complete my project
 :::::::::::::::::::::::::::::::::::
-Gave me an idea of how to download audio from Youtube
+Gave me an idea of how to download audio from YouTube
 https://ericdraken.com/download-youtube-videos-with-php/
 
-Helped me download audio from Youtube
+Helped me download audio from YouTube
 https://www.selenium.dev/
 
 Helped me fixed a bug in my program
@@ -49,9 +49,9 @@ https://youtu.be/9XJicRt_FaI
 Helped me automatically update the chrome driver
 https://github.com/bonigarcia/webdrivermanager
 :::::::::::::::::::::::::::::::::::
-How do I download songs from entire Youtube playlists?
+How do I download songs from entire YouTube playlists?
 :::::::::::::::::::::::::::::::::::
-1. Copy the url to a Youtube playlist you would like to download
+1. Copy the url to a YouTube playlist you would like to download
 
 2. Open the sliding menu in the bottom left and click on the button which looks like this "📥"
 
@@ -60,9 +60,9 @@ How do I download songs from entire Youtube playlists?
 
 4. Press the button to the right of the field which looks like this "📥"
 :::::::::::::::::::::::::::::::::::
-How do I download an individual song from Youtube?
+How do I download an individual song from YouTube?
 :::::::::::::::::::::::::::::::::::
-1. Copy the url to a Youtube video you would like to download
+1. Copy the url to a YouTube video you would like to download
 
 2. Open the sliding menu in the bottom left and click on the button which looks like this "📥"
 
@@ -109,9 +109,9 @@ List of features in MotisHarmony
 :::::::::::::::::::::::::::::::::::
 1. Create, rename and delete playlists
 
-2. Download playlists and videos from Youtube
+2. Download playlists and videos from YouTube
 
-3. Download playlists and videos from Youtube using the built in browser
+3. Download playlists and videos from YouTube using the built in browser
 
 4. Edit song data
 
@@ -119,17 +119,19 @@ List of features in MotisHarmony
 
 6. Built in sleep timer
 
-7. Ability to use shuffle play
+7. Shuffle play
 
-8. Ability to loop a song
+8. Loop a song
 
-9. Ability to create and use multiple accounts
+9. Create and use multiple accounts
 
-10. Ability to communicate with headphones/earbuds
+10. Delete accounts
 
-11. Ability to alter audio balance
+11. Pause/Play/Skip with headphones/earbuds
 
-12. Sound visualizer
+12. Alter audio balance
+
+13. View song with audio visualizer
 :::::::::::::::::::::::::::::::::::
 What is the sleep timer and how do I use it?
 :::::::::::::::::::::::::::::::::::
@@ -183,17 +185,17 @@ To fix this do the following:
 
 3. In the context menu click on the option which reads "Retry Download"
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] has already been added to the download queue, or has already been downloaded"
+What is the download error "[My YouTube link] has already been added to the download queue, or has already been downloaded"
 :::::::::::::::::::::::::::::::::::
-It means that the Youtube link you've inputted has aleady been downloaded or added to the download queue.
+It means that the YouTube link you've inputted has aleady been downloaded or added to the download queue.
 :::::::::::::::::::::::::::::::::::
 What is the download error "Failed to get playlist since you are disconnected from wifi"?
 :::::::::::::::::::::::::::::::::::
 It means that while the playlist you were trying to get was being parsed, the wifi disconnected and the playlist was unable to be parsed. You must reconnect to wifi and get your playlist again.
 :::::::::::::::::::::::::::::::::::
-What is the download error "You're currently IP banned from Youtube and cannot download songs at this time"?
+What is the download error "You're currently IP banned from YouTube and cannot download songs at this time"?
 :::::::::::::::::::::::::::::::::::
-It means that you probably downloaded a ton of songs from Youtube(1000+ songs!). 
+It means that you probably downloaded a ton of songs from YouTube(1000+ songs!). 
 
 To fix this you can try the following:
 
@@ -223,11 +225,11 @@ To fix this do the following:
 
 3. In the context menu click on the option which reads "Retry Download"
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] could not be downloaded at this time, please try again later or find an alternative link"?
+What is the download error "[My YouTube link] could not be downloaded at this time, please try again later or find an alternative link"?
 :::::::::::::::::::::::::::::::::::
 It means that there was unknown error which occured while downloading your requested link. Perhaps try downloading an alternate link.
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] failed to download because you are not connected to wifi"?
+What is the download error "[My YouTube link] failed to download because you are not connected to wifi"?
 :::::::::::::::::::::::::::::::::::
 It means you aren't connected to wifi. 
 
@@ -239,7 +241,7 @@ To fix this do the following:
 
 3. In the context menu click on the option which reads "Retry Download"
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] could not be accessed because you are not connected to wifi"?
+What is the download error "[My YouTube link] could not be accessed because you are not connected to wifi"?
 :::::::::::::::::::::::::::::::::::
 It means you aren't connected to wifi. 
 
@@ -251,9 +253,9 @@ To fix this do the following:
 
 3. In the context menu click on the option which reads "Retry Download"
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] " cannot be downloaded at this as you may be IP blocked by youtube! Or You may be disconnected from wifi."?
+What is the download error "[My YouTube link] " cannot be downloaded at this as you may be IP blocked by YouTube! Or You may be disconnected from wifi."?
 :::::::::::::::::::::::::::::::::::
-If you downloaded a ton of songs from Youtube(1000+ songs!) then you're probably IP banned from youtube.
+If you downloaded a ton of songs from YouTube(1000+ songs!) then you're probably IP banned from YouTube.
 
 To fix this you can try the following:
 
@@ -265,31 +267,31 @@ To fix this you can try the following:
 
 If you haven't downloaded many songs, then you may be disconnected from wifi.
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] is likely not a link!"?
+What is the download error "[My YouTube link] is likely not a link!"?
 :::::::::::::::::::::::::::::::::::
-It means that the link you entered is not a valid link to a Youtube video or playlist.
+It means that the link you entered is not a valid link to a YouTube video or playlist.
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] is age restricted and cannot be downloaded!"?
+What is the download error "[My YouTube link] is age restricted and cannot be downloaded!"?
 :::::::::::::::::::::::::::::::::::
-It means that the link you entered is a link to an age restricted Youtube Video whose audio source cannot be accessed anonymously. Perhaps try an alternative link which isn't age restricted. 
+It means that the link you entered is a link to an age restricted YouTube Video whose audio source cannot be accessed anonymously. Perhaps try an alternative link which isn't age restricted. 
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] is unavailable to the public!"?
+What is the download error "[My YouTube link] is unavailable to the public!"?
 :::::::::::::::::::::::::::::::::::
-It means that the link you entered is a link to an Youtube Video that is may be banned in your country or banned by Youtube. Perhaps try an alternative link which banned in your country or banned by Youtube
+It means that the link you entered is a link to an YouTube Video that is may be banned in your country or banned by YouTube. Perhaps try an alternative link which banned in your country or banned by YouTube
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] is private and cannot be downloaded!"?
+What is the download error "[My YouTube link] is private and cannot be downloaded!"?
 :::::::::::::::::::::::::::::::::::
-It means that the link you entered is a link to an Youtube Video that is private. Perhaps try an alternative link which is not private. If you are able to edit this Youtube link you could set it to unlisted instead of private.
+It means that the link you entered is a link to an YouTube Video that is private. Perhaps try an alternative link which is not private. If you are able to edit this YouTube link you could set it to unlisted instead of private.
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] is a livestream and cannot be downloaded!"?
+What is the download error "[My YouTube link] is a livestream and cannot be downloaded!"?
 :::::::::::::::::::::::::::::::::::
 It means that the link you entered is a link to a livestream which cannot be downloaded since it's a livestream.
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] is a radio player and cannot be downloaded!"?
+What is the download error "[My YouTube link] is a radio player and cannot be downloaded!"?
 :::::::::::::::::::::::::::::::::::
-It means that the link you entered is a link to a radio player. A Youtube radio player looks similar to a Youtube playlist. The difference between them is that a radio player is constantly updating and "infinite" and therefore cannot be downloaded. Get a link to a Youtube playlist instead!
+It means that the link you entered is a link to a radio player. A YouTube radio player looks similar to a YouTube playlist. The difference between them is that a radio player is constantly updating and "infinite" and therefore cannot be downloaded. Get a link to a YouTube playlist instead!
 :::::::::::::::::::::::::::::::::::
-What is the download error "[My Youtube link] is a playlist that is either private or does not exist!"?
+What is the download error "[My YouTube link] is a playlist that is either private or does not exist!"?
 :::::::::::::::::::::::::::::::::::
 It means that the link you entered is a link to a playlist which is either private or does not exist.
 
@@ -402,3 +404,118 @@ This will apply the changes you've made to the Sleep Timer. If you chose to enab
 
 "Enable Alarm"
 By selecting this radio button, the program will begin to keep track of the time after you press apply. The alarm will play music when the desired time is reached
+:::::::::::::::::::::::::::::::::::
+Why was MotisHarmony created?
+:::::::::::::::::::::::::::::::::::
+The current problem:
+Downloading songs via the internet is inconvenient and time-consuming. While there are tools that make it simple to import and arrange music, manually downloading and arranging large playlists is time consuming. Furthermore, using file organisation programs like Documents By Readle and Bolt to construct playlists results in inefficient data storage. How can the songs be efficiently downloaded and saved for future use from the internet?
+
+The solution:
+In order to combat this problem, a program named MotisHarmony was designed to let users listen to and download music ad free from the internet. By providing a responsive and simple UI, the user is able to easily download songs, efficiently store song data, modify song data, and play songs the way they want them to be played.
+:::::::::::::::::::::::::::::::::::
+What is the design of the Music Downloader model?
+:::::::::::::::::::::::::::::::::::
+For the design of MotisHarmony, YouTube was utilized as a way to obtain music audio from various artists across the globe. However, there are two problems which interfered with the progress of MotisHarmony. Cipher signatures which hid the link to the audio source, and the download throttling of the audio source itself. Via research online, it was discovered that the development of complex algorithms to decipher these cipher signatures could be skipped by using a headless driver to capture network data from YouTube and parse out the audio source using Java string methods. And through experimentation, it was determined that the throttling of the audio source can be bypassed by downloading the audio source in three minute chunks rather than all at once.
+
+Pros And Cons Of The Music Downloader Model Design:
+
+Pros:
+-The code which obtains the audio source from a YouTube video requires little maintenance since we bypass having to write code to decipher the cipher signature
+-The download method easily bypasses YouTube's throttling where throttling may be an issue for YouTube download libraries such as YouTube-dl
+-Super fast downloads (0.788 seconds for a 3 minute song)
+
+Cons:
+-Since the method used requires a headless driver, the file of the jar file is much larger
+-The method used only obtains a .weba file which requires the Jave-2 library to convert it to a .m4a file
+-The libraries used only allows the program to run on windows
+-The program requires Chrome to be installed
+-Slow conversion time (3.715 seconds for a 3 minute song)
+:::::::::::::::::::::::::::::::::::
+What is the design of the Music Downloader UI?
+:::::::::::::::::::::::::::::::::::
+Along with the model is the responsive UI created by adding listeners to components in the model. This allows users to input YouTube links to playlists or videos. The responsive UI also allows for the user to click on a song to view its info while downloading. If an invalid link is inputted, the user will be alerted. The program also gives the user percentages such as download and conversion percentages.  A custom browser is also included allowing the user to download YouTube videos directly from the browser.
+:::::::::::::::::::::::::::::::::::
+What is the design of the Song Storage Model?
+:::::::::::::::::::::::::::::::::::
+In order to efficiently store song data we use objects called “SongDataObjects” to store data. Rather than storing the data of the actual song in these objects, the paths of these downloaded songs are stored instead. In addition, SongDataObjects also stores info such as title name, song length, artist name, and so on. These SongDataObjects can then be stored in LinkedLists which act as playlists with these LinkedLists then being stored in a HashMap with their keys being their names. Now since SongDataObjects are only created when a song is downloaded, if the user decided to add one particular song to multiple playlists, instead of creating a new SongDataObject to that playlist, we pass the SongDataObject as a reference to the LinkedList. This in return allows simple modification of the SongDataObjects without having to check for clones of one SongDataObject stored in multiple other playlists and having to change the clones data accordingly. Methods allow for the deletion of songs from the account entirely.
+
+Pros And Cons Of The Song Storage Model Design:
+
+Pros:
+-Easy modification of song data
+-Very robust
+-Efficient at storing song data
+
+Cons:
+-Inability to change thumbnail paths
+-Inability to import songs
+:::::::::::::::::::::::::::::::::::
+What is the design of the Song Storage UI?
+:::::::::::::::::::::::::::::::::::
+Similar to the UI design of the music downloader, we also add listeners to the model to display the current structure of the playlists and songs within these playlists. Furthermore there are dialog boxes which can be opened to modify playlist and song data.
+:::::::::::::::::::::::::::::::::::
+What is the design of the Music Player model?
+:::::::::::::::::::::::::::::::::::
+This portion of the program primarily uses boolean values to determine whether the user wants to play songs in a looped, shuffled or ordered format. For the ordered play, the music player plays the next song in the playlist while keeping track of the current position in the playlist. For the shuffled format, the playlist is copied to another LinkedList which is then shuffled. This will reduce the probability of a song being played twice in a row. An alarm clock and a sleep timer also comes with the music player. Using the JavaFx library we use a TimeLine object to keep track of both the alarm clock and the sleep timer for when they should be activated. Methods in the model allows the modification of current positions in the song and volume control. The model also supports headphone compatibility allowing the user to skip or pause songs with buttons on their headphones.
+
+Pros And Cons Of The Music Downloader Model Design:
+
+Pros:
+-Robust and hard to break
+-Lots of features (Alarm clock, sleep timer, headphone compatibility)
+
+Cons:
+-Complex and hard to trace
+-Prone to logic errors
+:::::::::::::::::::::::::::::::::::
+What is the design of the Music Player UI?
+:::::::::::::::::::::::::::::::::::
+As with the rest of the program, the MusicPlayer UI is connected to the model via listeners to update the song’s wave visualization, song info displays, current song position, and duration of the song playing. The UI will also display the current playlist playing.A dialog box is used to modify the alarm clock. The same method is used to modify the sleep timer.
+:::::::::::::::::::::::::::::::::::
+What is the design of the Accounts model?
+:::::::::::::::::::::::::::::::::::
+In order to save account data we create and use objects called “Accounts” which store user data such as their password, username, playlists, songs, and so on. Additionally, passwords are first encrypted then stored as one way hash. Getters and setters are used to modify account data. These objects are then serialized into files and stored on the user's computer in designated folders automatically created by the program. A shutdown hook is then used to automatically serialize account data on exiting.
+
+Pros And Cons Of The Accounts Model Design:
+
+Pros:
+-Easily save account data
+
+Cons:
+-If the program crashes then account data will not be saved
+:::::::::::::::::::::::::::::::::::
+What is the design of the Accounts UI?
+:::::::::::::::::::::::::::::::::::
+To display the data of the Accounts object we have a settings page which utilizes RadioButtons, Sliders, and ChoiceBoxes which display the settings of the logged in account.
+:::::::::::::::::::::::::::::::::::
+What are the applications of MotisHarmony?
+:::::::::::::::::::::::::::::::::::
+The methods used to obtain the audio source from a YouTube video can be modified to support other websites such as DailyMotion, Spotify, and any other websites which hosts media content. By making the model more robust, it's possible to parse audio files, videos, and images from a wide range of sites on the internet.
+:::::::::::::::::::::::::::::::::::
+What are some conclusions made from MotisHarmony?
+:::::::::::::::::::::::::::::::::::
+Overall, though MotisHarmony works well, it only does so on the Windows operating system when Chrome is installed. To further improve the program, multiplatform capabilities should be added, its dependency on Chrome and Windows should be removed, and another method should be used to capture network data from YouTube in order to reduce the size of the program. Multiple threads could be used so that songs can be downloaded and converted at the same time.
+:::::::::::::::::::::::::::::::::::
+What are the pros and cons of the Overall UI design?
+:::::::::::::::::::::::::::::::::::
+Pros:
+-UI is aesthetically pleasing
+-It's responsive and updates the user on every action they make
+
+Cons:
+-The UI is unable to be resized
+-Not much UI customization
+:::::::::::::::::::::::::::::::::::
+How are songs downloaded from the built in browser?
+:::::::::::::::::::::::::::::::::::
+Click on a YouTube video or playlist that you would like to download.
+
+You can then right click and select "Download Video Audio" from the context menu to download the audio.
+
+You can also click the button on the top right which looks like "📥" to download the video.
+:::::::::::::::::::::::::::::::::::
+How to find YouTube playlists?
+:::::::::::::::::::::::::::::::::::
+First enter what kind of playlist you want into the YouTube search bar and hit enter.
+
+Then with YouTube search use "Filter" and select "Playlist" as a type.
