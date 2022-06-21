@@ -223,7 +223,12 @@ public class AccountsDataManager implements Serializable {//This class will be u
     }
 
     public static void deleteSong(SongDataObject[] sdoToRemove) throws IOException, Exception {
-        String[] arrayOfPlaylistSongs = Accounts.getLoggedInAccount().getPlaylistDataObject().getArrayOfPlaylistNames();
+         String[] arrayOfPlaylistSongs = null;
+        if (Accounts.getLoggedInAccount() != null) {
+            arrayOfPlaylistSongs = Accounts.getLoggedInAccount().getPlaylistDataObject().getArrayOfPlaylistNames();
+        } else {
+            return;
+        }
 
         for (int j = 0; j < sdoToRemove.length; j++) {
             for (int i = 0; i < arrayOfPlaylistSongs.length; i++) {

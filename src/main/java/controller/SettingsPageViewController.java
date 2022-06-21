@@ -182,6 +182,7 @@ public class SettingsPageViewController implements Initializable {
         YoutubeDownloader.getYtdCurrentlyUsing().setStopDownloading(true);
         YoutubeDownloader.getYtdCurrentlyUsing().setStopAllDownloadingProcesses(true);
         Accounts.setLoggedInAccount(null);
+        YoutubeDownloader.getYtdCurrentlyUsing().getAudioEncoderUsing().abortEncoding();
         //Stop the alarm clock from checking the time
         AlarmClock.getAlarmCurrentlyUsing().stopAlarmCheck();
         //Makes the sliding bar menu animate correctly

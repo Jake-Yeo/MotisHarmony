@@ -467,7 +467,7 @@ public class YoutubeDownloader {
             //We no longer create a new thread everytime we run the AudioConverter below, this will give time for the chrome driver to "breath" and will prevent massive lag.  
             try {
                 setIsConvertingAudio(true);
-                ac.addToConversionQueue(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
+                ac.convertWebaToWav(youtubeSongData);//If two videos have the same title names then this method will fail, each music file must have its own unique name. Fix the same name bug by incorporating the youtube video IDs in the name of the file
                 setIsConvertingAudio(false);
             } catch (Exception ex) {
                 ex.printStackTrace();
